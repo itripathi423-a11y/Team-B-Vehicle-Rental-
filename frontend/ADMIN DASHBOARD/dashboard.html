@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AUTO DEALER — Admin Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="dashboard.css" />
+  </head>
+
+  <body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-mark">AD</div>
+        <div class="logo-text-block">
+          <span class="logo-brand">AUTO DEALER</span>
+          <span class="logo-sub">FLEET MANAGEMENT</span>
+        </div>
+      </div>
+
+      <!-- ✅ FIXED NAVIGATION (REAL PAGES) -->
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item active">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard
+        </a>
+
+        <a href="admin.vehicle.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path
+              d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+            />
+            <circle cx="7" cy="17" r="2" />
+            <circle cx="17" cy="17" r="2" />
+            <path d="M5 17h8" />
+            <path d="M3 9h18" />
+          </svg>
+          Vehicles
+        </a>
+
+        <a href="bookings.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          Bookings
+        </a>
+
+        <a href="kyc.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          KYC
+        </a>
+
+        <a href="payments.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <rect x="2" y="5" width="20" height="14" rx="2" />
+            <line x1="2" y1="10" x2="22" y2="10" />
+          </svg>
+          Payments
+        </a>
+
+        <a href="enquiries.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+            <line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+          Enquiries
+        </a>
+
+        <a href="reviews.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          Reviews
+        </a>
+
+        <a href="servicing.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path
+              d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
+            />
+          </svg>
+          Servicing
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar">AK</div>
+          <div class="user-info">
+            <span class="user-name">Alex Kinetic</span>
+            <span class="user-role">Super Admin</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main-wrap">
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="search-wrap">
+          <input type="text" placeholder="Search analytics..." />
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <main class="content">
+        <!-- DASHBOARD -->
+        <div class="page">
+          <div class="page-header">
+            <h1 class="page-title">Dashboard Overview</h1>
+            <p class="page-sub">Real-time fleet analytics</p>
+          </div>
+
+          <!-- STAT CARDS -->
+          <div class="stat-grid">
+            <div class="stat-card">
+              <p>Total Vehicles</p>
+              <h2>156</h2>
+            </div>
+
+            <div class="stat-card">
+              <p>Active Bookings</p>
+              <h2>42</h2>
+            </div>
+
+            <div class="stat-card">
+              <p>Revenue</p>
+              <h2>Rs 48.2k</h2>
+            </div>
+
+            <div class="stat-card">
+              <p>Enquiries</p>
+              <h2>18</h2>
+            </div>
+          </div>
+
+          <!-- CHART -->
+          <div class="charts-row">
+            <div class="chart-card">
+              <h3>Monthly Performance</h3>
+              <canvas id="barChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+              <h3>Fleet Utilization</h3>
+              <p>SUVs - 88%</p>
+              <p>Sedans - 62%</p>
+              <p>Hatchbacks - 45%</p>
+              <p>Electric - 94%</p>
+            </div>
+          </div>
+
+          <!-- TABLE -->
+          <div class="table-card">
+            <h3>Recent Bookings</h3>
+
+            <table>
+              <tr>
+                <th>ID</th>
+                <th>Customer</th>
+                <th>Vehicle</th>
+                <th>Status</th>
+              </tr>
+
+              <tr>
+                <td>#BK-2041</td>
+                <td>Rohan Sharma</td>
+                <td>Fortuner</td>
+                <td>Active</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- CHART JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+    <script>
+      const ctx = document.getElementById("barChart");
+
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+          datasets: [
+            {
+              label: "Revenue",
+              data: [12, 19, 8, 15, 22],
+            },
+          ],
+        },
+      });
+    </script>
+  </body>
+</html>
