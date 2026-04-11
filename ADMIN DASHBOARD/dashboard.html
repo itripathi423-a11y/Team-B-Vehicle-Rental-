@@ -296,10 +296,393 @@
       </div>
     </div>
 
-    <!-- PLACEHOLDER PAGES -->
+    <!-- VEHICLES PAGE — ADD VEHICLE FORM -->
     <div class="page" id="page-vehicles">
-      <div class="page-header"><div><h1 class="page-title">Vehicles</h1><p class="page-sub">Manage your entire fleet here.</p></div></div>
-      <div class="empty-state">🚗<p>Vehicle management coming soon</p></div>
+
+      <!-- VIEW: Fleet List -->
+      <div id="view-fleet-list">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Vehicles</h1>
+            <p class="page-sub">Manage your entire fleet.</p>
+          </div>
+          <button class="btn-primary" id="btnShowAddVehicle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Vehicle
+          </button>
+        </div>
+
+        <!-- Fleet summary mini-stats -->
+        <div class="fleet-stats-row">
+          <div class="fleet-mini-stat">
+            <span class="fms-num">156</span>
+            <span class="fms-label">Total Fleet</span>
+          </div>
+          <div class="fleet-mini-stat">
+            <span class="fms-num" style="color:#22C55E">112</span>
+            <span class="fms-label">Available</span>
+          </div>
+          <div class="fleet-mini-stat">
+            <span class="fms-num" style="color:#FF5C1A">42</span>
+            <span class="fms-label">On Road</span>
+          </div>
+          <div class="fleet-mini-stat">
+            <span class="fms-num" style="color:#D97706">2</span>
+            <span class="fms-label">In Service</span>
+          </div>
+        </div>
+
+        <!-- Fleet cards grid -->
+        <div class="fleet-grid">
+          <div class="fleet-card">
+            <div class="fc-img-wrap">
+              <img src="https://images.financialexpressdigital.com/2020/08/Toyota-Fortuner-TRD-660.jpg" alt="Fortuner">
+              <span class="fc-status fc-status--available">Available</span>
+            </div>
+            <div class="fc-body">
+              <div class="fc-top">
+                <div>
+                  <h4 class="fc-name">Toyota Fortuner</h4>
+                  <p class="fc-meta">SUV • Diesel • Auto • 7 Seats</p>
+                </div>
+                <span class="fc-plate">BA 1 KHA 4321</span>
+              </div>
+              <div class="fc-pricing">
+                <span>Rs 3,500<small>/4hr</small></span>
+                <span>Rs 6,000<small>/8hr</small></span>
+                <span class="fc-price-hi">Rs 8,500<small>/day</small></span>
+              </div>
+              <div class="fc-actions">
+                <button class="fc-btn-edit">Edit</button>
+                <button class="fc-btn-view">View Details</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="fleet-card">
+            <div class="fc-img-wrap">
+              <img src="https://imgd.aeplcdn.com/1920x1080/n/cw/ec/106815/creta-exterior-right-front-three-quarter-6.png?isig=0&q=80" alt="Creta">
+              <span class="fc-status fc-status--road">On Road</span>
+            </div>
+            <div class="fc-body">
+              <div class="fc-top">
+                <div>
+                  <h4 class="fc-name">Hyundai Creta</h4>
+                  <p class="fc-meta">SUV • Petrol • Auto • 5 Seats</p>
+                </div>
+                <span class="fc-plate">BA 2 CHA 8812</span>
+              </div>
+              <div class="fc-pricing">
+                <span>Rs 2,000<small>/4hr</small></span>
+                <span>Rs 3,500<small>/8hr</small></span>
+                <span class="fc-price-hi">Rs 4,500<small>/day</small></span>
+              </div>
+              <div class="fc-actions">
+                <button class="fc-btn-edit">Edit</button>
+                <button class="fc-btn-view">View Details</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="fleet-card">
+            <div class="fc-img-wrap">
+              <img src="https://www.marutiseva.com/assets/images/new-gen-swift/car-03.png" alt="Swift">
+              <span class="fc-status fc-status--available">Available</span>
+            </div>
+            <div class="fc-body">
+              <div class="fc-top">
+                <div>
+                  <h4 class="fc-name">Maruti Swift</h4>
+                  <p class="fc-meta">Hatchback • Petrol • Manual • 5 Seats</p>
+                </div>
+                <span class="fc-plate">BA 3 PA 2210</span>
+              </div>
+              <div class="fc-pricing">
+                <span>Rs 1,000<small>/4hr</small></span>
+                <span>Rs 1,800<small>/8hr</small></span>
+                <span class="fc-price-hi">Rs 2,500<small>/day</small></span>
+              </div>
+              <div class="fc-actions">
+                <button class="fc-btn-edit">Edit</button>
+                <button class="fc-btn-view">View Details</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add New Card -->
+          <div class="fleet-card fleet-card--add" id="btnAddCard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40" style="color:#FF5C1A"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <p>Add New Vehicle</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: Add Vehicle Form -->
+      <div id="view-add-vehicle" style="display:none">
+
+        <!-- Form Header -->
+        <div class="av-header">
+          <div>
+            <h1 class="av-title">ADD VEHICLE</h1>
+            <div class="av-sub">
+              <span class="dot-orange"></span>
+              FLEET EXPANSION PROTOCOL
+            </div>
+          </div>
+          <div class="av-header-actions">
+            <button class="btn-ghost" id="btnDiscard">Discard</button>
+            <button class="btn-primary" id="btnSaveAsset">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+              Save Asset
+            </button>
+          </div>
+        </div>
+
+        <!-- Form Layout: Left + Right -->
+        <div class="av-layout">
+
+          <!-- LEFT: Main Form Sections -->
+          <div class="av-main">
+
+            <!-- BASIC INFO -->
+            <div class="av-section">
+              <div class="av-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FF5C1A" stroke-width="1.8" width="18" height="18"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                BASIC INFORMATION
+              </div>
+
+              <div class="av-row">
+                <div class="av-field av-field--grow">
+                  <label class="av-label">CAR NAME</label>
+                  <input type="text" class="av-input" placeholder="e.g. Toyota Fortuner TRD">
+                </div>
+                <div class="av-field av-field--grow">
+                  <label class="av-label">BRAND</label>
+                  <div class="av-select-wrap">
+                    <select class="av-select">
+                      <option>Toyota</option>
+                      <option>Hyundai</option>
+                      <option>Maruti</option>
+                      <option>Honda</option>
+                      <option>Porsche</option>
+                      <option>BMW</option>
+                      <option>Other</option>
+                    </select>
+                    <svg class="av-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg>
+                  </div>
+                </div>
+              </div>
+
+              <div class="av-row av-row--4">
+                <div class="av-field">
+                  <label class="av-label">BODY TYPE</label>
+                  <div class="av-select-wrap">
+                    <select class="av-select">
+                      <option>SUV</option>
+                      <option>Sedan</option>
+                      <option>Hatchback</option>
+                      <option>MPV</option>
+                      <option>Pickup</option>
+                      <option>Luxury</option>
+                    </select>
+                    <svg class="av-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg>
+                  </div>
+                </div>
+                <div class="av-field">
+                  <label class="av-label">FUEL TYPE</label>
+                  <div class="av-select-wrap">
+                    <select class="av-select">
+                      <option>Petrol</option>
+                      <option>Diesel</option>
+                      <option>Electric</option>
+                      <option>Hybrid</option>
+                    </select>
+                    <svg class="av-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg>
+                  </div>
+                </div>
+                <div class="av-field">
+                  <label class="av-label">TRANSMISSION</label>
+                  <div class="transmission-toggle">
+                    <button class="trans-btn active" data-val="auto">AUTO</button>
+                    <button class="trans-btn" data-val="manual">MANUAL</button>
+                  </div>
+                </div>
+                <div class="av-field">
+                  <label class="av-label">SEATS</label>
+                  <input type="number" class="av-input" value="5" min="2" max="14">
+                </div>
+              </div>
+
+              <div class="av-row">
+                <div class="av-field av-field--grow">
+                  <label class="av-label">LICENSE PLATE</label>
+                  <input type="text" class="av-input" placeholder="e.g. BA 1 KHA 4321">
+                </div>
+                <div class="av-field">
+                  <label class="av-label">YEAR</label>
+                  <input type="number" class="av-input" value="2024" min="2000" max="2030">
+                </div>
+              </div>
+            </div>
+
+            <!-- RENTAL PRICING -->
+            <div class="av-section">
+              <div class="av-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FF5C1A" stroke-width="1.8" width="18" height="18"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                RENTAL PRICING STRUCTURE
+              </div>
+
+              <div class="av-row av-row--3">
+                <div class="av-field">
+                  <label class="av-label">4 HOURS</label>
+                  <div class="av-price-input">
+                    <span class="av-currency">Rs</span>
+                    <input type="number" class="av-input av-input--price" placeholder="0.00" value="3500">
+                  </div>
+                </div>
+                <div class="av-field">
+                  <label class="av-label">8 HOURS</label>
+                  <div class="av-price-input">
+                    <span class="av-currency">Rs</span>
+                    <input type="number" class="av-input av-input--price" placeholder="0.00" value="6000">
+                  </div>
+                </div>
+                <div class="av-field">
+                  <label class="av-label">FULL DAY (24H)</label>
+                  <div class="av-price-input">
+                    <span class="av-currency">Rs</span>
+                    <input type="number" class="av-input av-input--price" placeholder="0.00" value="8500">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DETAILS & FEATURES -->
+            <div class="av-section">
+              <div class="av-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FF5C1A" stroke-width="1.8" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                DETAILS &amp; FEATURES
+              </div>
+
+              <div class="av-row">
+                <div class="av-field av-field--grow">
+                  <label class="av-label">COLOR SHADE</label>
+                  <div class="color-input-wrap">
+                    <input type="color" id="colorPicker" value="#1a1a1a" class="color-picker-hidden">
+                    <div class="color-swatch" id="colorSwatch" onclick="document.getElementById('colorPicker').click()"></div>
+                    <input type="text" class="av-input" id="colorName" placeholder="e.g. Pearl White" value="Vantablack Metallic">
+                  </div>
+                </div>
+                <div class="av-field av-field--grow">
+                  <label class="av-label">EXTERIOR FINISH</label>
+                  <div class="av-select-wrap">
+                    <select class="av-select">
+                      <option>Matte</option>
+                      <option>Gloss</option>
+                      <option>Metallic</option>
+                      <option>Satin</option>
+                      <option>Chrome</option>
+                    </select>
+                    <svg class="av-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg>
+                  </div>
+                </div>
+              </div>
+
+              <div class="av-field" style="margin-top:16px">
+                <label class="av-label">MARKETING DESCRIPTION</label>
+                <textarea class="av-textarea" placeholder="Describe the driving experience..."></textarea>
+              </div>
+
+              <div class="av-field" style="margin-top:20px">
+                <label class="av-label">KEY FEATURES</label>
+                <div class="features-grid">
+                  <label class="feat-check"><input type="checkbox" checked><span class="feat-box"></span>AC</label>
+                  <label class="feat-check"><input type="checkbox" checked><span class="feat-box"></span>GPS</label>
+                  <label class="feat-check"><input type="checkbox" checked><span class="feat-box"></span>Bluetooth</label>
+                  <label class="feat-check"><input type="checkbox"><span class="feat-box"></span>Sunroof</label>
+                  <label class="feat-check"><input type="checkbox"><span class="feat-box"></span>Leather Seats</label>
+                  <label class="feat-check"><input type="checkbox" checked><span class="feat-box"></span>Auto Pilot</label>
+                  <label class="feat-check"><input type="checkbox"><span class="feat-box"></span>4×4</label>
+                  <label class="feat-check"><input type="checkbox"><span class="feat-box"></span>Ventilated</label>
+                  <label class="feat-check"><input type="checkbox"><span class="feat-box"></span>Heated Seats</label>
+                  <label class="feat-check"><input type="checkbox"><span class="feat-box"></span>360 Camera</label>
+                  <label class="feat-check"><input type="checkbox" checked><span class="feat-box"></span>USB Charging</label>
+                  <label class="feat-check"><input type="checkbox"><span class="feat-box"></span>Dashcam</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Sidebar Panels -->
+          <div class="av-sidebar">
+
+            <!-- FLEET STATUS -->
+            <div class="av-panel">
+              <div class="av-panel-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FF5C1A" stroke-width="1.8" width="16" height="16"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                FLEET STATUS
+              </div>
+              <label class="av-label" style="margin-bottom:8px">AVAILABILITY</label>
+              <div class="av-select-wrap">
+                <select class="av-select" id="availabilitySelect">
+                  <option>Available</option>
+                  <option>Maintenance</option>
+                  <option>Reserved</option>
+                  <option>Retired</option>
+                </select>
+                <svg class="av-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="av-note" id="statusNote">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="1.8" width="14" height="14" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span><strong>Note:</strong> Setting status to 'Available' will immediately push this vehicle to the customer-facing mobile application.</span>
+              </div>
+            </div>
+
+            <!-- MEDIA ASSETS -->
+            <div class="av-panel">
+              <div class="av-panel-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FF5C1A" stroke-width="1.8" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                MEDIA ASSETS
+                <span class="media-count" id="mediaCount">0/8 MAX</span>
+              </div>
+
+              <div class="media-grid" id="mediaGrid">
+                <!-- Uploaded images appear here -->
+              </div>
+
+              <label class="av-upload-btn" for="mediaUpload">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                BULK UPLOAD IMAGES
+              </label>
+              <input type="file" id="mediaUpload" multiple accept="image/*" style="display:none">
+              <p class="av-upload-hint">JPG, PNG, WEBP (Max 5MB each)</p>
+            </div>
+
+            <!-- INVENTORY SYNC -->
+            <div class="av-panel av-panel--info">
+              <div class="av-panel-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#2196F3" stroke-width="1.8" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                INVENTORY SYNC
+              </div>
+              <p class="av-info-text">This vehicle will be assigned a unique QR Identifier for real-time tracking via the Fleet Manager app upon saving.</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- BOTTOM ACTION BAR -->
+        <div class="av-bottom-bar">
+          <span class="autosave-txt" id="autosaveTxt">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>
+            LAST AUTO-SAVE: <span id="autosaveTime">--:-- --</span>
+          </span>
+          <div class="av-bottom-actions">
+            <button class="btn-ghost" id="btnCancel">CANCEL</button>
+            <button class="btn-primary" id="btnCreateAsset">CREATE ASSET</button>
+          </div>
+        </div>
+
+      </div>
     </div>
     <div class="page" id="page-bookings">
       <div class="page-header"><div><h1 class="page-title">Bookings</h1><p class="page-sub">View and manage all bookings.</p></div></div>

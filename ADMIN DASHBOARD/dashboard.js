@@ -153,3 +153,123 @@ searchInput?.addEventListener('keydown', (e) => {
 document.querySelector('.notif-btn')?.addEventListener('click', () => {
   alert('3 new notifications:\n• New booking #BK-2042\n• KYC pending: Rajan Thapa\n• Service due: BA 1 KHA 4321');
 });
+
+// ===== VEHICLES PAGE =====
+
+// Switch between fleet list and add form
+function showView(viewId) {
+  document.getElementById('view-fleet-list').style.display = viewId === 'list' ? 'block' : 'none';
+  document.getElementById('view-add-vehicle').style.display = viewId === 'add' ? 'block' : 'none';
+}
+
+document.getElementById('btnShowAddVehicle')?.addEventListener('click', () => showView('add'));
+document.getElementById('btnAddCard')?.addEventListener('click', () => showView('add'));
+document.getElementById('btnDiscard')?.addEventListener('click', () => showView('list'));
+document.getElementById('btnCancel')?.addEventListener('click', () => showView('list'));
+
+// Transmission toggle
+document.querySelectorAll('.trans-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.trans-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// Color picker sync
+const colorPicker = document.getElementById('colorPicker');
+const colorSwatch = document.getElementById('colorSwatch');
+if (colorPicker && colorSwatch) {
+  colorSwatch.style.background = colorPicker.value;
+  colorPicker.addEventListener('input', () => {
+    colorSwatch.style.background = colorPicker.value;
+  });
+}
+
+// Media upload
+let mediaFiles = [];
+const mediaUpload = document.getElementById('mediaUpload');
+const mediaGrid   = document.getElementById('mediaGrid');
+const mediaCount  = document.getElementById('mediaCount');
+
+mediaUpload?.addEventListener('change', (e) => {
+  const files = Array.from(e.target.files);
+  files.forEach(file => {
+    if (mediaFiles.length >= 8) return;
+    if (file.size > 5 * 1024 * 1024) { alert(`${file.name} exceeds 5MB`); return; }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      mediaFiles.push(ev.target.result);
+      renderMedia();
+    };
+    reader.readAsDataURL(file);
+  });
+  e.target.value = '';
+});
+
+function renderMedia() {
+  if (!mediaGrid) return;
+  mediaGrid.innerHTML = '';
+  mediaFiles.forEach((src, i) => {
+    const div = document.createElement('div');
+    div.className = 'media-thumb';
+    div.innerHTML = `<img src="${src}" alt="media-${i}">
+      <button class="media-remove" onclick="removeMedia(${i})">✕</button>`;
+    mediaGrid.appendChild(div);
+  });
+  if (mediaCount) mediaCount.textContent = `${mediaFiles.length}/8 MAX`;
+}
+
+window.removeMedia = (i) => {
+  mediaFiles.splice(i, 1);
+  renderMedia();
+};
+
+// Auto-save ticker
+function updateAutosave() {
+  const el = document.getElementById('autosaveTime');
+  if (!el) return;
+  const now = new Date();
+  let h = now.getHours(), m = now.getMinutes(), am = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  el.textContent = `${h}:${String(m).padStart(2,'0')} ${am}`;
+}
+
+// Trigger autosave every 60s
+setInterval(() => {
+  const view = document.getElementById('view-add-vehicle');
+  if (view && view.style.display !== 'none') updateAutosave();
+}, 60000);
+
+// Also update on any input change
+document.getElementById('view-add-vehicle')?.addEventListener('input', () => {
+  updateAutosave();
+});
+
+// Create Asset button
+document.getElementById('btnCreateAsset')?.addEventListener('click', () => {
+  const name = document.querySelector('#view-add-vehicle .av-input')?.value?.trim();
+  if (!name) { alert('Please enter a Car Name before creating the asset.'); return; }
+  alert(`✅ Vehicle "${name}" created successfully!\nQR tracking ID will be generated shortly.`);
+  mediaFiles = [];
+  renderMedia();
+  document.querySelectorAll('#view-add-vehicle .av-input, #view-add-vehicle .av-textarea').forEach(el => {
+    if (el.type !== 'number' && el.type !== 'color') el.value = '';
+  });
+  showView('list');
+});
+
+// Save Asset (top right button)
+document.getElementById('btnSaveAsset')?.addEventListener('click', () => {
+  updateAutosave();
+  const bar = document.querySelector('.autosave-txt');
+  if (bar) {
+    bar.style.color = '#16A34A';
+    setTimeout(() => bar.style.color = '', 2000);
+  }
+  alert('Draft saved!');
+});
+
+// Fleet card edit/view buttons
+document.querySelectorAll('.fc-btn-edit').forEach(btn => {
+  btn.addEventListener('click', () => showView('add'));
+});
