@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AUTO DEALER — Vehicles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="admin.vehicle.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+          <div class="logo-mark">AD</div>
+          <div class="logo-text-block">
+            <span class="logo-brand">AUTO DEALER</span>
+            <span class="logo-sub">FLEET MANAGEMENT</span>
+          </div>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="7" height="7" rx="1" />
+            </svg>
+            Dashboard
+          </a>
+          <a href="#" class="nav-item active">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+              />
+              <circle cx="7" cy="17" r="2" />
+              <circle cx="17" cy="17" r="2" />
+              <path d="M5 17h8" />
+              <path d="M3 9h18" />
+            </svg>
+            Vehicles
+          </a>
+          <a href="#" class="nav-item"
+            ><svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" /></svg
+            >Bookings</a
+          >
+          <a href="#" class="nav-item"
+            ><svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+            >KYC</a
+          >
+          <a href="#" class="nav-item"
+            ><svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="2" y="5" width="20" height="14" rx="2" />
+              <line x1="2" y1="10" x2="22" y2="10" /></svg
+            >Payments</a
+          >
+          <a href="#" class="nav-item"
+            ><svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" /></svg
+            >Enquiries</a
+          >
+          <a href="#" class="nav-item"
+            ><svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" /></svg
+            >Reviews</a
+          >
+          <a href="#" class="nav-item"
+            ><svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
+              /></svg
+            >Servicing</a
+          >
+        </nav>
+        <div class="sidebar-footer">
+          <div class="sidebar-user">
+            <div class="user-avatar">AK</div>
+            <div class="user-info">
+              <span class="user-name">Alex Kinetic</span
+              ><span class="user-role">Super Admin</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN -->
+      <div class="main-wrap">
+        <header class="topbar">
+          <button class="icon-btn" id="sidebarToggle" style="display: none">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+          <div class="search-wrap">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search vehicles..."
+            />
+          </div>
+          <div class="topbar-right">
+            <button class="icon-btn notif-btn">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              <span class="badge">3</span>
+            </button>
+            <div class="topbar-user">
+              <div class="topbar-avatar">AK</div>
+              <div>
+                <p class="topbar-name">Alex Kinetic</p>
+                <p class="topbar-role">Super Admin</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main class="content">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Vehicle Management</h1>
+              <p class="page-sub">
+                Manage your entire fleet — add, edit, and remove vehicles.
+              </p>
+            </div>
+            <div class="page-actions">
+              <button class="btn-ghost" id="toggleDeleted">
+                👁 Show Hidden
+              </button>
+              <button class="btn-primary" id="addVehicleBtn">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  width="16"
+                  height="16"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Add Vehicle
+              </button>
+            </div>
+          </div>
+
+          <!-- STAT CARDS -->
+          <div class="stat-grid" id="statsGrid">
+            <div class="stat-card" style="--delay: 0s">
+              <div class="stat-icon" style="--ic: #fff0e8">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#FF5C1A"
+                  stroke-width="1.8"
+                  width="22"
+                  height="22"
+                >
+                  <path
+                    d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+                  />
+                  <circle cx="7" cy="17" r="2" />
+                  <circle cx="17" cy="17" r="2" />
+                  <path d="M5 17h8" />
+                </svg>
+              </div>
+              <p class="stat-label">Total Vehicles</p>
+              <p class="stat-value" id="statTotal">—</p>
+              <p class="stat-hint">In active fleet</p>
+            </div>
+            <div class="stat-card" style="--delay: 0.08s">
+              <div class="stat-icon" style="--ic: #e8fff0">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#22C55E"
+                  stroke-width="1.8"
+                  width="22"
+                  height="22"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M9 12l2 2 4-4" />
+                </svg>
+              </div>
+              <p class="stat-label">Available</p>
+              <p class="stat-value" id="statAvail">—</p>
+              <p class="stat-hint">Ready to rent</p>
+            </div>
+            <div class="stat-card" style="--delay: 0.16s">
+              <div class="stat-icon" style="--ic: #fff8e8">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#F59E0B"
+                  stroke-width="1.8"
+                  width="22"
+                  height="22"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+              </div>
+              <p class="stat-label">Booked</p>
+              <p class="stat-value" id="statBooked">—</p>
+              <p class="stat-hint">Currently on road</p>
+            </div>
+            <div class="stat-card" style="--delay: 0.24s">
+              <div class="stat-icon" style="--ic: #f3e8ff">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#9333EA"
+                  stroke-width="1.8"
+                  width="22"
+                  height="22"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <line x1="19" y1="8" x2="19" y2="14" />
+                  <line x1="22" y1="11" x2="16" y2="11" />
+                </svg>
+              </div>
+              <p class="stat-label">Hidden</p>
+              <p class="stat-value" id="statHidden">—</p>
+              <p class="stat-hint">Soft-deleted vehicles</p>
+            </div>
+          </div>
+
+          <!-- FILTERS -->
+          <div class="filters-bar">
+            <select class="filter-select" id="filterStatus">
+              <option value="">All Status</option>
+              <option value="Available">Available</option>
+              <option value="Booked">Booked</option>
+            </select>
+            <select class="filter-select" id="filterType">
+              <option value="">All Types</option>
+              <option>SUV</option>
+              <option>Sedan</option>
+              <option>Hatchback</option>
+              <option>Pickup</option>
+              <option>Van</option>
+              <option>Minivan</option>
+              <option>Convertible</option>
+              <option>Electric</option>
+            </select>
+            <select class="filter-select" id="filterFuel">
+              <option value="">All Fuel</option>
+              <option>Petrol</option>
+              <option>Diesel</option>
+              <option>Electric</option>
+              <option>Hybrid</option>
+              <option>CNG</option>
+            </select>
+          </div>
+
+          <!-- TABLE -->
+          <div class="table-card">
+            <div class="table-header">
+              <div>
+                <h3 style="font-weight: 600; font-size: 15px">
+                  Fleet Inventory
+                </h3>
+                <p
+                  style="font-size: 12px; color: var(--muted); margin-top: 2px"
+                  id="tableCount"
+                >
+                  Loading...
+                </p>
+              </div>
+            </div>
+            <div style="overflow-x: auto">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Vehicle</th>
+                    <th>Plate</th>
+                    <th>Type</th>
+                    <th>Fuel</th>
+                    <th>Seats</th>
+                    <th>4h / 8h / 1day (Rs)</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="vehicleTableBody">
+                  <tr class="loading-row">
+                    <td colspan="8">Loading vehicles…</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- ── ADD / EDIT MODAL ─────────────────────────────────────── -->
+    <div class="modal-backdrop" id="vehicleModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title" id="modalTitle">Add New Vehicle</h2>
+          <button class="modal-close" id="closeModal">✕</button>
+        </div>
+        <form id="vehicleForm" enctype="multipart/form-data">
+          <input type="hidden" id="vehicleId" />
+          <div class="form-grid">
+            <!-- SECTION: Basic Info -->
+            <p class="section-label">Basic Information</p>
+
+            <div class="form-group">
+              <label class="form-label">Vehicle Name *</label>
+              <input
+                class="form-control"
+                name="name"
+                id="f_name"
+                placeholder="e.g. Fortuner"
+              />
+              <span class="form-error">Min 2 characters required.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Brand *</label>
+              <input
+                class="form-control"
+                name="brand"
+                id="f_brand"
+                placeholder="e.g. Toyota"
+              />
+              <span class="form-error">Brand is required.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Model *</label>
+              <input
+                class="form-control"
+                name="model"
+                id="f_model"
+                placeholder="e.g. Fortuner 2.8 4WD"
+              />
+              <span class="form-error">Model is required.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Year *</label>
+              <input
+                class="form-control"
+                name="year"
+                id="f_year"
+                type="number"
+                placeholder="2023"
+                min="1980"
+                max="2026"
+              />
+              <span class="form-error">Valid year required.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">License Plate *</label>
+              <input
+                class="form-control"
+                name="license_plate"
+                id="f_plate"
+                placeholder="BA 1 KHA 4321"
+                style="text-transform: uppercase"
+              />
+              <span class="form-error">License plate is required.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Seating Capacity *</label>
+              <input
+                class="form-control"
+                name="seating_capacity"
+                id="f_seats"
+                type="number"
+                placeholder="5"
+                min="1"
+              />
+              <span class="form-error">Must be a positive number.</span>
+            </div>
+
+            <!-- SECTION: Classification -->
+            <p class="section-label">Classification</p>
+
+            <div class="form-group">
+              <label class="form-label">Body Type *</label>
+              <select class="form-control" name="body_type" id="f_body">
+                <option value="">Select…</option>
+                <option>SUV</option>
+                <option>Sedan</option>
+                <option>Hatchback</option>
+                <option>Pickup</option>
+                <option>Van</option>
+                <option>Minivan</option>
+                <option>Convertible</option>
+                <option>Electric</option>
+              </select>
+              <span class="form-error">Required.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Fuel Type *</label>
+              <select class="form-control" name="fuel_type" id="f_fuel">
+                <option value="">Select…</option>
+                <option>Petrol</option>
+                <option>Diesel</option>
+                <option>Electric</option>
+                <option>Hybrid</option>
+                <option>CNG</option>
+              </select>
+              <span class="form-error">Required.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Transmission *</label>
+              <select class="form-control" name="transmission" id="f_trans">
+                <option value="">Select…</option>
+                <option>Manual</option>
+                <option>Automatic</option>
+                <option>CVT</option>
+              </select>
+              <span class="form-error">Required.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status *</label>
+              <select class="form-control" name="status" id="f_status">
+                <option value="Available">Available</option>
+                <option value="Booked">Booked</option>
+              </select>
+              <span class="form-error">Required.</span>
+            </div>
+
+            <!-- SECTION: Pricing -->
+            <p class="section-label">Rental Pricing (NPR)</p>
+
+            <div class="form-group">
+              <label class="form-label">4-Hour Price *</label>
+              <input
+                class="form-control"
+                name="price_4h"
+                id="f_p4h"
+                type="number"
+                placeholder="2500"
+                min="1"
+              />
+              <span class="form-error">Must be > 0.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">8-Hour Price *</label>
+              <input
+                class="form-control"
+                name="price_8h"
+                id="f_p8h"
+                type="number"
+                placeholder="4500"
+                min="1"
+              />
+              <span class="form-error">Must be > 0.</span>
+            </div>
+            <div class="form-group full">
+              <label class="form-label">1-Day Price *</label>
+              <input
+                class="form-control"
+                name="price_1d"
+                id="f_p1d"
+                type="number"
+                placeholder="7000"
+                min="1"
+              />
+              <span class="form-error">Must be > 0.</span>
+            </div>
+
+            <!-- SECTION: Description -->
+            <div class="form-group full">
+              <label class="form-label">Description</label>
+              <textarea
+                class="form-control"
+                name="description"
+                id="f_desc"
+                placeholder="Short description of the vehicle…"
+              ></textarea>
+            </div>
+            <!-- SECTION: Features -->
+            <p class="section-label">Features</p>
+
+            <div class="form-group full">
+              <label class="form-label">Select Features</label>
+
+              <div class="features-grid">
+                <label
+                  ><input type="checkbox" name="features" value="AC" />
+                  AC</label
+                >
+                <label
+                  ><input type="checkbox" name="features" value="ABS" />
+                  ABS</label
+                >
+                <label
+                  ><input type="checkbox" name="features" value="Airbags" />
+                  Airbags</label
+                >
+                <label
+                  ><input type="checkbox" name="features" value="GPS" />
+                  GPS</label
+                >
+                <label
+                  ><input type="checkbox" name="features" value="Bluetooth" />
+                  Bluetooth</label
+                >
+                <label
+                  ><input type="checkbox" name="features" value="Sunroof" />
+                  Sunroof</label
+                >
+                <label
+                  ><input
+                    type="checkbox"
+                    name="features"
+                    value="Parking Sensors"
+                  />
+                  Parking Sensors</label
+                >
+                <label
+                  ><input
+                    type="checkbox"
+                    name="features"
+                    value="Reverse Camera"
+                  />
+                  Reverse Camera</label
+                >
+              </div>
+
+              <span class="form-error"
+                >Select at least one feature (optional).</span
+              >
+
+              <!-- SECTION: Images -->
+              <p class="section-label">Images</p>
+              <p
+                style="
+                  grid-column: 1/-1;
+                  font-size: 12px;
+                  color: var(--muted);
+                  margin-top: -10px;
+                  margin-bottom: 6px;
+                "
+              >
+                Accepted: JPG, PNG, WEBP — Max 5MB each.
+              </p>
+            </div>
+            <div class="img-upload-grid">
+              <!-- Thumbnail -->
+              <div
+                class="img-upload-box thumb-box"
+                id="box_thumbnail"
+                onclick="document.getElementById('f_thumbnail').click()"
+              >
+                <input
+                  type="file"
+                  id="f_thumbnail"
+                  name="thumbnail"
+                  accept="image/*"
+                  style="display: none"
+                  onchange="previewImage(this, 'box_thumbnail')"
+                />
+                <span class="upload-icon">🖼️</span>
+                <span class="upload-label">Thumbnail (Main image)</span>
+              </div>
+              <!-- 5 gallery images -->
+              <div
+                class="img-upload-box"
+                id="box_image_1"
+                onclick="document.getElementById('f_img1').click()"
+              >
+                <input
+                  type="file"
+                  id="f_img1"
+                  name="image_1"
+                  accept="image/*"
+                  style="display: none"
+                  onchange="previewImage(this, 'box_image_1')"
+                />
+                <span class="upload-icon">📷</span
+                ><span class="upload-label">Photo 1</span>
+              </div>
+              <div
+                class="img-upload-box"
+                id="box_image_2"
+                onclick="document.getElementById('f_img2').click()"
+              >
+                <input
+                  type="file"
+                  id="f_img2"
+                  name="image_2"
+                  accept="image/*"
+                  style="display: none"
+                  onchange="previewImage(this, 'box_image_2')"
+                />
+                <span class="upload-icon">📷</span
+                ><span class="upload-label">Photo 2</span>
+              </div>
+              <div
+                class="img-upload-box"
+                id="box_image_3"
+                onclick="document.getElementById('f_img3').click()"
+              >
+                <input
+                  type="file"
+                  id="f_img3"
+                  name="image_3"
+                  accept="image/*"
+                  style="display: none"
+                  onchange="previewImage(this, 'box_image_3')"
+                />
+                <span class="upload-icon">📷</span
+                ><span class="upload-label">Photo 3</span>
+              </div>
+              <div
+                class="img-upload-box"
+                id="box_image_4"
+                onclick="document.getElementById('f_img4').click()"
+              >
+                <input
+                  type="file"
+                  id="f_img4"
+                  name="image_4"
+                  accept="image/*"
+                  style="display: none"
+                  onchange="previewImage(this, 'box_image_4')"
+                />
+                <span class="upload-icon">📷</span
+                ><span class="upload-label">Photo 4</span>
+              </div>
+              <div
+                class="img-upload-box"
+                id="box_image_5"
+                onclick="document.getElementById('f_img5').click()"
+              >
+                <input
+                  type="file"
+                  id="f_img5"
+                  name="image_5"
+                  accept="image/*"
+                  style="display: none"
+                  onchange="previewImage(this, 'box_image_5')"
+                />
+                <span class="upload-icon">📷</span
+                ><span class="upload-label">Photo 5</span>
+              </div>
+            </div>
+          </div>
+          <!-- /form-grid -->
+
+          <div class="modal-footer">
+            <button type="button" class="btn-ghost" id="cancelModal">
+              Cancel
+            </button>
+            <button type="submit" class="btn-primary" id="submitBtn">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                width="15"
+                height="15"
+              >
+                <path
+                  d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"
+                />
+                <polyline points="17 21 17 13 7 13 7 21" />
+                <polyline points="7 3 7 8 15 8" />
+              </svg>
+              Save Vehicle
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ── CONFIRM MODAL ─────────────────────────────────────────── -->
+    <div class="modal-backdrop" id="confirmModal">
+      <div class="modal confirm-modal">
+        <div class="confirm-icon" id="confirmIcon">⚠️</div>
+        <p class="confirm-msg" id="confirmMsg">Are you sure?</p>
+        <p class="confirm-name" id="confirmName"></p>
+        <div class="modal-footer" style="justify-content: center">
+          <button class="btn-ghost" id="confirmCancel">Cancel</button>
+          <button
+            class="btn-primary btn-danger"
+            id="confirmOk"
+            style="background: var(--danger)"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast-wrap" id="toastWrap"></div>
+    <script src="admin.vehicle.js"></script>
+  </body>
+</html>

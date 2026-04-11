@@ -1,0 +1,284 @@
+/* ===== COLOR VARIABLES ===== */
+:root {
+  --primary: #ff711f;
+  --secondary: #ffffff;
+  --tertiary: #000000;
+}
+
+/* ===== RESET ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Arial", sans-serif;
+}
+
+/* ===== BODY ===== */
+body {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ===== LEFT CONTAINER ===== */
+.left-container {
+  width: 50vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background image (blurred) */
+.left-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("ASSETS/car.jpg") center/cover no-repeat;
+  filter: blur(3px);
+  transform: scale(1.05);
+  z-index: 0;
+}
+
+/* Dark overlay */
+.left-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+/* ===== LEFT CONTENT ===== */
+.overlay-content {
+  position: relative;
+  z-index: 2;
+  color: white;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+/* TAG */
+.tag {
+  background-color: var(--primary);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: bold;
+  width: fit-content;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
+/* MAIN HEADING */
+.overlay-content h1 {
+  font-size: 48px;
+  font-weight: bold;
+  line-height: 1.2;
+  margin-bottom: 15px;
+}
+
+/* SUBTEXT */
+.subtitle {
+  font-size: 18px;
+  opacity: 0.8;
+  margin-bottom: 40px;
+}
+
+/* BRAND */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* LINE */
+.brand .line {
+  width: 40px;
+  height: 2px;
+  background: white;
+  opacity: 0.6;
+}
+
+/* BRAND TEXT */
+.brand p {
+  font-size: 12px;
+  letter-spacing: 2px;
+  opacity: 0.7;
+}
+
+/* ===== RIGHT CONTAINER ===== */
+.right-container {
+  width: 50vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--secondary);
+  padding: 20px;
+}
+
+/* ===== MESSAGE ===== */
+.message {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.message h1 {
+  font-size: 32px;
+  color: var(--tertiary);
+  margin-bottom: 10px;
+}
+
+.message p {
+  font-size: 16px;
+  color: var(--tertiary);
+  opacity: 0.7;
+}
+
+/* ===== FORM CONTAINER ===== */
+.form-container {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== LABELS ===== */
+.form-container label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: var(--tertiary);
+}
+
+/* ===== INPUTS ===== */
+.form-container input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(51, 51, 51, 0.3);
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: white;
+  color: var(--tertiary);
+}
+
+/* PASSWORD FIX */
+.form-group input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ===== PASSWORD ROW ===== */
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+/* ===== FORGOT PASSWORD ===== */
+.forgot {
+  font-size: 12px;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.forgot:hover {
+  text-decoration: underline;
+}
+
+/* ===== LOGIN BUTTON ===== */
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.login-btn:hover {
+  opacity: 0.9;
+}
+
+/* ===== GOOGLE BUTTON ===== */
+.google-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: white;
+  border: 1px solid rgba(51, 51, 51, 0.3);
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-bottom: 15px;
+  color: var(--tertiary);
+}
+
+/* Hover darker */
+.google-btn:hover {
+  background-color: #f49c69;
+}
+
+/* Logo left */
+.google-btn img {
+  width: 18px;
+  height: 18px;
+  margin-left: 15px;
+  z-index: 1;
+}
+
+/* Text center */
+.google-btn span {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 500;
+}
+
+/* ===== SIGNUP ===== */
+.form-container p {
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
+  color: var(--tertiary);
+  opacity: 0.7;
+}
+
+.form-container p a {
+  color: var(--primary);
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+.form-container p a:hover {
+  text-decoration: underline;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  body {
+    flex-direction: column;
+  }
+
+  .left-container {
+    display: none;
+  }
+
+  .right-container {
+    width: 100%;
+    height: 100vh;
+  }
+}
