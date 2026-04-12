@@ -168,6 +168,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  width: 92%;
 }
 
 /* ── TOPBAR ──────────────────────────────────────── */
@@ -540,7 +541,9 @@ body {
   padding: 24px;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
+  overflow: hidden;
 }
+
 .table-header {
   display: flex;
   align-items: flex-start;
