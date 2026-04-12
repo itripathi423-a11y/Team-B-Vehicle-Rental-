@@ -16,24 +16,23 @@ document
       return;
     }
 
-    try {
-      const res = await fetch("http://localhost:3000/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, password }),
-      });
+    const res = await fetch("http://localhost:5000/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, phone, password }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (data.success) {
-        message.style.color = "green";
-        message.textContent = data.message;
-      } else {
-        message.style.color = "red";
-        message.textContent = data.message;
-      }
-    } catch (err) {
+    if (data.success) {
+      message.style.color = "green";
+      message.textContent = data.message;
+
+      setTimeout(() => {
+        window.location.href = "/USER DASHBOARD/userdashboard.html";
+      }, 1000);
+    } else {
       message.style.color = "red";
-      message.textContent = "Server error";
+      message.textContent = data.message;
     }
   });

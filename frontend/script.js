@@ -5,24 +5,28 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
   const password = document.getElementById("password").value.trim();
   const messageDiv = document.getElementById("login-message");
 
-  try {
-    const res = await fetch("http://localhost:3000/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+  const res = await fetch("http://localhost:5000/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ email, password }),
+  });
 
-    const data = await res.json();
+  const data = await res.json();
 
-    if (data.success) {
-      messageDiv.style.color = "green";
-      messageDiv.textContent = data.message;
-    } else {
-      messageDiv.style.color = "red";
-      messageDiv.textContent = data.message;
-    }
-  } catch (err) {
+  if (data.success) {
+    messageDiv.style.color = "green";
+    messageDiv.textContent = data.message;
+
+    setTimeout(() => {
+      if (data.role === "admin") {
+        window.location.href = "/ADMIN DASHBOARD/dashboard.html";
+      } else {
+        window.location.href = "/USER DASHBOARD/userdashboard.html";
+      }
+    }, 1000);
+  } else {
     messageDiv.style.color = "red";
-    messageDiv.textContent = "Server error";
+    messageDiv.textContent = data.message;
   }
 });
