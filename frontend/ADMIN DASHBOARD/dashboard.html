@@ -4,481 +4,682 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AUTO DEALER — Admin Dashboard</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap"
       rel="stylesheet"
     />
-
     <link rel="stylesheet" href="dashboard.css" />
+    <style>
+      /* Nav nudge to match vehicle page */
+      .sidebar-nav {
+        padding-top: 20px;
+      }
+
+      /* Skeleton shimmer */
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          #f0f0f0 25%,
+          #e0e0e0 50%,
+          #f0f0f0 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.2s infinite;
+        border-radius: 4px;
+        height: 14px;
+        display: inline-block;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+      .skeleton-row td {
+        padding: 16px 14px;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .empty-state span {
+        font-size: 32px;
+        display: block;
+        margin-bottom: 8px;
+      }
+    </style>
   </head>
-
   <body>
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-      <div class="sidebar-logo">
-        <div class="logo-mark">AD</div>
-        <div class="logo-text-block">
-          <span class="logo-brand">AUTO DEALER</span>
-          <span class="logo-sub">FLEET MANAGEMENT</span>
-        </div>
-      </div>
-
-      <!-- ✅ FIXED NAVIGATION (REAL PAGES) -->
-      <nav class="sidebar-nav">
-        <a href="dashboard.html" class="nav-item active">
-          <svg
-            class="nav-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <rect x="3" y="3" width="7" height="7" rx="1" />
-            <rect x="14" y="3" width="7" height="7" rx="1" />
-            <rect x="3" y="14" width="7" height="7" rx="1" />
-            <rect x="14" y="14" width="7" height="7" rx="1" />
-          </svg>
-          Dashboard
-        </a>
-
-        <a href="admin.vehicle.html" class="nav-item">
-          <svg
-            class="nav-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <path
-              d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
-            />
-            <circle cx="7" cy="17" r="2" />
-            <circle cx="17" cy="17" r="2" />
-            <path d="M5 17h8" />
-            <path d="M3 9h18" />
-          </svg>
-          Vehicles
-        </a>
-
-        <a href="admin.bookings.html" class="nav-item">
-          <svg
-            class="nav-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <rect x="3" y="4" width="18" height="18" rx="2" />
-            <line x1="16" y1="2" x2="16" y2="6" />
-            <line x1="8" y1="2" x2="8" y2="6" />
-            <line x1="3" y1="10" x2="21" y2="10" />
-          </svg>
-          Bookings
-        </a>
-
-        <a href="admin.kyc.html" class="nav-item">
-          <svg
-            class="nav-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-          </svg>
-          KYC
-        </a>
-
-        <a href="admin.payments.html" class="nav-item">
-          <svg
-            class="nav-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <rect x="2" y="5" width="20" height="14" rx="2" />
-            <line x1="2" y1="10" x2="22" y2="10" />
-          </svg>
-          Payments
-        </a>
-
-        <a href="admin.enquiries.html" class="nav-item">
-          <svg
-            class="nav-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-            <line x1="12" y1="17" x2="12.01" y2="17" />
-          </svg>
-          Enquiries
-        </a>
-
-        <a href="admin.reviews.html" class="nav-item">
-          <svg
-            class="nav-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
-          Reviews
-        </a>
-
-        <a href="admin.servicing.html" class="nav-item">
-          <svg
-            class="nav-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <path
-              d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
-            />
-          </svg>
-          Servicing
-        </a>
-      </nav>
-
-      <div class="sidebar-footer">
-        <div class="sidebar-user">
-          <div class="user-avatar">AK</div>
-          <div class="user-info">
-            <span class="user-name">Alex Kinetic</span>
-            <span class="user-role">Super Admin</span>
+    <div class="layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+          <div class="logo-mark">AD</div>
+          <div class="logo-text-block">
+            <span class="logo-brand">AUTO DEALER</span>
+            <span class="logo-sub">FLEET MANAGEMENT</span>
           </div>
         </div>
-      </div>
-    </aside>
-
-    <div id="app">
-      <main class="content">
-        <div class="page-header">
-          <div>
-            <h1 class="page-title">Dashboard Overview</h1>
-            <p class="page-sub">
-              Real-time fleet health &amp; performance metrics
-            </p>
-          </div>
-          <div class="page-actions">
-            <button class="btn-ghost">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                width="15"
-                height="15"
-              >
-                <rect x="3" y="4" width="18" height="18" rx="2" />
-                <line x1="16" y1="2" x2="16" y2="6" />
-                <line x1="8" y1="2" x2="8" y2="6" />
-                <line x1="3" y1="10" x2="21" y2="10" />
-              </svg>
-              Last 30 Days
-            </button>
-            <button class="btn-primary">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                width="15"
-                height="15"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              Export Report
-            </button>
-          </div>
-        </div>
-
-        <!-- STAT CARDS -->
-        <div class="stat-grid">
-          <div class="stat-card" style="--delay: 0s">
-            <div class="stat-top">
-              <div class="stat-icon" style="--ic: #fff0e8">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#FF5C1A"
-                  stroke-width="1.8"
-                  width="22"
-                  height="22"
-                >
-                  <path
-                    d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
-                  />
-                  <circle cx="7" cy="17" r="2" />
-                  <circle cx="17" cy="17" r="2" />
-                  <path d="M5 17h8" />
-                </svg>
-              </div>
-              <span class="stat-badge up">+4%</span>
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" class="nav-item active">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="7" height="7" rx="1" /></svg
+            >Dashboard
+          </a>
+          <a href="admin.vehicle.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+              />
+              <circle cx="7" cy="17" r="2" />
+              <circle cx="17" cy="17" r="2" />
+              <path d="M5 17h8" />
+              <path d="M3 9h18" /></svg
+            >Vehicles
+          </a>
+          <a href="admin.bookings.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" /></svg
+            >Bookings
+          </a>
+          <a href="admin.kyc.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+            >KYC
+          </a>
+          <a href="admin.payments.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="2" y="5" width="20" height="14" rx="2" />
+              <line x1="2" y1="10" x2="22" y2="10" /></svg
+            >Payments
+          </a>
+          <a href="admin.enquiries.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" /></svg
+            >Enquiries
+          </a>
+          <a href="admin.reviews.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" /></svg
+            >Reviews
+          </a>
+          <a href="admin.servicing.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
+              /></svg
+            >Servicing
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="sidebar-user">
+            <div class="user-avatar" id="sidebarAvatarInitials">—</div>
+            <div class="user-info">
+              <span class="user-name" id="sidebarAdminName">Loading…</span>
+              <span class="user-role" id="sidebarAdminRole">—</span>
             </div>
-            <p class="stat-label">Total Vehicles</p>
-            <p class="stat-value">156</p>
-            <p class="stat-hint">8 added this month</p>
           </div>
-          <div class="stat-card" style="--delay: 0.08s">
-            <div class="stat-top">
-              <div class="stat-icon" style="--ic: #eff6ff">
+        </div>
+      </aside>
+
+      <!-- MAIN WRAP -->
+      <div class="main-wrap">
+        <!-- TOPBAR -->
+        <header class="topbar">
+          <div class="search-wrap">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              id="dashboardSearch"
+              placeholder="Search bookings, vehicles, customers…"
+            />
+          </div>
+          <div class="topbar-right">
+            <button class="icon-btn notif-btn">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              <span class="badge">3</span>
+            </button>
+            <div class="topbar-user">
+              <div class="topbar-avatar" id="topbarAvatarInitials">—</div>
+              <div>
+                <p class="topbar-name" id="topbarAdminName">Loading…</p>
+                <p class="topbar-role" id="topbarAdminRole">—</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- CONTENT -->
+        <main class="content">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Dashboard Overview</h1>
+              <p class="page-sub">
+                Real-time fleet health &amp; performance metrics
+              </p>
+            </div>
+            <div class="page-actions">
+              <button class="btn-ghost">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#2563EB"
-                  stroke-width="1.8"
-                  width="22"
-                  height="22"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  width="15"
+                  height="15"
                 >
                   <rect x="3" y="4" width="18" height="18" rx="2" />
                   <line x1="16" y1="2" x2="16" y2="6" />
                   <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-              </div>
-              <span class="stat-badge up">+12%</span>
-            </div>
-            <p class="stat-label">Active Bookings</p>
-            <p class="stat-value">42</p>
-            <p class="stat-hint">Currently on road</p>
-          </div>
-          <div class="stat-card" style="--delay: 0.16s">
-            <div class="stat-top">
-              <div class="stat-icon" style="--ic: #ecfdf5">
+                  <line x1="3" y1="10" x2="21" y2="10" /></svg
+                >Last 30 Days
+              </button>
+              <button class="btn-primary">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#16A34A"
-                  stroke-width="1.8"
-                  width="22"
-                  height="22"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  width="15"
+                  height="15"
                 >
-                  <rect x="2" y="5" width="20" height="14" rx="2" />
-                  <line x1="2" y1="10" x2="22" y2="10" />
-                </svg>
-              </div>
-              <span class="stat-badge up">+8.2%</span>
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" /></svg
+                >Export Report
+              </button>
             </div>
-            <p class="stat-label">Total Revenue</p>
-            <p class="stat-value" style="font-size: 36px">Rs 48.2k</p>
-            <p class="stat-hint">Earned this month</p>
-          </div>
-          <div class="stat-card" style="--delay: 0.24s">
-            <div class="stat-top">
-              <div class="stat-icon" style="--ic: #fffbeb">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#D97706"
-                  stroke-width="1.8"
-                  width="22"
-                  height="22"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                  <line x1="12" y1="17" x2="12.01" y2="17" />
-                </svg>
-              </div>
-              <span class="stat-badge down">-2%</span>
-            </div>
-            <p class="stat-label">Enquiries</p>
-            <p class="stat-value">18</p>
-            <p class="stat-hint">New leads today</p>
-          </div>
-        </div>
-
-        <!-- CHARTS -->
-        <div class="charts-row">
-          <div class="chart-card">
-            <div class="chart-hdr">
-              <div>
-                <h3 class="chart-title">Monthly Bookings &amp; Revenue</h3>
-                <p class="chart-sub">Jan – Dec 2024 performance comparison</p>
-              </div>
-              <div class="chart-legend">
-                <span class="leg-dot" style="background: #ff5c1a"></span
-                >&nbsp;Revenue
-                <span
-                  class="leg-dot"
-                  style="background: #e5e7eb; margin-left: 10px"
-                ></span
-                >&nbsp;Bookings
-              </div>
-            </div>
-            <div class="bar-wrap"><canvas id="barChart"></canvas></div>
           </div>
 
-          <div class="chart-card">
-            <h3 class="chart-title">Fleet Utilization</h3>
-            <div class="util-list">
-              <div>
-                <div class="util-row">
-                  <span class="util-name">Electric Fleet</span
-                  ><span class="util-pct">94%</span>
+          <!-- STAT CARDS -->
+          <div class="stat-grid">
+            <div class="stat-card" style="--delay: 0s">
+              <div class="stat-top">
+                <div class="stat-icon" style="--ic: #fff0e8">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#FF5C1A"
+                    stroke-width="1.8"
+                    width="22"
+                    height="22"
+                  >
+                    <path
+                      d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+                    />
+                    <circle cx="7" cy="17" r="2" />
+                    <circle cx="17" cy="17" r="2" />
+                    <path d="M5 17h8" />
+                  </svg>
                 </div>
-                <div class="util-bar">
-                  <div class="util-fill" style="--w: 94%"></div>
-                </div>
+                <span class="stat-badge up">+4%</span>
               </div>
-              <div>
-                <div class="util-row">
-                  <span class="util-name">SUVs</span
-                  ><span class="util-pct">88%</span>
-                </div>
-                <div class="util-bar">
-                  <div class="util-fill" style="--w: 88%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="util-row">
-                  <span class="util-name">Luxury Sedans</span
-                  ><span class="util-pct">62%</span>
-                </div>
-                <div class="util-bar">
-                  <div class="util-fill" style="--w: 62%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="util-row">
-                  <span class="util-name">Hatchbacks</span
-                  ><span class="util-pct">45%</span>
-                </div>
-                <div class="util-bar">
-                  <div class="util-fill" style="--w: 45%"></div>
-                </div>
-              </div>
+              <p class="stat-label">Total Vehicles</p>
+              <p class="stat-value" id="statVehicles">—</p>
+              <p class="stat-hint">In active fleet</p>
             </div>
-            <div class="insight">
-              <p class="ins-tag">INSIGHT</p>
-              <p class="ins-txt">
-                "EV demand exceeds SUV demand by 6% this quarter. Consider
-                expanding the electric fleet."
+            <div class="stat-card" style="--delay: 0.08s">
+              <div class="stat-top">
+                <div class="stat-icon" style="--ic: #eff6ff">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#2563EB"
+                    stroke-width="1.8"
+                    width="22"
+                    height="22"
+                  >
+                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                </div>
+                <span class="stat-badge up">+12%</span>
+              </div>
+              <p class="stat-label">Active Bookings</p>
+              <p class="stat-value" id="statBookings">—</p>
+              <p class="stat-hint">Currently on road</p>
+            </div>
+            <div class="stat-card" style="--delay: 0.16s">
+              <div class="stat-top">
+                <div class="stat-icon" style="--ic: #ecfdf5">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#16A34A"
+                    stroke-width="1.8"
+                    width="22"
+                    height="22"
+                  >
+                    <rect x="2" y="5" width="20" height="14" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                  </svg>
+                </div>
+                <span class="stat-badge up">+8.2%</span>
+              </div>
+              <p class="stat-label">Total Revenue</p>
+              <p class="stat-value" id="statRevenue" style="font-size: 36px">
+                —
               </p>
+              <p class="stat-hint">Earned this month</p>
+            </div>
+            <div class="stat-card" style="--delay: 0.24s">
+              <div class="stat-top">
+                <div class="stat-icon" style="--ic: #fffbeb">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#D97706"
+                    stroke-width="1.8"
+                    width="22"
+                    height="22"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                </div>
+                <span class="stat-badge down">-2%</span>
+              </div>
+              <p class="stat-label">Enquiries</p>
+              <p class="stat-value" id="statEnquiries">—</p>
+              <p class="stat-hint">New leads today</p>
             </div>
           </div>
-        </div>
 
-        <!-- RECENT BOOKINGS TABLE -->
-        <div class="table-card">
-          <div class="table-toolbar">
-            <div>
-              <h3 class="card-title">Recent Bookings</h3>
-              <p class="card-sub">Latest 5 active transactions</p>
+          <!-- CHARTS -->
+          <div class="charts-row">
+            <div class="chart-card">
+              <div class="chart-hdr">
+                <div>
+                  <h3 class="chart-title">Monthly Bookings &amp; Revenue</h3>
+                  <p class="chart-sub">Jan – Dec performance comparison</p>
+                </div>
+                <div class="chart-legend">
+                  <span class="leg-dot" style="background: #ff5c1a"></span
+                  >&nbsp;Revenue
+                  <span
+                    class="leg-dot"
+                    style="background: #e5e7eb; margin-left: 10px"
+                  ></span
+                  >&nbsp;Bookings
+                </div>
+              </div>
+              <div class="bar-wrap"><canvas id="barChart"></canvas></div>
             </div>
-            <a href="bookings.html" class="btn-ghost btn-sm">View All →</a>
+            <div class="chart-card">
+              <h3 class="chart-title">Fleet Utilization</h3>
+              <div class="util-list">
+                <div>
+                  <div class="util-row">
+                    <span class="util-name">Electric Fleet</span
+                    ><span class="util-pct">94%</span>
+                  </div>
+                  <div class="util-bar">
+                    <div class="util-fill" style="--w: 94%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="util-row">
+                    <span class="util-name">SUVs</span
+                    ><span class="util-pct">88%</span>
+                  </div>
+                  <div class="util-bar">
+                    <div class="util-fill" style="--w: 88%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="util-row">
+                    <span class="util-name">Luxury Sedans</span
+                    ><span class="util-pct">62%</span>
+                  </div>
+                  <div class="util-bar">
+                    <div class="util-fill" style="--w: 62%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="util-row">
+                    <span class="util-name">Hatchbacks</span
+                    ><span class="util-pct">45%</span>
+                  </div>
+                  <div class="util-bar">
+                    <div class="util-fill" style="--w: 45%"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="insight">
+                <p class="ins-tag">INSIGHT</p>
+                <p class="ins-txt">
+                  "EV demand exceeds SUV demand by 6% this quarter. Consider
+                  expanding the electric fleet."
+                </p>
+              </div>
+            </div>
           </div>
-          <div class="table-wrap">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Booking ID</th>
-                  <th>Customer</th>
-                  <th>Vehicle</th>
-                  <th>Duration</th>
-                  <th>Amount</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="mono">#BK-2041</td>
-                  <td>Rohan Sharma</td>
-                  <td>Fortuner (BA 1 KHA 4321)</td>
-                  <td>3 days</td>
-                  <td>Rs 25,500</td>
-                  <td>
-                    <span class="badge badge-green"
-                      ><span class="dot"></span>Active</span
-                    >
-                  </td>
-                </tr>
-                <tr>
-                  <td class="mono">#BK-2040</td>
-                  <td>Priya Thapa</td>
-                  <td>Creta (BA 2 CHA 8812)</td>
-                  <td>1 day</td>
-                  <td>Rs 4,500</td>
-                  <td>
-                    <span class="badge badge-green"
-                      ><span class="dot"></span>Active</span
-                    >
-                  </td>
-                </tr>
-                <tr>
-                  <td class="mono">#BK-2039</td>
-                  <td>Aman Gurung</td>
-                  <td>Swift (BA 3 PA 2210)</td>
-                  <td>5 days</td>
-                  <td>Rs 12,500</td>
-                  <td>
-                    <span class="badge badge-amber"
-                      ><span class="dot"></span>Pending</span
-                    >
-                  </td>
-                </tr>
-                <tr>
-                  <td class="mono">#BK-2038</td>
-                  <td>Sita Rai</td>
-                  <td>Fortuner (BA 1 KHA 4321)</td>
-                  <td>2 days</td>
-                  <td>Rs 17,000</td>
-                  <td>
-                    <span class="badge badge-grey"
-                      ><span class="dot"></span>Completed</span
-                    >
-                  </td>
-                </tr>
-                <tr>
-                  <td class="mono">#BK-2037</td>
-                  <td>Dev Karki</td>
-                  <td>Creta (BA 2 CHA 8812)</td>
-                  <td>7 days</td>
-                  <td>Rs 31,500</td>
-                  <td>
-                    <span class="badge badge-grey"
-                      ><span class="dot"></span>Completed</span
-                    >
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+
+          <!-- RECENT BOOKINGS TABLE -->
+          <div class="table-card">
+            <div class="table-toolbar">
+              <div>
+                <h3 class="card-title">Recent Bookings</h3>
+                <p class="card-sub" id="bookingSubtitle">Loading…</p>
+              </div>
+              <a href="admin.bookings.html" class="btn-ghost btn-sm"
+                >View All →</a
+              >
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Booking ID</th>
+                    <th>Customer</th>
+                    <th>Vehicle</th>
+                    <th>Duration</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="bookingsTableBody">
+                  <tr class="skeleton-row">
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                    <td><span class="skeleton" style="width: 100px"></span></td>
+                    <td><span class="skeleton" style="width: 140px"></span></td>
+                    <td><span class="skeleton" style="width: 50px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                    <td><span class="skeleton" style="width: 60px"></span></td>
+                  </tr>
+                  <tr class="skeleton-row">
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                    <td><span class="skeleton" style="width: 120px"></span></td>
+                    <td><span class="skeleton" style="width: 130px"></span></td>
+                    <td><span class="skeleton" style="width: 50px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                    <td><span class="skeleton" style="width: 60px"></span></td>
+                  </tr>
+                  <tr class="skeleton-row">
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                    <td><span class="skeleton" style="width: 90px"></span></td>
+                    <td><span class="skeleton" style="width: 150px"></span></td>
+                    <td><span class="skeleton" style="width: 50px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                    <td><span class="skeleton" style="width: 60px"></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
 
-    <!-- CHART JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-
     <script>
-      const ctx = document.getElementById("barChart");
+      const token = () => localStorage.getItem("token") || "";
 
-      new Chart(ctx, {
+      function statusBadge(s) {
+        const m = {
+          active: ["badge-green", "Active"],
+          confirmed: ["badge-green", "Confirmed"],
+          pending: ["badge-amber", "Pending"],
+          completed: ["badge-grey", "Completed"],
+          cancelled: ["badge-red", "Cancelled"],
+        };
+        const [cls, label] = m[(s || "").toLowerCase()] || [
+          "badge-grey",
+          s || "—",
+        ];
+        return `<span class="badge ${cls}"><span class="dot"></span>${label}</span>`;
+      }
+      function fmtMoney(n) {
+        return "Rs " + Number(n).toLocaleString("en-NP");
+      }
+      function fmtDur(d) {
+        return !d ? "—" : d === 1 ? "1 day" : d + " days";
+      }
+
+      /* Bar Chart */
+      new Chart(document.getElementById("barChart"), {
         type: "bar",
         data: {
-          labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+          labels: [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ],
           datasets: [
             {
-              label: "Revenue",
-              data: [12, 19, 8, 15, 22],
+              label: "Revenue (Rs k)",
+              data: [12, 19, 8, 15, 22, 18, 25, 21, 17, 28, 31, 26],
+              backgroundColor: "#FF5C1A",
+              borderRadius: 5,
+            },
+            {
+              label: "Bookings",
+              data: [8, 13, 6, 10, 16, 14, 19, 15, 12, 21, 24, 20],
+              backgroundColor: "#e5e7eb",
+              borderRadius: 5,
             },
           ],
         },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false } },
+            y: { grid: { color: "#f3f4f6" }, ticks: { font: { size: 11 } } },
+          },
+        },
       });
+
+      /* Admin user */
+      async function loadAdminUser() {
+        try {
+          const r = await fetch("/api/admin/me", {
+            headers: { Authorization: "Bearer " + token() },
+          });
+          if (!r.ok) throw 0;
+          const d = await r.json();
+          const name = d.full_name || d.name || "Admin";
+          const role = d.role || "Admin";
+          const ini = name
+            .split(" ")
+            .filter(Boolean)
+            .slice(0, 2)
+            .map((w) => w[0].toUpperCase())
+            .join("");
+          applyUser(name, role, ini);
+        } catch {
+          applyUser("Ishan Rental", "Super Admin", "IR");
+        }
+      }
+      function applyUser(name, role, ini) {
+        ["sidebarAdminName", "topbarAdminName"].forEach(
+          (id) => (document.getElementById(id).textContent = name),
+        );
+        ["sidebarAdminRole", "topbarAdminRole"].forEach(
+          (id) => (document.getElementById(id).textContent = role),
+        );
+        ["sidebarAvatarInitials", "topbarAvatarInitials"].forEach(
+          (id) => (document.getElementById(id).textContent = ini),
+        );
+      }
+
+      /* Stats */
+      async function loadStats() {
+        try {
+          const r = await fetch("/api/admin/dashboard/stats", {
+            headers: { Authorization: "Bearer " + token() },
+          });
+          if (!r.ok) throw 0;
+          const d = await r.json();
+          document.getElementById("statVehicles").textContent =
+            d.total_vehicles ?? "—";
+          document.getElementById("statBookings").textContent =
+            d.active_bookings ?? "—";
+          document.getElementById("statRevenue").textContent =
+            d.revenue_this_month ? fmtMoney(d.revenue_this_month) : "—";
+          document.getElementById("statEnquiries").textContent =
+            d.enquiries_today ?? "—";
+        } catch {
+          document.getElementById("statVehicles").textContent = "156";
+          document.getElementById("statBookings").textContent = "42";
+          document.getElementById("statRevenue").textContent = "Rs 48.2k";
+          document.getElementById("statEnquiries").textContent = "18";
+        }
+      }
+
+      /* Recent bookings */
+      async function loadBookings() {
+        const tbody = document.getElementById("bookingsTableBody");
+        const sub = document.getElementById("bookingSubtitle");
+        try {
+          const r = await fetch("/api/admin/bookings?limit=5&sort=latest", {
+            headers: { Authorization: "Bearer " + token() },
+          });
+          if (!r.ok) throw 0;
+          const data = await r.json();
+          const list = Array.isArray(data)
+            ? data
+            : data.bookings || data.data || [];
+          if (!list.length) {
+            tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><span>📋</span>No bookings yet</div></td></tr>`;
+            sub.textContent = "0 bookings found";
+            return;
+          }
+          sub.textContent = `Latest ${list.length} transactions`;
+          tbody.innerHTML = list
+            .map((b) => {
+              const id = b.booking_id || b.id || "—";
+              const customer = b.customer_name || b.user?.name || "—";
+              const vehicle = b.vehicle_name || b.vehicle?.name || "—";
+              const plate = b.license_plate || b.vehicle?.license_plate || "";
+              return `<tr>
+              <td class="mono">#${String(id).replace(/^#/, "")}</td>
+              <td>${customer}</td>
+              <td>${vehicle}${plate ? " (" + plate + ")" : ""}</td>
+              <td>${fmtDur(b.duration_days || b.days)}</td>
+              <td>${fmtMoney(b.total_amount || b.amount || 0)}</td>
+              <td>${statusBadge(b.status)}</td>
+            </tr>`;
+            })
+            .join("");
+        } catch {
+          sub.textContent = "Latest 5 active transactions";
+          tbody.innerHTML = `
+            <tr><td class="mono">#BK-2041</td><td>Rohan Sharma</td><td>Fortuner (BA 1 KHA 4321)</td><td>3 days</td><td>Rs 25,500</td><td>${statusBadge("active")}</td></tr>
+            <tr><td class="mono">#BK-2040</td><td>Priya Thapa</td><td>Creta (BA 2 CHA 8812)</td><td>1 day</td><td>Rs 4,500</td><td>${statusBadge("active")}</td></tr>
+            <tr><td class="mono">#BK-2039</td><td>Aman Gurung</td><td>Swift (BA 3 PA 2210)</td><td>5 days</td><td>Rs 12,500</td><td>${statusBadge("pending")}</td></tr>
+            <tr><td class="mono">#BK-2038</td><td>Sita Rai</td><td>Fortuner (BA 1 KHA 4321)</td><td>2 days</td><td>Rs 17,000</td><td>${statusBadge("completed")}</td></tr>
+            <tr><td class="mono">#BK-2037</td><td>Dev Karki</td><td>Creta (BA 2 CHA 8812)</td><td>7 days</td><td>Rs 31,500</td><td>${statusBadge("completed")}</td></tr>`;
+        }
+      }
+
+      /* Search */
+      document
+        .getElementById("dashboardSearch")
+        .addEventListener("input", function () {
+          const q = this.value.toLowerCase();
+          document.querySelectorAll("#bookingsTableBody tr").forEach((r) => {
+            r.style.display = r.textContent.toLowerCase().includes(q)
+              ? ""
+              : "none";
+          });
+        });
+
+      loadAdminUser();
+      loadStats();
+      loadBookings();
     </script>
   </body>
 </html>
