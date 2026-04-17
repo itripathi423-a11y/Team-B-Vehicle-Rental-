@@ -14,12 +14,8 @@
 
 "use strict";
 
-/* ── CONFIG ─────────────────────────────────────────── */
-const BASE_URL = "http://127.0.0.1:5501/api"; // ← change to your API base
+const BASE_URL = "http://localhost:5000/api";
 
-/* ── HELPERS ─────────────────────────────────────────── */
-
-/** Get auth headers. Supports both cookie-session and JWT. */
 function authHeaders() {
   const token = localStorage.getItem("ad_token");
   const headers = { "Content-Type": "application/json" };
@@ -255,37 +251,27 @@ async function loadUserProfile() {
 ─────────────────────────────────────────────────────── */
 async function loadStats() {
   try {
-    const stats = await apiFetch("/user/bookings/stats");
+    const res = await apiFetch("/user/bookings/stats");
+    const stats = res.data;
+
     if (!stats) return;
 
     setElText("statTotal", stats.total ?? 0);
     setElText("statCompleted", stats.completed ?? 0);
     setElText("statActive", stats.active ?? 0);
 
-    /* Format total spent as Rs 87k or Rs 1.2L */
     const spent = stats.total_spent ?? 0;
+
     let spentStr;
-    if (spent >= 100000) {
-      spentStr = "Rs " + (spent / 100000).toFixed(1) + "L";
-    } else if (spent >= 1000) {
-      spentStr = "Rs " + Math.round(spent / 1000) + "k";
-    } else {
-      spentStr = fmtNPR(spent);
-    }
+    if (spent >= 100000) spentStr = "Rs " + (spent / 100000).toFixed(1) + "L";
+    else if (spent >= 1000) spentStr = "Rs " + Math.round(spent / 1000) + "k";
+    else spentStr = fmtNPR(spent);
+
     setElText("statSpent", spentStr);
   } catch (err) {
-    console.error("Stats load failed:", err.message);
-    ["statTotal", "statCompleted", "statActive", "statSpent"].forEach((id) =>
-      setElText(id, "—"),
-    );
+    console.error(err.message);
   }
 }
-
-function setElText(id, value) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = value;
-}
-
 /* ── 3. RECENT BOOKINGS TABLE ────────────────────────
    GET /api/user/bookings?limit=5&sort=desc
    Expected response (array):
@@ -306,16 +292,14 @@ async function loadRecentBookings() {
   const tbody = document.getElementById("recentBookingsTbody");
   if (!tbody) return;
 
-  // Show skeletons while loading
   tbody.innerHTML = skeletonRows(5, 4);
 
   try {
-    const bookings = await apiFetch("/user/bookings?limit=5&sort=desc");
+    const res = await apiFetch("/user/bookings?limit=5&sort=desc");
+    const bookings = res.data;
 
     if (!bookings || bookings.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:40px;color:#9ca3af;font-size:13px;">
-        No bookings yet. <a href="#" style="color:var(--orange);">Book your first vehicle →</a>
-      </td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5">No bookings yet</td></tr>`;
       return;
     }
 
@@ -328,19 +312,20 @@ async function loadRecentBookings() {
             <div class="veh-thumb">
               ${
                 b.thumbnail
-                  ? `<img src="${b.thumbnail}" alt="${b.vehicle_name}" style="width:100%;height:100%;object-fit:cover;border-radius:7px;">`
+                  ? `<img src="${b.thumbnail}" />`
                   : vehicleEmoji(b.body_type)
               }
             </div>
             <div>
-              <p class="veh-name">${escHtml(b.vehicle_name)}</p>
-              <p class="veh-plate">${escHtml(b.license_plate)}</p>
+              <p>${escHtml(b.vehicle_name)}</p>
+              <p>${escHtml(b.license_plate)}</p>
             </div>
           </div>
         </td>
+
         <td>${escHtml(b.duration_type)}</td>
         <td>${fmtDate(b.pickup_datetime)}</td>
-        <td><span style="font-family:'Space Mono',monospace;font-size:12px;">${fmtNPR(b.total_amount)}</span></td>
+        <td>${fmtNPR(b.total_amount)}</td>
         <td>${statusBadge(b.status)}</td>
       </tr>
     `,
@@ -348,75 +333,6 @@ async function loadRecentBookings() {
       .join("");
   } catch (err) {
     showError("recentBookingsTbody", err.message);
-  }
-}
-
-/* ── 4. UPCOMING BOOKING CARD ────────────────────────
-   GET /api/user/bookings/upcoming
-   Expected response (single object or null):
-   {
-     id: 102,
-     vehicle_name: "Toyota Fortuner",
-     license_plate: "BA 1234",
-     fuel_type: "Diesel",
-     body_type: "SUV",
-     seating_capacity: 7,
-     duration_type: "8 Hours",
-     pickup_datetime: "2026-04-14T09:00:00",
-     total_amount: 18500
-   }
-─────────────────────────────────────────────────────── */
-async function loadUpcomingBooking() {
-  const card = document.getElementById("upcomingCard");
-  if (!card) return;
-
-  // Skeleton state
-  card.innerHTML = `<p class="upcoming-label">● Next Booking</p>
-    <div class="skeleton" style="height:20px;width:60%;border-radius:4px;background:rgba(255,255,255,0.08);margin-bottom:8px;"></div>
-    <div class="skeleton" style="height:14px;width:80%;border-radius:4px;background:rgba(255,255,255,0.05);"></div>`;
-
-  try {
-    const b = await apiFetch("/user/bookings/upcoming");
-
-    if (!b) {
-      card.innerHTML = `
-        <p class="upcoming-label">● Next Booking</p>
-        <p style="color:rgba(255,255,255,0.35);font-size:13px;margin-top:12px;">No upcoming bookings.</p>
-        <a href="#" class="welcome-cta" style="margin-top:18px;display:inline-flex;">Browse Vehicles →</a>`;
-      return;
-    }
-
-    const days = daysUntil(b.pickup_datetime);
-    const daysLabel =
-      days === 0 ? "TODAY" : days === 1 ? "1 DAY" : `${days} DAYS`;
-
-    card.innerHTML = `
-      <p class="upcoming-label">● Next Booking</p>
-      <p class="upcoming-car">${escHtml(b.vehicle_name)}</p>
-      <p class="upcoming-meta">${escHtml(b.license_plate)} &nbsp;·&nbsp; ${escHtml(b.fuel_type)} ${escHtml(b.body_type)} &nbsp;·&nbsp; ${b.seating_capacity} seats</p>
-      <div class="upcoming-row">
-        <div>
-          <div class="upcoming-info" style="margin-bottom:10px;">
-            <span>Pickup</span>
-            <strong>${fmtDateTime(b.pickup_datetime)}</strong>
-          </div>
-          <div class="upcoming-info">
-            <span>Duration</span>
-            <strong>${escHtml(b.duration_type)}</strong>
-          </div>
-        </div>
-        <div class="countdown">
-          <p class="countdown-num">${days}</p>
-          <p class="countdown-lbl">${daysLabel} LEFT</p>
-        </div>
-      </div>
-      <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;align-items:center;">
-        <span style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(255,255,255,0.35);">TOTAL</span>
-        <span style="font-family:'Space Mono',monospace;font-size:14px;color:#fff;font-weight:700;">${fmtNPR(b.total_amount)}</span>
-      </div>`;
-  } catch (err) {
-    card.innerHTML = `<p class="upcoming-label">● Next Booking</p>
-      <p style="color:#f87171;font-size:12px;margin-top:10px;">⚠ ${err.message}</p>`;
   }
 }
 
@@ -447,63 +363,62 @@ async function loadAvailableVehicles() {
   const strip = document.getElementById("vehiclesStrip");
   if (!strip) return;
 
-  // Skeleton cards
-  strip.innerHTML = [1, 2, 3]
-    .map(
-      () => `
-    <div class="vehicle-card">
-      <div class="vehicle-img" style="background:#f3f4f6;"></div>
-      <div class="vehicle-body">
-        <div class="skeleton" style="height:16px;width:70%;border-radius:4px;background:#f3f4f6;margin-bottom:8px;"></div>
-        <div class="skeleton" style="height:12px;width:90%;border-radius:4px;background:#f3f4f6;margin-bottom:16px;"></div>
-        <div class="skeleton" style="height:36px;border-radius:8px;background:#f3f4f6;"></div>
-      </div>
-    </div>`,
-    )
-    .join("");
+  // Loading skeleton
+  strip.innerHTML = "";
 
   try {
-    const vehicles = await apiFetch("/vehicles?status=Available&limit=3");
+    const res = await apiFetch("/vehicles?status=Available&limit=3");
+    const vehicles = res.data; // IMPORTANT FIX
 
     if (!vehicles || vehicles.length === 0) {
-      strip.innerHTML = `<p style="color:var(--muted);font-size:13px;grid-column:1/-1;">No vehicles available right now.</p>`;
+      strip.innerHTML = `<p style="color:gray;">No vehicles available right now.</p>`;
       return;
     }
 
     strip.innerHTML = vehicles
-      .map(
-        (v) => `
-      <div class="vehicle-card">
-        <div class="vehicle-img">
-          ${
-            v.thumbnail
-              ? `<img src="${v.thumbnail}" alt="${escHtml(v.name)}" />`
-              : vehicleEmoji(v.body_type)
-          }
-          <span class="vehicle-avail">Available</span>
-        </div>
-        <div class="vehicle-body">
-          <p class="vehicle-name">${escHtml(v.name)}</p>
-          <div class="vehicle-meta">
-            <span>${escHtml(v.fuel_type)}</span>
-            <span>${v.seating_capacity} Seats</span>
-            <span>${escHtml(v.transmission)}</span>
+      .map((v) => {
+        // ✅ FIXED IMAGE PATH (IMPORTANT)
+        const imgSrc = v.thumbnail
+          ? `${BASE_URL.replace("/api", "")}/uploads/vehicles/${encodeURIComponent(v.thumbnail)}`
+          : null;
+
+        return `
+        <div class="vehicle-card">
+          <div class="vehicle-img">
+            ${
+              imgSrc
+                ? `<img src="${imgSrc}" alt="${v.name}" />`
+                : vehicleEmoji(v.body_type)
+            }
+            <span class="vehicle-avail">Available</span>
           </div>
-          <div class="vehicle-price">
-            <span class="price-val">${fmtNPR(v.price_4h)}</span>
-            <span class="price-unit">/ 4hr</span>
+
+          <div class="vehicle-body">
+            <p class="vehicle-name">${escHtml(v.name)}</p>
+
+            <div class="vehicle-meta">
+              <span>${escHtml(v.fuel_type)}</span>
+              <span>${v.seating_capacity} Seats</span>
+              <span>${escHtml(v.transmission)}</span>
+            </div>
+
+            <div class="vehicle-price">
+              <span class="price-val">${fmtNPR(v.price_4h)}</span>
+              <span class="price-unit">/ 4hr</span>
+            </div>
+
+            <a href="booking.html?vehicle_id=${v.id}" class="book-btn">
+              Book Now
+            </a>
           </div>
-          <a href="booking.html?vehicle_id=${v.id}" class="book-btn">Book Now</a>
         </div>
-      </div>
-    `,
-      )
+      `;
+      })
       .join("");
   } catch (err) {
-    strip.innerHTML = `<p style="color:#dc2626;font-size:13px;grid-column:1/-1;">⚠ ${err.message}</p>`;
+    strip.innerHTML = `<p style="color:red;">${err.message}</p>`;
   }
 }
-
 /* ── 6. NOTIFICATIONS COUNT ──────────────────────────
    GET /api/user/notifications/unread-count
    Expected response: { count: 3 }

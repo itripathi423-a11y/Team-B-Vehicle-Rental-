@@ -18,8 +18,11 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     messageDiv.style.color = "green";
     messageDiv.textContent = data.message;
 
+    // IMPORTANT FIX HERE
+    const role = data.user?.role;
+
     setTimeout(() => {
-      if (data.role === "admin") {
+      if (role === "admin") {
         window.location.href = "/ADMIN DASHBOARD/dashboard.html";
       } else {
         window.location.href = "/USER DASHBOARD/userdashboard.html";

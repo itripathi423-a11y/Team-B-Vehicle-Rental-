@@ -2,6 +2,29 @@ const API = "http://localhost:5000/api/vehicles";
 const IMG_BASE = "http://localhost:5000/uploads/vehicles/";
 let allVehicles = [];
 let showingDeleted = false;
+// ── Topbar user dropdown ──────────────────────────
+const topbarUser = document.getElementById("topbarUser");
+const userDropdown = document.getElementById("userDropdown");
+const logoutBtn = document.getElementById("logoutBtn");
+
+topbarUser.addEventListener("click", (e) => {
+  e.stopPropagation();
+  userDropdown.classList.toggle("open");
+});
+
+// Close when clicking outside
+document.addEventListener("click", () => {
+  userDropdown.classList.remove("open");
+});
+
+// Logout — ends session and redirects
+logoutBtn.addEventListener("click", async () => {
+  try {
+    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+  } finally {
+    window.location.href = "../../index.html";
+  }
+});
 
 // ── Toast ──────────────────────────────────────────────────────
 function toast(msg, type = "success") {
