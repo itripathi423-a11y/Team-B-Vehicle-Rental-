@@ -7,14 +7,19 @@ const userRoutes = require("./routes/userRoutes");
 const vehicleRoutes = require("./routes/admin.vehicle.routes");
 const adminRoutes = require("./routes/admin.dashboard.routes");
 const userDashboardRoutes = require("./routes/user.dashboard.routes");
+const userVehicleListingRoutes = require("./routes/user.vehicle.listing.routes");
 
 const app = express();
 
-/* BODY */
+/* =========================
+   BODY PARSING
+========================= */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/* CORS */
+/* =========================
+   CORS (IMPORTANT)
+========================= */
 app.use(
   cors({
     origin: ["http://localhost:5500", "http://127.0.0.1:5500"],
@@ -22,30 +27,49 @@ app.use(
   })
 );
 
-/* SESSION */
+/* =========================
+   SESSION (FIXED)
+   THIS WAS YOUR MAIN ISSUE
+========================= */
 app.use(
   session({
     secret: "vehicle_rental_secret",
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: false, // localhost only
+      sameSite: "lax", // 🔥 IMPORTANT FIX FOR BROWSER COOKIES
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    },
   })
 );
-
-/* HOME ROUTE (MOVE THIS UP) */
+/* =========================
+   HOME ROUTE
+========================= */
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/HOME/homepage.html"));
 });
 
-/* STATIC (AFTER HOME ROUTE) */
+/* =========================
+   STATIC FILES
+========================= */
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use(express.static(path.join(__dirname, "../frontend")));
 
-/* ROUTES */
+
+/* =========================
+   ROUTES
+========================= */
 app.use("/api", userRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api", userDashboardRoutes);
+app.use("/api/user/vehicles", userVehicleListingRoutes);
 
+/* =========================
+   SERVER START
+========================= */
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");
 });
