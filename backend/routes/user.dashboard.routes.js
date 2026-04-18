@@ -2,26 +2,36 @@ const express = require("express");
 const router = express.Router();
 
 const dashboard = require("../controllers/user.dashboard.controller");
-const auth = require("../middleware/auth.middleware");
+const { isLoggedIn } = require("../middleware/auth.middleware");
+
+// helper to prevent crash
+const safe = (fn) => (req, res, next) =>
+  typeof fn === "function"
+    ? fn(req, res, next)
+    : res.status(500).json({ error: "Controller missing" });
 
 /* USER */
-router.get("/user/profile", auth, dashboard.getUserProfile);
+router.get("/user/profile", isLoggedIn, safe(dashboard.getUserProfile));
 
-/* DASHBOARD STATS */
-router.get("/user/bookings/stats", auth, dashboard.getDashboardStats);
+/* DASHBOARD */
+router.get("/user/bookings/stats", isLoggedIn, safe(dashboard.getDashboardStats));
 
-/* BOOKINGS */
-router.get("/user/bookings", auth, dashboard.getRecentBookings);
-router.get("/user/bookings/upcoming", auth, dashboard.getUpcomingBooking);
+router.get("/user/bookings", isLoggedIn, safe(dashboard.getRecentBookings));
+
+router.get(
+  "/user/bookings/upcoming",
+  isLoggedIn,
+  safe(dashboard.getUpcomingBooking)
+);
 
 /* VEHICLES */
-router.get("/vehicles", dashboard.getVehicles);
+router.get("/vehicles", safe(dashboard.getVehicles));
 
 /* NOTIFICATIONS */
 router.get(
   "/user/notifications/unread-count",
-  auth,
-  dashboard.getUnreadNotifications,
+  isLoggedIn,
+  safe(dashboard.getUnreadNotifications)
 );
 
 module.exports = router;

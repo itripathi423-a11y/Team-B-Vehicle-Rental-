@@ -1,29 +1,18 @@
 const db = require("../config/db");
 
-/* ─────────────────────────────
-   USER PROFILE
-───────────────────────────── */
+/* USER PROFILE */
 exports.getUserProfile = (req, res) => {
   const userId = req.user.id;
 
   const sql = `
-    SELECT 
-      u.id,
-      u.name,
-      u.email,
-      u.phone,
-      u.role,
-      k.status AS kyc_status,
-      k.document_front AS profile_photo
-    FROM users u
-    LEFT JOIN kyc k ON u.id = k.user_id
-    WHERE u.id = ?
+    SELECT id, name, email, phone
+    FROM users
+    WHERE id = ?
   `;
 
   db.query(sql, [userId], (err, result) => {
     if (err) return res.status(500).json(err);
-    if (!result.length)
-      return res.status(404).json({ message: "User not found" });
+    if (!result.length) return res.status(404).json({ message: "User not found" });
 
     const u = result[0];
     const [first_name, ...last] = u.name.split(" ");
@@ -34,15 +23,11 @@ exports.getUserProfile = (req, res) => {
       last_name: last.join(" "),
       email: u.email,
       phone: u.phone,
-      kyc_status: u.kyc_status || "not_submitted",
-      profile_photo: u.profile_photo || null,
     });
   });
 };
 
-/* ─────────────────────────────
-   BOOKING STATS
-───────────────────────────── */
+/* DASHBOARD STATS */
 exports.getDashboardStats = (req, res) => {
   const userId = req.user.id;
 
@@ -62,25 +47,20 @@ exports.getDashboardStats = (req, res) => {
   });
 };
 
-/* ─────────────────────────────
-   RECENT BOOKINGS
-───────────────────────────── */
+/* RECENT BOOKINGS */
 exports.getRecentBookings = (req, res) => {
   const userId = req.user.id;
 
   const sql = `
     SELECT 
       b.id,
-      b.rental_type AS duration_type,
+      b.rental_type,
       b.pickup_datetime,
-      b.total_price AS total_amount,
+      b.total_price,
       b.status,
-
       v.name AS vehicle_name,
       v.license_plate,
-      v.body_type,
       v.thumbnail
-
     FROM bookings b
     JOIN vehicles v ON b.vehicle_id = v.id
     WHERE b.user_id = ?
@@ -94,25 +74,16 @@ exports.getRecentBookings = (req, res) => {
   });
 };
 
-/* ─────────────────────────────
-   UPCOMING BOOKING
-───────────────────────────── */
+/* UPCOMING BOOKING */
 exports.getUpcomingBooking = (req, res) => {
   const userId = req.user.id;
 
   const sql = `
-    SELECT 
-      b.*,
-      v.name AS vehicle_name,
-      v.license_plate,
-      v.fuel_type,
-      v.body_type,
-      v.seating_capacity
+    SELECT b.*, v.name AS vehicle_name
     FROM bookings b
     JOIN vehicles v ON b.vehicle_id = v.id
     WHERE b.user_id = ?
       AND b.pickup_datetime >= NOW()
-      AND b.status IN ('Pending','Confirmed','Active')
     ORDER BY b.pickup_datetime ASC
     LIMIT 1
   `;
@@ -123,36 +94,15 @@ exports.getUpcomingBooking = (req, res) => {
   });
 };
 
-/* ─────────────────────────────
-   VEHICLES LIST
-───────────────────────────── */
+/* VEHICLES */
 exports.getVehicles = (req, res) => {
-  const { status, limit } = req.query;
-
-  let sql = `SELECT * FROM vehicles WHERE is_deleted = 0`;
-  const params = [];
-
-  if (status) {
-    sql += " AND status = ?";
-    params.push(status);
-  }
-
-  sql += " ORDER BY created_at DESC";
-
-  if (limit) {
-    sql += " LIMIT ?";
-    params.push(parseInt(limit));
-  }
-
-  db.query(sql, params, (err, result) => {
+  db.query("SELECT * FROM vehicles WHERE is_deleted = 0", (err, result) => {
     if (err) return res.status(500).json(err);
     res.json(result);
   });
 };
 
-/* ─────────────────────────────
-   NOTIFICATIONS COUNT
-───────────────────────────── */
+/* NOTIFICATIONS */
 exports.getUnreadNotifications = (req, res) => {
   const userId = req.user.id;
 

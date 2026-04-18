@@ -1,19 +1,20 @@
-const jwt = require("jsonwebtoken");
-
-module.exports = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader) {
-    return res.status(401).json({ message: "No token provided" });
+const isLoggedIn = (req, res, next) => {
+  if (!req.session.user) {
+    return res.status(401).json({ message: "Not logged in" });
   }
 
-  const token = authHeader.split(" ")[1];
+  req.user = req.session.user;
+  next();
+};
 
-  try {
-    const decoded = jwt.verify(token, "secretkey");
-    req.user = decoded;
-    next();
-  } catch (err) {
-    return res.status(401).json({ message: "Invalid token" });
+const isAdmin = (req, res, next) => {
+  if (!req.session.user || req.session.user.role !== "admin") {
+    return res.status(403).json({ message: "Admin only" });
   }
+  next();
+};
+
+module.exports = {
+  isLoggedIn,
+  isAdmin,
 };
