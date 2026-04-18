@@ -407,7 +407,7 @@ async function loadAvailableVehicles() {
               <span class="price-unit">/ 4hr</span>
             </div>
 
-            <a href="booking.html?vehicle_id=${v.id}" class="book-btn">
+            <a href="user.booking.html?vehicle_id=${v.id}" class="book-btn">
               Book Now
             </a>
           </div>
