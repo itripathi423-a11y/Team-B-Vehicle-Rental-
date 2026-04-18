@@ -9,12 +9,10 @@ const isLoggedIn = (req, res, next) => {
 
 const isAdmin = (req, res, next) => {
   if (!req.session.user || req.session.user.role !== "admin") {
-    return res.status(403).json({ message: "Admin only" });
+    return res.status(403).json({ message: "Not admin" });
   }
+
   next();
 };
 
-module.exports = {
-  isLoggedIn,
-  isAdmin,
-};
+module.exports = { isLoggedIn, isAdmin };
