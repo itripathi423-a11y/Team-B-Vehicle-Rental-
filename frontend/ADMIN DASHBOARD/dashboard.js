@@ -1,155 +1,124 @@
-// ===== ISHAN RENTAL — Admin Dashboard JS =====
+// ===== API BASE =====
+const API = "http://localhost:5000/api/admin";
 
-// ── SIDEBAR NAVIGATION ──
-const navItems = document.querySelectorAll('.nav-item');
-const pages    = document.querySelectorAll('.page');
+// ===== LOAD ADMIN PROFILE =====
+async function loadAdmin() {
+  try {
+    const res = await fetch(`${API}/me`, {
+      credentials: "include",
+    });
 
-navItems.forEach(item => {
-  item.addEventListener('click', (e) => {
-    e.preventDefault();
-    const target = item.dataset.page;
+    if (!res.ok) throw new Error();
 
-    navItems.forEach(n => n.classList.remove('active'));
-    pages.forEach(p => p.classList.remove('active'));
+    const d = await res.json();
 
-    item.classList.add('active');
-    document.getElementById(`page-${target}`)?.classList.add('active');
+    const name = d.name || "Admin";
+    const role = d.role || "Admin";
 
-    // close sidebar on mobile
-    if (window.innerWidth < 768) {
-      document.getElementById('sidebar').classList.remove('open');
-    }
-  });
-});
+    const initials = name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
 
-// ── MOBILE SIDEBAR TOGGLE ──
-document.getElementById('sidebarToggle')?.addEventListener('click', () => {
-  document.getElementById('sidebar').classList.toggle('open');
-});
+    document.getElementById("sidebarAdminName").textContent = name;
+    document.getElementById("topbarAdminName").textContent = name;
 
-// ── COUNTER ANIMATION ──
-function animateCounter(el) {
-  const target = parseInt(el.dataset.target);
-  if (!target) return;
-  let start = 0;
-  const duration = 1200;
-  const step = (timestamp) => {
-    if (!start) start = timestamp;
-    const progress = Math.min((timestamp - start) / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    el.textContent = Math.floor(eased * target);
-    if (progress < 1) requestAnimationFrame(step);
-    else el.textContent = target;
-  };
-  requestAnimationFrame(step);
-}
+    document.getElementById("sidebarAdminRole").textContent = role;
+    document.getElementById("topbarAdminRole").textContent = role;
 
-document.querySelectorAll('.stat-value[data-target]').forEach(el => {
-  const obs = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting) { animateCounter(el); obs.disconnect(); }
-  });
-  obs.observe(el);
-});
-
-// ── BAR CHART (Chart.js) ──
-const ctx = document.getElementById('barChart')?.getContext('2d');
-if (ctx) {
-  const months   = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN'];
-  const revenue  = [28, 35, 78, 52, 45, 60];
-  const bookings = [18, 22, 40, 30, 28, 35];
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: months,
-      datasets: [
-        {
-          label: 'Revenue (k)',
-          data: revenue,
-          backgroundColor: (ctx) => {
-            const i = ctx.dataIndex;
-            return i === 2 ? '#FF5C1A' : '#F3F4F6';
-          },
-          borderRadius: 8,
-          borderSkipped: false,
-          barPercentage: 0.5,
-          categoryPercentage: 0.6,
-        },
-        {
-          label: 'Bookings',
-          data: bookings,
-          backgroundColor: '#E5E7EB',
-          borderRadius: 8,
-          borderSkipped: false,
-          barPercentage: 0.5,
-          categoryPercentage: 0.6,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#111827',
-          titleColor: '#F9FAFB',
-          bodyColor: '#D1D5DB',
-          padding: 12,
-          cornerRadius: 8,
-          callbacks: {
-            label: (ctx) => {
-              const label = ctx.dataset.label;
-              return ` ${label}: ${ctx.parsed.y}${label.includes('Revenue') ? 'k' : ''}`;
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          grid: { display: false },
-          border: { display: false },
-          ticks: {
-            font: { family: "'Space Mono', monospace", size: 10 },
-            color: '#9CA3AF'
-          }
-        },
-        y: {
-          grid: { color: '#F3F4F6', lineWidth: 1 },
-          border: { display: false, dash: [4, 4] },
-          ticks: {
-            font: { family: "'DM Sans', sans-serif", size: 11 },
-            color: '#9CA3AF',
-            callback: v => v + 'k'
-          }
-        }
-      }
-    }
-  });
-}
-
-// ── TABLE ROW CLICK ──
-document.querySelectorAll('.data-table tbody tr').forEach(row => {
-  row.addEventListener('click', () => {
-    const bookingId = row.querySelector('.mono')?.textContent;
-    if (bookingId) alert(`Opening booking: ${bookingId}`);
-  });
-});
-
-// ── EXPORT REPORT BUTTON ──
-document.querySelector('.btn-primary')?.addEventListener('click', () => {
-  alert('Generating report... (connect to backend to export real data)');
-});
-
-// ── SEARCH ──
-const searchInput = document.querySelector('.search-wrap input');
-searchInput?.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && searchInput.value.trim()) {
-    alert(`Searching for: "${searchInput.value}"`);
+    document.getElementById("sidebarAvatarInitials").textContent = initials;
+    document.getElementById("topbarAvatarInitials").textContent = initials;
+  } catch (err) {
+    console.log("Failed to load admin profile");
   }
-});
+}
 
-// ── NOTIFICATION BELL ──
-document.querySelector('.notif-btn')?.addEventListener('click', () => {
-  alert('3 new notifications:\n• New booking #BK-2042\n• KYC pending: Rajan Thapa\n• Service due: BA 1 KHA 4321');
-});
+// ===== LOAD DASHBOARD STATS =====
+async function loadStats() {
+  try {
+    const res = await fetch(`${API}/dashboard/stats`, {
+      credentials: "include",
+    });
+
+    if (!res.ok) throw new Error();
+
+    const d = await res.json();
+
+    document.getElementById("statVehicles").textContent = d.total_vehicles ?? 0;
+
+    document.getElementById("statBookings").textContent =
+      d.active_bookings ?? 0;
+
+    document.getElementById("statRevenue").textContent =
+      "Rs " + (d.revenue_this_month ?? 0).toLocaleString("en-NP");
+
+    document.getElementById("statEnquiries").textContent =
+      d.enquiries_today ?? 0;
+  } catch (err) {
+    console.log("Failed to load stats");
+  }
+}
+
+// ===== LOAD BOOKINGS =====
+async function loadBookings() {
+  try {
+    const res = await fetch(`${API}/bookings?limit=5`, {
+      credentials: "include",
+    });
+
+    if (!res.ok) throw new Error();
+
+    const data = await res.json();
+
+    const list = Array.isArray(data) ? data : data.bookings || [];
+
+    const tbody = document.getElementById("bookingsTableBody");
+
+    if (!list.length) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" class="empty-state">
+            📋 No bookings found
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = list
+      .map(
+        (b) => `
+      <tr>
+        <td>#${b.booking_id}</td>
+        <td>${b.user_name}</td>
+        <td>${b.vehicle_name}</td>
+        <td>${b.total_days} days</td>
+        <td>Rs ${Number(b.total_price).toLocaleString("en-NP")}</td>
+        <td>${b.status}</td>
+      </tr>
+    `,
+      )
+      .join("");
+  } catch (err) {
+    console.log("Failed to load bookings");
+  }
+}
+
+// ===== SEARCH FUNCTION =====
+document
+  .getElementById("dashboardSearch")
+  ?.addEventListener("input", function () {
+    const q = this.value.toLowerCase();
+
+    document.querySelectorAll("#bookingsTableBody tr").forEach((row) => {
+      row.style.display = row.textContent.toLowerCase().includes(q)
+        ? ""
+        : "none";
+    });
+  });
+
+// ===== INITIAL LOAD =====
+loadAdmin();
+loadStats();
+loadBookings();

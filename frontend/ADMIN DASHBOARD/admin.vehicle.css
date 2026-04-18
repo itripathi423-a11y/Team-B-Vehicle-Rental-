@@ -264,7 +264,13 @@ body {
   height: 17px;
   color: var(--muted);
 }
+<<<<<<< Updated upstream
 .badge {
+=======
+
+/* Scoped badge only for notif button */
+.notif-btn .badge {
+>>>>>>> Stashed changes
   position: absolute;
   top: -3px;
   right: -3px;
@@ -279,6 +285,11 @@ body {
   align-items: center;
   justify-content: center;
 }
+<<<<<<< Updated upstream
+=======
+
+/* ── TOPBAR USER & DROPDOWN ──────────────────────── */
+>>>>>>> Stashed changes
 .topbar-user {
   display: flex;
   align-items: center;
@@ -288,6 +299,8 @@ body {
   cursor: pointer;
   transition: background 0.2s;
   margin-left: 4px;
+  position: relative;
+  user-select: none;
 }
 /* ── USER DROPDOWN ───────────────────────────────── */
 .topbar-user {
@@ -375,15 +388,115 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+}
+
+.topbar-info {
+  display: flex;
+  flex-direction: column;
 }
 .topbar-name {
   font-size: 13px;
   font-weight: 500;
   color: var(--text);
+  line-height: 1.3;
 }
 .topbar-role {
   font-size: 11px;
   color: var(--muted);
+  line-height: 1.3;
+}
+
+.topbar-chevron {
+  flex-shrink: 0;
+  color: #9ca3af;
+  transition: transform 0.2s ease;
+}
+
+.topbar-user.open .topbar-chevron {
+  transform: rotate(180deg);
+}
+
+/* Dropdown */
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  min-width: 210px;
+  z-index: 999;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.97);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  transform-origin: top right;
+}
+
+.user-dropdown.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: all;
+}
+
+.dropdown-header {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.dropdown-header .dh-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--dark);
+  line-height: 1.3;
+}
+
+.dropdown-header .dh-email {
+  font-size: 11.5px;
+  color: #9ca3af;
+  margin-top: 2px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  font-size: 13.5px;
+  font-family: "DM Sans", sans-serif;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.12s;
+  text-decoration: none;
+}
+
+.dropdown-item:hover {
+  background: #f9fafb;
+}
+
+.dropdown-item svg {
+  flex-shrink: 0;
+  color: #9ca3af;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: #f3f4f6;
+  margin: 4px 0;
+}
+
+.dropdown-item.logout {
+  color: #ef4444;
+}
+
+.dropdown-item.logout svg {
+  color: #ef4444;
+}
+
+.dropdown-item.logout:hover {
+  background: #fef2f2;
 }
 
 /* ── CONTENT ─────────────────────────────────────── */
@@ -428,9 +541,15 @@ body {
   font-weight: 500;
   color: var(--text);
   cursor: pointer;
+<<<<<<< Updated upstream
   transition:
     background 0.2s,
     border-color 0.2s;
+=======
+  transition: background 0.2s, border-color 0.2s;
+  white-space: nowrap;
+  text-decoration: none;
+>>>>>>> Stashed changes
 }
 .btn-ghost:hover {
   background: var(--bg);
@@ -449,10 +568,15 @@ body {
   font-weight: 500;
   color: #fff;
   cursor: pointer;
+<<<<<<< Updated upstream
   transition:
     background 0.2s,
     transform 0.2s,
     box-shadow 0.2s;
+=======
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  white-space: nowrap;
+>>>>>>> Stashed changes
 }
 .btn-primary:hover {
   background: var(--orange-light);
@@ -512,23 +636,22 @@ body {
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
   animation: slideUp 0.4s ease var(--delay, 0s) both;
+<<<<<<< Updated upstream
   transition:
     transform 0.2s,
     box-shadow 0.2s;
+=======
+  transition: transform 0.2s, box-shadow 0.2s;
+  min-width: 0;
+>>>>>>> Stashed changes
 }
 .stat-card:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-md);
 }
 @keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
 }
 .stat-top {
   display: flex;
@@ -676,7 +799,6 @@ body {
   color: var(--muted);
 }
 
-/* vehicle cell */
 .vehicle-cell {
   display: flex;
   align-items: center;
@@ -713,7 +835,6 @@ body {
   margin-top: 2px;
 }
 
-/* status badges */
 .status {
   display: inline-block;
   padding: 4px 10px;
@@ -737,6 +858,17 @@ body {
 .action-btns {
   display: flex;
   gap: 6px;
+<<<<<<< Updated upstream
+=======
+  flex-wrap: nowrap;
+}
+
+.loading-row td {
+  text-align: center;
+  color: var(--muted);
+  padding: 40px 0;
+  font-size: 14px;
+>>>>>>> Stashed changes
 }
 
 /* ── TOAST ───────────────────────────────────────── */
@@ -764,15 +896,10 @@ body {
   animation: slideInR 0.25s ease;
 }
 @keyframes slideInR {
-  from {
-    transform: translateX(20px);
-    opacity: 0;
-  }
-  to {
-    transform: none;
-    opacity: 1;
-  }
+  from { transform: translateX(20px); opacity: 0; }
+  to   { transform: none; opacity: 1; }
 }
+<<<<<<< Updated upstream
 .toast.success {
   border-left: 3px solid #16a34a;
 }
@@ -785,6 +912,14 @@ body {
 .toast-icon {
   font-size: 17px;
 }
+=======
+
+.toast.success { border-left: 3px solid #16a34a; }
+.toast.error   { border-left: 3px solid #dc2626; }
+.toast.warn    { border-left: 3px solid #d97706; }
+
+.toast-icon { font-size: 17px; }
+>>>>>>> Stashed changes
 
 /* ── MODAL ───────────────────────────────────────── */
 .modal-backdrop {
@@ -817,14 +952,8 @@ body {
   animation: modalIn 0.25s ease;
 }
 @keyframes modalIn {
-  from {
-    transform: translateY(-14px);
-    opacity: 0;
-  }
-  to {
-    transform: none;
-    opacity: 1;
-  }
+  from { transform: translateY(-14px); opacity: 0; }
+  to   { transform: none; opacity: 1; }
 }
 .modal-header {
   display: flex;
@@ -856,7 +985,6 @@ body {
   background: #e5e7eb;
 }
 
-/* FORM */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -925,7 +1053,36 @@ textarea.form-control {
   margin-top: 2px;
 }
 
+<<<<<<< Updated upstream
 /* IMAGE UPLOAD */
+=======
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.features-grid label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.features-grid input[type="checkbox"] {
+  accent-color: var(--orange);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+>>>>>>> Stashed changes
 .img-upload-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -955,6 +1112,7 @@ textarea.form-control {
   grid-column: 1/-1;
   min-height: 100px;
 }
+<<<<<<< Updated upstream
 .img-upload-box input {
   position: absolute;
   inset: 0;
@@ -971,6 +1129,12 @@ textarea.form-control {
   color: var(--muted);
   font-weight: 500;
 }
+=======
+
+.upload-icon  { font-size: 20px; }
+.upload-label { font-size: 11px; color: var(--muted); font-weight: 500; }
+
+>>>>>>> Stashed changes
 .img-preview {
   position: absolute;
   inset: 0;
@@ -980,7 +1144,6 @@ textarea.form-control {
   border-radius: 8px;
 }
 
-/* MODAL FOOTER */
 .modal-footer {
   display: flex;
   justify-content: flex-end;
@@ -990,6 +1153,7 @@ textarea.form-control {
   border-top: 1px solid var(--border);
 }
 
+<<<<<<< Updated upstream
 /* CONFIRM */
 .confirm-modal {
   max-width: 400px;
@@ -1058,9 +1222,48 @@ textarea.form-control {
   .table-card {
     overflow-x: auto;
   }
+=======
+.confirm-modal  { max-width: 400px; }
+.confirm-icon   { font-size: 42px; text-align: center; margin-bottom: 12px; }
+.confirm-msg    { text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 4px; }
+.confirm-name   { text-align: center; font-weight: 700; font-size: 15px; color: var(--dark); margin-bottom: 20px; }
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media (max-width: 1200px) {
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: none; }
+  #sidebarToggle { display: flex !important; }
+  .main-wrap  { margin-left: 0; }
+  .content    { padding: 20px 16px; }
+  .topbar     { padding: 0 16px; }
+  .stat-grid  { grid-template-columns: repeat(2, 1fr); }
+  .page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .form-grid  { grid-template-columns: 1fr; }
+  .img-upload-grid { grid-template-columns: 1fr 1fr; }
+  .img-upload-box.thumb-box { grid-column: 1 / -1; }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Only hide name/role text on mobile, NOT the dropdown */
+  .topbar-info { display: none; }
+>>>>>>> Stashed changes
 }
 @media (max-width: 480px) {
+<<<<<<< Updated upstream
   .stat-grid {
     grid-template-columns: 1fr;
   }
 }
+=======
+  .stat-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr 1fr; }
+  .img-upload-grid { grid-template-columns: 1fr; }
+}
+>>>>>>> Stashed changes
