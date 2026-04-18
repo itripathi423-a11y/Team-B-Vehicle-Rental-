@@ -4,6 +4,7 @@ const db = require("../config/db");
 exports.registerUser = (req, res) => {
   const { name, email, phone, password } = req.body;
 
+<<<<<<< Updated upstream
   db.query("SELECT * FROM users WHERE email=?", [email], (err, result) => {
     if (result.length > 0) {
       return res.json({ success: false, message: "Email exists" });
@@ -13,10 +14,56 @@ exports.registerUser = (req, res) => {
       "INSERT INTO users (name,email,phone,password,role) VALUES (?,?,?,?,?)",
       [name, email, phone, password, "user"],
       () => res.json({ success: true }),
+=======
+  if (!name || !email || !phone || !password) {
+    return res.json({
+      success: false,
+      message: "All fields required",
+    });
+  }
+
+  User.findUserByEmail(email, (err, result) => {
+    if (err) {
+      return res.json({
+        success: false,
+        message: "Server error",
+      });
+    }
+
+    if (result.length > 0) {
+      return res.json({
+        success: false,
+        message: "Email already exists",
+      });
+    }
+
+    User.createUser(
+      {
+        name,
+        email,
+        phone,
+        password,
+        role: "user",
+      },
+      (err) => {
+        if (err) {
+          return res.json({
+            success: false,
+            message: "Registration failed",
+          });
+        }
+
+        return res.json({
+          success: true,
+          message: "Registration successful",
+        });
+      },
+>>>>>>> Stashed changes
     );
   });
 };
 
+<<<<<<< Updated upstream
 /* LOGIN */
 exports.loginUser = (req, res) => {
   const { email, password } = req.body;
@@ -65,10 +112,58 @@ exports.getUserProfile = (req, res) => {
       phone: u.phone,
       kyc_status: "Pending",
       profile_photo: null,
+=======
+// LOGIN (SESSION BASED - FIXED)
+const loginUser = (req, res) => {
+  const { email, password } = req.body;
+
+  User.findUserByEmail(email, (err, results) => {
+    if (err) {
+      return res.json({
+        success: false,
+        message: "Server error",
+      });
+    }
+
+    if (!results || results.length === 0) {
+      return res.json({
+        success: false,
+        message: "Invalid credentials",
+      });
+    }
+
+    const user = results[0];
+
+    // Plain password check
+    if (password !== user.password) {
+      return res.json({
+        success: false,
+        message: "Invalid credentials",
+      });
+    }
+
+    // ✅ CREATE SESSION
+    req.session.user = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
+
+    console.log("LOGIN SESSION CREATED:", req.session.user);
+
+    // ✅ IMPORTANT RESPONSE FOR FRONTEND
+    return res.json({
+      success: true,
+      message: "Login successful",
+      role: user.role,
+      user: req.session.user,
+>>>>>>> Stashed changes
     });
   });
 };
 
+<<<<<<< Updated upstream
 /* STATS */
 exports.getBookingStats = (req, res) => {
   if (!req.session.user) return res.status(401).json({});
@@ -148,4 +243,9 @@ exports.getUpcomingBooking = (req, res) => {
       res.json(result[0] || null);
     },
   );
+=======
+module.exports = {
+  registerUser,
+  loginUser,
+>>>>>>> Stashed changes
 };

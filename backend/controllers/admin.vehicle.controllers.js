@@ -109,7 +109,7 @@ exports.updateVehicle = (req, res) => {
       price_4h=?,
       price_8h=?,
       price_1d=?,
-      status=?,          -- ✅ FIXED HERE
+      status=?,          
       description=?
     WHERE id=?
   `;
@@ -127,7 +127,7 @@ exports.updateVehicle = (req, res) => {
     v.price_4h,
     v.price_8h,
     v.price_1d,
-    v.status, // ✅ MUST SEND FROM FRONTEND
+    v.status, 
     v.description || null,
     id,
   ];
