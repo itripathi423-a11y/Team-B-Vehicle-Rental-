@@ -1,20 +1,12 @@
 const db = require("../config/db");
 
-/* REGISTER */
+/* =========================
+   REGISTER USER
+========================= */
 exports.registerUser = (req, res) => {
   const { name, email, phone, password } = req.body;
 
-<<<<<<< Updated upstream
-  db.query("SELECT * FROM users WHERE email=?", [email], (err, result) => {
-    if (result.length > 0) {
-      return res.json({ success: false, message: "Email exists" });
-    }
-
-    db.query(
-      "INSERT INTO users (name,email,phone,password,role) VALUES (?,?,?,?,?)",
-      [name, email, phone, password, "user"],
-      () => res.json({ success: true }),
-=======
+  // Validation
   if (!name || !email || !phone || !password) {
     return res.json({
       success: false,
@@ -22,7 +14,8 @@ exports.registerUser = (req, res) => {
     });
   }
 
-  User.findUserByEmail(email, (err, result) => {
+  // Check email exists
+  db.query("SELECT * FROM users WHERE email=?", [email], (err, result) => {
     if (err) {
       return res.json({
         success: false,
@@ -37,16 +30,12 @@ exports.registerUser = (req, res) => {
       });
     }
 
-    User.createUser(
-      {
-        name,
-        email,
-        phone,
-        password,
-        role: "user",
-      },
-      (err) => {
-        if (err) {
+    // Insert user
+    db.query(
+      "INSERT INTO users (name, email, phone, password, role) VALUES (?,?,?,?,?)",
+      [name, email, phone, password, "user"],
+      (err2) => {
+        if (err2) {
           return res.json({
             success: false,
             message: "Registration failed",
@@ -57,67 +46,18 @@ exports.registerUser = (req, res) => {
           success: true,
           message: "Registration successful",
         });
-      },
->>>>>>> Stashed changes
+      }
     );
   });
 };
 
-<<<<<<< Updated upstream
-/* LOGIN */
+/* =========================
+   LOGIN USER
+========================= */
 exports.loginUser = (req, res) => {
   const { email, password } = req.body;
 
   db.query("SELECT * FROM users WHERE email=?", [email], (err, result) => {
-    if (!result.length) {
-      return res.json({ success: false });
-    }
-
-    const user = result[0];
-
-    if (user.password !== password) {
-      return res.json({ success: false });
-    }
-
-    req.session.user = {
-      id: user.id,
-      name: user.name,
-    };
-
-    res.json({ success: true });
-  });
-};
-
-/* LOGOUT */
-exports.logoutUser = (req, res) => {
-  req.session.destroy(() => {
-    res.json({ success: true });
-  });
-};
-
-/* PROFILE */
-exports.getUserProfile = (req, res) => {
-  if (!req.session.user) return res.status(401).json({});
-
-  const id = req.session.user.id;
-
-  db.query("SELECT * FROM users WHERE id=?", [id], (err, result) => {
-    const u = result[0];
-
-    res.json({
-      id: u.id,
-      first_name: u.name.split(" ")[0],
-      last_name: u.name.split(" ")[1] || "",
-      email: u.email,
-      phone: u.phone,
-      kyc_status: "Pending",
-      profile_photo: null,
-=======
-// LOGIN (SESSION BASED - FIXED)
-const loginUser = (req, res) => {
-  const { email, password } = req.body;
-
-  User.findUserByEmail(email, (err, results) => {
     if (err) {
       return res.json({
         success: false,
@@ -125,24 +65,23 @@ const loginUser = (req, res) => {
       });
     }
 
-    if (!results || results.length === 0) {
+    if (!result.length) {
       return res.json({
         success: false,
         message: "Invalid credentials",
       });
     }
 
-    const user = results[0];
+    const user = result[0];
 
-    // Plain password check
-    if (password !== user.password) {
+    if (user.password !== password) {
       return res.json({
         success: false,
         message: "Invalid credentials",
       });
     }
 
-    // ✅ CREATE SESSION
+    // Session create
     req.session.user = {
       id: user.id,
       name: user.name,
@@ -150,21 +89,55 @@ const loginUser = (req, res) => {
       role: user.role,
     };
 
-    console.log("LOGIN SESSION CREATED:", req.session.user);
-
-    // ✅ IMPORTANT RESPONSE FOR FRONTEND
     return res.json({
       success: true,
       message: "Login successful",
-      role: user.role,
       user: req.session.user,
->>>>>>> Stashed changes
     });
   });
 };
 
-<<<<<<< Updated upstream
-/* STATS */
+/* =========================
+   LOGOUT USER
+========================= */
+exports.logoutUser = (req, res) => {
+  req.session.destroy(() => {
+    res.json({ success: true });
+  });
+};
+
+/* =========================
+   PROFILE
+========================= */
+exports.getUserProfile = (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({});
+  }
+
+  const id = req.session.user.id;
+
+  db.query("SELECT * FROM users WHERE id=?", [id], (err, result) => {
+    if (err || !result.length) {
+      return res.status(500).json({});
+    }
+
+    const u = result[0];
+
+    return res.json({
+      id: u.id,
+      first_name: u.name.split(" ")[0],
+      last_name: u.name.split(" ")[1] || "",
+      email: u.email,
+      phone: u.phone,
+      kyc_status: "Pending",
+      profile_photo: null,
+    });
+  });
+};
+
+/* =========================
+   BOOKING STATS
+========================= */
 exports.getBookingStats = (req, res) => {
   if (!req.session.user) return res.status(401).json({});
 
@@ -182,12 +155,15 @@ exports.getBookingStats = (req, res) => {
   `,
     [userId],
     (err, result) => {
+      if (err) return res.status(500).json({});
       res.json(result[0]);
-    },
+    }
   );
 };
 
-/* BOOKINGS */
+/* =========================
+   BOOKINGS
+========================= */
 exports.getUserBookings = (req, res) => {
   if (!req.session.user) return res.status(401).json([]);
 
@@ -211,12 +187,15 @@ exports.getUserBookings = (req, res) => {
   `,
     [userId],
     (err, result) => {
+      if (err) return res.status(500).json([]);
       res.json(result);
-    },
+    }
   );
 };
 
-/* UPCOMING */
+/* =========================
+   UPCOMING BOOKING
+========================= */
 exports.getUpcomingBooking = (req, res) => {
   if (!req.session.user) return res.status(401).json(null);
 
@@ -240,12 +219,8 @@ exports.getUpcomingBooking = (req, res) => {
   `,
     [userId],
     (err, result) => {
+      if (err) return res.status(500).json(null);
       res.json(result[0] || null);
-    },
+    }
   );
-=======
-module.exports = {
-  registerUser,
-  loginUser,
->>>>>>> Stashed changes
 };

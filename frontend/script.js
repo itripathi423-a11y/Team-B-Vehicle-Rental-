@@ -18,11 +18,9 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     messageDiv.style.color = "green";
     messageDiv.textContent = data.message;
 
-<<<<<<< Updated upstream
     // IMPORTANT FIX HERE
     const role = data.user?.role;
-=======
->>>>>>> Stashed changes
+
 
     setTimeout(() => {
       if (role === "admin") {
