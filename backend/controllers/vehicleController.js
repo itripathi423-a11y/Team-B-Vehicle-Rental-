@@ -10,13 +10,24 @@ exports.getVehicles = (req, res) => {
       price_4h, price_8h, price_1d,
       thumbnail
     FROM vehicles
-    WHERE status='Available' AND is_deleted=0
+    WHERE status = 'Available' 
+      AND is_deleted = 0
     ORDER BY created_at DESC
     LIMIT ?
   `;
 
   db.query(sql, [limit], (err, results) => {
-    if (err) return res.status(500).json({ message: "Vehicle error" });
-    res.json(results);
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: "Vehicle fetch error",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: results,
+    });
   });
 };
