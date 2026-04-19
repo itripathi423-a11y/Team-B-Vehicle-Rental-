@@ -1,16 +1,12 @@
-// Import database connection from config folder
 const db = require("../config/db");
 
 /* =========================
    REGISTER USER
 ========================= */
-
-// Function to register a new user
 exports.registerUser = (req, res) => {
-  // Extract user input from request body
   const { name, email, phone, password } = req.body;
 
-  // Validation: check if all fields are provided
+  // Validation
   if (!name || !email || !phone || !password) {
     return res.json({
       success: false,
@@ -18,9 +14,8 @@ exports.registerUser = (req, res) => {
     });
   }
 
-  // Check if email already exists in database
+  // Check email exists
   db.query("SELECT * FROM users WHERE email=?", [email], (err, result) => {
-    // Handle database error
     if (err) {
       return res.json({
         success: false,
@@ -28,7 +23,6 @@ exports.registerUser = (req, res) => {
       });
     }
 
-    // If user already exists
     if (result.length > 0) {
       return res.json({
         success: false,
@@ -36,12 +30,11 @@ exports.registerUser = (req, res) => {
       });
     }
 
-    // Insert new user into database
+    // Insert user
     db.query(
       "INSERT INTO users (name, email, phone, password, role) VALUES (?,?,?,?,?)",
       [name, email, phone, password, "user"],
       (err2) => {
-        // Handle insert error
         if (err2) {
           return res.json({
             success: false,
@@ -49,7 +42,6 @@ exports.registerUser = (req, res) => {
           });
         }
 
-        // Success response
         return res.json({
           success: true,
           message: "Registration successful",
@@ -62,15 +54,10 @@ exports.registerUser = (req, res) => {
 /* =========================
    LOGIN USER
 ========================= */
-
-// Function to login user
 exports.loginUser = (req, res) => {
-  // Extract login credentials
   const { email, password } = req.body;
 
-  // Find user by email
   db.query("SELECT * FROM users WHERE email=?", [email], (err, result) => {
-    // Handle DB error
     if (err) {
       return res.json({
         success: false,
@@ -78,7 +65,6 @@ exports.loginUser = (req, res) => {
       });
     }
 
-    // If no user found
     if (!result.length) {
       return res.json({
         success: false,
@@ -86,10 +72,8 @@ exports.loginUser = (req, res) => {
       });
     }
 
-    // Get user data
     const user = result[0];
 
-    // Check password match
     if (user.password !== password) {
       return res.json({
         success: false,
@@ -97,7 +81,7 @@ exports.loginUser = (req, res) => {
       });
     }
 
-    // Create session for logged-in user
+    // Session create
     req.session.user = {
       id: user.id,
       name: user.name,
@@ -105,7 +89,6 @@ exports.loginUser = (req, res) => {
       role: user.role,
     };
 
-    // Send success response
     return res.json({
       success: true,
       message: "Login successful",
@@ -117,10 +100,7 @@ exports.loginUser = (req, res) => {
 /* =========================
    LOGOUT USER
 ========================= */
-
-// Function to logout user
 exports.logoutUser = (req, res) => {
-  // Destroy session
   req.session.destroy(() => {
     res.json({ success: true });
   });
@@ -129,35 +109,40 @@ exports.logoutUser = (req, res) => {
 /* =========================
    PROFILE
 ========================= */
-
-// Function to get user profile
 exports.getUserProfile = (req, res) => {
-  // Check if user is logged in
   if (!req.session.user) {
     return res.status(401).json({});
   }
 
-  // Get logged-in user ID
   const id = req.session.user.id;
 
-  // Fetch user from database
-  db.query("SELECT * FROM users WHERE id=?", [id], (err, result) => {
-    // Handle error or no data
+  const query = `
+    SELECT 
+      u.id,
+      u.name,
+      u.email,
+      u.phone,
+      COALESCE(k.status, 'not_submitted') AS kyc_status
+    FROM users u
+    LEFT JOIN kyc k ON u.id = k.user_id
+    WHERE u.id = ?
+    LIMIT 1
+  `;
+
+  db.query(query, [id], (err, result) => {
     if (err || !result.length) {
       return res.status(500).json({});
     }
 
-    // Get user record
     const u = result[0];
 
-    // Send formatted profile data
     return res.json({
       id: u.id,
-      first_name: u.name.split(" ")[0],
-      last_name: u.name.split(" ")[1] || "",
+      first_name: u.name ? u.name.split(" ")[0] : "",
+      last_name: u.name ? u.name.split(" ")[1] || "" : "",
       email: u.email,
       phone: u.phone,
-      kyc_status: "Pending",
+      kyc_status: u.kyc_status,
       profile_photo: null,
     });
   });
@@ -166,15 +151,11 @@ exports.getUserProfile = (req, res) => {
 /* =========================
    BOOKING STATS
 ========================= */
-
-// Function to get booking statistics
 exports.getBookingStats = (req, res) => {
-  // Check login session
   if (!req.session.user) return res.status(401).json({});
 
   const userId = req.session.user.id;
 
-  // Query booking stats
   db.query(
     `
     SELECT 
@@ -187,10 +168,7 @@ exports.getBookingStats = (req, res) => {
   `,
     [userId],
     (err, result) => {
-      // Handle error
       if (err) return res.status(500).json({});
-
-      // Send stats
       res.json(result[0]);
     },
   );
@@ -199,15 +177,11 @@ exports.getBookingStats = (req, res) => {
 /* =========================
    BOOKINGS
 ========================= */
-
-// Function to get user bookings
 exports.getUserBookings = (req, res) => {
-  // Check session
   if (!req.session.user) return res.status(401).json([]);
 
   const userId = req.session.user.id;
 
-  // Get last 5 bookings
   db.query(
     `
     SELECT 
@@ -226,10 +200,7 @@ exports.getUserBookings = (req, res) => {
   `,
     [userId],
     (err, result) => {
-      // Handle error
       if (err) return res.status(500).json([]);
-
-      // Send bookings
       res.json(result);
     },
   );
@@ -238,15 +209,11 @@ exports.getUserBookings = (req, res) => {
 /* =========================
    UPCOMING BOOKING
 ========================= */
-
-// Function to get upcoming booking
 exports.getUpcomingBooking = (req, res) => {
-  // Check session
   if (!req.session.user) return res.status(401).json(null);
 
   const userId = req.session.user.id;
 
-  // Get next upcoming booking
   db.query(
     `
     SELECT 
@@ -265,10 +232,7 @@ exports.getUpcomingBooking = (req, res) => {
   `,
     [userId],
     (err, result) => {
-      // Handle error
       if (err) return res.status(500).json(null);
-
-      // Return first upcoming booking or null
       res.json(result[0] || null);
     },
   );

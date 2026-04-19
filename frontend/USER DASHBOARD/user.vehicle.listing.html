@@ -1,628 +1,882 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AUTO DEALER — Vehicles</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
-<link href="userdashboard.css" rel="stylesheet"/>
-<style>
-/* ── SEARCH BAR ── */
-.search-section {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px 24px;
-  margin-bottom: 24px;
-  box-shadow: var(--shadow);
-  animation: fadeUp 0.35s ease both;
-}
-.search-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--dark);
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.search-title svg { width: 16px; height: 16px; stroke: var(--orange); }
-.search-row {
-  display: grid;
-  grid-template-columns: 1fr 180px 180px 180px auto;
-  gap: 10px;
-  align-items: end;
-}
-.search-field { display: flex; flex-direction: column; gap: 5px; }
-.search-field label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-.search-input {
-  height: 40px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 0 12px;
-  font-family: "DM Sans", sans-serif;
-  font-size: 13.5px;
-  color: var(--text);
-  background: var(--bg);
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-.search-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(255,92,26,0.1); }
-.search-input[type=number]::-webkit-inner-spin-button,
-.search-input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-.search-input[type=number] { -moz-appearance: textfield; }
-.search-input option { background: white; }
-.search-btn {
-  height: 40px;
-  padding: 0 20px;
-  background: var(--dark);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-family: "DM Sans", sans-serif;
-  font-size: 13.5px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-.search-btn:hover { background: var(--orange); }
-.search-btn svg { width: 15px; height: 15px; }
-.clear-btn {
-  height: 40px;
-  padding: 0 14px;
-  background: none;
-  color: var(--muted);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-family: "DM Sans", sans-serif;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-.clear-btn:hover { border-color: var(--orange); color: var(--orange); }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AUTO DEALER — Vehicles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="userdashboard.css" rel="stylesheet" />
+    <style>
+      /* ── SEARCH BAR ── */
+      .search-section {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px 24px;
+        margin-bottom: 24px;
+        box-shadow: var(--shadow);
+        animation: fadeUp 0.35s ease both;
+      }
+      .search-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .search-title svg {
+        width: 16px;
+        height: 16px;
+        stroke: var(--orange);
+      }
+      .search-row {
+        display: grid;
+        grid-template-columns: 1fr 180px 180px 180px auto;
+        gap: 10px;
+        align-items: end;
+      }
+      .search-field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .search-field label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .search-input {
+        height: 40px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 0 12px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        color: var(--text);
+        background: var(--bg);
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .search-input:focus {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 3px rgba(255, 92, 26, 0.1);
+      }
+      .search-input[type="number"]::-webkit-inner-spin-button,
+      .search-input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      .search-input[type="number"] {
+        -moz-appearance: textfield;
+      }
+      .search-input option {
+        background: white;
+      }
+      .search-btn {
+        background: var(--orange);
+        height: 40px;
+        padding: 0 20px;
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
 
-/* RESULTS META */
-.results-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-.results-count {
-  font-size: 13px;
-  color: var(--muted);
-}
-.results-count strong { color: var(--dark); font-weight: 600; }
-.sort-select {
-  height: 36px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 0 10px;
-  font-family: "DM Sans", sans-serif;
-  font-size: 12.5px;
-  color: var(--text);
-  background: var(--white);
-  outline: none;
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
-.sort-select:focus { border-color: var(--orange); }
+      .search-btn svg {
+        width: 15px;
+        height: 15px;
+      }
+      .clear-btn {
+        height: 40px;
+        padding: 0 14px;
+        background: none;
+        color: var(--muted);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .clear-btn:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+      }
 
-/* ACTIVE FILTERS */
-.active-filters {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-}
-.filter-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 11px;
-  background: var(--orange-dim);
-  border: 1px solid rgba(255,92,26,0.25);
-  border-radius: 99px;
-  font-size: 12px;
-  color: var(--orange);
-  font-weight: 500;
-}
-.filter-chip button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--orange);
-  display: flex;
-  align-items: center;
-  padding: 0;
-  font-size: 14px;
-  line-height: 1;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-}
-.filter-chip button:hover { opacity: 1; }
+      /* RESULTS META */
+      .results-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+      .results-count {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .results-count strong {
+        color: var(--dark);
+        font-weight: 600;
+      }
+      .sort-select {
+        height: 36px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 0 10px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 12.5px;
+        color: var(--text);
+        background: var(--white);
+        outline: none;
+        cursor: pointer;
+        transition: border-color 0.2s;
+      }
+      .sort-select:focus {
+        border-color: var(--orange);
+      }
 
-/* VEHICLE GRID */
-.vehicles-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  margin-bottom: 28px;
-}
+      /* ACTIVE FILTERS */
+      .active-filters {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      }
+      .filter-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 11px;
+        background: var(--orange-dim);
+        border: 1px solid rgba(255, 92, 26, 0.25);
+        border-radius: 99px;
+        font-size: 12px;
+        color: var(--orange);
+        font-weight: 500;
+      }
+      .filter-chip button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--orange);
+        display: flex;
+        align-items: center;
+        padding: 0;
+        font-size: 14px;
+        line-height: 1;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+      }
+      .filter-chip button:hover {
+        opacity: 1;
+      }
 
-/* VEHICLE CARD */
-.vehicle-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  transition: transform 0.22s, box-shadow 0.22s, border-color 0.22s;
-  animation: fadeUp 0.4s ease both;
-}
-.vehicle-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-  border-color: rgba(255,92,26,0.3);
-}
-.vehicle-img-wrap {
-  position: relative;
-  height: 170px;
-  background: var(--bg);
-  overflow: hidden;
-}
-.vehicle-img-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s;
-}
-.vehicle-card:hover .vehicle-img-wrap img { transform: scale(1.04); }
-.vehicle-img-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 56px;
-  background: linear-gradient(135deg, #f4f5f7, #e9eaec);
-}
-.avail-badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  padding: 4px 10px;
-  border-radius: 99px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-}
-.avail-badge.available { background: #ecfdf5; color: #16a34a; border: 1px solid #bbf7d0; }
-.avail-badge.booked { background: #fff1f2; color: #dc2626; border: 1px solid #fecaca; }
-.vehicle-card-body { padding: 16px; }
-.vc-name {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--dark);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 8px;
-}
-.vc-meta {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 14px;
-}
-.vc-meta-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 9px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font-size: 11px;
-  color: var(--text);
-  font-weight: 500;
-}
-.vc-meta-pill svg { width: 11px; height: 11px; flex-shrink: 0; }
-.fuel-petrol { color: #ea580c; }
-.fuel-diesel { color: #1d4ed8; }
-.fuel-electric { color: #16a34a; }
-.fuel-hybrid { color: #7c3aed; }
-.fuel-cng { color: #0891b2; }
+      /* VEHICLE GRID */
+      .vehicles-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-bottom: 28px;
+      }
 
-.vc-prices {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  margin-bottom: 14px;
-}
-.price-box {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 8px 6px;
-  text-align: center;
-}
-.price-box-dur {
-  display: block;
-  font-size: 9px;
-  font-family: "Space Mono", monospace;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 3px;
-}
-.price-box-val {
-  display: block;
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 17px;
-  color: var(--dark);
-  letter-spacing: 0.5px;
-  line-height: 1;
-}
-.price-box-cur {
-  display: block;
-  font-size: 9px;
-  color: var(--muted);
-  margin-top: 1px;
-}
-.view-btn {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  background: var(--dark);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-family: "DM Sans", sans-serif;
-  font-size: 13.5px;
-  font-weight: 500;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  transition: background 0.2s, transform 0.15s;
-}
-.view-btn:hover { background: var(--orange); transform: translateY(-1px); }
+      /* VEHICLE CARD */
+      .vehicle-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition:
+          transform 0.22s,
+          box-shadow 0.22s,
+          border-color 0.22s;
+        animation: fadeUp 0.4s ease both;
+      }
+      .vehicle-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+        border-color: rgba(255, 92, 26, 0.3);
+      }
+      .vehicle-img-wrap {
+        position: relative;
+        height: 170px;
+        background: var(--bg);
+        overflow: hidden;
+      }
+      .vehicle-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+      }
+      .vehicle-card:hover .vehicle-img-wrap img {
+        transform: scale(1.04);
+      }
+      .vehicle-img-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 56px;
+        background: linear-gradient(135deg, #f4f5f7, #e9eaec);
+      }
+      .avail-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 4px 10px;
+        border-radius: 99px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+      }
+      .avail-badge.available {
+        background: #ecfdf5;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
+      }
+      .avail-badge.booked {
+        background: #fff1f2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+      }
+      .vehicle-card-body {
+        padding: 16px;
+      }
+      .vc-name {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--dark);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 8px;
+      }
+      .vc-meta {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+      .vc-meta-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 9px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-size: 11px;
+        color: var(--text);
+        font-weight: 500;
+      }
+      .vc-meta-pill svg {
+        width: 11px;
+        height: 11px;
+        flex-shrink: 0;
+      }
+      .fuel-petrol {
+        color: #ea580c;
+      }
+      .fuel-diesel {
+        color: #1d4ed8;
+      }
+      .fuel-electric {
+        color: #16a34a;
+      }
+      .fuel-hybrid {
+        color: #7c3aed;
+      }
+      .fuel-cng {
+        color: #0891b2;
+      }
 
-/* EMPTY STATE */
-.empty-state {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 64px 24px;
-  color: var(--muted);
-}
-.empty-state svg { width: 48px; height: 48px; stroke: #d1d5db; margin-bottom: 16px; }
-.empty-state h3 { font-size: 16px; font-weight: 600; color: var(--dark); margin-bottom: 6px; }
-.empty-state p { font-size: 13px; }
+      .vc-prices {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        margin-bottom: 14px;
+      }
+      .price-box {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px 6px;
+        text-align: center;
+      }
+      .price-box-dur {
+        display: block;
+        font-size: 9px;
+        font-family: "Space Mono", monospace;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 3px;
+      }
+      .price-box-val {
+        display: block;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 17px;
+        color: var(--dark);
+        letter-spacing: 0.5px;
+        line-height: 1;
+      }
+      .price-box-cur {
+        display: block;
+        font-size: 9px;
+        color: var(--muted);
+        margin-top: 1px;
+      }
+      .view-btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background: var(--orange);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        font-weight: 500;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+      }
+      .view-btn:hover {
+        transform: translateY(-1px);
+      }
 
-/* PAGINATION */
-.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin-bottom: 28px;
-}
-.page-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--white);
-  font-size: 13px;
-  color: var(--text);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-.page-btn:hover { border-color: var(--orange); color: var(--orange); }
-.page-btn.active { background: var(--orange); color: #fff; border-color: var(--orange); }
-.page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+      /* EMPTY STATE */
+      .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 64px 24px;
+        color: var(--muted);
+      }
+      .empty-state svg {
+        width: 48px;
+        height: 48px;
+        stroke: #d1d5db;
+        margin-bottom: 16px;
+      }
+      .empty-state h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 6px;
+      }
+      .empty-state p {
+        font-size: 13px;
+      }
 
-@media (max-width: 1100px) { .vehicles-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 768px) {
-  .vehicles-grid { grid-template-columns: 1fr; }
-  .search-row { grid-template-columns: 1fr; }
-}
-</style>
-</head>
-<body>
+      /* PAGINATION */
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-bottom: 28px;
+      }
+      .page-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--white);
+        font-size: 13px;
+        color: var(--text);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+      .page-btn:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+      }
+      .page-btn.active {
+        background: var(--orange);
+        color: #fff;
+        border-color: var(--orange);
+      }
+      .page-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
 
-<!-- SIDEBAR -->
-<aside class="sidebar" id="sidebar">
-  <a href="userdashboard.html" class="sidebar-logo">
-    <div class="logo-mark">AD</div>
-    <div class="logo-text-block">
-      <span class="logo-brand">Auto Dealer</span>
-      <span class="logo-sub">Fleet Management</span>
-    </div>
-  </a>
-  <nav class="sidebar-nav">
-    <a href="userdashboard.html" class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      Dashboard
-    </a>
-    <a href="user.vehicle.html" class="nav-item active">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M5 17h8M3 9h18"/></svg>
-      Vehicles
-    </a>
-    <a href="#" class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      My Bookings
-    </a>
-    <a href="#" class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      KYC
-    </a>
-    <a href="#" class="nav-item">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-      Payments
-    </a>
-  </nav>
-  <div class="sidebar-footer">
-    <div class="sidebar-user">
-      <div class="user-avatar">SR</div>
-      <div class="user-info">
-        <span class="user-name">Swikar Regmi</span>
-        <span class="user-kyc-status unverified">⚠ KYC Pending</span>
-      </div>
-    </div>
-  </div>
-</aside>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-<div class="main-wrap">
-  <header class="topbar">
-    <button class="icon-btn" id="sidebarToggle" style="display:none">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-    </button>
-    <span class="topbar-page-title">Vehicles</span>
-    <div class="topbar-right">
-      <button class="icon-btn" title="Notifications">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-        <span class="notif-badge">3</span>
-      </button>
-      <div class="topbar-user" id="userMenuTrigger">
-        <div class="topbar-avatar">SR</div>
-        <div>
-          <p class="topbar-name">Swikar Regmi</p>
-          <p class="topbar-role">Member</p>
+      @media (max-width: 1100px) {
+        .vehicles-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 768px) {
+        .vehicles-grid {
+          grid-template-columns: 1fr;
+        }
+        .search-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <a href="userdashboard.html" class="sidebar-logo">
+        <div class="logo-mark">AD</div>
+        <div class="logo-text-block">
+          <span class="logo-brand">Auto Dealer</span>
+          <span class="logo-sub">Fleet Management</span>
         </div>
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#9ca3af;margin-left:2px;transition:transform .2s" id="dropChevron"><polyline points="6 9 12 15 18 9"/></svg>
-      </div>
-      <div class="user-dropdown" id="userDropdown">
-        <div class="dropdown-header">
-          <div class="dropdown-name">Swikar Regmi</div>
-          <div class="dropdown-email">swikar.regmi@email.com</div>
-        </div>
-        <div class="dropdown-body">
-          <button class="dropdown-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Profile</button>
-          <button class="dropdown-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>KYC Verification</button>
-          <div class="dropdown-divider"></div>
-          <button class="dropdown-item logout" onclick="alert('Logging out…')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Log Out</button>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main class="content">
-
-    <!-- Search Section -->
-    <div class="search-section">
-      <div class="search-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        Search &amp; Filter Vehicles
-      </div>
-      <div class="search-row">
-        <div class="search-field">
-          <label>Search by name or keyword</label>
-          <input class="search-input" type="text" id="searchText" placeholder="e.g. Fortuner, SUV, Toyota…" oninput="applyFilters()">
-        </div>
-        <div class="search-field">
-          <label>Body Type</label>
-          <select class="search-input" id="filterBody" onchange="applyFilters()">
-            <option value="">All Body Types</option>
-            <option>SUV</option>
-            <option>Sedan</option>
-            <option>Hatchback</option>
-            <option>MPV</option>
-            <option>Off-Road</option>
-            <option>Pickup</option>
-          </select>
-        </div>
-        <div class="search-field">
-          <label>Fuel Type</label>
-          <select class="search-input" id="filterFuel" onchange="applyFilters()">
-            <option value="">All Fuel Types</option>
-            <option>Petrol</option>
-            <option>Diesel</option>
-            <option>Electric</option>
-            <option>Hybrid</option>
-            <option>CNG</option>
-          </select>
-        </div>
-        <div class="search-field">
-          <label>Max Price — 4h (NPR)</label>
-          <div style="position:relative;">
-            <span style="position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--muted);font-family:'Space Mono',monospace;pointer-events:none;">Rs.</span>
-            <input class="search-input" type="number" id="filterPrice" min="0" max="99999" placeholder="e.g. 3000" step="100"  oninput="applyFilters()" style="padding-left:100px;-moz-appearance:textfield;">
+      </a>
+      <nav class="sidebar-nav">
+        <a href="userdashboard.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard
+        </a>
+        <a href="user.vehicle.html" class="nav-item active">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path
+              d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+            />
+            <circle cx="7" cy="17" r="2" />
+            <circle cx="17" cy="17" r="2" />
+            <path d="M5 17h8M3 9h18" />
+          </svg>
+          Vehicles
+        </a>
+        <a href="#" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          My Bookings
+        </a>
+        <a href="#" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          KYC
+        </a>
+        <a href="#" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <rect x="2" y="5" width="20" height="14" rx="2" />
+            <line x1="2" y1="10" x2="22" y2="10" />
+          </svg>
+          Payments
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar">SR</div>
+          <div class="user-info">
+            <span class="user-name">Swikar Regmi</span>
+            <span class="user-kyc-status unverified">⚠ KYC Pending</span>
           </div>
         </div>
-        <div style="display:flex;gap:8px">
-          <button class="search-btn" onclick="applyFilters()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            Search
-          </button>
-          <button class="clear-btn" onclick="clearFilters()">Clear</button>
-        </div>
       </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="main-wrap">
+      <header class="topbar">
+        <button class="icon-btn" id="sidebarToggle" style="display: none">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <span class="topbar-page-title">Vehicles</span>
+        <div class="topbar-right">
+          <button class="icon-btn" title="Notifications">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+            </svg>
+            <span class="notif-badge">3</span>
+          </button>
+          <div class="topbar-user" id="userMenuTrigger">
+            <div class="topbar-avatar">SR</div>
+            <div>
+              <p class="topbar-name">Swikar Regmi</p>
+              <p class="topbar-role">Member</p>
+            </div>
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              style="
+                color: #9ca3af;
+                margin-left: 2px;
+                transition: transform 0.2s;
+              "
+              id="dropChevron"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="dropdown-header">
+              <div class="dropdown-name">Swikar Regmi</div>
+              <div class="dropdown-email">swikar.regmi@email.com</div>
+            </div>
+            <div class="dropdown-body">
+              <button class="dropdown-item">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" /></svg
+                >My Profile
+              </button>
+              <button class="dropdown-item">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+                >KYC Verification
+              </button>
+              <div class="dropdown-divider"></div>
+              <button
+                class="dropdown-item logout"
+                onclick="alert('Logging out…')"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" /></svg
+                >Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- Search Section -->
+        <div class="search-section">
+          <div class="search-title">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            Search &amp; Filter Vehicles
+          </div>
+          <div class="search-row">
+            <div class="search-field">
+              <label>Search by name or keyword</label>
+              <input
+                class="search-input"
+                type="text"
+                id="searchText"
+                placeholder="e.g. Fortuner, SUV, Toyota…"
+                oninput="applyFilters()"
+              />
+            </div>
+            <div class="search-field">
+              <label>Body Type</label>
+              <select
+                class="search-input"
+                id="filterBody"
+                onchange="applyFilters()"
+              >
+                <option value="">All Body Types</option>
+                <option>SUV</option>
+                <option>Sedan</option>
+                <option>Hatchback</option>
+                <option>MPV</option>
+                <option>Off-Road</option>
+                <option>Pickup</option>
+              </select>
+            </div>
+            <div class="search-field">
+              <label>Fuel Type</label>
+              <select
+                class="search-input"
+                id="filterFuel"
+                onchange="applyFilters()"
+              >
+                <option value="">All Fuel Types</option>
+                <option>Petrol</option>
+                <option>Diesel</option>
+                <option>Electric</option>
+                <option>Hybrid</option>
+                <option>CNG</option>
+              </select>
+            </div>
+
+            <div style="display: flex; gap: 8px">
+              <button class="search-btn" onclick="applyFilters()">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                Search
+              </button>
+              <button class="clear-btn" onclick="clearFilters()">Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Filters -->
+        <div class="active-filters" id="activeFilters"></div>
+
+        <!-- Results Meta -->
+        <div class="results-meta">
+          <p class="results-count">
+            Showing <strong id="resultCount">0</strong> vehicles
+          </p>
+          <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+            <option value="default">Sort: Default</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="name-asc">Name: A–Z</option>
+          </select>
+        </div>
+
+        <!-- Vehicle Grid -->
+        <div class="vehicles-grid" id="vehicleGrid"></div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination"></div>
+
+        <div class="footer-strip">
+          <p>© 2026 Auto Dealer Fleet Management. All rights reserved.</p>
+          <div class="footer-links">
+            <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a>
+          </div>
+        </div>
+      </main>
     </div>
-
-    <!-- Active Filters -->
-    <div class="active-filters" id="activeFilters"></div>
-
-    <!-- Results Meta -->
-    <div class="results-meta">
-      <p class="results-count">Showing <strong id="resultCount">0</strong> vehicles</p>
-      <select class="sort-select" id="sortSelect" onchange="applyFilters()">
-        <option value="default">Sort: Default</option>
-        <option value="price-asc">Price: Low to High</option>
-        <option value="price-desc">Price: High to Low</option>
-        <option value="name-asc">Name: A–Z</option>
-      </select>
-    </div>
-
-    <!-- Vehicle Grid -->
-    <div class="vehicles-grid" id="vehicleGrid"></div>
-
-    <!-- Pagination -->
-    <div class="pagination" id="pagination"></div>
-
-    <div class="footer-strip">
-      <p>© 2026 Auto Dealer Fleet Management. All rights reserved.</p>
-      <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a></div>
-    </div>
-
-  </main>
-</div>
-<script>
-/* =======================
+    <script>
+      /* =======================
    GLOBAL STATE
 ======================= */
-let VEHICLES = [];
-let filtered = [];
-const PAGE_SIZE = 9;
-let currentPage = 1;
+      let VEHICLES = [];
+      let filtered = [];
+      const PAGE_SIZE = 9;
+      let currentPage = 1;
 
-/* =======================
+      /* =======================
    FUEL ICONS
 ======================= */
-const fuelIcons = {
-  Petrol: "⛽",
-  Diesel: "🛢️",
-  Electric: "⚡",
-  Hybrid: "🔋",
-  CNG: "🔵"
-};
+      const fuelIcons = {
+        Petrol: "⛽",
+        Diesel: "🛢️",
+        Electric: "⚡",
+        Hybrid: "🔋",
+        CNG: "🔵",
+      };
 
-/* =======================
+      /* =======================
    SAFE API FETCH
 ======================= */
-async function apiFetch(url, options = {}) {
-  const res = await fetch(url, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json"
-    }
-  });
+      async function apiFetch(url, options = {}) {
+        const res = await fetch(url, {
+          ...options,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-  if (!res.ok) {
-    throw new Error("API error: " + res.status);
-  }
+        if (!res.ok) {
+          throw new Error("API error: " + res.status);
+        }
 
-  return res.json();
-}
+        return res.json();
+      }
 
-/* =======================
+      /* =======================
    LOAD VEHICLES
 ======================= */
-async function loadVehicles() {
-  try {
-    const res = await fetch("/api/user/vehicles");
-    const json = await res.json();
+      async function loadVehicles() {
+        try {
+          const res = await fetch("/api/user/vehicles");
+          const json = await res.json();
 
-    console.log("VEHICLES RESPONSE:", json);
+          console.log("VEHICLES RESPONSE:", json);
 
-    VEHICLES = Array.isArray(json) ? json : (json.data || []);
-    filtered = [...VEHICLES];
+          VEHICLES = Array.isArray(json) ? json : json.data || [];
+          filtered = [...VEHICLES];
 
-    renderGrid();
-  } catch (err) {
-    console.error("Vehicle load failed:", err);
-  }
-}
+          renderGrid();
+        } catch (err) {
+          console.error("Vehicle load failed:", err);
+        }
+      }
 
-/* =======================
+      /* =======================
    LOAD USER PROFILE
 ======================= */
-async function loadUserProfile() {
-  try {
-    const user = await apiFetch("/api/user/profile");
+      async function loadUserProfile() {
+        try {
+          const user = await apiFetch("/api/user/profile");
 
-    const fullName =
-      `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User";
+          const fullName =
+            `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User";
 
-    const initials = fullName
-      .split(" ")
-      .map(n => n[0])
-      .join("")
-      .toUpperCase();
+          const initials = fullName
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase();
 
-    const nameEl = document.querySelector(".topbar-name");
-    if (nameEl) nameEl.textContent = fullName;
+          const nameEl = document.querySelector(".topbar-name");
+          if (nameEl) nameEl.textContent = fullName;
 
-    const avatarEl = document.querySelector(".topbar-avatar");
-    if (avatarEl) avatarEl.textContent = initials;
+          const avatarEl = document.querySelector(".topbar-avatar");
+          if (avatarEl) avatarEl.textContent = initials;
+        } catch (err) {
+          console.error("Profile load failed:", err);
+        }
+      }
 
-  } catch (err) {
-    console.error("Profile load failed:", err);
-  }
-}
-
-/* =======================
+      /* =======================
    RENDER GRID (CARD UI)
 ======================= */
-function renderGrid() {
-  const sort = document.getElementById('sortSelect').value;
-  let data = [...filtered];
+      function renderGrid() {
+        const sort = document.getElementById("sortSelect").value;
+        let data = [...filtered];
 
-  if (sort === 'price-asc') data.sort((a, b) => a.price_4h - b.price_4h);
-  if (sort === 'price-desc') data.sort((a, b) => b.price_4h - a.price_4h);
-  if (sort === 'name-asc') data.sort((a, b) => a.name.localeCompare(b.name));
+        if (sort === "price-asc") data.sort((a, b) => a.price_4h - b.price_4h);
+        if (sort === "price-desc") data.sort((a, b) => b.price_4h - a.price_4h);
+        if (sort === "name-asc")
+          data.sort((a, b) => a.name.localeCompare(b.name));
 
-  const grid = document.getElementById('vehicleGrid');
-  document.getElementById('resultCount').textContent = data.length;
+        const grid = document.getElementById("vehicleGrid");
+        document.getElementById("resultCount").textContent = data.length;
 
-  if (!data.length) {
-    grid.innerHTML = `
+        if (!data.length) {
+          grid.innerHTML = `
       <div class="empty-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M5 17h8M3 9h18"/></svg>
         <h3>No vehicles found</h3>
         <p>Try adjusting your filters</p>
       </div>`;
-    return;
-  }
+          return;
+        }
 
-  grid.innerHTML = data.map((v, i) => {
-    const img = v.thumbnail ? `/uploads/vehicles/${v.thumbnail}` : null;
-    const isAvail = v.status === 'Available';
-    const fuelClass = {
-      Petrol: 'fuel-petrol', Diesel: 'fuel-diesel',
-      Electric: 'fuel-electric', Hybrid: 'fuel-hybrid', CNG: 'fuel-cng'
-    }[v.fuel_type] || '';
+        grid.innerHTML = data
+          .map((v, i) => {
+            const img = v.thumbnail ? `/uploads/vehicles/${v.thumbnail}` : null;
+            const isAvail = v.status === "Available";
+            const fuelClass =
+              {
+                Petrol: "fuel-petrol",
+                Diesel: "fuel-diesel",
+                Electric: "fuel-electric",
+                Hybrid: "fuel-hybrid",
+                CNG: "fuel-cng",
+              }[v.fuel_type] || "";
 
-    return `
+            return `
     <div class="vehicle-card" style="animation-delay:${i * 0.05}s">
 
       <div class="vehicle-img-wrap">
-        ${img
-          ? `<img src="${img}" alt="${v.name}" loading="lazy">`
-          : `<div class="vehicle-img-placeholder">🚗</div>`}
-        <span class="avail-badge ${isAvail ? 'available' : 'booked'}">
-          ${isAvail ? 'Available' : 'Booked'}
+        ${
+          img
+            ? `<img src="${img}" alt="${v.name}" loading="lazy">`
+            : `<div class="vehicle-img-placeholder">🚗</div>`
+        }
+        <span class="avail-badge ${isAvail ? "available" : "booked"}">
+          ${isAvail ? "Available" : "Booked"}
         </span>
       </div>
 
@@ -664,57 +918,55 @@ function renderGrid() {
 
       </div>
     </div>`;
-  }).join('');
-}
-/* =======================
+          })
+          .join("");
+      }
+      /* =======================
    FILTER SYSTEM
 ======================= */
-function applyFilters() {
-  const text = document.getElementById("searchText").value.toLowerCase();
-  const body = document.getElementById("filterBody").value;
-  const fuel = document.getElementById("filterFuel").value;
-  const price = document.getElementById("filterPrice").value;
+      function applyFilters() {
+        const text = document.getElementById("searchText").value.toLowerCase();
+        const body = document.getElementById("filterBody").value;
+        const fuel = document.getElementById("filterFuel").value;
+        const price = document.getElementById("filterPrice").value;
 
-  filtered = VEHICLES.filter(v =>
-    (!text ||
-      v.name.toLowerCase().includes(text) ||
-      v.brand.toLowerCase().includes(text) ||
-      v.model.toLowerCase().includes(text)
-    ) &&
-    (!body || v.body_type === body) &&
-    (!fuel || v.fuel_type === fuel) &&
-    (!price || v.price_4h <= Number(price))
-  );
+        filtered = VEHICLES.filter(
+          (v) =>
+            (!text ||
+              v.name.toLowerCase().includes(text) ||
+              v.brand.toLowerCase().includes(text) ||
+              v.model.toLowerCase().includes(text)) &&
+            (!body || v.body_type === body) &&
+            (!fuel || v.fuel_type === fuel) &&
+            (!price || v.price_4h <= Number(price)),
+        );
 
-  currentPage = 1;
-  renderGrid();
-}
+        currentPage = 1;
+        renderGrid();
+      }
 
-/* =======================
+      /* =======================
    CLEAR FILTERS
 ======================= */
-function clearFilters() {
-  document.getElementById("searchText").value = "";
-  document.getElementById("filterBody").value = "";
-  document.getElementById("filterFuel").value = "";
-  document.getElementById("filterPrice").value = "";
+      function clearFilters() {
+        document.getElementById("searchText").value = "";
+        document.getElementById("filterBody").value = "";
+        document.getElementById("filterFuel").value = "";
+        document.getElementById("filterPrice").value = "";
 
-  filtered = [...VEHICLES];
-  renderGrid();
-}
+        filtered = [...VEHICLES];
+        renderGrid();
+      }
 
-/* =======================
+      /* =======================
    INIT PAGE
 ======================= */
-async function initPage() {
-  await Promise.all([
-    loadVehicles(),
-    loadUserProfile()
-  ]);
-}
+      async function initPage() {
+        await Promise.all([loadVehicles(), loadUserProfile()]);
+      }
 
-/* RUN */
-initPage();
-</script>
-</body>
+      /* RUN */
+      initPage();
+    </script>
+  </body>
 </html>

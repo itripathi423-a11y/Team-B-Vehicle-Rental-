@@ -12,26 +12,27 @@ document.addEventListener("DOMContentLoaded", () => {
         card.classList.add("card");
 
         card.innerHTML = `
-          <img src="http://localhost:5000/uploads/vehicles/${car.thumbnail}" />
+  <div class="card-img">
+    <img src="http://localhost:5000/uploads/vehicles/${car.thumbnail}" />
+  </div>
 
-          <div class="card-info">
-            <div class="card-top">
-              <h3>${car.name}</h3>
-              <span class="card-type">
-                ${car.body_type} • ${car.transmission}
-              </span>
-            </div>
+  <div class="card-content">
+    <div class="card-top">
+      <h3>${car.name}</h3>
+      <span class="card-type">
+        ${car.body_type} • ${car.transmission}
+      </span>
+    </div>
 
-            <div class="card-bottom">
-              <div class="price-block">
-                <span class="price">Rs ${car.price_1d}</span>
-                <span class="per">/day</span>
-              </div>
+    <div class="price-block">
+      <div>4 hr: <span>Rs ${car.price_4h}</span></div>
+      <div>8 hr: <span>Rs ${car.price_8h}</span></div>
+      <div>1 day: <span>Rs ${car.price_1d}</span></div>
+    </div>
 
-              <button class="card-btn">Book</button>
-            </div>
-          </div>
-        `;
+    <button class="card-btn">View Details</button>
+  </div>
+`;
 
         container.appendChild(card);
       });
