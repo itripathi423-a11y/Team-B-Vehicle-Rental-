@@ -10,28 +10,22 @@ const safe = (fn) => (req, res, next) =>
     ? fn(req, res, next)
     : res.status(500).json({ error: "Controller missing" });
 
-/* USER */
-router.get("/user/profile", isLoggedIn, safe(dashboard.getUserProfile));
+router.get("/profile", isLoggedIn, safe(dashboard.getUserProfile));
 
-/* DASHBOARD */
-router.get("/user/bookings/stats", isLoggedIn, safe(dashboard.getDashboardStats));
+router.get("/bookings/stats", isLoggedIn, safe(dashboard.getDashboardStats));
 
-router.get("/user/bookings", isLoggedIn, safe(dashboard.getRecentBookings));
+router.get("/bookings", isLoggedIn, safe(dashboard.getRecentBookings));
 
 router.get(
-  "/user/bookings/upcoming",
+  "/bookings/upcoming",
   isLoggedIn,
-  safe(dashboard.getUpcomingBooking)
+  safe(dashboard.getUpcomingBooking),
 );
 
-/* VEHICLES */
-router.get("/vehicles", safe(dashboard.getVehicles));
-
-/* NOTIFICATIONS */
 router.get(
-  "/user/notifications/unread-count",
+  "/notifications/unread-count",
   isLoggedIn,
-  safe(dashboard.getUnreadNotifications)
+  safe(dashboard.getUnreadNotifications),
 );
 
 module.exports = router;

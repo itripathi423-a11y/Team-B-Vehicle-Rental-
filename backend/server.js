@@ -27,6 +27,9 @@ const userVehicleListingRoutes = require("./routes/user.vehicle.listing.routes")
 
 const vehicleDetailsRoutes = require("./routes/vehicleDetails.routes");
 
+const vehicleRoutes_booking = require("./routes/vehicle.routes");
+const bookingRoutes = require("./routes/booking.routes");
+
 // Create Express app instance
 const app = express();
 
@@ -111,7 +114,9 @@ app.use("/api", userDashboardRoutes);
 app.use("/api/user/vehicles", userVehicleListingRoutes);
 // API base
 app.use("/api/user/vehicle-details", vehicleDetailsRoutes);
-
+app.use("/api/admin/vehicles", vehicleRoutes); // admin routes
+app.use("/api/vehicles", vehicleRoutes_booking); // public booking routes
+app.use("/api/bookings", bookingRoutes);
 /* =========================
    SERVER START
 ========================= */
