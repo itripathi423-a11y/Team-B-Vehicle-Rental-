@@ -1,4 +1,7 @@
 const db = require("../config/db");
+const transporter = require("../utils/mailer");
+
+const ADMIN_EMAIL = "admin@gmail.com"; // change this
 
 // CREATE BOOKING
 exports.createBooking = (req, res) => {
@@ -9,7 +12,7 @@ exports.createBooking = (req, res) => {
     user_email,
     user_phone,
     pickup_location,
-    rental_type, // '4h' | '8h' | '1d' | 'custom'
+    rental_type,
     pickup_datetime,
     drop_datetime,
     total_days,
@@ -17,7 +20,7 @@ exports.createBooking = (req, res) => {
     total_price,
   } = req.body;
 
-  // Basic validation
+  // Validation
   if (
     !vehicle_id ||
     !user_id ||
@@ -30,9 +33,10 @@ exports.createBooking = (req, res) => {
     !drop_datetime ||
     !total_price
   ) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Missing required fields" });
+    return res.status(400).json({
+      success: false,
+      message: "Missing required fields",
+    });
   }
 
   const booking_ref = "AD" + Date.now();
@@ -64,28 +68,69 @@ exports.createBooking = (req, res) => {
       price_per_unit || total_price,
       total_price,
     ],
-    (err, result) => {
+    async (err, result) => {
       if (err) {
         console.error("Booking insert error:", err);
-        return res
-          .status(500)
-          .json({
-            success: false,
-            message: "Booking failed",
-            error: err.message,
-          });
+        return res.status(500).json({
+          success: false,
+          message: "Booking failed",
+          error: err.message,
+        });
       }
 
-      res.json({
+      // ----------------------------------
+      // SEND EMAIL AFTER SUCCESS
+      // ----------------------------------
+      try {
+        const mailOptions = {
+          from: `"Auto Dealer System" <${process.env.EMAIL_USER}>`,
+          to: ADMIN_EMAIL,
+          subject: "New Booking Received",
+
+          text: `
+NEW BOOKING ALERT 🚗
+
+A new booking has been confirmed in the system.
+
+-----------------------------------
+Booking Details:
+-----------------------------------
+Booking Ref : ${booking_ref}
+Customer    : ${user_name}
+Email       : ${user_email}
+Phone       : ${user_phone}
+
+Vehicle ID  : ${vehicle_id}
+Pickup      : ${pickup_location}
+
+From        : ${pickup_datetime}
+To          : ${drop_datetime}
+
+Total Price : Rs ${total_price}
+
+-----------------------------------
+Please check admin dashboard for details.
+-----------------------------------
+
+Auto Dealer System
+  `,
+        };
+
+        await transporter.sendMail(mailOptions);
+      } catch (emailErr) {
+        console.error("Email error:", emailErr);
+        // Do NOT fail booking if email fails
+      }
+
+      return res.json({
         success: true,
-        message: "Booking created successfully",
+        message: "Booking created successfully and admin notified",
         booking_ref,
         booking_id: result.insertId,
       });
     },
   );
 };
-
 // GET ALL BOOKINGS FOR A USER
 exports.getUserBookings = (req, res) => {
   const userId = req.params.userId;
