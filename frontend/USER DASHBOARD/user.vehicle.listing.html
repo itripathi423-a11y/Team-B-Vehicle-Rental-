@@ -470,7 +470,7 @@
           </svg>
           Dashboard
         </a>
-        <a href="user.vehicle.html" class="nav-item active">
+        <a href="user.vehicle.listing.html" class="nav-item active">
           <svg
             class="nav-icon"
             viewBox="0 0 24 24"
@@ -747,16 +747,16 @@
     </div>
     <script>
       /* =======================
-   GLOBAL STATE
-======================= */
+         GLOBAL STATE
+      ======================= */
       let VEHICLES = [];
       let filtered = [];
       const PAGE_SIZE = 9;
       let currentPage = 1;
 
       /* =======================
-   FUEL ICONS
-======================= */
+         FUEL ICONS
+      ======================= */
       const fuelIcons = {
         Petrol: "⛽",
         Diesel: "🛢️",
@@ -766,8 +766,8 @@
       };
 
       /* =======================
-   SAFE API FETCH
-======================= */
+         SAFE API FETCH
+      ======================= */
       async function apiFetch(url, options = {}) {
         const res = await fetch(url, {
           ...options,
@@ -784,8 +784,8 @@
       }
 
       /* =======================
-   LOAD VEHICLES
-======================= */
+         LOAD VEHICLES
+      ======================= */
       async function loadVehicles() {
         try {
           const res = await fetch("/api/user/vehicles");
@@ -803,8 +803,8 @@
       }
 
       /* =======================
-   LOAD USER PROFILE
-======================= */
+         LOAD USER PROFILE
+      ======================= */
       async function loadUserProfile() {
         try {
           const user = await apiFetch("/api/user/profile");
@@ -829,8 +829,8 @@
       }
 
       /* =======================
-   RENDER GRID (CARD UI)
-======================= */
+         RENDER GRID (CARD UI)
+      ======================= */
       function renderGrid() {
         const sort = document.getElementById("sortSelect").value;
         let data = [...filtered];
@@ -845,11 +845,11 @@
 
         if (!data.length) {
           grid.innerHTML = `
-      <div class="empty-state">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M5 17h8M3 9h18"/></svg>
-        <h3>No vehicles found</h3>
-        <p>Try adjusting your filters</p>
-      </div>`;
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M5 17h8M3 9h18"/></svg>
+              <h3>No vehicles found</h3>
+              <p>Try adjusting your filters</p>
+            </div>`;
           return;
         }
 
@@ -867,68 +867,67 @@
               }[v.fuel_type] || "";
 
             return `
-    <div class="vehicle-card" style="animation-delay:${i * 0.05}s">
+          <div class="vehicle-card" style="animation-delay:${i * 0.05}s">
 
-      <div class="vehicle-img-wrap">
-        ${
-          img
-            ? `<img src="${img}" alt="${v.name}" loading="lazy">`
-            : `<div class="vehicle-img-placeholder">🚗</div>`
-        }
-        <span class="avail-badge ${isAvail ? "available" : "booked"}">
-          ${isAvail ? "Available" : "Booked"}
-        </span>
-      </div>
+            <div class="vehicle-img-wrap">
+              ${
+                img
+                  ? `<img src="${img}" alt="${v.name}" loading="lazy">`
+                  : `<div class="vehicle-img-placeholder">🚗</div>`
+              }
+              <span class="avail-badge ${isAvail ? "available" : "booked"}">
+                ${isAvail ? "Available" : "Booked"}
+              </span>
+            </div>
 
-      <div class="vehicle-card-body">
+            <div class="vehicle-card-body">
 
-        <div class="vc-name">${v.name}</div>
+              <div class="vc-name">${v.name}</div>
 
-        <div class="vc-meta">
-          <span class="vc-meta-pill ${fuelClass}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22V8l9-6 9 6v14"/></svg>
-            ${v.fuel_type}
-          </span>
-          <span class="vc-meta-pill">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/></svg>
-            ${v.body_type}
-          </span>
-          <span class="vc-meta-pill">⚙ ${v.transmission}</span>
-        </div>
+              <div class="vc-meta">
+                <span class="vc-meta-pill ${fuelClass}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22V8l9-6 9 6v14"/></svg>
+                  ${v.fuel_type}
+                </span>
+                <span class="vc-meta-pill">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/></svg>
+                  ${v.body_type}
+                </span>
+                <span class="vc-meta-pill">⚙ ${v.transmission}</span>
+              </div>
 
-        <div class="vc-prices">
-          <div class="price-box">
-            <span class="price-box-dur">4 hours</span>
-            <span class="price-box-val">${Number(v.price_4h).toLocaleString()}</span>
-            <span class="price-box-cur">NPR</span>
-          </div>
-          <div class="price-box">
-            <span class="price-box-dur">8 hours</span>
-            <span class="price-box-val">${Number(v.price_8h).toLocaleString()}</span>
-            <span class="price-box-cur">NPR</span>
-          </div>
-          <div class="price-box">
-            <span class="price-box-dur">1 day</span>
-            <span class="price-box-val">${Number(v.price_1d).toLocaleString()}</span>
-            <span class="price-box-cur">NPR</span>
-          </div>
-        </div>
+              <div class="vc-prices">
+                <div class="price-box">
+                  <span class="price-box-dur">4 hours</span>
+                  <span class="price-box-val">${Number(v.price_4h).toLocaleString()}</span>
+                  <span class="price-box-cur">NPR</span>
+                </div>
+                <div class="price-box">
+                  <span class="price-box-dur">8 hours</span>
+                  <span class="price-box-val">${Number(v.price_8h).toLocaleString()}</span>
+                  <span class="price-box-cur">NPR</span>
+                </div>
+                <div class="price-box">
+                  <span class="price-box-dur">1 day</span>
+                  <span class="price-box-val">${Number(v.price_1d).toLocaleString()}</span>
+                  <span class="price-box-cur">NPR</span>
+                </div>
+              </div>
 
-        <a href="vehicle-details.html?id=${v.id}" class="view-btn">View Details →</a>
+              <a href="vehicle-details.html?id=${v.id}" class="view-btn">View Details →</a>
 
-      </div>
-    </div>`;
+            </div>
+          </div>`;
           })
           .join("");
       }
       /* =======================
-   FILTER SYSTEM
-======================= */
+         FILTER SYSTEM
+      ======================= */
       function applyFilters() {
         const text = document.getElementById("searchText").value.toLowerCase();
         const body = document.getElementById("filterBody").value;
         const fuel = document.getElementById("filterFuel").value;
-        const price = document.getElementById("filterPrice").value;
 
         filtered = VEHICLES.filter(
           (v) =>
@@ -937,17 +936,15 @@
               v.brand.toLowerCase().includes(text) ||
               v.model.toLowerCase().includes(text)) &&
             (!body || v.body_type === body) &&
-            (!fuel || v.fuel_type === fuel) &&
-            (!price || v.price_4h <= Number(price)),
+            (!fuel || v.fuel_type === fuel),
         );
 
-        currentPage = 1;
         renderGrid();
       }
 
       /* =======================
-   CLEAR FILTERS
-======================= */
+         CLEAR FILTERS
+      ======================= */
       function clearFilters() {
         document.getElementById("searchText").value = "";
         document.getElementById("filterBody").value = "";
@@ -959,8 +956,8 @@
       }
 
       /* =======================
-   INIT PAGE
-======================= */
+         INIT PAGE
+      ======================= */
       async function initPage() {
         await Promise.all([loadVehicles(), loadUserProfile()]);
       }

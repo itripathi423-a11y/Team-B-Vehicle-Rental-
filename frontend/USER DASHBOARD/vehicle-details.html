@@ -1,229 +1,1475 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AUTO DEALER — Vehicle Details</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
-<link href="userdashboard.css" rel="stylesheet"/>
-<style>
-.breadcrumb { display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);margin-bottom:22px; }
-.breadcrumb a { color:var(--muted);text-decoration:none;transition:color .2s; }
-.breadcrumb a:hover { color:var(--orange); }
-.breadcrumb span { color:var(--dark);font-weight:500; }
-.breadcrumb svg { width:12px;height:12px; }
-.detail-layout { display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start; }
-.detail-main-img { width:100%;height:320px;background:linear-gradient(135deg,#f4f5f7,#e9eaec);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:100px;border:1px solid var(--border);overflow:hidden;margin-bottom:12px;position:relative; }
-.avail-overlay { position:absolute;top:16px;left:16px;padding:6px 14px;border-radius:99px;font-size:12px;font-weight:700; }
-.avail-overlay.av { background:#ecfdf5;color:#16a34a;border:1px solid #bbf7d0; }
-.avail-overlay.bk { background:#fff1f2;color:#dc2626;border:1px solid #fecaca; }
-.gallery { display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap; }
-.gallery-thumb { width:72px;height:54px;border-radius:8px;background:var(--bg);border:2px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .2s;overflow:hidden; }
-.gallery-thumb:hover,.gallery-thumb.active { border-color:var(--orange); }
-.detail-card { background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin-bottom:18px; }
-.detail-card-title { font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:8px; }
-.detail-card-title::before { content:'';display:block;width:3px;height:14px;background:var(--orange);border-radius:2px; }
-.specs-grid { display:grid;grid-template-columns:1fr 1fr;gap:0; }
-.spec-row { padding:12px 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:3px; }
-.specs-grid .spec-row:nth-last-child(1),.specs-grid .spec-row:nth-last-child(2) { border-bottom:none; }
-.spec-key { font-size:10.5px;font-family:"Space Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.5px; }
-.spec-val { font-size:14px;font-weight:600;color:var(--dark);display:flex;align-items:center;gap:5px; }
-.fuel-petrol{color:#ea580c;}.fuel-diesel{color:#1d4ed8;}.fuel-electric{color:#16a34a;}.fuel-hybrid{color:#7c3aed;}.fuel-cng{color:#0891b2;}
-.desc-text { font-size:13.5px;line-height:1.7;color:var(--text); }
-.detail-sidebar { position:sticky;top:80px;display:flex;flex-direction:column;gap:16px; }
-.price-card { background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow); }
-.price-card-name { font-family:"Bebas Neue",sans-serif;font-size:26px;letter-spacing:1px;color:var(--dark);line-height:1;margin-bottom:4px; }
-.price-card-sub { font-size:12.5px;color:var(--muted);margin-bottom:18px; }
-.pricing-options { display:flex;flex-direction:column;gap:8px;margin-bottom:18px; }
-.pricing-opt { display:flex;align-items:center;justify-content:space-between;padding:13px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .2s; }
-.pricing-opt:hover,.pricing-opt.selected { border-color:var(--orange);background:rgba(255,92,26,.04); }
-.pricing-opt-label { font-size:13.5px;font-weight:500;color:var(--dark);display:flex;align-items:center;gap:8px; }
-.pricing-opt-label svg { width:14px;height:14px;stroke:var(--muted); }
-.pricing-opt-price { font-family:"Bebas Neue",sans-serif;font-size:20px;color:var(--orange);letter-spacing:.5px; }
-.book-now-btn { display:flex;width:100%;padding:13px;background:var(--dark);color:#fff;border:none;border-radius:var(--radius-sm);font-family:"DM Sans",sans-serif;font-size:14px;font-weight:600;cursor:pointer;text-align:center;text-decoration:none;transition:background .2s,transform .15s;align-items:center;justify-content:center;gap:8px; }
-.book-now-btn:hover { background:var(--orange);transform:translateY(-1px); }
-.info-box { background:#fffbeb;border:1px solid #fde68a;border-radius:var(--radius-sm);padding:12px 14px;font-size:12px;color:#92400e;display:flex;gap:8px;align-items:flex-start; }
-.info-box svg { width:14px;height:14px;stroke:#d97706;flex-shrink:0;margin-top:1px; }
-@media(max-width:900px){.detail-layout{grid-template-columns:1fr;}.detail-sidebar{position:static;}}
-</style>
-</head>
-<body>
-<aside class="sidebar" id="sidebar">
-  <a href="userdashboard.html" class="sidebar-logo">
-    <div class="logo-mark">AD</div>
-    <div class="logo-text-block"><span class="logo-brand">Auto Dealer</span><span class="logo-sub">Fleet Management</span></div>
-  </a>
-  <nav class="sidebar-nav">
-    <a href="userdashboard.html" class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
-    <a href="user.vehicle.listing.html" class="nav-item active"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M5 17h8M3 9h18"/></svg>Vehicles</a>
-    <a href="#" class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>My Bookings</a>
-    <a href="#" class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>KYC</a>
-    <a href="#" class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Payments</a>
-  </nav>
-  <div class="sidebar-footer">
-    <div class="sidebar-user">
-      <div class="user-avatar">SR</div>
-      <div class="user-info"><span class="user-name">Swikar Regmi</span><span class="user-kyc-status unverified">⚠ KYC Pending</span></div>
-    </div>
-  </div>
-</aside>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AUTO DEALER — Vehicle Details</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ── CSS VARS ── */
+      :root {
+        --orange: #ff5c1a;
+        --orange-dim: rgba(255, 92, 26, 0.08);
+        --dark: #111827;
+        --text: #374151;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --bg: #f9fafb;
+        --white: #ffffff;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.07), 0 1px 2px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+        --radius: 12px;
+        --radius-sm: 8px;
+        /* ── SIDEBAR VARS ── */
+        --sidebar-bg: #0a0a0a;
+        --sidebar-w: 240px;
+      }
 
-<div class="main-wrap">
-  <header class="topbar">
-    <button class="icon-btn" id="sidebarToggle" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
-    <span class="topbar-page-title" id="pageTitle">Vehicle Details</span>
-    <div class="topbar-right">
-      <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-badge">3</span></button>
-      <div class="topbar-user" id="userMenuTrigger">
-        <div class="topbar-avatar">SR</div>
-        <div><p class="topbar-name">Swikar Regmi</p><p class="topbar-role">Member</p></div>
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#9ca3af;margin-left:2px;transition:transform .2s" id="dropChevron"><polyline points="6 9 12 15 18 9"/></svg>
-      </div>
-      <div class="user-dropdown" id="userDropdown">
-        <div class="dropdown-header"><div class="dropdown-name">Swikar Regmi</div><div class="dropdown-email">swikar.regmi@email.com</div></div>
-        <div class="dropdown-body">
-          <button class="dropdown-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Profile</button>
-          <div class="dropdown-divider"></div>
-          <button class="dropdown-item logout" onclick="alert('Logging out…')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Log Out</button>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        min-height: 100vh;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes pulse-dot {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.35;
+        }
+      }
+
+      /* ════════════════════════════════
+         SIDEBAR  — dark theme
+      ════════════════════════════════ */
+      .sidebar {
+        width: var(--sidebar-w);
+        min-height: 100vh;
+        background: var(--sidebar-bg);
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        z-index: 200;
+        transition: transform 0.3s ease;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .sidebar-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 24px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        text-decoration: none;
+      }
+      .logo-mark {
+        width: 36px;
+        height: 36px;
+        background: var(--orange);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 16px;
+        color: #fff;
+        letter-spacing: 0.5px;
+        flex-shrink: 0;
+      }
+      .logo-text-block {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+      .logo-brand {
+        display: block;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 17px;
+        color: #fff;
+        letter-spacing: 2px;
+        line-height: 1;
+      }
+      .logo-sub {
+        display: block;
+        font-family: "Space Mono", monospace;
+        font-size: 9px;
+        color: rgba(255, 255, 255, 0.3);
+        letter-spacing: 1px;
+        margin-top: 2px;
+      }
+
+      .sidebar-nav {
+        flex: 1;
+        padding: 16px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 9px;
+        color: rgba(255, 255, 255, 0.45);
+        font-size: 14px;
+        font-weight: 400;
+        text-decoration: none;
+        transition: all 0.18s;
+      }
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .nav-item.active {
+        background: rgba(255, 92, 26, 0.12);
+        color: var(--orange);
+        font-weight: 500;
+      }
+      .nav-item.active .nav-icon {
+        stroke: var(--orange);
+      }
+      .nav-icon {
+        width: 17px;
+        height: 17px;
+        flex-shrink: 0;
+        transition: stroke 0.18s;
+      }
+
+      .sidebar-footer {
+        padding: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .sidebar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .user-avatar {
+        width: 34px;
+        height: 34px;
+        background: var(--orange);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .user-info {
+        min-width: 0;
+      }
+      .user-name {
+        font-size: 13px;
+        color: #fff;
+        font-weight: 600;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .user-kyc-status {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-family: "Space Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.5px;
+      }
+      .user-kyc-status.unverified {
+        color: #f59e0b;
+      }
+      .user-kyc-status.verified {
+        color: #22c55e;
+      }
+      .kyc-pulse {
+        width: 5px;
+        height: 5px;
+        background: currentColor;
+        border-radius: 50%;
+        animation: pulse-dot 1.6s ease infinite;
+      }
+
+      /* ── MAIN WRAP ── */
+      .main-wrap {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* ── TOPBAR ── */
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        height: 60px;
+        display: flex;
+        align-items: center;
+        padding: 0 28px;
+        gap: 12px;
+        box-shadow: var(--shadow);
+      }
+      .topbar-back {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .topbar-back:hover {
+        color: var(--orange);
+      }
+      .topbar-back svg {
+        width: 16px;
+        height: 16px;
+      }
+      .topbar-divider {
+        color: var(--border);
+        margin: 0 4px;
+      }
+      .topbar-page-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .topbar-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        background: none;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--muted);
+        position: relative;
+        transition: all 0.2s;
+      }
+      .icon-btn svg {
+        width: 17px;
+        height: 17px;
+      }
+      .icon-btn:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+      }
+      .notif-badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        background: var(--orange);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid var(--white);
+      }
+      .topbar-avatar {
+        width: 32px;
+        height: 32px;
+        background: var(--orange);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .topbar-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .topbar-role {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .topbar-user {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+      }
+
+      /* ── CONTENT ── */
+      .content {
+        padding: 28px;
+        max-width: 2000px;
+        width: 100%;
+      }
+
+      /* ── TWO-COLUMN LAYOUT ── */
+      .detail-layout {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 24px;
+        align-items: start;
+      }
+
+      /* ── LEFT COLUMN ── */
+      .left-col {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      /* ── IMAGE GALLERY ── */
+      .gallery-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        animation: fadeUp 0.35s ease both;
+      }
+      .gallery-main {
+        position: relative;
+        height: 320px;
+        background: #f3f4f6;
+        overflow: hidden;
+      }
+      .gallery-main img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+      }
+      .gallery-main img:hover {
+        transform: scale(1.03);
+      }
+      .gallery-main-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 80px;
+        background: linear-gradient(135deg, #f4f5f7, #e9eaec);
+      }
+      .avail-badge {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        padding: 5px 12px;
+        border-radius: 99px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+      }
+      .avail-badge.available {
+        background: #ecfdf5;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
+      }
+      .avail-badge.booked {
+        background: #fff1f2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+      }
+      .gallery-thumbs {
+        display: flex;
+        gap: 10px;
+        padding: 12px 14px;
+        background: var(--white);
+        border-top: 1px solid var(--border);
+      }
+      .thumb-wrap {
+        position: relative;
+        width: 82px;
+        height: 60px;
+        border-radius: 6px;
+        overflow: hidden;
+        cursor: pointer;
+        border: 2px solid transparent;
+        flex-shrink: 0;
+        transition: border-color 0.2s;
+      }
+      .thumb-wrap.active {
+        border-color: var(--orange);
+      }
+      .thumb-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.25s;
+      }
+      .thumb-wrap:hover img {
+        transform: scale(1.08);
+      }
+      .thumb-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        background: #f3f4f6;
+      }
+      .thumb-overflow {
+        position: absolute;
+        inset: 0;
+        background: rgba(17, 24, 39, 0.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 22px;
+        color: #fff;
+        letter-spacing: 1px;
+      }
+
+      /* ── SECTION CARD ── */
+      .section-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 22px 24px;
+        box-shadow: var(--shadow);
+        animation: fadeUp 0.4s ease both;
+      }
+      .section-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--dark);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        margin-bottom: 18px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      /* ── VEHICLE HEADER ── */
+      .vh-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .vh-name {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 30px;
+        color: var(--dark);
+        letter-spacing: 1px;
+        line-height: 1;
+      }
+      .vh-meta-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 10px;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 11px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-size: 12px;
+        color: var(--text);
+        font-weight: 500;
+      }
+      .pill.fuel-petrol {
+        color: #ea580c;
+        border-color: #fed7aa;
+        background: #fff7ed;
+      }
+      .pill.fuel-diesel {
+        color: #1d4ed8;
+        border-color: #bfdbfe;
+        background: #eff6ff;
+      }
+      .pill.fuel-electric {
+        color: #16a34a;
+        border-color: #bbf7d0;
+        background: #f0fdf4;
+      }
+      .pill.fuel-hybrid {
+        color: #7c3aed;
+        border-color: #ddd6fe;
+        background: #faf5ff;
+      }
+
+      /* ── SPECS GRID ── */
+      .specs-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .spec-box {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 12px;
+        text-align: center;
+      }
+      .spec-label {
+        font-size: 10px;
+        font-family: "Space Mono", monospace;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+      }
+      .spec-val {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--dark);
+      }
+
+      /* ── DESCRIPTION ── */
+      .desc-text {
+        font-size: 14px;
+        line-height: 1.75;
+        color: var(--text);
+      }
+      .desc-text.clamped {
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .read-more-btn {
+        margin-top: 10px;
+        background: none;
+        border: none;
+        color: var(--orange);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 0;
+        font-family: "DM Sans", sans-serif;
+      }
+
+      /* ── FEATURES ── */
+      .features-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        color: var(--text);
+        font-weight: 500;
+      }
+      .feature-icon {
+        width: 30px;
+        height: 30px;
+        background: var(--orange-dim);
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        flex-shrink: 0;
+      }
+
+      /* ══════════════════════════════════════
+         RIGHT COLUMN — BOOKING CARD
+      ══════════════════════════════════════ */
+      .booking-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-md);
+        overflow: hidden;
+        position: sticky;
+        top: 80px;
+        animation: fadeUp 0.45s ease both;
+      }
+      .booking-header {
+        background: var(--dark);
+        padding: 20px 22px;
+      }
+      .booking-header-label {
+        font-size: 11px;
+        font-family: "Space Mono", monospace;
+        color: rgba(255, 255, 255, 0.45);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 7px;
+      }
+      .booking-vehicle-name {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 26px;
+        color: #fff;
+        letter-spacing: 1px;
+        line-height: 1;
+      }
+      .booking-body {
+        padding: 20px 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .field-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+      }
+      .duration-btns {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+      .dur-btn {
+        padding: 11px 8px;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: var(--bg);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.18s;
+        line-height: 1.3;
+      }
+      .dur-btn:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+      }
+      .dur-btn.active {
+        background: var(--orange);
+        color: #fff;
+        border-color: var(--orange);
+      }
+      .dur-btn .dur-price {
+        display: block;
+        font-size: 11px;
+        font-weight: 400;
+        opacity: 0.8;
+        margin-top: 3px;
+      }
+      .date-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .booking-input {
+        height: 40px;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 0 12px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        color: var(--text);
+        background: var(--bg);
+        outline: none;
+        width: 100%;
+        transition: border-color 0.2s;
+      }
+      .booking-input:focus {
+        border-color: var(--orange);
+      }
+      .price-breakdown {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+      }
+      .price-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        color: var(--text);
+      }
+      .price-row.muted {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .price-row.total {
+        border-top: 1px solid var(--border);
+        padding-top: 11px;
+        margin-top: 2px;
+        font-weight: 700;
+        color: var(--dark);
+        font-size: 15px;
+      }
+      .price-row.total .val {
+        color: var(--orange);
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 26px;
+        letter-spacing: 0.5px;
+        line-height: 1;
+      }
+      .book-btn {
+        width: 100%;
+        padding: 14px;
+        background: var(--orange);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-family: "DM Sans", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        letter-spacing: 0.3px;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+      }
+      .book-btn:hover {
+        transform: translateY(-1px);
+        background: #e8500f;
+      }
+      .book-btn svg {
+        width: 17px;
+        height: 17px;
+      }
+      .kyc-notice {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 11px 14px;
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-radius: var(--radius-sm);
+        font-size: 12.5px;
+        color: #92400e;
+      }
+      .kyc-notice svg {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+      }
+
+      /* ── FOOTER ── */
+      .footer-strip {
+        margin-top: 32px;
+        padding: 20px 0 8px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .footer-links {
+        display: flex;
+        gap: 14px;
+      }
+      .footer-links a {
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .footer-links a:hover {
+        color: var(--orange);
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 1080px) {
+        .detail-layout {
+          grid-template-columns: 1fr;
+        }
+        .booking-card {
+          position: static;
+        }
+      }
+      @media (max-width: 720px) {
+        :root {
+          --sidebar-w: 0px;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .main-wrap {
+          margin-left: 0;
+        }
+        .content {
+          padding: 16px;
+        }
+        .specs-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <a href="userdashboard.html" class="sidebar-logo">
+        <div class="logo-mark">AD</div>
+        <div class="logo-text-block">
+          <span class="logo-brand">Auto Dealer</span>
+          <span class="logo-sub">Fleet Management</span>
         </div>
-      </div>
-    </div>
-  </header>
-  <main class="content" id="mainContent">
-    <div style="text-align:center;padding:60px;color:var(--muted)">Loading…</div>
-  </main>
-</div>
-
-<script>
-const VEHICLES = [
-  {id:1,name:"Toyota Fortuner",brand:"Toyota",model:"Fortuner",year:2023,plate:"BA 1 JA 1234",type:"SUV",fuel:"Diesel",transmission:"Automatic",seats:7,color:"Pearl White",emoji:"🚙",available:true,price4h:3200,price8h:5500,price1d:9500,desc:"A powerful full-size SUV with advanced 4WD system, perfect for city commutes and mountain adventures. Features commanding presence, luxury interiors, and top-tier safety systems."},
-  {id:2,name:"Hyundai Creta",brand:"Hyundai",model:"Creta",year:2023,plate:"BA 2 CHA 5678",type:"SUV",fuel:"Petrol",transmission:"Automatic",seats:5,color:"Fiery Red",emoji:"🚗",available:true,price4h:1800,price8h:3000,price1d:5200,desc:"A compact SUV with a sporty design, great fuel efficiency and a premium cabin experience. Ideal for city driving with excellent road presence."},
-  {id:3,name:"Suzuki Swift",brand:"Suzuki",model:"Swift",year:2022,plate:"BA 3 NA 9012",type:"Hatchback",fuel:"Petrol",transmission:"Manual",seats:5,color:"Speedy Blue",emoji:"🏎",available:true,price4h:1000,price8h:1800,price1d:3200,desc:"A nimble and fun hatchback perfect for city driving. Great fuel economy and easy to park in tight urban spaces."},
-  {id:4,name:"Mahindra Thar",brand:"Mahindra",model:"Thar",year:2022,plate:"BA 4 PA 3456",type:"Off-Road",fuel:"Diesel",transmission:"Manual",seats:4,color:"Rocky Beige",emoji:"🛻",available:false,price4h:2500,price8h:4200,price1d:7500,desc:"An iconic off-road beast built for extreme terrain. The go-to choice for adventurers seeking rugged capability."},
-  {id:5,name:"Honda City",brand:"Honda",model:"City",year:2023,plate:"BA 5 KA 7890",type:"Sedan",fuel:"Petrol",transmission:"Automatic",seats:5,color:"Lunar Silver",emoji:"🚘",available:true,price4h:1400,price8h:2600,price1d:4500,desc:"An elegant sedan with class-leading interior space, smooth ride quality, and advanced tech features."},
-  {id:6,name:"Toyota Land Cruiser",brand:"Toyota",model:"Land Cruiser",year:2024,plate:"BA 1 BA 2024",type:"SUV",fuel:"Diesel",transmission:"Automatic",seats:8,color:"Midnight Black",emoji:"🚐",available:true,price4h:4500,price8h:7800,price1d:13500,desc:"The pinnacle of luxury SUVs. Unmatched comfort, capability, and prestige for the most demanding journeys."},
-  {id:7,name:"Maruti Ertiga",brand:"Maruti",model:"Ertiga",year:2022,plate:"BA 7 DA 1357",type:"MPV",fuel:"CNG",transmission:"Manual",seats:7,color:"Premium Silver",emoji:"🚌",available:true,price4h:1200,price8h:2200,price1d:3800,desc:"A practical 7-seater MPV ideal for family trips. Economical CNG option for budget-conscious travelers."},
-  {id:8,name:"Kia Seltos",brand:"Kia",model:"Seltos",year:2023,plate:"BA 8 GA 2468",type:"SUV",fuel:"Petrol",transmission:"Automatic",seats:5,color:"Gravity Grey",emoji:"🚗",available:true,price4h:2000,price8h:3500,price1d:6000,desc:"A feature-packed compact SUV with bold design, excellent tech features and sporty performance."},
-  {id:9,name:"Nissan Magnite",brand:"Nissan",model:"Magnite",year:2023,plate:"BA 9 HA 1122",type:"SUV",fuel:"Petrol",transmission:"Automatic",seats:5,color:"Vivid Blue",emoji:"🚗",available:true,price4h:1600,price8h:2900,price1d:5000,desc:"A modern sub-compact SUV loaded with features and great value with an impressive tech suite."},
-  {id:10,name:"MG Hector",brand:"MG",model:"Hector",year:2023,plate:"BA 10 IA 3344",type:"SUV",fuel:"Hybrid",transmission:"Automatic",seats:5,color:"Candy White",emoji:"🚙",available:true,price4h:2800,price8h:4800,price1d:8200,desc:"India's first internet car with a massive panoramic sunroof and 14-inch touchscreen, and hybrid efficiency."},
-  {id:11,name:"Tata Nexon EV",brand:"Tata",model:"Nexon EV",year:2024,plate:"BA 11 JA 5566",type:"SUV",fuel:"Electric",transmission:"Automatic",seats:5,color:"Flame Red",emoji:"⚡",available:true,price4h:1900,price8h:3400,price1d:5800,desc:"A premium electric SUV with a 312km range. Zero emissions, full performance."},
-  {id:12,name:"Ford Endeavour",brand:"Ford",model:"Endeavour",year:2022,plate:"BA 12 LA 7788",type:"SUV",fuel:"Diesel",transmission:"Automatic",seats:7,color:"Shadow Black",emoji:"🚙",available:false,price4h:3800,price8h:6500,price1d:11000,desc:"A rugged body-on-frame SUV built for adventure with terrain management system for any road."},
-];
-
-const fuelMeta = {
-  Petrol:{icon:"⛽",cls:"fuel-petrol"},Diesel:{icon:"🛢️",cls:"fuel-diesel"},
-  Electric:{icon:"⚡",cls:"fuel-electric"},Hybrid:{icon:"🔋",cls:"fuel-hybrid"},CNG:{icon:"🌿",cls:"fuel-cng"},
-};
-const galleryEmojis = ["🚗","🛣️","🏔️","🌆","🛤️"];
-const id = parseInt(new URLSearchParams(window.location.search).get("id"))||1;
-const v = VEHICLES.find(x=>x.id===id)||VEHICLES[0];
-const fm = fuelMeta[v.fuel]||fuelMeta.Petrol;
-document.getElementById("pageTitle").textContent = v.name;
-document.title = `AUTO DEALER — ${v.name}`;
-
-document.getElementById("mainContent").innerHTML = `
-  <div class="breadcrumb">
-    <a href="userdashboard.html">Dashboard</a>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-    <a href="user.vehicle.listing.html">Vehicles</a>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-    <span>${v.name}</span>
-  </div>
-  <div class="detail-layout">
-    <div>
-      <div class="detail-main-img" id="mainImg">
-        <div style="font-size:100px">${v.emoji}</div>
-        <span class="avail-overlay ${v.available?'av':'bk'}">${v.available?'✓ Available Now':'✗ Currently Booked'}</span>
-      </div>
-      <div class="gallery">
-        ${galleryEmojis.map((e,i)=>`<div class="gallery-thumb ${i===0?'active':''}" onclick="selectThumb(this,'${e}')"><span style="font-size:22px">${e}</span></div>`).join('')}
-      </div>
-      <div class="detail-card">
-        <div class="detail-card-title">Vehicle Specifications</div>
-        <div class="specs-grid">
-          <div class="spec-row"><span class="spec-key">Brand</span><span class="spec-val">${v.brand}</span></div>
-          <div class="spec-row"><span class="spec-key">Model</span><span class="spec-val">${v.model}</span></div>
-          <div class="spec-row"><span class="spec-key">Year</span><span class="spec-val">${v.year}</span></div>
-          <div class="spec-row"><span class="spec-key">License Plate</span><span class="spec-val" style="font-family:'Space Mono',monospace;font-size:12px">${v.plate}</span></div>
-          <div class="spec-row"><span class="spec-key">Body Type</span><span class="spec-val">${v.type}</span></div>
-          <div class="spec-row"><span class="spec-key">Fuel Type</span><span class="spec-val ${fm.cls}">${fm.icon} ${v.fuel}</span></div>
-          <div class="spec-row"><span class="spec-key">Transmission</span><span class="spec-val">${v.transmission}</span></div>
-          <div class="spec-row"><span class="spec-key">Seating</span><span class="spec-val">${v.seats} Passengers</span></div>
-          <div class="spec-row"><span class="spec-key">Color</span><span class="spec-val">${v.color}</span></div>
-          <div class="spec-row"><span class="spec-key">Insurance</span><span class="spec-val" style="color:#16a34a">✓ Included</span></div>
-        </div>
-      </div>
-      <div class="detail-card">
-        <div class="detail-card-title">About This Vehicle</div>
-        <p class="desc-text">${v.desc}</p>
-      </div>
-    </div>
-    <div class="detail-sidebar">
-      <div class="price-card">
-        <div class="price-card-name">${v.name}</div>
-        <div class="price-card-sub">${v.year} · ${v.type} · ${v.fuel}</div>
-        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:10px">Select Duration</div>
-        <div class="pricing-options">
-          <label class="pricing-opt selected" data-dur="4h" onclick="selectPricing('4h')">
-            <span class="pricing-opt-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>4 Hours</span>
-            <span class="pricing-opt-price">Rs.${v.price4h.toLocaleString()}</span>
-          </label>
-          <label class="pricing-opt" data-dur="8h" onclick="selectPricing('8h')">
-            <span class="pricing-opt-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>8 Hours</span>
-            <span class="pricing-opt-price">Rs.${v.price8h.toLocaleString()}</span>
-          </label>
-          <label class="pricing-opt" data-dur="1d" onclick="selectPricing('1d')">
-            <span class="pricing-opt-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>1 Day</span>
-            <span class="pricing-opt-price">Rs.${v.price1d.toLocaleString()}</span>
-          </label>
-        </div>
-        <a href="user.booking.html?id=${v.id}" class="book-now-btn" ${v.available?'':'style="opacity:.5;pointer-events:none"'}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M5 17h8M3 9h18"/></svg>
-          ${v.available?'Book Now':'Currently Unavailable'}
+      </a>
+      <nav class="sidebar-nav">
+        <a href="userdashboard.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard
         </a>
+        <a href="user.vehicle.listing.html" class="nav-item active">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path
+              d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+            />
+            <circle cx="7" cy="17" r="2" />
+            <circle cx="17" cy="17" r="2" />
+            <path d="M5 17h8M3 9h18" />
+          </svg>
+          Vehicles
+        </a>
+        <a href="#" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          My Bookings
+        </a>
+        <a href="#" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          KYC
+        </a>
+        <a href="#" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <rect x="2" y="5" width="20" height="14" rx="2" />
+            <line x1="2" y1="10" x2="22" y2="10" />
+          </svg>
+          Payments
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar">SR</div>
+          <div class="user-info">
+            <span class="user-name">Swikar Regmi</span>
+            <span class="user-kyc-status unverified">
+              <span class="kyc-pulse"></span>KYC Pending
+            </span>
+          </div>
+        </div>
       </div>
-      ${!v.available?`<div class="info-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>This vehicle is currently booked. Please check back later or browse other available vehicles.</div>`:''}
-      <div class="detail-card" style="margin-bottom:0">
-        <div class="detail-card-title">Includes</div>
-        ${['Full insurance coverage','24/7 roadside assistance','Unlimited mileage','Clean & sanitized vehicle','GPS navigation'].map(f=>`
-          <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text)">
-            <span style="width:18px;height:18px;background:#ecfdf5;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;color:#16a34a;font-weight:700">✓</span>${f}
-          </div>`).join('')}
-      </div>
+    </aside>
+
+    <div class="main-wrap">
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <a href="user.vehicle.listing.html" class="topbar-back">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+          Vehicles
+        </a>
+        <span class="topbar-divider">/</span>
+        <span class="topbar-page-title" id="topbarTitle">Vehicle Details</span>
+        <div class="topbar-right">
+          <button class="icon-btn" title="Notifications">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+            </svg>
+            <span class="notif-badge">3</span>
+          </button>
+          <div class="topbar-user">
+            <div class="topbar-avatar">SR</div>
+            <div>
+              <p class="topbar-name">Swikar Regmi</p>
+              <p class="topbar-role">Member</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="content">
+        <div class="detail-layout">
+          <!-- ═══ LEFT COLUMN ═══ -->
+          <div class="left-col">
+            <!-- GALLERY -->
+            <div class="gallery-card">
+              <div class="gallery-main">
+                <div class="gallery-main-placeholder" id="mainImgWrap">🚗</div>
+                <span class="avail-badge available" id="availBadge"
+                  >Available</span
+                >
+              </div>
+              <div class="gallery-thumbs" id="thumbsRow"></div>
+            </div>
+
+            <!-- VEHICLE HEADER -->
+            <div class="section-card" style="animation-delay: 0.05s">
+              <div class="vh-header">
+                <div>
+                  <div class="vh-name" id="vhName">Loading…</div>
+                  <div class="vh-meta-pills" id="vhPills"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SPECIFICATIONS -->
+            <div class="section-card" style="animation-delay: 0.1s">
+              <div class="section-title">Vehicle Specifications</div>
+              <div class="specs-grid" id="specsGrid"></div>
+            </div>
+
+            <!-- DESCRIPTION -->
+            <div class="section-card" style="animation-delay: 0.15s">
+              <div class="section-title">About this Vehicle</div>
+              <p class="desc-text clamped" id="descText">
+                No description available.
+              </p>
+              <button
+                class="read-more-btn"
+                id="readMoreBtn"
+                onclick="toggleDesc()"
+                style="display: none"
+              >
+                Read more
+              </button>
+            </div>
+
+            <!-- FEATURES -->
+            <div class="section-card" style="animation-delay: 0.2s">
+              <div class="section-title">Features</div>
+              <div class="features-grid" id="featuresGrid">
+                <div class="feature-item">
+                  <div class="feature-icon">❄️</div>
+                  Climate Control
+                </div>
+                <div class="feature-item">
+                  <div class="feature-icon">🗺️</div>
+                  GPS Navigation
+                </div>
+                <div class="feature-item">
+                  <div class="feature-icon">🔊</div>
+                  Bluetooth Audio
+                </div>
+                <div class="feature-item">
+                  <div class="feature-icon">🪑</div>
+                  Leather Seats
+                </div>
+                <div class="feature-item">
+                  <div class="feature-icon">🤖</div>
+                  Autopilot
+                </div>
+                <div class="feature-item">
+                  <div class="feature-icon">📷</div>
+                  360° Camera
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ RIGHT COLUMN — BOOKING ═══ -->
+          <div class="booking-card">
+            <div class="booking-header">
+              <div class="booking-header-label">Book this vehicle</div>
+              <div class="booking-vehicle-name" id="bookingVhName">—</div>
+            </div>
+
+            <div class="booking-body">
+              <!-- Duration -->
+              <div>
+                <div class="field-label">Select Duration</div>
+                <div class="duration-btns" id="durationBtns">
+                  <button
+                    class="dur-btn active"
+                    data-dur="4h"
+                    onclick="selectDuration(this)"
+                  >
+                    4 Hours<span class="dur-price" id="price4h">—</span>
+                  </button>
+                  <button
+                    class="dur-btn"
+                    data-dur="8h"
+                    onclick="selectDuration(this)"
+                  >
+                    8 Hours<span class="dur-price" id="price8h">—</span>
+                  </button>
+                  <button
+                    class="dur-btn"
+                    data-dur="1d"
+                    onclick="selectDuration(this)"
+                  >
+                    1 Day<span class="dur-price" id="price1d">—</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Date & Time -->
+              <div>
+                <div class="field-label">Pickup Date &amp; Time</div>
+                <div class="date-row">
+                  <input
+                    class="booking-input"
+                    type="date"
+                    id="pickupDate"
+                    onchange="calcPrice()"
+                  />
+                  <input
+                    class="booking-input"
+                    type="time"
+                    id="pickupTime"
+                    value="09:00"
+                    onchange="calcPrice()"
+                  />
+                </div>
+              </div>
+
+              <!-- Price Breakdown -->
+              <div class="price-breakdown">
+                <div class="price-row muted">
+                  <span id="baseLabel">Base rate (4 hrs)</span>
+                  <span id="baseVal">—</span>
+                </div>
+                <div class="price-row muted">
+                  <span>VAT (13%)</span>
+                  <span id="vatVal">—</span>
+                </div>
+                <div class="price-row total">
+                  <span>Total</span>
+                  <span class="val" id="totalVal">—</span>
+                </div>
+              </div>
+
+              <!-- KYC Notice -->
+              <div class="kyc-notice">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                  />
+                  <line x1="12" y1="9" x2="12" y2="13" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                Complete KYC verification before booking
+              </div>
+
+              <!-- Book Button -->
+              <button
+                class="book-btn"
+                onclick="window.location.href = 'user.booking.html'"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Book Now
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-strip">
+          <p>© 2026 Auto Dealer Fleet Management. All rights reserved.</p>
+          <div class="footer-links">
+            <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a>
+          </div>
+        </div>
+      </main>
     </div>
-  </div>
-  <div class="footer-strip" style="margin-top:8px">
-    <p>© 2026 Auto Dealer Fleet Management.</p>
-    <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a></div>
-  </div>
-`;
 
-function selectPricing(type) {
-  document.querySelectorAll('.pricing-opt').forEach(el=>el.classList.remove('selected'));
-  document.querySelector(`.pricing-opt[data-dur="${type}"]`).classList.add('selected');
-}
+    <script>
+      const DEMO = {
+        id: 1,
+        name: "Tesla Model S Plaid",
+        brand: "Tesla",
+        model: "Model S Plaid",
+        body_type: "Sedan",
+        fuel_type: "Electric",
+        transmission: "Automatic",
+        seats: 5,
+        year: 2024,
+        color: "Pearl White",
+        mileage: "0 km/charge",
+        engine: "Tri-Motor",
+        status: "Available",
+        price_4h: 8000,
+        price_8h: 14000,
+        price_1d: 22000,
+        description:
+          "Experience the pinnacle of electric performance with Tesla Model S Plaid.",
+        features: [
+          { icon: "❄️", label: "Climate Control" },
+          { icon: "🗺️", label: "GPS Navigation" },
+          { icon: "🔊", label: "Bluetooth Audio" },
+        ],
+        images: [null, null, null],
+      };
 
-function selectThumb(el, emoji) {
-  document.querySelectorAll('.gallery-thumb').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  const prev = document.getElementById("mainImg").querySelector('div');
-  if(prev){ prev.style.transition='opacity .2s'; prev.style.opacity='0'; setTimeout(()=>{ prev.textContent=emoji; prev.style.opacity='1'; },150); }
-}
+      let vehicle = null;
+      let selectedDur = "4h";
+      const VAT_RATE = 0.13;
 
-// Sidebar & dropdown
-const sidebar=document.getElementById("sidebar"),overlay=document.getElementById("sidebarOverlay"),toggle=document.getElementById("sidebarToggle");
-toggle?.addEventListener("click",()=>{sidebar.classList.toggle("open");overlay.classList.toggle("open");});
-overlay?.addEventListener("click",()=>{sidebar.classList.remove("open");overlay.classList.remove("open");});
-window.addEventListener("resize",()=>{if(toggle)toggle.style.display=window.innerWidth<=768?"flex":"none";});
-if(toggle)toggle.style.display=window.innerWidth<=768?"flex":"none";
-const trigger=document.getElementById("userMenuTrigger"),dropdown=document.getElementById("userDropdown"),chevron=document.getElementById("dropChevron");
-let open=false;
-trigger.addEventListener("click",e=>{e.stopPropagation();open=!open;dropdown.classList.toggle("open",open);chevron.style.transform=open?"rotate(180deg)":"";});
-document.addEventListener("click",()=>{if(open){open=false;dropdown.classList.remove("open");chevron.style.transform="";}});
-dropdown.addEventListener("click",e=>e.stopPropagation());
-</script>
-</body>
+      async function loadVehicle() {
+        const params = new URLSearchParams(location.search);
+        const id = params.get("id");
+
+        try {
+          const res = await fetch(`/api/user/vehicle-details/${id}`);
+          if (!res.ok) throw new Error();
+          vehicle = await res.json();
+        } catch {
+          vehicle = DEMO;
+        }
+
+        render();
+      }
+
+      function render() {
+        const v = vehicle;
+
+        // BASIC INFO
+        document.getElementById("topbarTitle").textContent = v.name;
+        document.getElementById("bookingVhName").textContent = v.name;
+        document.getElementById("vhName").textContent = v.name;
+
+        // STATUS
+        const badge = document.getElementById("availBadge");
+        badge.textContent = v.status;
+        badge.className =
+          "avail-badge " + (v.status === "Available" ? "available" : "booked");
+
+        // MAIN IMAGE (SAFE FIX)
+        const mainWrap = document.getElementById("mainImgWrap");
+        const images = Array.isArray(v.images) ? v.images : [];
+        const firstImg = images[0];
+
+        if (firstImg) {
+          mainWrap.innerHTML = `
+        <img id="mainImg" src="${firstImg}" 
+          alt="${v.name}" 
+          style="width:100%;height:100%;object-fit:cover;transition:0.3s">
+      `;
+        }
+
+        renderThumbs();
+
+        // PILL INFO
+        const fuelClass =
+          {
+            Petrol: "fuel-petrol",
+            Diesel: "fuel-diesel",
+            Electric: "fuel-electric",
+            Hybrid: "fuel-hybrid",
+          }[v.fuel_type] || "";
+
+        document.getElementById("vhPills").innerHTML = `
+      <span class="pill ${fuelClass}">${v.fuel_type}</span>
+      <span class="pill">${v.body_type}</span>
+      <span class="pill">⚙ ${v.transmission}</span>
+      <span class="pill">👤 ${v.seats} Seats</span>
+    `;
+
+        // SPECS
+        document.getElementById("specsGrid").innerHTML = [
+          { label: "Year", val: v.year },
+          { label: "Color", val: v.color },
+          { label: "Engine", val: v.engine || "—" },
+          { label: "Fuel", val: v.fuel_type },
+          { label: "Transmission", val: v.transmission },
+          { label: "Seats", val: v.seats },
+        ]
+          .map(
+            (s) =>
+              `<div class="spec-box"><div class="spec-label">${s.label}</div><div class="spec-val">${s.val}</div></div>`,
+          )
+          .join("");
+
+        // DESCRIPTION
+        const descEl = document.getElementById("descText");
+        descEl.textContent = v.description || "No description available.";
+
+        const btn = document.getElementById("readMoreBtn");
+        if (v.description && v.description.length > 220)
+          btn.style.display = "block";
+
+        // FEATURES (FULL SAFE FIX)
+        let features = [];
+
+        try {
+          if (typeof v.features === "string") {
+            features = JSON.parse(v.features);
+          } else if (Array.isArray(v.features)) {
+            features = v.features;
+          }
+        } catch {
+          features = [];
+        }
+
+        document.getElementById("featuresGrid").innerHTML = features.length
+          ? features
+              .map((f) => {
+                if (typeof f === "string") {
+                  return `
+                <div class="feature-item">
+                  <div class="feature-icon">✔️</div>
+                  ${f}
+                </div>
+              `;
+                }
+
+                return `
+              <div class="feature-item">
+                <div class="feature-icon">${f.icon || "✔️"}</div>
+                ${f.label || ""}
+              </div>
+            `;
+              })
+              .join("")
+          : `<div class="feature-item">No features available</div>`;
+
+        // PRICES
+        document.getElementById("price4h").textContent =
+          `NPR ${Number(v.price_4h).toLocaleString()}`;
+        document.getElementById("price8h").textContent =
+          `NPR ${Number(v.price_8h).toLocaleString()}`;
+        document.getElementById("price1d").textContent =
+          `NPR ${Number(v.price_1d).toLocaleString()}`;
+
+        document.getElementById("pickupDate").value = new Date()
+          .toISOString()
+          .slice(0, 10);
+
+        calcPrice();
+      }
+
+      function renderThumbs() {
+        const v = vehicle;
+        const images = Array.isArray(v.images) ? v.images : [];
+        const row = document.getElementById("thumbsRow");
+
+        const total = images.length;
+        const showCount = Math.min(total, 3);
+        const extra = total - 3;
+
+        row.innerHTML = Array.from({ length: showCount }, (_, i) => {
+          const src = images[i];
+          const isLast = i === 2 && extra > 0;
+
+          return `
+        <div class="thumb-wrap ${i === 0 ? "active" : ""}" onclick="switchMain(${i}, this)">
+          ${src ? `<img src="${src}">` : `<div class="thumb-placeholder">🚗</div>`}
+          ${isLast ? `<div class="thumb-overflow">+${extra}</div>` : ""}
+        </div>
+      `;
+        }).join("");
+      }
+
+      function switchMain(idx, el) {
+        document
+          .querySelectorAll(".thumb-wrap")
+          .forEach((t) => t.classList.remove("active"));
+
+        el.classList.add("active");
+
+        const mainImg = document.getElementById("mainImg");
+        const src = vehicle.images?.[idx];
+
+        if (mainImg && src) mainImg.src = src;
+      }
+
+      function selectDuration(btn) {
+        document
+          .querySelectorAll(".dur-btn")
+          .forEach((b) => b.classList.remove("active"));
+
+        btn.classList.add("active");
+        selectedDur = btn.dataset.dur;
+        calcPrice();
+      }
+
+      function calcPrice() {
+        if (!vehicle) return;
+
+        const v = vehicle;
+
+        const base =
+          selectedDur === "4h"
+            ? v.price_4h
+            : selectedDur === "8h"
+              ? v.price_8h
+              : v.price_1d;
+
+        const vat = Math.round(base * VAT_RATE);
+        const total = base + vat;
+
+        const label =
+          selectedDur === "4h"
+            ? "4 hrs"
+            : selectedDur === "8h"
+              ? "8 hrs"
+              : "1 day";
+
+        document.getElementById("baseLabel").textContent =
+          `Base rate (${label})`;
+
+        document.getElementById("baseVal").textContent =
+          `NPR ${Number(base).toLocaleString()}`;
+
+        document.getElementById("vatVal").textContent =
+          `NPR ${Number(vat).toLocaleString()}`;
+
+        document.getElementById("totalVal").textContent =
+          `NPR ${Number(total).toLocaleString()}`;
+      }
+
+      let descExpanded = false;
+
+      function toggleDesc() {
+        const el = document.getElementById("descText");
+        const btn = document.getElementById("readMoreBtn");
+
+        descExpanded = !descExpanded;
+
+        el.classList.toggle("clamped", !descExpanded);
+        btn.textContent = descExpanded ? "Show less" : "Read more";
+      }
+
+      function handleBook() {
+        const date = document.getElementById("pickupDate").value;
+        const time = document.getElementById("pickupTime").value;
+
+        if (!date) return alert("Please select a pickup date.");
+
+        alert(
+          `Booking requested!\nVehicle: ${vehicle.name}\nDuration: ${selectedDur}\nPickup: ${date} at ${time}`,
+        );
+      }
+
+      loadVehicle();
+    </script>
+  </body>
 </html>

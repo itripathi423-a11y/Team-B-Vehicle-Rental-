@@ -25,6 +25,8 @@ const userDashboardRoutes = require("./routes/user.dashboard.routes");
 // Import user vehicle listing routes
 const userVehicleListingRoutes = require("./routes/user.vehicle.listing.routes");
 
+const vehicleDetailsRoutes = require("./routes/vehicleDetails.routes");
+
 // Create Express app instance
 const app = express();
 
@@ -107,6 +109,8 @@ app.use("/api", userDashboardRoutes);
 
 // User vehicle listing routes
 app.use("/api/user/vehicles", userVehicleListingRoutes);
+// API base
+app.use("/api/user/vehicle-details", vehicleDetailsRoutes);
 
 /* =========================
    SERVER START
