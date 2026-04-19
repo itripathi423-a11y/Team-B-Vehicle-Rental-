@@ -1,3 +1,6 @@
+require("dotenv").config({ path: __dirname + "/.env" });
+console.log("EMAIL_USER =", process.env.EMAIL_USER);
+console.log("EMAIL_PASS =", process.env.EMAIL_PASS);
 // Import Express framework
 const express = require("express");
 
