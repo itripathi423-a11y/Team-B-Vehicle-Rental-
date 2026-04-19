@@ -139,10 +139,11 @@ async function loadUserProfile() {
     const fullName = `${user.first_name} ${user.last_name}`;
     const initials =
       `${user.first_name?.[0] ?? ""}${user.last_name?.[0] ?? ""}`.toUpperCase();
+
     const isVerified = user.kyc_status === "Verified";
     const hasPhoto = !!user.profile_photo;
 
-    /* ── Greeting in welcome banner ── */
+    /* ── TOP WELCOME TEXT ── */
     const hour = new Date().getHours();
     const greet =
       hour < 12
@@ -150,43 +151,28 @@ async function loadUserProfile() {
         : hour < 17
           ? "Good afternoon"
           : "Good evening";
+
     const welcomeH1 = document.querySelector(".welcome-text h1");
     if (welcomeH1) {
       welcomeH1.innerHTML = `${greet}, <span id="greetName">${user.first_name}</span> 👋`;
     }
 
-    /* ── Helper: inject photo or initials into any avatar container ── */
-    function populateAvatar(containerEl, initialsEl) {
-      if (!containerEl) return;
-      if (hasPhoto) {
-        if (initialsEl) initialsEl.style.display = "none";
-        // Remove any existing img first to avoid duplicates
-        containerEl.querySelectorAll("img").forEach((i) => i.remove());
-        const img = document.createElement("img");
-        img.src = user.profile_photo;
-        img.alt = fullName;
-        containerEl.appendChild(img);
-      } else {
-        if (initialsEl) initialsEl.textContent = initials;
-      }
-      if (isVerified) {
-        containerEl
-          .querySelectorAll(".avatar-tick,.avatar-verified-badge")
-          .forEach((t) => t.remove());
-        const tick = document.createElement("span");
-        tick.className = "avatar-tick";
-        tick.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>`;
-        containerEl.appendChild(tick);
-      }
-    }
-
-    /* ── Sidebar avatar + name + kyc ── */
-    populateAvatar(
-      document.getElementById("sidebarAvatar"),
-      document.getElementById("sidebarInitials"),
-    );
+    /* ── SIDEBAR NAME ── */
     const sidebarNameEl = document.getElementById("sidebarName");
     if (sidebarNameEl) sidebarNameEl.textContent = fullName;
+
+    /* ── TOPBAR NAME ── */
+    const topbarNameEl = document.getElementById("topbarName");
+    if (topbarNameEl) topbarNameEl.textContent = fullName;
+
+    /* ── 🔥 DROPDOWN MENU (FIXED PART) ── */
+    const ddName = document.getElementById("ddName");
+    const ddEmail = document.getElementById("ddEmail");
+
+    if (ddName) ddName.textContent = fullName;
+    if (ddEmail) ddEmail.textContent = user.email;
+
+    /* ── KYC STATUS ── */
     const sidebarKycEl = document.getElementById("sidebarKyc");
     if (sidebarKycEl) {
       if (isVerified) {
@@ -201,44 +187,56 @@ async function loadUserProfile() {
       }
     }
 
-    /* ── Topbar avatar + name + role ── */
-    populateAvatar(
-      document.getElementById("topbarAvatar"),
-      document.getElementById("topbarInitials"),
-    );
-    const topbarNameEl = document.getElementById("topbarName");
-    if (topbarNameEl) topbarNameEl.textContent = fullName;
+    /* ── TOPBAR ROLE ── */
     const topbarRoleEl = document.getElementById("topbarRole");
     if (topbarRoleEl) {
       topbarRoleEl.textContent = isVerified ? "✔ Verified Member" : "Member";
       topbarRoleEl.style.color = isVerified ? "#16a34a" : "";
     }
 
-    /* ── KYC alert banner ── */
-    const kycAlertEl = document.getElementById("kycAlert");
-    if (kycAlertEl) {
+    /* ── AVATAR HANDLING ── */
+    function populateAvatar(containerEl, initialsEl) {
+      if (!containerEl) return;
+
+      if (hasPhoto) {
+        if (initialsEl) initialsEl.style.display = "none";
+
+        containerEl.querySelectorAll("img").forEach((i) => i.remove());
+
+        const img = document.createElement("img");
+        img.src = user.profile_photo;
+        img.alt = fullName;
+        containerEl.appendChild(img);
+      } else {
+        if (initialsEl) initialsEl.textContent = initials;
+      }
+
       if (isVerified) {
-        kycAlertEl.style.display = "none";
-      } else if (user.kyc_status === "Rejected") {
-        kycAlertEl.querySelector("strong").textContent =
-          "Your KYC was rejected";
-        kycAlertEl.querySelector("span").textContent =
-          "Your identity verification was not approved. Please re-submit with valid documents.";
-        kycAlertEl.style.background = "#fff1f2";
-        kycAlertEl.style.borderColor = "#fecaca";
-        kycAlertEl.style.borderLeftColor = "#dc2626";
-        kycAlertEl.querySelector("svg").style.stroke = "#dc2626";
-        kycAlertEl.querySelector(".kyc-alert-btn").style.background = "#dc2626";
+        containerEl.querySelectorAll(".avatar-tick").forEach((t) => t.remove());
+
+        const tick = document.createElement("span");
+        tick.className = "avatar-tick";
+        tick.innerHTML = `✔`;
+        containerEl.appendChild(tick);
       }
     }
 
-    /* Store user id globally */
+    populateAvatar(
+      document.getElementById("sidebarAvatar"),
+      document.getElementById("sidebarInitials"),
+    );
+
+    populateAvatar(
+      document.getElementById("topbarAvatar"),
+      document.getElementById("topbarInitials"),
+    );
+
+    /* ── STORE USER ID ── */
     window._userId = user.id;
   } catch (err) {
     console.error("Profile load failed:", err.message);
   }
 }
-
 /* ── 2. BOOKING STATS ────────────────────────────────
    GET /api/user/bookings/stats
    Expected response:
