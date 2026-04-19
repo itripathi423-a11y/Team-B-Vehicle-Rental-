@@ -43,12 +43,18 @@ exports.getVehicleById = (req, res) => {
 exports.createVehicle = (req, res) => {
   const v = req.body;
 
+  // ✅ FIX: features must be JSON
+  const features = Array.isArray(v.features)
+    ? JSON.stringify(v.features)
+    : JSON.stringify(v.features ? [v.features] : []);
+
   const sql = `
     INSERT INTO vehicles 
     (name, brand, model, year, license_plate, body_type, fuel_type, transmission,
      seating_capacity, price_4h, price_8h, price_1d, status, description, color,
+     features,
      thumbnail, image_1, image_2, image_3, image_4, image_5)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   `;
 
   const values = [
@@ -66,7 +72,9 @@ exports.createVehicle = (req, res) => {
     v.price_1d,
     v.status || "Available",
     v.description || null,
-    v.color || null, // ✅ ADDED COLOR
+    v.color || null,
+
+    features, // ✅ FIXED HERE
 
     req.files?.thumbnail?.[0]?.filename || null,
     req.files?.image_1?.[0]?.filename || null,
@@ -95,6 +103,11 @@ exports.updateVehicle = (req, res) => {
   const { id } = req.params;
   const v = req.body;
 
+  // ✅ FIX: features JSON safe
+  const features = Array.isArray(v.features)
+    ? JSON.stringify(v.features)
+    : JSON.stringify(v.features ? [v.features] : []);
+
   const sql = `
     UPDATE vehicles SET
       name=?,
@@ -111,7 +124,8 @@ exports.updateVehicle = (req, res) => {
       price_1d=?,
       status=?,
       description=?,
-      color=?
+      color=?,
+      features=?
     WHERE id=?
   `;
 
@@ -130,7 +144,10 @@ exports.updateVehicle = (req, res) => {
     v.price_1d,
     v.status,
     v.description || null,
-    v.color || null, // ✅ ADDED COLOR
+    v.color || null,
+
+    features, // ✅ FIXED
+
     id,
   ];
 
@@ -140,10 +157,12 @@ exports.updateVehicle = (req, res) => {
       return res.status(500).json({ success: false, message: err.message });
     }
 
-    res.json({ success: true, message: "Vehicle updated successfully" });
+    res.json({
+      success: true,
+      message: "Vehicle updated successfully",
+    });
   });
 };
-
 // ───────── SOFT DELETE / RESTORE ─────────
 exports.updateStatus = (req, res) => {
   const { id } = req.params;

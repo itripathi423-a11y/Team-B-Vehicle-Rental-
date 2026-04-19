@@ -207,17 +207,19 @@ function resetForm() {
   document.querySelectorAll(".img-preview").forEach((el) => el.remove());
 }
 
-// ── Open Edit ─────────────────────────────────────────────────
 async function openEdit(id) {
   try {
     const r = await fetch(`${API}/${id}`);
     const d = await r.json();
+
     if (!d.success) return toast("Could not load vehicle.", "error");
+
     const v = d.data;
 
     document.getElementById("vehicleId").value = id;
     document.getElementById("modalTitle").textContent = "Edit Vehicle";
 
+    // ── BASIC FIELDS ─────────────────────────────
     const fields = {
       f_name: v.name,
       f_brand: v.brand,
@@ -233,13 +235,31 @@ async function openEdit(id) {
       f_p8h: v.price_8h,
       f_p1d: v.price_1d,
       f_desc: v.description || "",
+      f_color: v.color || "", // ✅ FIX ADDED
     };
+
     Object.entries(fields).forEach(([id, val]) => {
       const el = document.getElementById(id);
       if (el) el.value = val;
     });
 
-    // Show existing images as previews
+    // ── FEATURES FIX (IMPORTANT) ─────────────────
+    let features = [];
+
+    try {
+      features =
+        typeof v.features === "string"
+          ? JSON.parse(v.features)
+          : v.features || [];
+    } catch {
+      features = [];
+    }
+
+    document.querySelectorAll('input[name="features"]').forEach((cb) => {
+      cb.checked = features.includes(cb.value);
+    });
+
+    // ── IMAGES PREVIEW ───────────────────────────
     const imgMap = {
       box_thumbnail: v.thumbnail,
       box_image_1: v.image_1,
@@ -248,23 +268,41 @@ async function openEdit(id) {
       box_image_4: v.image_4,
       box_image_5: v.image_5,
     };
+
     Object.entries(imgMap).forEach(([boxId, fname]) => {
       if (!fname) return;
+
       const box = document.getElementById(boxId);
       const old = box.querySelector(".img-preview");
       if (old) old.remove();
+
       const img = document.createElement("img");
       img.className = "img-preview";
       img.src = `${IMG_BASE}${fname}`;
       box.appendChild(img);
     });
 
+    // ── COLOR PICKER SYNC (IMPORTANT) ────────────
+    const colorPicker = document.getElementById("f_color_picker");
+
+    if (colorPicker && v.color) {
+      const hexMap = {
+        "Pearl White": "#ffffff",
+        "Midnight Black": "#000000",
+        Red: "#ff0000",
+        Blue: "#0000ff",
+        Gray: "#808080",
+      };
+
+      colorPicker.value = hexMap[v.color] || "#ffffff";
+    }
+
     openModal();
   } catch (e) {
+    console.log(e);
     toast("Failed to fetch vehicle.", "error");
   }
 }
-
 // ── Submit Form ───────────────────────────────────────────────
 document
   .getElementById("vehicleForm")
