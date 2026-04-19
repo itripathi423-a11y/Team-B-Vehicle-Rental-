@@ -260,14 +260,14 @@ async function loadStats() {
     setElText("statCompleted", stats.completed ?? 0);
     setElText("statActive", stats.active ?? 0);
 
-    const spent = stats.total_spent ?? 0;
+    let kycStatus = stats.kyc_status || "not_submitted";
 
-    let spentStr;
-    if (spent >= 100000) spentStr = "Rs " + (spent / 100000).toFixed(1) + "L";
-    else if (spent >= 1000) spentStr = "Rs " + Math.round(spent / 1000) + "k";
-    else spentStr = fmtNPR(spent);
+    if (kycStatus === "verified") kycStatus = "Verified ✅";
+    else if (kycStatus === "rejected") kycStatus = "Rejected ❌";
+    else if (kycStatus === "pending") kycStatus = "Pending ⏳";
+    else kycStatus = "Not Submitted ⚠️";
 
-    setElText("statSpent", spentStr);
+    setElText("statSpent", kycStatus);
   } catch (err) {
     console.error(err.message);
   }
