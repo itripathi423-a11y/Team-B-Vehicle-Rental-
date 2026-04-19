@@ -287,6 +287,7 @@ async function loadStats() {
    ]
 ─────────────────────────────────────────────────────── */
 async function loadRecentBookings() {
+  const IMAGE_BASE = "http://localhost:5000/uploads/vehicles/";
   const tbody = document.getElementById("recentBookingsTbody");
   if (!tbody) return;
 
@@ -294,7 +295,7 @@ async function loadRecentBookings() {
 
   try {
     const res = await apiFetch("/user/bookings?limit=5&sort=desc");
-    const bookings = res.data;
+    const bookings = res;
 
     if (!bookings || bookings.length === 0) {
       tbody.innerHTML = `<tr><td colspan="5">No bookings yet</td></tr>`;
@@ -310,7 +311,7 @@ async function loadRecentBookings() {
             <div class="veh-thumb">
               ${
                 b.thumbnail
-                  ? `<img src="${b.thumbnail}" />`
+                  ? `<img src="${IMAGE_BASE + b.thumbnail}" onerror="this.style.display='none'" />`
                   : vehicleEmoji(b.body_type)
               }
             </div>
@@ -331,90 +332,6 @@ async function loadRecentBookings() {
       .join("");
   } catch (err) {
     showError("recentBookingsTbody", err.message);
-  }
-}
-
-/* ── 5. AVAILABLE VEHICLES STRIP ─────────────────────
-   GET /api/vehicles?status=Available&limit=3
-   Expected response (array):
-   [
-     {
-       id: 1,
-       name: "BMW 3 Series",
-       brand: "BMW",
-       model: "320i",
-       year: 2023,
-       body_type: "Sedan",
-       fuel_type: "Petrol",
-       transmission: "Automatic",
-       seating_capacity: 5,
-       price_4h: 15500,
-       price_8h: 25000,
-       price_1d: 40000,
-       thumbnail: "uploads/vehicles/bmw.jpg" | null,
-       status: "Available"
-     },
-     ...
-   ]
-─────────────────────────────────────────────────────── */
-async function loadAvailableVehicles() {
-  const strip = document.getElementById("vehiclesStrip");
-  if (!strip) return;
-
-  // Loading skeleton
-  strip.innerHTML = "";
-
-  try {
-    const res = await apiFetch("/vehicles?status=Available&limit=3");
-    const vehicles = res.data; // IMPORTANT FIX
-
-    if (!vehicles || vehicles.length === 0) {
-      strip.innerHTML = `<p style="color:gray;">No vehicles available right now.</p>`;
-      return;
-    }
-
-    strip.innerHTML = vehicles
-      .map((v) => {
-        // ✅ FIXED IMAGE PATH (IMPORTANT)
-        const imgSrc = v.thumbnail
-          ? `${BASE_URL.replace("/api", "")}/uploads/vehicles/${encodeURIComponent(v.thumbnail)}`
-          : null;
-
-        return `
-        <div class="vehicle-card">
-          <div class="vehicle-img">
-            ${
-              imgSrc
-                ? `<img src="${imgSrc}" alt="${v.name}" />`
-                : vehicleEmoji(v.body_type)
-            }
-            <span class="vehicle-avail">Available</span>
-          </div>
-
-          <div class="vehicle-body">
-            <p class="vehicle-name">${escHtml(v.name)}</p>
-
-            <div class="vehicle-meta">
-              <span>${escHtml(v.fuel_type)}</span>
-              <span>${v.seating_capacity} Seats</span>
-              <span>${escHtml(v.transmission)}</span>
-            </div>
-
-            <div class="vehicle-price">
-              <span class="price-val">${fmtNPR(v.price_4h)}</span>
-              <span class="price-unit">/ 4hr</span>
-            </div>
-
-            <a href="user.booking.html?vehicle_id=${v.id}" class="book-btn">
-              Book Now
-            </a>
-          </div>
-        </div>
-      `;
-      })
-      .join("");
-  } catch (err) {
-    strip.innerHTML = `<p style="color:red;">${err.message}</p>`;
   }
 }
 /* ── 6. NOTIFICATIONS COUNT ──────────────────────────
@@ -481,7 +398,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   await Promise.allSettled([
     loadStats(),
     loadRecentBookings(),
-    loadAvailableVehicles(),
     loadNotifCount(),
   ]);
 });
