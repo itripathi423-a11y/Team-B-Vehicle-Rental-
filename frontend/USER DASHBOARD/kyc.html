@@ -1,0 +1,2097 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AUTO DEALER — KYC Verification</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --orange: #ff5c1a;
+        --orange-light: #ff7a3d;
+        --orange-dim: rgba(255, 92, 26, 0.12);
+        --bg: #f4f5f7;
+        --white: #ffffff;
+        --sidebar-bg: #0a0a0a;
+        --sidebar-w: 240px;
+        --dark: #111827;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --radius: 14px;
+        --radius-sm: 8px;
+        --shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+        --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.1);
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        font-size: 15px;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        width: var(--sidebar-w);
+        min-height: 100vh;
+        background: var(--sidebar-bg);
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        z-index: 200;
+        transition: transform 0.3s ease;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .sidebar-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 24px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        text-decoration: none;
+      }
+      .logo-mark {
+        width: 36px;
+        height: 36px;
+        background: var(--orange);
+        color: #fff;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        flex-shrink: 0;
+      }
+      .logo-text-block {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+      .logo-brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 17px;
+        letter-spacing: 2.5px;
+        color: #fff;
+        line-height: 1;
+      }
+      .logo-sub {
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        color: rgba(255, 255, 255, 0.3);
+        font-family: "Space Mono", monospace;
+      }
+      .sidebar-nav {
+        flex: 1;
+        padding: 16px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 9px;
+        color: rgba(255, 255, 255, 0.45);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 400;
+        transition: all 0.18s;
+        cursor: pointer;
+      }
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .nav-item.active {
+        background: var(--orange-dim);
+        color: var(--orange);
+        font-weight: 500;
+      }
+      .nav-item.active .nav-icon {
+        stroke: var(--orange);
+      }
+      .nav-icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        transition: stroke 0.18s;
+      }
+      .sidebar-footer {
+        padding: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .sidebar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+      }
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .user-info {
+        min-width: 0;
+      }
+      .user-name {
+        display: block;
+        font-size: 13px;
+        color: #fff;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .user-kyc-status {
+        display: block;
+        font-size: 10px;
+        font-family: "Space Mono", monospace;
+        letter-spacing: 0.5px;
+      }
+      .user-kyc-status.unverified {
+        color: #f59e0b;
+      }
+      .user-kyc-status.verified {
+        color: #22c55e;
+      }
+
+      /* ── SIDEBAR OVERLAY ── */
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 199;
+      }
+      .sidebar-overlay.open {
+        display: block;
+      }
+
+      /* ── MAIN WRAP ── */
+      .main-wrap {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        width: calc(100% - var(--sidebar-w));
+      }
+
+      /* ── TOPBAR ── */
+      .topbar {
+        height: 64px;
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        padding: 0 28px;
+        gap: 16px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .topbar-page-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .topbar-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .icon-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 9px;
+        background: none;
+        border: 1px solid var(--border);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        transition: background 0.2s;
+      }
+      .icon-btn:hover {
+        background: var(--bg);
+      }
+      .icon-btn svg {
+        width: 17px;
+        height: 17px;
+        color: var(--muted);
+      }
+      .topbar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 12px;
+        border-radius: 9px;
+        cursor: pointer;
+        transition: background 0.2s;
+        margin-left: 4px;
+      }
+      .topbar-user:hover {
+        background: var(--bg);
+      }
+      .topbar-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .topbar-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+      }
+      .topbar-role {
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      /* ── CONTENT ── */
+      .content {
+        flex: 1;
+        padding: 28px;
+        overflow-y: auto;
+      }
+
+      /* ── STEP INDICATOR ── */
+      .kyc-steps {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        margin-bottom: 28px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px 28px;
+        box-shadow: var(--shadow);
+      }
+      .step {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+      }
+      .step-num {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--muted);
+        flex-shrink: 0;
+        transition: all 0.3s;
+      }
+      .step.active .step-num {
+        border-color: var(--orange);
+        background: var(--orange);
+        color: #fff;
+      }
+      .step.done .step-num {
+        border-color: #22c55e;
+        background: #22c55e;
+        color: #fff;
+      }
+      .step-info {
+        min-width: 0;
+      }
+      .step-label {
+        font-size: 11px;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .step-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .step.active .step-title {
+        color: var(--orange);
+      }
+      .step.done .step-title {
+        color: #16a34a;
+      }
+      .step-connector {
+        flex: none;
+        width: 40px;
+        height: 2px;
+        background: var(--border);
+        margin: 0 4px;
+        border-radius: 2px;
+      }
+      .step-connector.done {
+        background: #22c55e;
+      }
+
+      /* ── KYC FORM SECTIONS ── */
+      .form-section {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 28px;
+        box-shadow: var(--shadow);
+        margin-bottom: 20px;
+        animation: fadeUp 0.4s ease both;
+      }
+      .form-section:nth-child(2) {
+        animation-delay: 0.05s;
+      }
+      .form-section:nth-child(3) {
+        animation-delay: 0.1s;
+      }
+      .form-section:nth-child(4) {
+        animation-delay: 0.15s;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 22px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border);
+      }
+      .section-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .section-icon svg {
+        width: 20px;
+        height: 20px;
+      }
+      .section-title-text h3 {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .section-title-text p {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      /* ── FORM FIELDS ── */
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+      }
+      .form-grid.three {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .form-group.full {
+        grid-column: 1 / -1;
+      }
+      label {
+        font-size: 12.5px;
+        font-weight: 500;
+        color: var(--dark);
+        font-family: "Space Mono", monospace;
+        letter-spacing: 0.3px;
+      }
+      label span.req {
+        color: var(--orange);
+        margin-left: 2px;
+      }
+      input[type="text"],
+      input[type="email"],
+      input[type="tel"],
+      select {
+        height: 44px;
+        padding: 0 14px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        color: var(--text);
+        background: var(--white);
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        width: 100%;
+      }
+      input:focus,
+      select:focus {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 3px rgba(255, 92, 26, 0.1);
+      }
+      input::placeholder {
+        color: #c4c9d4;
+      }
+      select {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        padding-right: 38px;
+      }
+
+      /* ── DOCUMENT TYPE DROPDOWN ── */
+      .doc-type-wrap {
+        display: flex;
+        gap: 12px;
+      }
+      .doc-type-opt {
+        flex: 1;
+      }
+      .doc-type-opt input[type="radio"] {
+        display: none;
+      }
+      .doc-type-opt label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 10px;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+        font-family: "DM Sans", sans-serif;
+        font-size: 12.5px;
+        font-weight: 500;
+        letter-spacing: 0;
+        color: var(--muted);
+      }
+      .doc-type-opt label svg {
+        width: 24px;
+        height: 24px;
+        stroke: var(--muted);
+        transition: stroke 0.2s;
+      }
+      .doc-type-opt input:checked + label {
+        border-color: var(--orange);
+        background: var(--orange-dim);
+        color: var(--orange);
+      }
+      .doc-type-opt input:checked + label svg {
+        stroke: var(--orange);
+      }
+      .doc-type-opt label:hover {
+        border-color: var(--orange);
+        color: var(--dark);
+      }
+
+      /* ── UPLOAD ZONE ── */
+      .upload-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 4px;
+      }
+      .upload-zone {
+        border: 2px dashed var(--border);
+        border-radius: 10px;
+        padding: 24px 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: #fafafa;
+        min-height: 150px;
+        position: relative;
+        overflow: hidden;
+      }
+      .upload-zone:hover,
+      .upload-zone.drag {
+        border-color: var(--orange);
+        background: var(--orange-dim);
+      }
+      .upload-zone.has-file {
+        border-color: #22c55e;
+        background: #ecfdf5;
+      }
+      .upload-zone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+      }
+      .upload-icon {
+        width: 44px;
+        height: 44px;
+        background: var(--bg);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 4px;
+      }
+      .upload-zone:hover .upload-icon,
+      .upload-zone.drag .upload-icon {
+        background: rgba(255, 92, 26, 0.15);
+      }
+      .upload-zone.has-file .upload-icon {
+        background: #dcfce7;
+      }
+      .upload-icon svg {
+        width: 20px;
+        height: 20px;
+        stroke: var(--muted);
+      }
+      .upload-zone:hover .upload-icon svg,
+      .upload-zone.drag .upload-icon svg {
+        stroke: var(--orange);
+      }
+      .upload-zone.has-file .upload-icon svg {
+        stroke: #16a34a;
+      }
+      .upload-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--dark);
+        text-align: center;
+      }
+      .upload-zone.has-file .upload-label {
+        color: #16a34a;
+      }
+      .upload-hint {
+        font-size: 11px;
+        color: var(--muted);
+        text-align: center;
+      }
+      .upload-sub {
+        font-size: 10.5px;
+        color: #9ca3af;
+        font-family: "Space Mono", monospace;
+      }
+      .upload-preview {
+        width: 100%;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin-top: 4px;
+        display: none;
+      }
+
+      /* Selfie zone */
+      .selfie-zone {
+        border: 2px dashed var(--border);
+        border-radius: 10px;
+        padding: 32px 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: #fafafa;
+        min-height: 180px;
+        position: relative;
+        overflow: hidden;
+      }
+      .selfie-zone:hover,
+      .selfie-zone.drag {
+        border-color: var(--orange);
+        background: var(--orange-dim);
+      }
+      .selfie-zone.has-file {
+        border-color: #22c55e;
+        background: #ecfdf5;
+      }
+      .selfie-zone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+      }
+      .selfie-circle {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 2px dashed var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .selfie-circle svg {
+        width: 28px;
+        height: 28px;
+        stroke: var(--muted);
+      }
+      .selfie-zone.has-file .selfie-circle {
+        border-color: #22c55e;
+        background: #dcfce7;
+      }
+      .selfie-zone.has-file .selfie-circle svg {
+        stroke: #16a34a;
+      }
+
+      /* ── CONSENT ── */
+      .consent-block {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        background: #f9fafb;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin-top: 4px;
+      }
+      .consent-block input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--orange);
+        flex-shrink: 0;
+        margin-top: 2px;
+        cursor: pointer;
+      }
+      .consent-text {
+        font-size: 12.5px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .consent-text a {
+        color: var(--orange);
+        text-decoration: none;
+      }
+
+      /* ── SUBMIT BUTTON ── */
+      .submit-row {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 14px;
+        margin-top: 8px;
+      }
+      .btn-secondary {
+        padding: 11px 24px;
+        background: none;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-secondary:hover {
+        background: var(--bg);
+        color: var(--dark);
+      }
+      .btn-primary {
+        padding: 11px 28px;
+        background: var(--orange);
+        border: none;
+        border-radius: 9px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition:
+          background 0.2s,
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .btn-primary:hover {
+        background: var(--orange-light);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(255, 92, 26, 0.35);
+      }
+      .btn-primary svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      /* ── STATUS PANEL (shown after submit) ── */
+      .status-panel {
+        display: none;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 48px 36px;
+        box-shadow: var(--shadow);
+        text-align: center;
+        margin-bottom: 28px;
+        animation: fadeUp 0.5s ease;
+      }
+      .status-panel.visible {
+        display: block;
+      }
+      .status-icon-wrap {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+      }
+      .status-icon-wrap.pending {
+        background: #fff8e1;
+      }
+      .status-icon-wrap.pending svg {
+        stroke: #f59e0b;
+      }
+      .status-icon-wrap.approved {
+        background: #ecfdf5;
+      }
+      .status-icon-wrap.approved svg {
+        stroke: #22c55e;
+      }
+      .status-icon-wrap.rejected {
+        background: #fff1f2;
+      }
+      .status-icon-wrap.rejected svg {
+        stroke: #dc2626;
+      }
+      .status-icon-wrap svg {
+        width: 38px;
+        height: 38px;
+      }
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 16px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 600;
+        font-family: "Space Mono", monospace;
+        letter-spacing: 0.5px;
+        margin-bottom: 14px;
+      }
+      .status-badge.pending {
+        background: #fff8e1;
+        color: #b45309;
+      }
+      .status-badge.approved {
+        background: #ecfdf5;
+        color: #16a34a;
+      }
+      .status-badge.rejected {
+        background: #fff1f2;
+        color: #dc2626;
+      }
+      .status-badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+        display: inline-block;
+      }
+      .status-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 36px;
+        letter-spacing: 1.5px;
+        color: var(--dark);
+        margin-bottom: 10px;
+      }
+      .status-desc {
+        font-size: 13.5px;
+        color: var(--muted);
+        max-width: 420px;
+        margin: 0 auto 24px;
+        line-height: 1.6;
+      }
+      .status-meta {
+        display: flex;
+        justify-content: center;
+        gap: 32px;
+        border-top: 1px solid var(--border);
+        padding-top: 20px;
+        margin-top: 8px;
+      }
+      .status-meta-item {
+        text-align: center;
+      }
+      .status-meta-label {
+        font-size: 10.5px;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+      .status-meta-value {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .status-ref {
+        font-family: "Space Mono", monospace;
+        font-size: 13px;
+        color: var(--orange);
+      }
+      .btn-outline-orange {
+        padding: 10px 22px;
+        background: none;
+        border: 1.5px solid var(--orange);
+        border-radius: 9px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        font-weight: 500;
+        color: var(--orange);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-outline-orange:hover {
+        background: var(--orange);
+        color: #fff;
+      }
+
+      /* ── TIPS CARD ── */
+      .tips-card {
+        background: var(--dark);
+        border-radius: var(--radius);
+        padding: 24px 28px;
+        margin-bottom: 28px;
+        position: relative;
+        overflow: hidden;
+      }
+      .tips-card::before {
+        content: "";
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(
+          circle,
+          rgba(255, 92, 26, 0.18) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .tips-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 20px;
+        letter-spacing: 2px;
+        color: #fff;
+        margin-bottom: 14px;
+      }
+      .tips-title span {
+        color: var(--orange);
+      }
+      .tips-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .tip-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .tip-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--orange);
+        flex-shrink: 0;
+        margin-top: 6px;
+      }
+      .tip-text {
+        font-size: 12.5px;
+        color: rgba(255, 255, 255, 0.55);
+        line-height: 1.5;
+      }
+
+      /* Footer */
+      .footer-strip {
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .footer-strip p {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .footer-links {
+        display: flex;
+        gap: 20px;
+      }
+      .footer-links a {
+        font-size: 12px;
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .footer-links a:hover {
+        color: var(--orange);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: none;
+        }
+        .main-wrap {
+          margin-left: 0;
+          width: 100%;
+        }
+        .content {
+          padding: 20px 16px;
+        }
+        .topbar {
+          padding: 0 16px;
+        }
+        #sidebarToggle {
+          display: flex !important;
+        }
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+        .form-grid.three {
+          grid-template-columns: 1fr;
+        }
+        .upload-grid {
+          grid-template-columns: 1fr;
+        }
+        .kyc-steps {
+          padding: 16px;
+          gap: 6px;
+        }
+        .step-connector {
+          width: 20px;
+        }
+        .step-info {
+          display: none;
+        }
+        .tips-list {
+          grid-template-columns: 1fr;
+        }
+        .footer-strip {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .doc-type-wrap {
+          flex-direction: column;
+        }
+        .status-meta {
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar" id="sidebar">
+      <a href="#" class="sidebar-logo">
+        <div class="logo-mark">AD</div>
+        <div class="logo-text-block">
+          <span class="logo-brand">Auto Dealer</span>
+          <span class="logo-sub">Fleet Management</span>
+        </div>
+      </a>
+      <nav class="sidebar-nav">
+        <a href="userdashboard.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard
+        </a>
+        <a href="user.vehicle.listing.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path
+              d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+            />
+            <circle cx="7" cy="17" r="2" />
+            <circle cx="17" cy="17" r="2" />
+            <path d="M5 17h8M3 9h18" />
+          </svg>
+          Vehicles
+        </a>
+        <a href="#" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          My Bookings
+        </a>
+        <a href="kyc.html" class="nav-item active">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          KYC
+        </a>
+        <a href="#" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <rect x="2" y="5" width="20" height="14" rx="2" />
+            <line x1="2" y1="10" x2="22" y2="10" />
+          </svg>
+          Payments
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar"><span>SR</span></div>
+          <div class="user-info">
+            <span class="user-name">Swikar Regmi</span>
+            <span class="user-kyc-status unverified" id="sidebarKycStatus"
+              >⚠ KYC Pending</span
+            >
+          </div>
+        </div>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ── MAIN WRAP ── -->
+    <div class="main-wrap">
+      <header class="topbar">
+        <button class="icon-btn" id="sidebarToggle" style="display: none">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <span class="topbar-page-title">KYC Verification</span>
+        <div class="topbar-right">
+          <button class="icon-btn" title="Notifications">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+            </svg>
+          </button>
+          <div class="topbar-user">
+            <div class="topbar-avatar"><span>SR</span></div>
+            <div>
+              <p class="topbar-name">Swikar Regmi</p>
+              <p class="topbar-role">Customer</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- Step Indicator -->
+        <div class="kyc-steps" id="kycSteps">
+          <div class="step active" id="step1">
+            <div class="step-num">1</div>
+            <div class="step-info">
+              <div class="step-label">Step 01</div>
+              <div class="step-title">Personal Info</div>
+            </div>
+          </div>
+          <div class="step-connector" id="conn1"></div>
+          <div class="step" id="step2">
+            <div class="step-num">2</div>
+            <div class="step-info">
+              <div class="step-label">Step 02</div>
+              <div class="step-title">Document Upload</div>
+            </div>
+          </div>
+          <div class="step-connector" id="conn2"></div>
+          <div class="step" id="step3">
+            <div class="step-num">3</div>
+            <div class="step-info">
+              <div class="step-label">Step 03</div>
+              <div class="step-title">Selfie Verification</div>
+            </div>
+          </div>
+          <div class="step-connector" id="conn3"></div>
+          <div class="step" id="step4">
+            <div class="step-num">4</div>
+            <div class="step-info">
+              <div class="step-label">Step 04</div>
+              <div class="step-title">Review & Submit</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STATUS PANEL (shown post-submit) -->
+        <div class="status-panel" id="statusPanel">
+          <div class="status-icon-wrap pending" id="statusIconWrap">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 6v6l4 2" />
+            </svg>
+          </div>
+          <div class="status-badge pending" id="statusBadge">Under Review</div>
+          <div class="status-title" id="statusTitle">
+            VERIFICATION IN PROGRESS
+          </div>
+          <p class="status-desc" id="statusDesc">
+            Your KYC documents have been submitted successfully. Our team is
+            reviewing your information. You'll be notified within 24–48 hours.
+          </p>
+          <div style="margin-bottom: 28px">
+            <button class="btn-outline-orange" onclick="resetForm()">
+              Edit Submission
+            </button>
+          </div>
+          <div class="status-meta">
+            <div class="status-meta-item">
+              <div class="status-meta-label">Reference ID</div>
+              <div class="status-ref" id="statusRef">#KYC-000000</div>
+            </div>
+            <div class="status-meta-item">
+              <div class="status-meta-label">Submitted</div>
+              <div class="status-meta-value" id="statusDate">—</div>
+            </div>
+            <div class="status-meta-item">
+              <div class="status-meta-label">Document Type</div>
+              <div class="status-meta-value" id="statusDocType">—</div>
+            </div>
+            <div class="status-meta-item">
+              <div class="status-meta-label">Est. Review</div>
+              <div class="status-meta-value">24–48 hrs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FORM (hidden after submit) -->
+        <div id="kycForm">
+          <!-- Section 1: Personal Info -->
+          <div class="form-section">
+            <div class="section-title">
+              <div class="section-icon" style="background: #fff0e8">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#FF5C1A"
+                  stroke-width="1.8"
+                >
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                </svg>
+              </div>
+              <div class="section-title-text">
+                <h3>Personal Information</h3>
+                <p>
+                  Enter your details exactly as they appear on your ID document
+                </p>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="fullName"
+                  >Full Name <span class="req">*</span></label
+                >
+                <input
+                  type="text"
+                  id="fullName"
+                  placeholder="e.g. Swikar Regmi"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="email"
+                  >Email Address <span class="req">*</span></label
+                >
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="e.g. swikar@email.com"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="phone"
+                  >Phone Number <span class="req">*</span></label
+                >
+                <input
+                  type="tel"
+                  id="phone"
+                  placeholder="e.g. +977 98XXXXXXXX"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="dob"
+                  >Document Number <span class="req">*</span></label
+                >
+                <input
+                  type="text"
+                  id="dob"
+                  placeholder="e.g. 12345-67890"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: Document Upload -->
+          <div class="form-section">
+            <div class="section-title">
+              <div class="section-icon" style="background: #eff6ff">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#2563eb"
+                  stroke-width="1.8"
+                >
+                  <path
+                    d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                  />
+                  <polyline points="14 2 14 8 20 8" />
+                </svg>
+              </div>
+              <div class="section-title-text">
+                <h3>Government Document</h3>
+                <p>
+                  Select your document type and upload clear photos of both
+                  sides
+                </p>
+              </div>
+            </div>
+
+            <!-- Document Type -->
+            <div class="form-group" style="margin-bottom: 20px">
+              <label>Document Type <span class="req">*</span></label>
+              <div class="doc-type-wrap" style="margin-top: 10px">
+                <div class="doc-type-opt">
+                  <input
+                    type="radio"
+                    name="docType"
+                    id="docCitizenship"
+                    value="Citizenship"
+                    checked
+                  />
+                  <label for="docCitizenship">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                    >
+                      <rect x="3" y="4" width="18" height="16" rx="2" />
+                      <circle cx="9" cy="10" r="2" />
+                      <path d="M15 8h2M15 12h2M7 16h10" />
+                    </svg>
+                    Citizenship
+                  </label>
+                </div>
+                <div class="doc-type-opt">
+                  <input
+                    type="radio"
+                    name="docType"
+                    id="docLicense"
+                    value="License"
+                  />
+                  <label for="docLicense">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                    >
+                      <rect x="1" y="4" width="22" height="16" rx="2" />
+                      <path d="M1 10h22M8 15h.01M12 15h4" />
+                    </svg>
+                    Driving License
+                  </label>
+                </div>
+                <div class="doc-type-opt">
+                  <input
+                    type="radio"
+                    name="docType"
+                    id="docPassport"
+                    value="Passport"
+                  />
+                  <label for="docPassport">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                    >
+                      <rect x="4" y="2" width="16" height="20" rx="2" />
+                      <circle cx="12" cy="10" r="3" />
+                      <path d="M8 18h8" />
+                    </svg>
+                    Passport
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Front & Back Upload -->
+            <label style="margin-bottom: 12px; display: block"
+              >Upload Document <span class="req">*</span></label
+            >
+            <div class="upload-grid">
+              <div
+                class="upload-zone"
+                id="frontZone"
+                ondragover="handleDrag(event, 'frontZone')"
+                ondragleave="handleDragLeave('frontZone')"
+                ondrop="
+                  handleDrop(event, 'frontZone', 'frontInput', 'frontPreview')
+                "
+              >
+                <input
+                  type="file"
+                  id="frontInput"
+                  accept="image/*,.pdf"
+                  onchange="handleFile(this, 'frontZone', 'frontPreview')"
+                />
+                <div class="upload-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  >
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <path d="M8 21h8M12 17v4" />
+                  </svg>
+                </div>
+                <p class="upload-label" id="frontLabel">Front Side</p>
+                <p class="upload-hint">Drag & drop or click to browse</p>
+                <p class="upload-sub">JPG, PNG, PDF — max 5MB</p>
+                <img
+                  class="upload-preview"
+                  id="frontPreview"
+                  alt="Front preview"
+                />
+              </div>
+              <div
+                class="upload-zone"
+                id="backZone"
+                ondragover="handleDrag(event, 'backZone')"
+                ondragleave="handleDragLeave('backZone')"
+                ondrop="
+                  handleDrop(event, 'backZone', 'backInput', 'backPreview')
+                "
+              >
+                <input
+                  type="file"
+                  id="backInput"
+                  accept="image/*,.pdf"
+                  onchange="handleFile(this, 'backZone', 'backPreview')"
+                />
+                <div class="upload-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  >
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <path d="M8 21h8M12 17v4" />
+                  </svg>
+                </div>
+                <p class="upload-label" id="backLabel">Back Side</p>
+                <p class="upload-hint">Drag & drop or click to browse</p>
+                <p class="upload-sub">JPG, PNG, PDF — max 5MB</p>
+                <img
+                  class="upload-preview"
+                  id="backPreview"
+                  alt="Back preview"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Selfie -->
+          <div class="form-section">
+            <div class="section-title">
+              <div class="section-icon" style="background: #f3e8ff">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#9333ea"
+                  stroke-width="1.8"
+                >
+                  <path
+                    d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"
+                  />
+                  <circle cx="12" cy="13" r="4" />
+                </svg>
+              </div>
+              <div class="section-title-text">
+                <h3>Selfie Verification</h3>
+                <p>
+                  Take a clear selfie holding your ID document next to your face
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="selfie-zone"
+              id="selfieZone"
+              ondragover="handleDrag(event, 'selfieZone')"
+              ondragleave="handleDragLeave('selfieZone')"
+              ondrop="
+                handleDrop(event, 'selfieZone', 'selfieInput', 'selfiePreview')
+              "
+            >
+              <input
+                type="file"
+                id="selfieInput"
+                accept="image/*"
+                capture="user"
+                onchange="handleFile(this, 'selfieZone', 'selfiePreview')"
+              />
+              <div class="selfie-circle" id="selfieCircle">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <path
+                    d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"
+                  />
+                  <circle cx="12" cy="13" r="4" />
+                </svg>
+              </div>
+              <p class="upload-label" id="selfieLabel">
+                Upload Selfie with Document
+              </p>
+              <p class="upload-hint">
+                Hold your ID document clearly visible beside your face
+              </p>
+              <p class="upload-sub">
+                JPG, PNG — max 5MB · Good lighting required
+              </p>
+              <img
+                class="upload-preview"
+                id="selfiePreview"
+                alt="Selfie preview"
+                style="height: 100px"
+              />
+            </div>
+
+            <!-- Tips -->
+            <div class="tips-card" style="margin-top: 18px; margin-bottom: 0">
+              <div class="tips-title">
+                📸 <span>TIPS</span> FOR CLEAR VERIFICATION
+              </div>
+              <div class="tips-list">
+                <div class="tip-item">
+                  <div class="tip-dot"></div>
+                  <div class="tip-text">
+                    Ensure your face is clearly visible and not obscured
+                  </div>
+                </div>
+                <div class="tip-item">
+                  <div class="tip-dot"></div>
+                  <div class="tip-text">
+                    Hold the document flat so all text is readable
+                  </div>
+                </div>
+                <div class="tip-item">
+                  <div class="tip-dot"></div>
+                  <div class="tip-text">
+                    Use good lighting — avoid shadows and glare
+                  </div>
+                </div>
+                <div class="tip-item">
+                  <div class="tip-dot"></div>
+                  <div class="tip-text">
+                    Do not wear sunglasses or hats in the selfie
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: Consent & Submit -->
+          <div class="form-section">
+            <div class="section-title">
+              <div class="section-icon" style="background: #e8fff0">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#22c55e"
+                  stroke-width="1.8"
+                >
+                  <path d="M9 11l3 3L22 4" />
+                  <path
+                    d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+                  />
+                </svg>
+              </div>
+              <div class="section-title-text">
+                <h3>Review & Submit</h3>
+                <p>Confirm your consent and submit for verification</p>
+              </div>
+            </div>
+
+            <div class="consent-block" style="margin-bottom: 14px">
+              <input type="checkbox" id="consent1" />
+              <p class="consent-text">
+                I confirm that all the information and documents I have provided
+                are genuine, accurate, and belong to me. I understand that
+                submitting false information may result in account termination.
+              </p>
+            </div>
+            <div class="consent-block">
+              <input type="checkbox" id="consent2" />
+              <p class="consent-text">
+                I consent to Auto Dealer processing my personal data for
+                identity verification purposes in accordance with the
+                <a href="#">Privacy Policy</a> and
+                <a href="#">Terms of Service</a>.
+              </p>
+            </div>
+
+            <div class="submit-row" style="margin-top: 24px">
+              <button class="btn-secondary" onclick="resetForm()">
+                Clear Form
+              </button>
+              <button class="btn-primary" onclick="submitKYC()">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                Send for Verification
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- end #kycForm -->
+
+        <div class="footer-strip">
+          <p>© 2026 Auto Dealer Fleet Management. All rights reserved.</p>
+          <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact Us</a>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      /* ── Sidebar mobile ── */
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("sidebarOverlay");
+      const toggle = document.getElementById("sidebarToggle");
+      toggle?.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("open");
+      });
+      overlay?.addEventListener("click", () => {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("open");
+      });
+      window.addEventListener("resize", () => {
+        if (toggle)
+          toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
+      });
+      if (toggle)
+        toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
+
+      const API = "http://localhost:5000/api/kyc";
+
+      /* ════════════════════════════════════════
+     1. ON LOAD — fetch user info + KYC status
+  ════════════════════════════════════════ */
+      async function init() {
+        await loadUserInfo();
+        await loadKycStatus();
+      }
+
+      async function loadUserInfo() {
+        try {
+          const res = await fetch(`${API}/user-info`, {
+            credentials: "include",
+          });
+          const json = await res.json();
+          if (!json.success) return;
+
+          const user = json.data;
+
+          // Prefill form fields
+          document.getElementById("fullName").value = user.name || "";
+          document.getElementById("email").value = user.email || "";
+          document.getElementById("phone").value = user.phone || "";
+
+          // Update sidebar + topbar names
+          const initials = user.name
+            .split(" ")
+            .map((w) => w[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2);
+          document.querySelector(".user-name").textContent = user.name;
+          document.querySelector(".user-avatar span").textContent = initials;
+          document.querySelector(".topbar-name").textContent = user.name;
+          document.querySelector(".topbar-avatar span").textContent = initials;
+
+          updateSteps();
+        } catch (err) {
+          console.warn("Could not load user info:", err.message);
+        }
+      }
+
+      async function loadKycStatus() {
+        try {
+          const res = await fetch(`${API}/status`, { credentials: "include" });
+          const json = await res.json();
+          if (!json.success || !json.data) return; // no KYC yet — show form
+
+          const kyc = json.data;
+
+          // Show status panel instead of form
+          showStatusPanel(
+            kyc.status,
+            kyc.document_type,
+            kyc.submitted_at,
+            kyc.id,
+            kyc.rejection_reason,
+          );
+        } catch (err) {
+          console.warn("Could not load KYC status:", err.message);
+        }
+      }
+
+      function showStatusPanel(
+        status,
+        docType,
+        submittedAt,
+        kycId,
+        rejectionReason,
+      ) {
+        document.getElementById("kycForm").style.display = "none";
+        document.getElementById("statusPanel").classList.add("visible");
+
+        const iconWrap = document.getElementById("statusIconWrap");
+        const badge = document.getElementById("statusBadge");
+        const title = document.getElementById("statusTitle");
+        const desc = document.getElementById("statusDesc");
+        const kycStatus = document.getElementById("sidebarKycStatus");
+
+        // Reset classes
+        iconWrap.className = "status-icon-wrap";
+        badge.className = "status-badge";
+
+        if (status === "verified") {
+          iconWrap.classList.add("approved");
+          badge.classList.add("approved");
+          badge.textContent = "Verified";
+          title.textContent = "KYC APPROVED";
+          desc.textContent =
+            "Your identity has been verified. You can now book vehicles.";
+          iconWrap.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+          kycStatus.textContent = "✔ KYC Verified";
+          kycStatus.className = "user-kyc-status verified";
+        } else if (status === "rejected") {
+          iconWrap.classList.add("rejected");
+          badge.classList.add("rejected");
+          badge.textContent = "Rejected";
+          title.textContent = "KYC REJECTED";
+          desc.textContent = rejectionReason
+            ? `Reason: ${rejectionReason}. Please resubmit with correct documents.`
+            : "Your KYC was rejected. Please resubmit with correct documents.";
+          iconWrap.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
+          kycStatus.textContent = "✖ KYC Rejected";
+          kycStatus.className = "user-kyc-status unverified";
+        } else {
+          // pending / not_submitted
+          iconWrap.classList.add("pending");
+          badge.classList.add("pending");
+          badge.textContent = "Under Review";
+          title.textContent = "VERIFICATION IN PROGRESS";
+          desc.textContent =
+            "Your documents have been submitted. Our team will review within 24–48 hours.";
+          iconWrap.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`;
+          kycStatus.textContent = "⏳ Under Review";
+          kycStatus.className = "user-kyc-status unverified";
+        }
+
+        // Meta info
+        document.getElementById("statusRef").textContent = kycId
+          ? `#KYC-${kycId}`
+          : "—";
+        document.getElementById("statusDocType").textContent = docType || "—";
+        document.getElementById("statusDate").textContent = submittedAt
+          ? new Date(submittedAt).toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })
+          : "—";
+
+        // Step indicators all done
+        ["step1", "step2", "step3", "step4"].forEach((id) => {
+          const el = document.getElementById(id);
+          el.classList.remove("active");
+          el.classList.add("done");
+        });
+        ["conn1", "conn2", "conn3"].forEach((id) =>
+          document.getElementById(id).classList.add("done"),
+        );
+      }
+
+      /* ════════════════════════════════════════
+     2. FILE UPLOAD HANDLERS
+  ════════════════════════════════════════ */
+      function handleFile(input, zoneId, previewId) {
+        const file = input.files[0];
+        if (!file) return;
+
+        const zone = document.getElementById(zoneId);
+        const preview = document.getElementById(previewId);
+        zone.classList.add("has-file");
+
+        if (file.type.startsWith("image/")) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            preview.src = e.target.result;
+            preview.style.display = "block";
+          };
+          reader.readAsDataURL(file);
+        }
+
+        const nameEl = zone.querySelector(".upload-label");
+        if (nameEl)
+          nameEl.textContent =
+            "✓ " +
+            file.name.substring(0, 22) +
+            (file.name.length > 22 ? "…" : "");
+
+        updateSteps();
+      }
+
+      function handleDrag(e, zoneId) {
+        e.preventDefault();
+        document.getElementById(zoneId).classList.add("drag");
+      }
+      function handleDragLeave(zoneId) {
+        document.getElementById(zoneId).classList.remove("drag");
+      }
+      function handleDrop(e, zoneId, inputId, previewId) {
+        e.preventDefault();
+        const zone = document.getElementById(zoneId);
+        zone.classList.remove("drag");
+        const file = e.dataTransfer.files[0];
+        if (!file) return;
+        const input = document.getElementById(inputId);
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        input.files = dt.files;
+        handleFile(input, zoneId, previewId);
+      }
+
+      /* ════════════════════════════════════════
+     3. STEP PROGRESS TRACKER
+  ════════════════════════════════════════ */
+      function updateSteps() {
+        const hasName = document.getElementById("fullName")?.value.trim();
+        const hasEmail = document.getElementById("email")?.value.trim();
+        const hasPhone = document.getElementById("phone")?.value.trim();
+        const hasFront = document
+          .getElementById("frontZone")
+          ?.classList.contains("has-file");
+        const hasBack = document
+          .getElementById("backZone")
+          ?.classList.contains("has-file");
+        const hasSelfie = document
+          .getElementById("selfieZone")
+          ?.classList.contains("has-file");
+
+        const s1 = document.getElementById("step1"),
+          c1 = document.getElementById("conn1");
+        const s2 = document.getElementById("step2"),
+          c2 = document.getElementById("conn2");
+        const s3 = document.getElementById("step3"),
+          c3 = document.getElementById("conn3");
+        const s4 = document.getElementById("step4");
+
+        const mark = (step, conn, done, active) => {
+          step.classList.toggle("done", done);
+          step.classList.toggle("active", active && !done);
+          if (conn) conn.classList.toggle("done", done);
+        };
+
+        mark(s1, c1, !!(hasName && hasEmail && hasPhone), true);
+        mark(
+          s2,
+          c2,
+          !!(hasFront && hasBack && s1.classList.contains("done")),
+          s1.classList.contains("done"),
+        );
+        mark(
+          s3,
+          c3,
+          !!(hasSelfie && s2.classList.contains("done")),
+          s2.classList.contains("done"),
+        );
+        mark(s4, null, false, s3.classList.contains("done"));
+      }
+
+      ["fullName", "email", "phone", "dob"].forEach((id) => {
+        document.getElementById(id)?.addEventListener("input", updateSteps);
+      });
+
+      /* ════════════════════════════════════════
+     4. SUBMIT KYC — real API call
+  ════════════════════════════════════════ */
+      async function submitKYC() {
+        const fullName = document.getElementById("fullName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const docNumber = document.getElementById("dob").value.trim(); // reusing dob field as doc number
+        const hasFront = document
+          .getElementById("frontZone")
+          .classList.contains("has-file");
+        const hasBack = document
+          .getElementById("backZone")
+          .classList.contains("has-file");
+        const hasSelfie = document
+          .getElementById("selfieZone")
+          .classList.contains("has-file");
+        const c1 = document.getElementById("consent1").checked;
+        const c2 = document.getElementById("consent2").checked;
+
+        if (!fullName || !email || !phone) {
+          return alert("Please fill in all personal information fields.");
+        }
+        if (!hasFront || !hasBack) {
+          return alert("Please upload both front and back of your document.");
+        }
+        if (!hasSelfie) {
+          return alert("Please upload your selfie with the document.");
+        }
+        if (!c1 || !c2) {
+          return alert("Please accept both consent statements.");
+        }
+
+        const docType =
+          document.querySelector('input[name="docType"]:checked')?.value ||
+          "Citizenship";
+
+        // Build FormData — matches controller field names exactly
+        const formData = new FormData();
+        formData.append("document_type", docType);
+        formData.append("document_number", docNumber || "N/A");
+        formData.append(
+          "document_front",
+          document.getElementById("frontInput").files[0],
+        );
+        formData.append(
+          "document_back",
+          document.getElementById("backInput").files[0],
+        );
+        formData.append(
+          "selfie",
+          document.getElementById("selfieInput").files[0],
+        );
+
+        // Disable button during submit
+        const btn = document.querySelector(".btn-primary");
+        btn.disabled = true;
+        btn.textContent = "Submitting…";
+
+        try {
+          const res = await fetch(`${API}/submit`, {
+            method: "POST",
+            credentials: "include", // sends session cookie
+            body: formData, // no Content-Type header — browser sets multipart automatically
+          });
+          const json = await res.json();
+
+          if (!json.success)
+            throw new Error(json.message || "Submission failed");
+
+          // Success — show status panel
+          const now = new Date().toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          });
+          document.getElementById("statusRef").textContent = `#${json.ref}`;
+          document.getElementById("statusDate").textContent = now;
+          document.getElementById("statusDocType").textContent = docType;
+
+          showStatusPanel(
+            "pending",
+            docType,
+            new Date().toISOString(),
+            json.ref.replace("KYC-", ""),
+            null,
+          );
+        } catch (err) {
+          console.error(err);
+          alert("Submission failed: " + err.message);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Send for Verification";
+        }
+      }
+
+      /* ════════════════════════════════════════
+     5. RESET FORM
+  ════════════════════════════════════════ */
+      function resetForm() {
+        document.getElementById("kycForm").style.display = "";
+        document.getElementById("statusPanel").classList.remove("visible");
+
+        ["fullName", "email", "phone", "dob"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.value = "";
+        });
+        ["frontZone", "backZone", "selfieZone"].forEach((id) => {
+          document.getElementById(id)?.classList.remove("has-file", "drag");
+        });
+        ["frontPreview", "backPreview", "selfiePreview"].forEach((id) => {
+          const p = document.getElementById(id);
+          if (p) {
+            p.style.display = "none";
+            p.src = "";
+          }
+        });
+        document.getElementById("frontLabel").textContent = "Front Side";
+        document.getElementById("backLabel").textContent = "Back Side";
+        document.getElementById("selfieLabel").textContent =
+          "Upload Selfie with Document";
+        document.getElementById("consent1").checked = false;
+        document.getElementById("consent2").checked = false;
+        document.querySelector('input[name="docType"]').checked = true;
+        updateSteps();
+
+        // Reload fresh user info
+        loadUserInfo();
+      }
+
+      /* ── Boot ── */
+      init();
+    </script>
+  </body>
+</html>
