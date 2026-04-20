@@ -1,15 +1,8 @@
 require("dotenv").config({ path: __dirname + "/.env" });
 
-// Import Express framework
 const express = require("express");
-
-// Import CORS for cross-origin requests
 const cors = require("cors");
-
-// Import session middleware for authentication sessions
 const session = require("express-session");
-
-// Import path module for file path handling
 const path = require("path");
 
 // Import user-related routes
@@ -32,51 +25,43 @@ const vehicleDetailsRoutes = require("./routes/vehicleDetails.routes");
 const vehicleRoutes_booking = require("./routes/vehicle.routes");
 const bookingRoutes = require("./routes/booking.routes");
 
-// ADD at top with other imports
-const fileUpload = require("express-fileupload");
+// KYC routes
 const kycRoutes = require("./routes/kyc.routes");
 
-// Create Express app instance
+const mybookingRoutes = require("./routes/mybooking.routes");
+
+// Create Express app
 const app = express();
 
 /* =========================
    BODY PARSING
 ========================= */
-
-// Parse JSON request bodies
 app.use(express.json());
-
-// Parse URL-encoded form data
 app.use(express.urlencoded({ extended: true }));
 
 /* =========================
-   CORS (IMPORTANT)
+   CORS
 ========================= */
-
-// Enable CORS for frontend access
 app.use(
   cors({
-    origin: ["http://localhost:5500", "http://127.0.0.1:5500"], // allowed frontend URLs
-    credentials: true, // allow cookies/session sharing
+    origin: ["http://localhost:5500", "http://127.0.0.1:5500"],
+    credentials: true,
   }),
 );
 
 /* =========================
-   SESSION (FIXED)
-   THIS WAS YOUR MAIN ISSUE
+   SESSION
 ========================= */
-
-// Configure session middleware
 app.use(
   session({
-    secret: "vehicle_rental_secret", // secret key for session encryption
-    resave: false, // do not save session if not modified
-    saveUninitialized: false, // do not create empty sessions
+    secret: "vehicle_rental_secret",
+    resave: false,
+    saveUninitialized: false,
     cookie: {
-      httpOnly: true, // prevent JS access to cookies
-      secure: false, // allow HTTP (localhost only)
-      sameSite: "lax", // fix for browser cookie blocking issues
-      maxAge: 24 * 60 * 60 * 1000, // session expiry (1 day)
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000,
     },
   }),
 );
@@ -84,8 +69,6 @@ app.use(
 /* =========================
    HOME ROUTE
 ========================= */
-
-// Serve homepage HTML file
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/HOME/homepage.html"));
 });
@@ -93,50 +76,47 @@ app.get("/", (req, res) => {
 /* =========================
    STATIC FILES
 ========================= */
-
-// Serve uploaded files publicly
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
-
-// Serve frontend static files (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname, "../frontend")));
-// ADD after body parsing middleware (after app.use(express.urlencoded...))
-app.use(
-  fileUpload({
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
-    useTempFiles: false,
-  }),
-);
 
-// ADD with other routes
-app.use("/api/kyc", kycRoutes);
 /* =========================
    ROUTES
 ========================= */
 
-// User authentication routes
+// User routes
 app.use("/api", userRoutes);
 
-// Vehicle management routes (admin)
+// Admin vehicle routes
 app.use("/api/vehicles", vehicleRoutes);
 
-// Admin dashboard routes
+// Admin dashboard
 app.use("/api/admin", adminRoutes);
 
-// User dashboard routes
+// User dashboard
 app.use("/api", userDashboardRoutes);
 
-// User vehicle listing routes
+// User vehicles
 app.use("/api/user/vehicles", userVehicleListingRoutes);
-// API base
-app.use("/api/user/vehicle-details", vehicleDetailsRoutes);
-app.use("/api/admin/vehicles", vehicleRoutes); // admin routes
-app.use("/api/vehicles", vehicleRoutes_booking); // public booking routes
-app.use("/api/bookings", bookingRoutes);
-/* =========================
-   SERVER START
-========================= */
 
-// Start server on port 5000
+// Vehicle details
+app.use("/api/user/vehicle-details", vehicleDetailsRoutes);
+
+// Admin vehicles (duplicate safe if needed)
+app.use("/api/admin/vehicles", vehicleRoutes);
+
+// Public booking vehicles
+app.use("/api/vehicles", vehicleRoutes_booking);
+
+// Bookings
+app.use("/api/bookings", bookingRoutes);
+app.use("/api/bookings", mybookingRoutes);
+
+// KYC routes (MULTER HANDLED INSIDE ROUTE FILE)
+app.use("/api/kyc", kycRoutes);
+
+/* =========================
+   START SERVER
+========================= */
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");
 });

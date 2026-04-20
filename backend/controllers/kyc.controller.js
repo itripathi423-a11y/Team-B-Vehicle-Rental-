@@ -1,62 +1,46 @@
 const db = require("../config/db");
-const path = require("path");
-const fs = require("fs");
 
-// GET /api/kyc/user-info
+// ───────── USER INFO ─────────
 exports.getUserInfo = (req, res) => {
-  const userId = req.session?.user?.id; // ← fixed
+  const userId = req.session?.user?.id;
 
   if (!userId) {
     return res.status(401).json({ success: false, message: "Not logged in" });
   }
 
-  const sql = `SELECT id, name, email, phone FROM users WHERE id = ? LIMIT 1`;
+  db.query(
+    "SELECT id, name, email, phone FROM users WHERE id=?",
+    [userId],
+    (err, result) => {
+      if (err) return res.status(500).json({ success: false });
 
-  db.query(sql, [userId], (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ success: false, message: "DB error" });
-    }
-    if (!result.length) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
-    }
-    res.json({ success: true, data: result[0] });
-  });
+      res.json({ success: true, data: result[0] });
+    },
+  );
 };
 
-// GET /api/kyc/status
+// ───────── STATUS ─────────
 exports.getKycStatus = (req, res) => {
-  const userId = req.session?.user?.id; // ← fixed
+  const userId = req.session?.user?.id;
 
   if (!userId) {
-    return res.status(401).json({ success: false, message: "Not logged in" });
+    return res.status(401).json({ success: false });
   }
 
-  const sql = `
-    SELECT id, document_type, status, rejection_reason,
-           submitted_at, reviewed_at
-    FROM kyc
-    WHERE user_id = ?
-    LIMIT 1
-  `;
+  db.query(
+    "SELECT * FROM kyc WHERE user_id=? LIMIT 1",
+    [userId],
+    (err, result) => {
+      if (err) return res.status(500).json({ success: false });
 
-  db.query(sql, [userId], (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ success: false, message: "DB error" });
-    }
-    if (!result.length) {
-      return res.json({ success: true, data: null });
-    }
-    res.json({ success: true, data: result[0] });
-  });
+      res.json({ success: true, data: result[0] || null });
+    },
+  );
 };
 
-// POST /api/kyc/submit
+// ───────── SUBMIT KYC (MULTER) ─────────
 exports.submitKyc = (req, res) => {
-  const userId = req.session?.user?.id; // ← fixed
+  const userId = req.session?.user?.id;
 
   if (!userId) {
     return res.status(401).json({ success: false, message: "Not logged in" });
@@ -65,125 +49,82 @@ exports.submitKyc = (req, res) => {
   const { document_type, document_number } = req.body;
 
   if (!document_type || !document_number) {
+    return res.status(400).json({ success: false });
+  }
+
+  const front = req.files?.document_front?.[0];
+  const back = req.files?.document_back?.[0];
+  const selfie = req.files?.selfie?.[0];
+
+  if (!front || !back || !selfie) {
     return res.status(400).json({
       success: false,
-      message: "Document type and number are required",
+      message: "All documents required",
     });
   }
 
-  if (
-    !req.files?.document_front ||
-    !req.files?.document_back ||
-    !req.files?.selfie
-  ) {
-    return res.status(400).json({
-      success: false,
-      message:
-        "All three files are required: document_front, document_back, selfie",
-    });
-  }
+  const frontPath = `/uploads/kyc/${front.filename}`;
+  const backPath = `/uploads/kyc/${back.filename}`;
+  const selfiePath = `/uploads/kyc/${selfie.filename}`;
 
-  // Create upload dir if needed
-  const uploadDir = path.join(__dirname, "../../uploads/kyc");
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-  }
+  // check existing
+  db.query("SELECT id FROM kyc WHERE user_id=?", [userId], (err, existing) => {
+    if (err) return res.status(500).json({ success: false });
 
-  function saveFile(fileObj, prefix) {
-    const ext = path.extname(fileObj.name) || ".jpg";
-    const filename = `${prefix}_${userId}_${Date.now()}${ext}`;
-    const filepath = path.join(uploadDir, filename);
-    fileObj.mv(filepath);
-    return `/uploads/kyc/${filename}`;
-  }
+    if (existing.length) {
+      db.query(
+        `UPDATE kyc SET 
+            document_type=?,
+            document_number=?,
+            document_front=?,
+            document_back=?,
+            selfie=?,
+            status='pending',
+            submitted_at=NOW()
+          WHERE user_id=?`,
+        [
+          document_type,
+          document_number,
+          frontPath,
+          backPath,
+          selfiePath,
+          userId,
+        ],
+        (err2) => {
+          if (err2) return res.status(500).json({ success: false });
 
-  const frontPath = saveFile(req.files.document_front, "front");
-  const backPath = saveFile(req.files.document_back, "back");
-  const selfiePath = saveFile(req.files.selfie, "selfie");
+          res.json({
+            success: true,
+            message: "KYC updated",
+            ref: `KYC-${existing[0].id}`,
+          });
+        },
+      );
+    } else {
+      db.query(
+        `INSERT INTO kyc (
+            user_id, document_type, document_number,
+            document_front, document_back, selfie,
+            status, submitted_at
+          ) VALUES (?, ?, ?, ?, ?, ?, 'pending', NOW())`,
+        [
+          userId,
+          document_type,
+          document_number,
+          frontPath,
+          backPath,
+          selfiePath,
+        ],
+        (err2, result) => {
+          if (err2) return res.status(500).json({ success: false });
 
-  // Check if KYC already exists
-  db.query(
-    `SELECT id FROM kyc WHERE user_id = ? LIMIT 1`,
-    [userId],
-    (err, existing) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ success: false, message: "DB error" });
-      }
-
-      if (existing.length) {
-        // UPDATE existing
-        const updateSql = `
-        UPDATE kyc SET
-          document_type    = ?,
-          document_number  = ?,
-          document_front   = ?,
-          document_back    = ?,
-          selfie           = ?,
-          status           = 'pending',
-          rejection_reason = NULL,
-          submitted_at     = NOW(),
-          reviewed_at      = NULL
-        WHERE user_id = ?
-      `;
-        db.query(
-          updateSql,
-          [
-            document_type,
-            document_number,
-            frontPath,
-            backPath,
-            selfiePath,
-            userId,
-          ],
-          (err2) => {
-            if (err2) {
-              console.error(err2);
-              return res
-                .status(500)
-                .json({ success: false, message: "Update failed" });
-            }
-            res.json({
-              success: true,
-              message: "KYC re-submitted",
-              ref: `KYC-${existing[0].id}`,
-            });
-          },
-        );
-      } else {
-        // INSERT new
-        const insertSql = `
-        INSERT INTO kyc (
-          user_id, document_type, document_number,
-          document_front, document_back, selfie,
-          status, submitted_at
-        ) VALUES (?, ?, ?, ?, ?, ?, 'pending', NOW())
-      `;
-        db.query(
-          insertSql,
-          [
-            userId,
-            document_type,
-            document_number,
-            frontPath,
-            backPath,
-            selfiePath,
-          ],
-          (err2, result2) => {
-            if (err2) {
-              console.error(err2);
-              return res
-                .status(500)
-                .json({ success: false, message: "Insert failed" });
-            }
-            res.json({
-              success: true,
-              message: "KYC submitted",
-              ref: `KYC-${result2.insertId}`,
-            });
-          },
-        );
-      }
-    },
-  );
+          res.json({
+            success: true,
+            message: "KYC submitted",
+            ref: `KYC-${result.insertId}`,
+          });
+        },
+      );
+    }
+  });
 };

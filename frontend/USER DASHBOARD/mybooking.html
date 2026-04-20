@@ -1,0 +1,1880 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AUTO DEALER — My Bookings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --orange: #ff5c1a;
+        --orange-light: #ff7a3d;
+        --orange-dim: rgba(255, 92, 26, 0.12);
+        --bg: #f4f5f7;
+        --white: #ffffff;
+        --sidebar-bg: #0a0a0a;
+        --sidebar-w: 240px;
+        --dark: #111827;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --radius: 14px;
+        --radius-sm: 8px;
+        --shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+        --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.1);
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        font-size: 15px;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        width: var(--sidebar-w);
+        min-height: 100vh;
+        background: var(--sidebar-bg);
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        z-index: 200;
+        transition: transform 0.3s ease;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .sidebar-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 24px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        text-decoration: none;
+      }
+      .logo-mark {
+        width: 36px;
+        height: 36px;
+        background: var(--orange);
+        color: #fff;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        flex-shrink: 0;
+      }
+      .logo-text-block {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+      .logo-brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 17px;
+        letter-spacing: 2.5px;
+        color: #fff;
+        line-height: 1;
+      }
+      .logo-sub {
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        color: rgba(255, 255, 255, 0.3);
+        font-family: "Space Mono", monospace;
+      }
+      .sidebar-nav {
+        flex: 1;
+        padding: 16px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 9px;
+        color: rgba(255, 255, 255, 0.45);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 400;
+        transition: all 0.18s;
+        cursor: pointer;
+      }
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .nav-item.active {
+        background: var(--orange-dim);
+        color: var(--orange);
+        font-weight: 500;
+      }
+      .nav-item.active .nav-icon {
+        stroke: var(--orange);
+      }
+      .nav-icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+      }
+      .sidebar-footer {
+        padding: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .sidebar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .user-info {
+        min-width: 0;
+      }
+      .user-name {
+        display: block;
+        font-size: 13px;
+        color: #fff;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .user-kyc-status {
+        display: block;
+        font-size: 10px;
+        font-family: "Space Mono", monospace;
+        letter-spacing: 0.5px;
+        color: #f59e0b;
+      }
+
+      /* Overlay */
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 199;
+      }
+      .sidebar-overlay.open {
+        display: block;
+      }
+
+      /* ── MAIN ── */
+      .main-wrap {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .topbar {
+        height: 64px;
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        padding: 0 28px;
+        gap: 16px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .topbar-page-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .topbar-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .icon-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 9px;
+        background: none;
+        border: 1px solid var(--border);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+      }
+      .icon-btn:hover {
+        background: var(--bg);
+      }
+      .icon-btn svg {
+        width: 17px;
+        height: 17px;
+        color: var(--muted);
+      }
+      .topbar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 12px;
+        border-radius: 9px;
+        transition: background 0.2s;
+        margin-left: 4px;
+      }
+      .topbar-user:hover {
+        background: var(--bg);
+      }
+      .topbar-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .topbar-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+      }
+      .topbar-role {
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      /* ── CONTENT ── */
+      .content {
+        flex: 1;
+        padding: 28px;
+      }
+
+      /* ── SUMMARY CARDS ── */
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .stat-card {
+        background: var(--white);
+        border-radius: var(--radius);
+        padding: 20px 22px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        animation: fadeUp 0.4s ease both;
+      }
+      .stat-card:nth-child(1) {
+        animation-delay: 0.05s;
+      }
+      .stat-card:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .stat-card:nth-child(3) {
+        animation-delay: 0.15s;
+      }
+      .stat-card:nth-child(4) {
+        animation-delay: 0.2s;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .stat-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .stat-icon svg {
+        width: 22px;
+        height: 22px;
+      }
+      .stat-info {
+        min-width: 0;
+      }
+      .stat-label {
+        font-size: 11.5px;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+        letter-spacing: 0.3px;
+        margin-bottom: 2px;
+      }
+      .stat-value {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 32px;
+        color: var(--dark);
+        line-height: 1;
+        letter-spacing: 1px;
+      }
+
+      /* ── FILTER BAR ── */
+      .filter-bar {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        box-shadow: var(--shadow);
+        animation: fadeUp 0.4s ease 0.25s both;
+      }
+      .filter-search {
+        flex: 1;
+        min-width: 200px;
+        position: relative;
+      }
+      .filter-search svg {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 15px;
+        height: 15px;
+        stroke: var(--muted);
+      }
+      .filter-search input {
+        width: 100%;
+        height: 40px;
+        padding: 0 14px 0 36px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        color: var(--text);
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .filter-search input:focus {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 3px rgba(255, 92, 26, 0.1);
+      }
+      .filter-search input::placeholder {
+        color: #c4c9d4;
+      }
+      .filter-tabs {
+        display: flex;
+        gap: 4px;
+        background: var(--bg);
+        padding: 4px;
+        border-radius: 9px;
+      }
+      .ftab {
+        padding: 7px 14px;
+        border-radius: 7px;
+        font-size: 12.5px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        background: none;
+        color: var(--muted);
+        transition: all 0.18s;
+        white-space: nowrap;
+      }
+      .ftab.active {
+        background: var(--white);
+        color: var(--dark);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      }
+      .ftab[data-filter="confirmed"].active {
+        color: #16a34a;
+      }
+      .ftab[data-filter="pending"].active {
+        color: #d97706;
+      }
+      .ftab[data-filter="rejected"].active {
+        color: #dc2626;
+      }
+      .filter-sort {
+        height: 40px;
+        padding: 0 14px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        color: var(--text);
+        background: var(--white);
+        outline: none;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 30px;
+      }
+
+      /* ── TABLE ── */
+      .table-wrap {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        margin-bottom: 24px;
+        animation: fadeUp 0.4s ease 0.3s both;
+      }
+      .table-header {
+        padding: 18px 24px 14px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .table-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .table-count {
+        font-size: 12px;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+      }
+      .tbl-scroll {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 700px;
+      }
+      thead tr {
+        background: #f9fafb;
+      }
+      th {
+        padding: 11px 16px;
+        text-align: left;
+        font-family: "Space Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--muted);
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+      }
+      td {
+        padding: 0;
+        border-bottom: 1px solid #f3f4f6;
+        vertical-align: middle;
+      }
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .td-inner {
+        padding: 14px 16px;
+      }
+      tbody tr {
+        transition: background 0.15s;
+      }
+      tbody tr:hover td {
+        background: #fafafa;
+      }
+      tbody tr.hidden-row {
+        display: none;
+      }
+
+      /* Vehicle cell */
+      .veh-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .veh-thumb {
+        width: 56px;
+        height: 40px;
+        border-radius: 8px;
+        background: #f3f4f6;
+        overflow: hidden;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+      .veh-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .veh-name {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--dark);
+        line-height: 1.2;
+      }
+      .veh-plate {
+        font-size: 11px;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+        margin-top: 2px;
+      }
+
+      /* Status badges */
+      .s-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 12px;
+        border-radius: 99px;
+        font-size: 11.5px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .s-badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+        display: inline-block;
+        flex-shrink: 0;
+      }
+      .s-confirmed {
+        background: #ecfdf5;
+        color: #16a34a;
+      }
+      .s-pending {
+        background: #fffbeb;
+        color: #d97706;
+      }
+      .s-rejected {
+        background: #fff1f2;
+        color: #dc2626;
+      }
+      .s-active {
+        background: #eff6ff;
+        color: #2563eb;
+      }
+      .s-cancelled {
+        background: #f3f4f6;
+        color: #6b7280;
+      }
+
+      /* Amount */
+      .amount-cell {
+        font-family: "Space Mono", monospace;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--dark);
+      }
+      .amount-sub {
+        font-size: 10.5px;
+        color: var(--muted);
+        font-weight: 400;
+        margin-top: 1px;
+      }
+
+      /* Action buttons */
+      .actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .act-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--white);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.18s;
+        position: relative;
+      }
+      .act-btn svg {
+        width: 14px;
+        height: 14px;
+      }
+      .act-btn:hover {
+        transform: translateY(-1px);
+      }
+      .act-edit:hover {
+        border-color: #2563eb;
+        background: #eff6ff;
+      }
+      .act-edit:hover svg {
+        stroke: #2563eb;
+      }
+      .act-view:hover {
+        border-color: var(--orange);
+        background: var(--orange-dim);
+      }
+      .act-view:hover svg {
+        stroke: var(--orange);
+      }
+      .act-delete:hover {
+        border-color: #dc2626;
+        background: #fff1f2;
+      }
+      .act-delete:hover svg {
+        stroke: #dc2626;
+      }
+      .act-btn svg {
+        stroke: var(--muted);
+        fill: none;
+        stroke-width: 1.8;
+      }
+
+      /* Tooltip */
+      .act-btn[title]:hover::after {
+        content: attr(title);
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--dark);
+        color: #fff;
+        font-size: 10px;
+        padding: 3px 8px;
+        border-radius: 5px;
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 10;
+        font-family: "DM Sans", sans-serif;
+      }
+
+      /* Empty state */
+      .empty-state {
+        padding: 56px 24px;
+        text-align: center;
+      }
+      .empty-icon {
+        width: 64px;
+        height: 64px;
+        background: var(--orange-dim);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+      }
+      .empty-icon svg {
+        width: 28px;
+        height: 28px;
+        stroke: var(--orange);
+      }
+      .empty-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 22px;
+        letter-spacing: 1.5px;
+        color: var(--dark);
+        margin-bottom: 6px;
+      }
+      .empty-sub {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      /* Pagination */
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 24px;
+        border-top: 1px solid var(--border);
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .page-info {
+        font-size: 12.5px;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+      }
+      .page-btns {
+        display: flex;
+        gap: 4px;
+      }
+      .page-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 7px;
+        border: 1px solid var(--border);
+        background: none;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        color: var(--muted);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.18s;
+      }
+      .page-btn:hover {
+        background: var(--bg);
+        color: var(--dark);
+      }
+      .page-btn.active {
+        background: var(--orange);
+        border-color: var(--orange);
+        color: #fff;
+      }
+      .page-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+
+      /* Modal */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 500;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
+      .modal {
+        background: var(--white);
+        border-radius: var(--radius);
+        width: 100%;
+        max-width: 480px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        animation: modalIn 0.25s ease;
+        overflow: hidden;
+      }
+      @keyframes modalIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95) translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .modal-head {
+        padding: 22px 24px 18px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .modal-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .modal-close {
+        width: 30px;
+        height: 30px;
+        border-radius: 7px;
+        border: 1px solid var(--border);
+        background: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-close:hover {
+        background: var(--bg);
+      }
+      .modal-close svg {
+        width: 14px;
+        height: 14px;
+        stroke: var(--muted);
+      }
+      .modal-body {
+        padding: 24px;
+      }
+      .modal-body .form-group {
+        margin-bottom: 16px;
+      }
+      .modal-body label {
+        display: block;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--dark);
+        font-family: "Space Mono", monospace;
+        letter-spacing: 0.3px;
+        margin-bottom: 6px;
+      }
+      .modal-body input,
+      .modal-body select {
+        width: 100%;
+        height: 42px;
+        padding: 0 14px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        color: var(--text);
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .modal-body input:focus,
+      .modal-body select:focus {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 3px rgba(255, 92, 26, 0.1);
+      }
+      .modal-foot {
+        padding: 16px 24px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+      .btn-cancel {
+        padding: 9px 20px;
+        background: none;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        color: var(--muted);
+        cursor: pointer;
+      }
+      .btn-cancel:hover {
+        background: var(--bg);
+      }
+      .btn-save {
+        padding: 9px 22px;
+        background: var(--orange);
+        border: none;
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .btn-save:hover {
+        background: var(--orange-light);
+      }
+
+      /* Delete confirm modal */
+      .del-modal-body {
+        padding: 28px 24px;
+        text-align: center;
+      }
+      .del-icon {
+        width: 56px;
+        height: 56px;
+        background: #fff1f2;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+      }
+      .del-icon svg {
+        width: 26px;
+        height: 26px;
+        stroke: #dc2626;
+      }
+      .del-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 8px;
+      }
+      .del-desc {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .btn-delete-confirm {
+        padding: 9px 22px;
+        background: #dc2626;
+        border: none;
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: #fff;
+        cursor: pointer;
+      }
+      .btn-delete-confirm:hover {
+        background: #b91c1c;
+      }
+
+      /* Detail modal */
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .detail-item {
+        background: var(--bg);
+        border-radius: 8px;
+        padding: 12px 14px;
+      }
+      .detail-label {
+        font-size: 10.5px;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+        letter-spacing: 0.4px;
+        margin-bottom: 4px;
+      }
+      .detail-value {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .detail-veh {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px;
+        background: var(--dark);
+        border-radius: 10px;
+        margin-bottom: 16px;
+      }
+      .detail-veh-icon {
+        font-size: 28px;
+      }
+      .detail-veh-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+      }
+      .detail-veh-plate {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.45);
+        font-family: "Space Mono", monospace;
+      }
+
+      /* Footer */
+      .footer-strip {
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .footer-strip p {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .footer-links {
+        display: flex;
+        gap: 20px;
+      }
+      .footer-links a {
+        font-size: 12px;
+        color: var(--muted);
+        text-decoration: none;
+      }
+      .footer-links a:hover {
+        color: var(--orange);
+      }
+
+      @media (max-width: 1100px) {
+        .stat-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: none;
+        }
+        .main-wrap {
+          margin-left: 0;
+        }
+        .content {
+          padding: 20px 16px;
+        }
+        .topbar {
+          padding: 0 16px;
+        }
+        #sidebarToggle {
+          display: flex !important;
+        }
+        .stat-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .filter-bar {
+          flex-wrap: wrap;
+        }
+        .footer-strip {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar" id="sidebar">
+      <a href="#" class="sidebar-logo">
+        <div class="logo-mark">AD</div>
+        <div class="logo-text-block">
+          <span class="logo-brand">Auto Dealer</span>
+          <span class="logo-sub">Fleet Management</span>
+        </div>
+      </a>
+      <nav class="sidebar-nav">
+        <a href="userdashboard.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard
+        </a>
+        <a href="user.vehicle.listing.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path
+              d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+            />
+            <circle cx="7" cy="17" r="2" />
+            <circle cx="17" cy="17" r="2" />
+            <path d="M5 17h8M3 9h18" />
+          </svg>
+          Vehicles
+        </a>
+        <a href="mybooking.html" class="nav-item active">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          My Bookings
+        </a>
+        <a href="kyc.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          KYC
+        </a>
+        <a href="payments.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <rect x="2" y="5" width="20" height="14" rx="2" />
+            <line x1="2" y1="10" x2="22" y2="10" />
+          </svg>
+          Payments
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar">SR</div>
+          <div class="user-info">
+            <span class="user-name">Swikar Regmi</span>
+            <span class="user-kyc-status">⚠ KYC Pending</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ── MAIN WRAP ── -->
+    <div class="main-wrap">
+      <header class="topbar">
+        <button class="icon-btn" id="sidebarToggle" style="display: none">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <span class="topbar-page-title">My Bookings</span>
+        <div class="topbar-right">
+          <button class="icon-btn" title="Notifications">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+            </svg>
+          </button>
+          <div class="topbar-user">
+            <div class="topbar-avatar">SR</div>
+            <div>
+              <p class="topbar-name">Swikar Regmi</p>
+              <p class="topbar-role">Customer</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- Summary Stats -->
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background: #fff0e8">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#FF5C1A"
+                stroke-width="1.8"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Total</div>
+              <div class="stat-value" id="cntTotal">7</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: #ecfdf5">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#16a34a"
+                stroke-width="1.8"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9 12l2 2 4-4" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Confirmed</div>
+              <div class="stat-value" id="cntConfirmed">3</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: #fffbeb">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#d97706"
+                stroke-width="1.8"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Pending</div>
+              <div class="stat-value" id="cntPending">2</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: #fff1f2">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#dc2626"
+                stroke-width="1.8"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M15 9l-6 6M9 9l6 6" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Rejected</div>
+              <div class="stat-value" id="cntRejected">2</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+          <div class="filter-search">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search vehicle or booking ID…"
+              oninput="applyFilters()"
+            />
+          </div>
+          <div class="filter-tabs">
+            <button
+              class="ftab active"
+              data-filter="all"
+              onclick="setFilter('all')"
+            >
+              All
+            </button>
+            <button
+              class="ftab"
+              data-filter="confirmed"
+              onclick="setFilter('confirmed')"
+            >
+              Confirmed
+            </button>
+            <button
+              class="ftab"
+              data-filter="pending"
+              onclick="setFilter('pending')"
+            >
+              Pending
+            </button>
+            <button
+              class="ftab"
+              data-filter="rejected"
+              onclick="setFilter('rejected')"
+            >
+              Rejected
+            </button>
+          </div>
+          <select class="filter-sort" id="sortSelect" onchange="applyFilters()">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="amount-high">Amount: High → Low</option>
+            <option value="amount-low">Amount: Low → High</option>
+          </select>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrap">
+          <div class="table-header">
+            <span class="table-title">All Bookings</span>
+            <span class="table-count" id="tableCount">Showing 7 bookings</span>
+          </div>
+          <div class="tbl-scroll">
+            <table id="bookingTable">
+              <thead>
+                <tr>
+                  <th>Vehicle</th>
+                  <th>Booking ID</th>
+                  <th>Duration</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="bookingTbody">
+                <!-- Rows injected by JS -->
+              </tbody>
+            </table>
+            <div class="empty-state" id="emptyState" style="display: none">
+              <div class="empty-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+              </div>
+              <div class="empty-title">NO BOOKINGS FOUND</div>
+              <p class="empty-sub">Try adjusting your search or filter.</p>
+            </div>
+          </div>
+          <div class="pagination">
+            <span class="page-info" id="pageInfo">1–7 of 7</span>
+            <div class="page-btns">
+              <button
+                class="page-btn"
+                id="prevBtn"
+                disabled
+                onclick="changePage(-1)"
+              >
+                ‹
+              </button>
+              <button class="page-btn active" id="page1" onclick="goPage(1)">
+                1
+              </button>
+              <button
+                class="page-btn"
+                id="nextBtn"
+                disabled
+                onclick="changePage(1)"
+              >
+                ›
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-strip">
+          <p>© 2026 Auto Dealer Fleet Management. All rights reserved.</p>
+          <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact Us</a>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ── EDIT MODAL ── -->
+    <div class="modal-overlay" id="editModal">
+      <div class="modal">
+        <div class="modal-head">
+          <span class="modal-title">Edit Booking</span>
+          <button class="modal-close" onclick="closeModal('editModal')">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Vehicle</label><input type="text" id="editVehicle" />
+          </div>
+          <div class="form-group">
+            <label>Duration</label><input type="text" id="editDuration" />
+          </div>
+          <div class="form-group">
+            <label>Date</label><input type="text" id="editDate" />
+          </div>
+          <div class="form-group">
+            <label>Amount (Rs)</label><input type="text" id="editAmount" />
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="editStatus">
+              <option value="confirmed">Confirmed</option>
+              <option value="pending">Pending</option>
+              <option value="rejected">Rejected</option>
+              <option value="active">Active</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn-cancel" onclick="closeModal('editModal')">
+            Cancel
+          </button>
+          <button class="btn-save" onclick="saveEdit()">Save Changes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DELETE MODAL ── -->
+    <div class="modal-overlay" id="deleteModal">
+      <div class="modal">
+        <div class="del-modal-body">
+          <div class="del-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+              <path d="M10 11v6M14 11v6" />
+              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+            </svg>
+          </div>
+          <div class="del-title">Cancel Booking?</div>
+          <p class="del-desc">
+            Are you sure you want to cancel this booking? This action cannot be
+            undone.
+          </p>
+        </div>
+        <div class="modal-foot">
+          <button class="btn-cancel" onclick="closeModal('deleteModal')">
+            Keep Booking
+          </button>
+          <button class="btn-delete-confirm" onclick="confirmDelete()">
+            Yes, Cancel It
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── VIEW MODAL ── -->
+    <div class="modal-overlay" id="viewModal">
+      <div class="modal">
+        <div class="modal-head">
+          <span class="modal-title">Booking Details</span>
+          <button class="modal-close" onclick="closeModal('viewModal')">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body" id="viewModalBody"></div>
+        <div class="modal-foot">
+          <button class="btn-cancel" onclick="closeModal('viewModal')">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* ── STATE ── */
+      let bookings = [];
+      let activeFilter = "all";
+      let editIdx = null;
+      let deleteIdx = null;
+      const PER_PAGE = 7;
+      let currentPage = 1;
+
+      const API_BASE = "http://localhost:5000/api/bookings";
+      const IMG_BASE = "http://localhost:5000/uploads/vehicles/";
+
+      /* ── HELPERS ── */
+      function normalizeStatus(s) {
+        const map = {
+          Pending: "pending",
+          Confirmed: "confirmed",
+          Active: "active",
+          Completed: "cancelled",
+          Cancelled: "cancelled",
+        };
+        return map[s] || "pending";
+      }
+      function formatDuration(rental_type, total_days) {
+        if (rental_type === "4h") return "4h";
+        if (rental_type === "8h") return "8h";
+        if (rental_type === "1d") return "1 Day";
+        if (rental_type === "custom")
+          return `${total_days} Day${total_days > 1 ? "s" : ""}`;
+        return rental_type;
+      }
+      function formatDate(datetimeStr) {
+        const d = new Date(datetimeStr);
+        return d.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+      }
+      function bodyTypeEmoji(body_type) {
+        const map = {
+          SUV: "🚙",
+          Sedan: "🚗",
+          Hatchback: "🚘",
+          Pickup: "🛻",
+          Van: "🚐",
+          Minivan: "🚐",
+          Convertible: "🏎️",
+          Electric: "⚡",
+        };
+        return map[body_type] || "🚗";
+      }
+      function badge(status) {
+        const map = {
+          confirmed: ["s-confirmed", "Confirmed"],
+          pending: ["s-pending", "Pending"],
+          rejected: ["s-rejected", "Rejected"],
+          active: ["s-active", "Active"],
+          cancelled: ["s-cancelled", "Cancelled"],
+        };
+        const [cls, label] = map[status] || ["s-cancelled", status];
+        return `<span class="s-badge ${cls}">${label}</span>`;
+      }
+
+      /* ── thumb helper: image or emoji fallback ── */
+      function thumbHtml(b, size = "small") {
+        if (b.thumbnail) {
+          if (size === "large") {
+            return `<img src="${IMG_BASE}${b.thumbnail}" alt="${b.vehicle}"
+                  style="width:48px;height:48px;border-radius:8px;object-fit:cover"
+                  onerror="this.outerHTML='<span style=\\'font-size:28px\\'>${b.emoji}</span>'">`;
+          }
+          return `<img src="${IMG_BASE}${b.thumbnail}" alt="${b.vehicle}"
+                style="width:100%;height:100%;object-fit:cover;border-radius:8px"
+                onerror="this.outerHTML='<span style=\\'font-size:20px\\'>${b.emoji}</span>'">`;
+        }
+        return size === "large"
+          ? `<span style="font-size:28px">${b.emoji}</span>`
+          : `<span style="font-size:20px">${b.emoji}</span>`;
+      }
+
+      /* ── API LOAD ── */
+      async function loadBookings() {
+        try {
+          const res = await fetch(`${API_BASE}/my`, { credentials: "include" });
+          const data = await res.json();
+          if (!res.ok || !data.success) {
+            if (res.status === 401) {
+              alert("Session expired. Please log in again.");
+              window.location.href = "/login.html";
+              return;
+            }
+            throw new Error(data.message || "Failed to load bookings");
+          }
+          bookings = data.bookings.map((b) => ({
+            _dbId: b.id,
+            id: b.booking_ref,
+            vehicle: b.vehicle_name,
+            plate: b.license_plate,
+            emoji: bodyTypeEmoji(b.body_type),
+            thumbnail: b.vehicle_thumbnail || null, // ✅ from DB
+            duration: formatDuration(b.rental_type, b.total_days),
+            date: formatDate(b.pickup_datetime),
+            ts: new Date(b.pickup_datetime).getTime(),
+            amount: parseFloat(b.total_price),
+            status: normalizeStatus(b.status),
+            _raw: b,
+          }));
+          render();
+        } catch (err) {
+          console.error("loadBookings error:", err);
+          document.getElementById("emptyState").style.display = "";
+          document.getElementById("tableCount").textContent =
+            "Error loading bookings";
+        }
+      }
+
+      /* ── RENDER TABLE ── */
+      function render() {
+        const q = document.getElementById("searchInput").value.toLowerCase();
+        const sort = document.getElementById("sortSelect").value;
+
+        let filtered = bookings.filter((b, i) => {
+          b._idx = i;
+          if (activeFilter !== "all" && b.status !== activeFilter) return false;
+          if (
+            q &&
+            !b.vehicle.toLowerCase().includes(q) &&
+            !b.id.toLowerCase().includes(q) &&
+            !b.plate.toLowerCase().includes(q)
+          )
+            return false;
+          return true;
+        });
+
+        filtered.sort((a, b) => {
+          if (sort === "newest") return b.ts - a.ts;
+          if (sort === "oldest") return a.ts - b.ts;
+          if (sort === "amount-high") return b.amount - a.amount;
+          if (sort === "amount-low") return a.amount - b.amount;
+        });
+
+        const tbody = document.getElementById("bookingTbody");
+        const empty = document.getElementById("emptyState");
+        const count = document.getElementById("tableCount");
+        const pageInfo = document.getElementById("pageInfo");
+
+        if (!filtered.length) {
+          tbody.innerHTML = "";
+          empty.style.display = "";
+          count.textContent = "No bookings found";
+          pageInfo.textContent = "0 results";
+          return;
+        }
+
+        empty.style.display = "none";
+        const start = (currentPage - 1) * PER_PAGE;
+        const paginated = filtered.slice(start, start + PER_PAGE);
+        count.textContent = `Showing ${filtered.length} booking${filtered.length !== 1 ? "s" : ""}`;
+        pageInfo.textContent = `${start + 1}–${Math.min(start + PER_PAGE, filtered.length)} of ${filtered.length}`;
+
+        tbody.innerHTML = paginated
+          .map(
+            (b) => `
+      <tr>
+        <td><div class="td-inner">
+          <div class="veh-cell">
+            <div class="veh-thumb">${thumbHtml(b, "small")}</div>  <!-- ✅ real photo -->
+            <div>
+              <div class="veh-name">${b.vehicle}</div>
+              <div class="veh-plate">${b.plate}</div>
+            </div>
+          </div>
+        </div></td>
+        <td><div class="td-inner" style="font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted)">${b.id}</div></td>
+        <td><div class="td-inner" style="font-size:13px">${b.duration}</div></td>
+        <td><div class="td-inner" style="font-size:13px">${b.date}</div></td>
+        <td><div class="td-inner"><div class="amount-cell">Rs ${b.amount.toLocaleString()}</div></div></td>
+        <td><div class="td-inner">${badge(b.status)}</div></td>
+        <td><div class="td-inner">
+          <div class="actions">
+            <button class="act-btn act-view" title="View Details" onclick="viewBooking(${b._idx})">
+              <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+            <button class="act-btn act-edit" title="Edit" onclick="editBooking(${b._idx})">
+              <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="act-btn act-delete" title="Cancel Booking" onclick="deleteBooking(${b._idx})">
+              <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+            </button>
+          </div>
+        </div></td>
+      </tr>
+    `,
+          )
+          .join("");
+
+        // update stat cards
+        document.getElementById("cntTotal").textContent = bookings.length;
+        document.getElementById("cntConfirmed").textContent = bookings.filter(
+          (b) => b.status === "confirmed",
+        ).length;
+        document.getElementById("cntPending").textContent = bookings.filter(
+          (b) => b.status === "pending",
+        ).length;
+        document.getElementById("cntRejected").textContent = bookings.filter(
+          (b) => b.status === "rejected" || b.status === "cancelled",
+        ).length;
+      }
+
+      /* ── FILTERS & SORT ── */
+      function setFilter(f) {
+        activeFilter = f;
+        currentPage = 1;
+        document
+          .querySelectorAll(".ftab")
+          .forEach((t) => t.classList.toggle("active", t.dataset.filter === f));
+        render();
+      }
+      function applyFilters() {
+        currentPage = 1;
+        render();
+      }
+      function changePage(d) {
+        currentPage += d;
+        render();
+      }
+      function goPage(p) {
+        currentPage = p;
+        render();
+      }
+
+      /* ── EDIT ── */
+      function editBooking(idx) {
+        editIdx = idx;
+        const b = bookings[idx];
+        const raw = b._raw;
+        document.getElementById("editVehicle").value = b.vehicle;
+        document.getElementById("editVehicle").disabled = true;
+        document.getElementById("editDuration").value = raw.rental_type;
+        document.getElementById("editDate").value =
+          raw.pickup_datetime?.slice(0, 16) ?? "";
+        document.getElementById("editAmount").value = b.amount;
+        document.getElementById("editAmount").disabled = true;
+        document.getElementById("editStatus").value = raw.status;
+        document.getElementById("editStatus").disabled = true;
+        openModal("editModal");
+      }
+      async function saveEdit() {
+        if (editIdx === null) return;
+        const b = bookings[editIdx];
+        const raw = b._raw;
+        const newDuration = document.getElementById("editDuration").value;
+        const newDate = document.getElementById("editDate").value;
+        if (!newDate) {
+          alert("Please select a pickup date.");
+          return;
+        }
+        try {
+          const res = await fetch(`${API_BASE}/${raw.id}`, {
+            method: "PUT",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              rental_type: newDuration,
+              pickup_datetime: newDate,
+              drop_datetime: raw.drop_datetime,
+              notes: raw.notes,
+            }),
+          });
+          const data = await res.json();
+          if (!data.success) throw new Error(data.message);
+          closeModal("editModal");
+          await loadBookings();
+        } catch (err) {
+          alert("Update failed: " + err.message);
+        }
+      }
+
+      /* ── DELETE ── */
+      function deleteBooking(idx) {
+        deleteIdx = idx;
+        openModal("deleteModal");
+      }
+      async function confirmDelete() {
+        if (deleteIdx === null) return;
+        const b = bookings[deleteIdx];
+        try {
+          const res = await fetch(`${API_BASE}/${b._raw.id}`, {
+            method: "DELETE",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ cancel_reason: "Cancelled by user" }),
+          });
+          const data = await res.json();
+          if (!data.success) throw new Error(data.message);
+          deleteIdx = null;
+          closeModal("deleteModal");
+          await loadBookings();
+        } catch (err) {
+          alert("Cancel failed: " + err.message);
+        }
+      }
+
+      /* ── VIEW ── */
+      function viewBooking(idx) {
+        const b = bookings[idx];
+        document.getElementById("viewModalBody").innerHTML = `
+      <div class="detail-veh">
+        <div class="detail-veh-icon">${thumbHtml(b, "large")}</div>  <!-- ✅ real photo -->
+        <div>
+          <div class="detail-veh-name">${b.vehicle}</div>
+          <div class="detail-veh-plate">${b.plate}</div>
+        </div>
+        <div style="margin-left:auto">${badge(b.status)}</div>
+      </div>
+      <div class="detail-grid">
+        <div class="detail-item"><div class="detail-label">Booking ID</div><div class="detail-value">${b.id}</div></div>
+        <div class="detail-item"><div class="detail-label">Duration</div><div class="detail-value">${b.duration}</div></div>
+        <div class="detail-item"><div class="detail-label">Date</div><div class="detail-value">${b.date}</div></div>
+        <div class="detail-item"><div class="detail-label">Amount</div><div class="detail-value">Rs ${b.amount.toLocaleString()}</div></div>
+        <div class="detail-item"><div class="detail-label">Number Plate</div><div class="detail-value">${b.plate}</div></div>
+        <div class="detail-item"><div class="detail-label">Status</div><div class="detail-value">${b._raw.status}</div></div>
+      </div>
+    `;
+        openModal("viewModal");
+      }
+
+      /* ── MODALS ── */
+      function openModal(id) {
+        document.getElementById(id).classList.add("open");
+      }
+      function closeModal(id) {
+        document.getElementById(id).classList.remove("open");
+      }
+      document.querySelectorAll(".modal-overlay").forEach((m) =>
+        m.addEventListener("click", (e) => {
+          if (e.target === m) m.classList.remove("open");
+        }),
+      );
+
+      /* ── SIDEBAR ── */
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("sidebarOverlay");
+      const toggle = document.getElementById("sidebarToggle");
+      toggle?.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("open");
+      });
+      overlay?.addEventListener("click", () => {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("open");
+      });
+      window.addEventListener("resize", () => {
+        if (toggle)
+          toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
+      });
+      if (toggle)
+        toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
+
+      /* ── INIT ── */
+      loadBookings();
+    </script>
+  </body>
+</html>

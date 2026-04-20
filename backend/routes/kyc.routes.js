@@ -1,18 +1,24 @@
 const express = require("express");
 const router = express.Router();
-const {
-  getUserInfo,
-  getKycStatus,
-  submitKyc,
-} = require("../controllers/kyc.controller");
 
-// GET  /api/kyc/user-info  — prefill form with user's name/email/phone
-router.get("/user-info", getUserInfo);
+const upload = require("../middleware/kycUpload");
+const kycController = require("../controllers/kyc.controller");
 
-// GET  /api/kyc/status     — check existing KYC status
-router.get("/status", getKycStatus);
+// GET USER INFO
+router.get("/user-info", kycController.getUserInfo);
 
-// POST /api/kyc/submit     — submit KYC form with files
-router.post("/submit", submitKyc);
+// GET KYC STATUS
+router.get("/status", kycController.getKycStatus);
+
+// SUBMIT KYC (MULTER HERE)
+router.post(
+  "/submit",
+  upload.fields([
+    { name: "document_front", maxCount: 1 },
+    { name: "document_back", maxCount: 1 },
+    { name: "selfie", maxCount: 1 },
+  ]),
+  kycController.submitKyc,
+);
 
 module.exports = router;
