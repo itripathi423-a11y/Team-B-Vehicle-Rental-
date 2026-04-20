@@ -1,6 +1,5 @@
 require("dotenv").config({ path: __dirname + "/.env" });
-console.log("EMAIL_USER =", process.env.EMAIL_USER);
-console.log("EMAIL_PASS =", process.env.EMAIL_PASS);
+
 // Import Express framework
 const express = require("express");
 
@@ -32,6 +31,10 @@ const vehicleDetailsRoutes = require("./routes/vehicleDetails.routes");
 
 const vehicleRoutes_booking = require("./routes/vehicle.routes");
 const bookingRoutes = require("./routes/booking.routes");
+
+// ADD at top with other imports
+const fileUpload = require("express-fileupload");
+const kycRoutes = require("./routes/kyc.routes");
 
 // Create Express app instance
 const app = express();
@@ -96,7 +99,16 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // Serve frontend static files (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname, "../frontend")));
+// ADD after body parsing middleware (after app.use(express.urlencoded...))
+app.use(
+  fileUpload({
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+    useTempFiles: false,
+  }),
+);
 
+// ADD with other routes
+app.use("/api/kyc", kycRoutes);
 /* =========================
    ROUTES
 ========================= */
