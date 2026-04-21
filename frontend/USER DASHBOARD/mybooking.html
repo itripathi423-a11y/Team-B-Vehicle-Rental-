@@ -16,7 +16,7 @@
         --orange-light: #ff7a3d;
         --orange-dim: rgba(255, 92, 26, 0.12);
         --bg: #f4f5f7;
-        --white: #ffffff;
+        --white: #fff;
         --sidebar-bg: #0a0a0a;
         --sidebar-w: 240px;
         --dark: #111827;
@@ -46,8 +46,6 @@
         min-height: 100vh;
         overflow-x: hidden;
       }
-
-      /* ── SIDEBAR ── */
       .sidebar {
         width: var(--sidebar-w);
         min-height: 100vh;
@@ -183,8 +181,6 @@
       .user-kyc-status.verified {
         color: #22c55e;
       }
-
-      /* Overlay */
       .sidebar-overlay {
         display: none;
         position: fixed;
@@ -195,8 +191,6 @@
       .sidebar-overlay.open {
         display: block;
       }
-
-      /* ── MAIN ── */
       .main-wrap {
         margin-left: var(--sidebar-w);
         flex: 1;
@@ -205,6 +199,7 @@
         flex-direction: column;
         min-height: 100vh;
       }
+      /* ── TOPBAR ── */
       .topbar {
         height: 64px;
         background: var(--white);
@@ -238,6 +233,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        position: relative;
         transition: background 0.2s;
       }
       .icon-btn:hover {
@@ -248,12 +244,133 @@
         height: 17px;
         color: var(--muted);
       }
+      .notif-badge {
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        background: var(--orange);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
       .topbar-user {
         display: flex;
         align-items: center;
         gap: 10px;
         padding: 6px 12px;
         border-radius: 9px;
+        cursor: pointer;
+        transition: background 0.2s;
+        margin-left: 4px;
+      }
+      .topbar-user:hover {
+        background: var(--bg);
+      }
+      .topbar-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+        flex-shrink: 0;
+      }
+      .topbar-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        inset: 0;
+      }
+      .topbar-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+      }
+      .topbar-role {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      /* TOPBAR */
+      .topbar {
+        height: 64px;
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        padding: 0 28px;
+        gap: 16px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .topbar-page-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .topbar-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+      }
+      .icon-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 9px;
+        background: none;
+        border: 1px solid var(--border);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        transition: background 0.2s;
+      }
+      .icon-btn:hover {
+        background: var(--bg);
+      }
+      .icon-btn svg {
+        width: 17px;
+        height: 17px;
+        color: var(--muted);
+      }
+      .notif-badge {
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        background: var(--orange);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .topbar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 12px;
+        border-radius: 9px;
+        cursor: pointer;
         transition: background 0.2s;
         margin-left: 4px;
       }
@@ -283,13 +400,22 @@
         color: var(--muted);
       }
 
-      /* ── CONTENT ── */
       .content {
         flex: 1;
         padding: 28px;
       }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
 
-      /* ── SUMMARY CARDS ── */
+      /* STAT GRID */
       .stat-grid {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -306,28 +432,6 @@
         align-items: center;
         gap: 14px;
         animation: fadeUp 0.4s ease both;
-      }
-      .stat-card:nth-child(1) {
-        animation-delay: 0.05s;
-      }
-      .stat-card:nth-child(2) {
-        animation-delay: 0.1s;
-      }
-      .stat-card:nth-child(3) {
-        animation-delay: 0.15s;
-      }
-      .stat-card:nth-child(4) {
-        animation-delay: 0.2s;
-      }
-      @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(14px);
-        }
-        to {
-          opacity: 1;
-          transform: none;
-        }
       }
       .stat-icon {
         width: 46px;
@@ -360,7 +464,7 @@
         letter-spacing: 1px;
       }
 
-      /* ── FILTER BAR ── */
+      /* FILTER BAR */
       .filter-bar {
         background: var(--white);
         border: 1px solid var(--border);
@@ -433,15 +537,6 @@
         color: var(--dark);
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
       }
-      .ftab[data-filter="confirmed"].active {
-        color: #16a34a;
-      }
-      .ftab[data-filter="pending"].active {
-        color: #d97706;
-      }
-      .ftab[data-filter="rejected"].active {
-        color: #dc2626;
-      }
       .filter-sort {
         height: 40px;
         padding: 0 14px;
@@ -460,7 +555,7 @@
         padding-right: 30px;
       }
 
-      /* ── TABLE ── */
+      /* TABLE */
       .table-wrap {
         background: var(--white);
         border: 1px solid var(--border);
@@ -527,11 +622,6 @@
       tbody tr:hover td {
         background: #fafafa;
       }
-      tbody tr.hidden-row {
-        display: none;
-      }
-
-      /* Vehicle cell */
       .veh-cell {
         display: flex;
         align-items: center;
@@ -566,8 +656,6 @@
         font-family: "Space Mono", monospace;
         margin-top: 2px;
       }
-
-      /* Status badges */
       .s-badge {
         display: inline-flex;
         align-items: center;
@@ -607,22 +695,12 @@
         background: #f3f4f6;
         color: #6b7280;
       }
-
-      /* Amount */
       .amount-cell {
         font-family: "Space Mono", monospace;
         font-size: 13px;
         font-weight: 700;
         color: var(--dark);
       }
-      .amount-sub {
-        font-size: 10.5px;
-        color: var(--muted);
-        font-weight: 400;
-        margin-top: 1px;
-      }
-
-      /* Action buttons */
       .actions {
         display: flex;
         align-items: center;
@@ -644,16 +722,12 @@
       .act-btn svg {
         width: 14px;
         height: 14px;
+        stroke: var(--muted);
+        fill: none;
+        stroke-width: 1.8;
       }
       .act-btn:hover {
         transform: translateY(-1px);
-      }
-      .act-edit:hover {
-        border-color: #2563eb;
-        background: #eff6ff;
-      }
-      .act-edit:hover svg {
-        stroke: #2563eb;
       }
       .act-view:hover {
         border-color: var(--orange);
@@ -662,6 +736,13 @@
       .act-view:hover svg {
         stroke: var(--orange);
       }
+      .act-edit:hover {
+        border-color: #2563eb;
+        background: #eff6ff;
+      }
+      .act-edit:hover svg {
+        stroke: #2563eb;
+      }
       .act-delete:hover {
         border-color: #dc2626;
         background: #fff1f2;
@@ -669,31 +750,6 @@
       .act-delete:hover svg {
         stroke: #dc2626;
       }
-      .act-btn svg {
-        stroke: var(--muted);
-        fill: none;
-        stroke-width: 1.8;
-      }
-
-      /* Tooltip */
-      .act-btn[title]:hover::after {
-        content: attr(title);
-        position: absolute;
-        bottom: calc(100% + 6px);
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--dark);
-        color: #fff;
-        font-size: 10px;
-        padding: 3px 8px;
-        border-radius: 5px;
-        white-space: nowrap;
-        pointer-events: none;
-        z-index: 10;
-        font-family: "DM Sans", sans-serif;
-      }
-
-      /* Empty state */
       .empty-state {
         padding: 56px 24px;
         text-align: center;
@@ -724,8 +780,6 @@
         font-size: 13px;
         color: var(--muted);
       }
-
-      /* Pagination */
       .pagination {
         display: flex;
         align-items: center;
@@ -773,7 +827,7 @@
         cursor: not-allowed;
       }
 
-      /* Modal */
+      /* MODALS */
       .modal-overlay {
         position: fixed;
         inset: 0;
@@ -907,8 +961,6 @@
       .btn-save:hover {
         background: var(--orange-light);
       }
-
-      /* Delete confirm modal */
       .del-modal-body {
         padding: 28px 24px;
         text-align: center;
@@ -953,8 +1005,6 @@
       .btn-delete-confirm:hover {
         background: #b91c1c;
       }
-
-      /* Detail modal */
       .detail-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -999,8 +1049,6 @@
         color: rgba(255, 255, 255, 0.45);
         font-family: "Space Mono", monospace;
       }
-
-      /* Footer */
       .footer-strip {
         padding-top: 24px;
         border-top: 1px solid var(--border);
@@ -1024,6 +1072,94 @@
       }
       .footer-links a:hover {
         color: var(--orange);
+      }
+
+      /* ══ USER DROPDOWN ══ */
+      .user-dropdown-wrap {
+        position: relative;
+        cursor: pointer;
+      }
+      .topbar-chevron {
+        transition: transform 0.2s;
+        color: #9ca3af;
+        flex-shrink: 0;
+      }
+      .topbar-chevron.open {
+        transform: rotate(180deg);
+      }
+      .user-dropdown-menu {
+        display: none;
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        min-width: 210px;
+        background: #fff;
+        border: 0.5px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 6px;
+        z-index: 999;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      }
+      .user-dropdown-menu.open {
+        display: block;
+      }
+      .dd-header {
+        padding: 10px 10px 8px;
+        border-bottom: 0.5px solid #f0f0f0;
+        margin-bottom: 4px;
+      }
+      .dd-header-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #111;
+      }
+      .dd-header-email {
+        font-size: 11px;
+        color: #9ca3af;
+      }
+      .dd-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 8px 10px;
+        border: none;
+        background: none;
+        border-radius: 8px;
+        font-size: 13px;
+        color: #111;
+        cursor: pointer;
+        text-align: left;
+      }
+      .dd-item:hover {
+        background: #f9fafb;
+      }
+      .dd-item svg {
+        color: #6b7280;
+        flex-shrink: 0;
+      }
+      .dd-kyc-badge {
+        margin-left: auto;
+        font-size: 10px;
+        padding: 2px 7px;
+        border-radius: 99px;
+        background: #fff8e1;
+        color: #b45309;
+        font-weight: 500;
+      }
+      .dd-divider {
+        height: 0.5px;
+        background: #f0f0f0;
+        margin: 4px 0;
+      }
+      .dd-danger {
+        color: #dc2626;
+      }
+      .dd-danger svg {
+        color: #dc2626;
+      }
+      .dd-danger:hover {
+        background: #fef2f2;
       }
 
       @media (max-width: 1100px) {
@@ -1053,9 +1189,6 @@
         .stat-grid {
           grid-template-columns: repeat(2, 1fr);
         }
-        .filter-bar {
-          flex-wrap: wrap;
-        }
         .footer-strip {
           flex-direction: column;
           align-items: flex-start;
@@ -1064,13 +1197,13 @@
     </style>
   </head>
   <body>
-    <!-- ── SIDEBAR ── -->
+    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
-      <a href="#" class="sidebar-logo">
+      <a href="userdashboard.html" class="sidebar-logo">
         <div class="logo-mark">AD</div>
         <div class="logo-text-block">
-          <span class="logo-brand">Auto Dealer</span>
-          <span class="logo-sub">Fleet Management</span>
+          <span class="logo-brand">Auto Dealer</span
+          ><span class="logo-sub">Fleet Management</span>
         </div>
       </a>
       <nav class="sidebar-nav">
@@ -1085,9 +1218,8 @@
             <rect x="3" y="3" width="7" height="7" rx="1" />
             <rect x="14" y="3" width="7" height="7" rx="1" />
             <rect x="3" y="14" width="7" height="7" rx="1" />
-            <rect x="14" y="14" width="7" height="7" rx="1" />
-          </svg>
-          Dashboard
+            <rect x="14" y="14" width="7" height="7" rx="1" /></svg
+          >Dashboard
         </a>
         <a href="user.vehicle.listing.html" class="nav-item">
           <svg
@@ -1102,9 +1234,8 @@
             />
             <circle cx="7" cy="17" r="2" />
             <circle cx="17" cy="17" r="2" />
-            <path d="M5 17h8M3 9h18" />
-          </svg>
-          Vehicles
+            <path d="M5 17h8M3 9h18" /></svg
+          >Vehicles
         </a>
         <a href="mybooking.html" class="nav-item active">
           <svg
@@ -1117,9 +1248,8 @@
             <rect x="3" y="4" width="18" height="18" rx="2" />
             <line x1="16" y1="2" x2="16" y2="6" />
             <line x1="8" y1="2" x2="8" y2="6" />
-            <line x1="3" y1="10" x2="21" y2="10" />
-          </svg>
-          My Bookings
+            <line x1="3" y1="10" x2="21" y2="10" /></svg
+          >My Bookings
         </a>
         <a href="kyc.html" class="nav-item">
           <svg
@@ -1129,11 +1259,10 @@
             stroke="currentColor"
             stroke-width="1.8"
           >
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-          </svg>
-          KYC
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+          >KYC
         </a>
-        <a href="payments.html" class="nav-item">
+        <a href="payment.html" class="nav-item">
           <svg
             class="nav-icon"
             viewBox="0 0 24 24"
@@ -1142,24 +1271,25 @@
             stroke-width="1.8"
           >
             <rect x="2" y="5" width="20" height="14" rx="2" />
-            <line x1="2" y1="10" x2="22" y2="10" />
-          </svg>
-          Payments
+            <line x1="2" y1="10" x2="22" y2="10" /></svg
+          >Payments
         </a>
       </nav>
       <div class="sidebar-footer">
         <div class="sidebar-user">
-          <div class="user-avatar"></div>
+          <div class="user-avatar" id="sidebarAvatar">
+            <span id="sidebarInitials"></span>
+          </div>
           <div class="user-info">
-            <span class="user-name"></span>
-            <span class="user-kyc-status"></span>
+            <span class="user-name" id="sidebarName"></span>
+            <span class="user-kyc-status" id="sidebarKyc"></span>
           </div>
         </div>
       </div>
     </aside>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- ── MAIN WRAP ── -->
+    <!-- MAIN WRAP -->
     <div class="main-wrap">
       <header class="topbar">
         <button class="icon-btn" id="sidebarToggle" style="display: none">
@@ -1187,13 +1317,110 @@
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
           </button>
-          <div class="topbar-user">
-            <div class="topbar-avatar"></div>
+
+          <!-- USER DROPDOWN -->
+          <div class="topbar-user user-dropdown-wrap" id="userDropdownWrap">
+            <div class="topbar-avatar" id="topbarAvatar">
+              <span id="topbarInitials"></span>
+            </div>
             <div>
-              <p class="topbar-name"></p>
-              <p class="topbar-role"></p>
+              <p class="topbar-name" id="topbarName"></p>
+              <p class="topbar-role" id="topbarRole">Member</p>
+            </div>
+            <svg
+              class="topbar-chevron"
+              id="topbarChevron"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              width="14"
+              height="14"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+            <div class="user-dropdown-menu" id="userDropdownMenu">
+              <div class="dd-header">
+                <div class="dd-header-name" id="ddName"></div>
+                <div class="dd-header-email" id="ddEmail"></div>
+              </div>
+              <button class="dd-item" onclick="location.href = '#'">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="15"
+                  height="15"
+                >
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" /></svg
+                >My profile
+              </button>
+              <button
+                class="dd-item"
+                onclick="location.href = 'mybooking.html'"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="15"
+                  height="15"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" /></svg
+                >My bookings
+              </button>
+              <button class="dd-item" onclick="location.href = 'kyc.html'">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="15"
+                  height="15"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+                >KYC verification
+                <span class="dd-kyc-badge" id="ddKycBadge">Pending</span>
+              </button>
+              <button class="dd-item" onclick="location.href = '#'">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="15"
+                  height="15"
+                >
+                  <circle cx="12" cy="12" r="3" />
+                  <path
+                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                  /></svg
+                >Settings
+              </button>
+              <div class="dd-divider"></div>
+              <button class="dd-item dd-danger" id="logoutBtn">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="15"
+                  height="15"
+                >
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" /></svg
+                >Log out
+              </button>
             </div>
           </div>
+          <!-- END USER DROPDOWN -->
         </div>
       </header>
 
@@ -1216,7 +1443,7 @@
             </div>
             <div class="stat-info">
               <div class="stat-label">Total</div>
-              <div class="stat-value" id="cntTotal">7</div>
+              <div class="stat-value" id="cntTotal">0</div>
             </div>
           </div>
           <div class="stat-card">
@@ -1233,7 +1460,7 @@
             </div>
             <div class="stat-info">
               <div class="stat-label">Confirmed</div>
-              <div class="stat-value" id="cntConfirmed">3</div>
+              <div class="stat-value" id="cntConfirmed">0</div>
             </div>
           </div>
           <div class="stat-card">
@@ -1250,7 +1477,7 @@
             </div>
             <div class="stat-info">
               <div class="stat-label">Pending</div>
-              <div class="stat-value" id="cntPending">2</div>
+              <div class="stat-value" id="cntPending">0</div>
             </div>
           </div>
           <div class="stat-card">
@@ -1267,7 +1494,7 @@
             </div>
             <div class="stat-info">
               <div class="stat-label">Rejected</div>
-              <div class="stat-value" id="cntRejected">2</div>
+              <div class="stat-value" id="cntRejected">0</div>
             </div>
           </div>
         </div>
@@ -1333,7 +1560,7 @@
         <div class="table-wrap">
           <div class="table-header">
             <span class="table-title">All Bookings</span>
-            <span class="table-count" id="tableCount">Showing 7 bookings</span>
+            <span class="table-count" id="tableCount">Loading…</span>
           </div>
           <div class="tbl-scroll">
             <table id="bookingTable">
@@ -1348,9 +1575,7 @@
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody id="bookingTbody">
-                <!-- Rows injected by JS -->
-              </tbody>
+              <tbody id="bookingTbody"></tbody>
             </table>
             <div class="empty-state" id="emptyState" style="display: none">
               <div class="empty-icon">
@@ -1371,7 +1596,7 @@
             </div>
           </div>
           <div class="pagination">
-            <span class="page-info" id="pageInfo">1–7 of 7</span>
+            <span class="page-info" id="pageInfo">—</span>
             <div class="page-btns">
               <button
                 class="page-btn"
@@ -1399,20 +1624,19 @@
         <div class="footer-strip">
           <p>© 2026 Auto Dealer Fleet Management. All rights reserved.</p>
           <div class="footer-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Contact Us</a>
+            <a href="#">Privacy Policy</a><a href="#">Terms of Service</a
+            ><a href="#">Contact Us</a>
           </div>
         </div>
       </main>
     </div>
 
-    <!-- ── EDIT MODAL ── -->
+    <!-- EDIT MODAL -->
     <div class="modal-overlay" id="editModal">
       <div class="modal">
         <div class="modal-head">
-          <span class="modal-title">Edit Booking</span>
-          <button class="modal-close" onclick="closeModal('editModal')">
+          <span class="modal-title">Edit Booking</span
+          ><button class="modal-close" onclick="closeModal('editModal')">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -1449,14 +1673,13 @@
         </div>
         <div class="modal-foot">
           <button class="btn-cancel" onclick="closeModal('editModal')">
-            Cancel
-          </button>
-          <button class="btn-save" onclick="saveEdit()">Save Changes</button>
+            Cancel</button
+          ><button class="btn-save" onclick="saveEdit()">Save Changes</button>
         </div>
       </div>
     </div>
 
-    <!-- ── DELETE MODAL ── -->
+    <!-- DELETE MODAL -->
     <div class="modal-overlay" id="deleteModal">
       <div class="modal">
         <div class="del-modal-body">
@@ -1481,21 +1704,20 @@
         </div>
         <div class="modal-foot">
           <button class="btn-cancel" onclick="closeModal('deleteModal')">
-            Keep Booking
-          </button>
-          <button class="btn-delete-confirm" onclick="confirmDelete()">
+            Keep Booking</button
+          ><button class="btn-delete-confirm" onclick="confirmDelete()">
             Yes, Cancel It
           </button>
         </div>
       </div>
     </div>
 
-    <!-- ── VIEW MODAL ── -->
+    <!-- VIEW MODAL -->
     <div class="modal-overlay" id="viewModal">
       <div class="modal">
         <div class="modal-head">
-          <span class="modal-title">Booking Details</span>
-          <button class="modal-close" onclick="closeModal('viewModal')">
+          <span class="modal-title">Booking Details</span
+          ><button class="modal-close" onclick="closeModal('viewModal')">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -1525,85 +1747,42 @@
       const PER_PAGE = 7;
       let currentPage = 1;
 
-      /* ════════════════════════════════════════
-   LOAD USER PROFILE
-   GET /api/user/profile
-   DB columns: name (single field, not first_name/last_name)
-════════════════════════════════════════ */
-      async function loadUserProfile() {
-        try {
-          const res = await fetch("/api/user/profile", {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include", // IMPORTANT if using cookies/session
-          });
+      /* ── USER DROPDOWN ── */
+      const userDropdownWrap = document.getElementById("userDropdownWrap");
+      const userDropdownMenu = document.getElementById("userDropdownMenu");
+      const topbarChevron = document.getElementById("topbarChevron");
+      userDropdownWrap?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const open = userDropdownMenu.classList.toggle("open");
+        topbarChevron.classList.toggle("open", open);
+      });
+      document.addEventListener("click", () => {
+        userDropdownMenu?.classList.remove("open");
+        topbarChevron?.classList.remove("open");
+      });
+      document.getElementById("logoutBtn")?.addEventListener("click", () => {
+        window.location.href = "/index.html";
+      });
 
-          if (!res.ok) throw new Error("Failed to load profile");
+      /* ── MOBILE SIDEBAR ── */
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("sidebarOverlay");
+      const toggle = document.getElementById("sidebarToggle");
+      toggle?.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("open");
+      });
+      overlay?.addEventListener("click", () => {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("open");
+      });
+      window.addEventListener("resize", () => {
+        if (toggle)
+          toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
+      });
+      if (toggle)
+        toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
 
-          const user = await res.json();
-
-          if (!user) return;
-
-          const fullName =
-            `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User";
-
-          const initials = fullName
-            .split(" ")
-            .map((n) => n[0])
-            .join("")
-            .toUpperCase();
-
-          const kycStatus = (user.kyc_status || "not_submitted").toLowerCase();
-
-          let kycText = "KYC Not Submitted";
-          let kycClass = "user-kyc-status unverified";
-
-          if (kycStatus === "verified") {
-            kycText = "KYC Verified";
-            kycClass = "user-kyc-status verified";
-          } else if (kycStatus === "pending") {
-            kycText = "KYC Pending";
-          } else if (kycStatus === "rejected") {
-            kycText = "KYC Rejected";
-          }
-
-          const setText = (selector, value) => {
-            const el = document.querySelector(selector);
-            if (el) el.textContent = value;
-          };
-
-          /* TOPBAR */
-          setText(".topbar-name", fullName);
-          setText(".topbar-role", user.role || "Member");
-
-          /* SIDEBAR */
-          setText(".user-name", fullName);
-
-          /* KYC (preserve pulse) */
-          const kycEl = document.querySelector(".user-kyc-status");
-          if (kycEl) {
-            const pulse = kycEl.querySelector(".kyc-pulse");
-
-            kycEl.className = kycClass;
-            kycEl.innerHTML = "";
-
-            if (pulse) kycEl.appendChild(pulse);
-            kycEl.appendChild(document.createTextNode(" " + kycText));
-          }
-
-          /* AVATARS */
-          const avatar = document.querySelector(".topbar-avatar");
-          if (avatar) avatar.textContent = initials;
-
-          const sidebarAvatar = document.querySelector(
-            ".sidebar-user .user-avatar",
-          );
-          if (sidebarAvatar) sidebarAvatar.textContent = initials;
-        } catch (err) {
-          console.error("Profile load failed:", err);
-        }
-      }
       const API_BASE = "http://localhost:5000/api/bookings";
       const IMG_BASE = "http://localhost:5000/uploads/vehicles/";
 
@@ -1618,24 +1797,22 @@
         };
         return map[s] || "pending";
       }
-      function formatDuration(rental_type, total_days) {
-        if (rental_type === "4h") return "4h";
-        if (rental_type === "8h") return "8h";
-        if (rental_type === "1d") return "1 Day";
-        if (rental_type === "custom")
-          return `${total_days} Day${total_days > 1 ? "s" : ""}`;
-        return rental_type;
+      function formatDuration(rt, td) {
+        if (rt === "4h") return "4h";
+        if (rt === "8h") return "8h";
+        if (rt === "1d") return "1 Day";
+        if (rt === "custom") return `${td} Day${td > 1 ? "s" : ""}`;
+        return rt;
       }
-      function formatDate(datetimeStr) {
-        const d = new Date(datetimeStr);
-        return d.toLocaleDateString("en-US", {
+      function formatDate(d) {
+        return new Date(d).toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",
           year: "numeric",
         });
       }
-      function bodyTypeEmoji(body_type) {
-        const map = {
+      function bodyEmoji(bt) {
+        const m = {
           SUV: "🚙",
           Sedan: "🚗",
           Hatchback: "🚘",
@@ -1645,7 +1822,7 @@
           Convertible: "🏎️",
           Electric: "⚡",
         };
-        return map[body_type] || "🚗";
+        return m[bt] || "🚗";
       }
       function badge(status) {
         const map = {
@@ -1658,44 +1835,104 @@
         const [cls, label] = map[status] || ["s-cancelled", status];
         return `<span class="s-badge ${cls}">${label}</span>`;
       }
-
-      /* ── thumb helper: image or emoji fallback ── */
       function thumbHtml(b, size = "small") {
         if (b.thumbnail) {
-          if (size === "large") {
-            return `<img src="${IMG_BASE}${b.thumbnail}" alt="${b.vehicle}"
-                  style="width:48px;height:48px;border-radius:8px;object-fit:cover"
-                  onerror="this.outerHTML='<span style=\\'font-size:28px\\'>${b.emoji}</span>'">`;
-          }
-          return `<img src="${IMG_BASE}${b.thumbnail}" alt="${b.vehicle}"
-                style="width:100%;height:100%;object-fit:cover;border-radius:8px"
-                onerror="this.outerHTML='<span style=\\'font-size:20px\\'>${b.emoji}</span>'">`;
+          if (size === "large")
+            return `<img src="${IMG_BASE}${b.thumbnail}" alt="${b.vehicle}" style="width:48px;height:48px;border-radius:8px;object-fit:cover" onerror="this.outerHTML='<span style=\\'font-size:28px\\'>${b.emoji}</span>'">`;
+          return `<img src="${IMG_BASE}${b.thumbnail}" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.outerHTML='<span style=\\'font-size:20px\\'>${b.emoji}</span>'">`;
         }
         return size === "large"
           ? `<span style="font-size:28px">${b.emoji}</span>`
           : `<span style="font-size:20px">${b.emoji}</span>`;
       }
 
-      /* ── API LOAD ── */
+      /* ── LOAD USER PROFILE ── */
+      async function loadUserProfile() {
+        try {
+          const res = await fetch("/api/user/profile", {
+            credentials: "include",
+          });
+          if (!res.ok) throw new Error("Profile failed");
+          const user = await res.json();
+          if (!user) return;
+          const fullName =
+            `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User";
+          const initials = fullName
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase();
+          const kycStatus = (user.kyc_status || "not_submitted").toLowerCase();
+          const isVerified = kycStatus === "verified";
+          const setTxt = (id, v) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = v;
+          };
+          setTxt("topbarName", fullName);
+          setTxt("topbarInitials", initials);
+          setTxt("topbarRole", isVerified ? "✔ Verified Member" : "Member");
+          setTxt("ddName", fullName);
+          setTxt("ddEmail", user.email || "");
+          setTxt("sidebarName", fullName);
+          setTxt("sidebarInitials", initials);
+          const kycBadge = document.getElementById("ddKycBadge");
+          if (kycBadge) {
+            if (isVerified) {
+              kycBadge.textContent = "Verified";
+              kycBadge.style.background = "#ecfdf5";
+              kycBadge.style.color = "#16a34a";
+            } else if (kycStatus === "rejected") {
+              kycBadge.textContent = "Rejected";
+              kycBadge.style.background = "#fff1f2";
+              kycBadge.style.color = "#dc2626";
+            } else {
+              kycBadge.textContent = "Pending";
+            }
+          }
+          const sidebarKyc = document.getElementById("sidebarKyc");
+          if (sidebarKyc) {
+            if (isVerified) {
+              sidebarKyc.textContent = "✔ KYC Verified";
+              sidebarKyc.className = "user-kyc-status verified";
+            } else if (kycStatus === "rejected") {
+              sidebarKyc.textContent = "✖ KYC Rejected";
+              sidebarKyc.className = "user-kyc-status unverified";
+            } else if (kycStatus === "pending") {
+              sidebarKyc.textContent = "⏳ KYC Pending";
+              sidebarKyc.className = "user-kyc-status unverified";
+            } else {
+              sidebarKyc.textContent = "⚠ KYC Not Submitted";
+              sidebarKyc.className = "user-kyc-status unverified";
+            }
+          }
+          if (isVerified) {
+            const r = document.getElementById("topbarRole");
+            if (r) r.style.color = "#16a34a";
+          }
+        } catch (err) {
+          console.error("Profile load failed:", err);
+        }
+      }
+
+      /* ── LOAD BOOKINGS ── */
       async function loadBookings() {
         try {
           const res = await fetch(`${API_BASE}/my`, { credentials: "include" });
           const data = await res.json();
           if (!res.ok || !data.success) {
             if (res.status === 401) {
-              alert("Session expired. Please log in again.");
               window.location.href = "/index.html";
               return;
             }
-            throw new Error(data.message || "Failed to load bookings");
+            throw new Error(data.message || "Failed");
           }
           bookings = data.bookings.map((b) => ({
             _dbId: b.id,
             id: b.booking_ref,
             vehicle: b.vehicle_name,
             plate: b.license_plate,
-            emoji: bodyTypeEmoji(b.body_type),
-            thumbnail: b.vehicle_thumbnail || null, // ✅ from DB
+            emoji: bodyEmoji(b.body_type),
+            thumbnail: b.vehicle_thumbnail || null,
             duration: formatDuration(b.rental_type, b.total_days),
             date: formatDate(b.pickup_datetime),
             ts: new Date(b.pickup_datetime).getTime(),
@@ -1705,18 +1942,17 @@
           }));
           render();
         } catch (err) {
-          console.error("loadBookings error:", err);
+          console.error("loadBookings:", err);
           document.getElementById("emptyState").style.display = "";
           document.getElementById("tableCount").textContent =
             "Error loading bookings";
         }
       }
 
-      /* ── RENDER TABLE ── */
+      /* ── RENDER ── */
       function render() {
         const q = document.getElementById("searchInput").value.toLowerCase();
         const sort = document.getElementById("sortSelect").value;
-
         let filtered = bookings.filter((b, i) => {
           b._idx = i;
           if (activeFilter !== "all" && b.status !== activeFilter) return false;
@@ -1729,19 +1965,16 @@
             return false;
           return true;
         });
-
         filtered.sort((a, b) => {
           if (sort === "newest") return b.ts - a.ts;
           if (sort === "oldest") return a.ts - b.ts;
           if (sort === "amount-high") return b.amount - a.amount;
           if (sort === "amount-low") return a.amount - b.amount;
         });
-
-        const tbody = document.getElementById("bookingTbody");
-        const empty = document.getElementById("emptyState");
-        const count = document.getElementById("tableCount");
-        const pageInfo = document.getElementById("pageInfo");
-
+        const tbody = document.getElementById("bookingTbody"),
+          empty = document.getElementById("emptyState"),
+          count = document.getElementById("tableCount"),
+          pageInfo = document.getElementById("pageInfo");
         if (!filtered.length) {
           tbody.innerHTML = "";
           empty.style.display = "";
@@ -1749,50 +1982,29 @@
           pageInfo.textContent = "0 results";
           return;
         }
-
         empty.style.display = "none";
-        const start = (currentPage - 1) * PER_PAGE;
-        const paginated = filtered.slice(start, start + PER_PAGE);
+        const start = (currentPage - 1) * PER_PAGE,
+          paginated = filtered.slice(start, start + PER_PAGE);
         count.textContent = `Showing ${filtered.length} booking${filtered.length !== 1 ? "s" : ""}`;
         pageInfo.textContent = `${start + 1}–${Math.min(start + PER_PAGE, filtered.length)} of ${filtered.length}`;
-
         tbody.innerHTML = paginated
           .map(
             (b) => `
-      <tr>
-        <td><div class="td-inner">
-          <div class="veh-cell">
-            <div class="veh-thumb">${thumbHtml(b, "small")}</div>  <!-- ✅ real photo -->
-            <div>
-              <div class="veh-name">${b.vehicle}</div>
-              <div class="veh-plate">${b.plate}</div>
-            </div>
-          </div>
-        </div></td>
-        <td><div class="td-inner" style="font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted)">${b.id}</div></td>
-        <td><div class="td-inner" style="font-size:13px">${b.duration}</div></td>
-        <td><div class="td-inner" style="font-size:13px">${b.date}</div></td>
-        <td><div class="td-inner"><div class="amount-cell">Rs ${b.amount.toLocaleString()}</div></div></td>
-        <td><div class="td-inner">${badge(b.status)}</div></td>
-        <td><div class="td-inner">
-          <div class="actions">
-            <button class="act-btn act-view" title="View Details" onclick="viewBooking(${b._idx})">
-              <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
-            <button class="act-btn act-edit" title="Edit" onclick="editBooking(${b._idx})">
-              <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            </button>
-            <button class="act-btn act-delete" title="Cancel Booking" onclick="deleteBooking(${b._idx})">
-              <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-            </button>
-          </div>
-        </div></td>
-      </tr>
-    `,
+          <tr>
+            <td><div class="td-inner"><div class="veh-cell"><div class="veh-thumb">${thumbHtml(b, "small")}</div><div><div class="veh-name">${b.vehicle}</div><div class="veh-plate">${b.plate}</div></div></div></div></td>
+            <td><div class="td-inner" style="font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted)">${b.id}</div></td>
+            <td><div class="td-inner" style="font-size:13px">${b.duration}</div></td>
+            <td><div class="td-inner" style="font-size:13px">${b.date}</div></td>
+            <td><div class="td-inner"><div class="amount-cell">Rs ${b.amount.toLocaleString()}</div></div></td>
+            <td><div class="td-inner">${badge(b.status)}</div></td>
+            <td><div class="td-inner"><div class="actions">
+              <button class="act-btn act-view" title="View" onclick="viewBooking(${b._idx})"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              <button class="act-btn act-edit" title="Edit" onclick="editBooking(${b._idx})"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+              <button class="act-btn act-delete" title="Cancel" onclick="deleteBooking(${b._idx})"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
+            </div></div></td>
+          </tr>`,
           )
           .join("");
-
-        // update stat cards
         document.getElementById("cntTotal").textContent = bookings.length;
         document.getElementById("cntConfirmed").textContent = bookings.filter(
           (b) => b.status === "confirmed",
@@ -1805,7 +2017,6 @@
         ).length;
       }
 
-      /* ── FILTERS & SORT ── */
       function setFilter(f) {
         activeFilter = f;
         currentPage = 1;
@@ -1827,11 +2038,10 @@
         render();
       }
 
-      /* ── EDIT ── */
       function editBooking(idx) {
         editIdx = idx;
-        const b = bookings[idx];
-        const raw = b._raw;
+        const b = bookings[idx],
+          raw = b._raw;
         document.getElementById("editVehicle").value = b.vehicle;
         document.getElementById("editVehicle").disabled = true;
         document.getElementById("editDuration").value = raw.rental_type;
@@ -1845,10 +2055,10 @@
       }
       async function saveEdit() {
         if (editIdx === null) return;
-        const b = bookings[editIdx];
-        const raw = b._raw;
-        const newDuration = document.getElementById("editDuration").value;
-        const newDate = document.getElementById("editDate").value;
+        const b = bookings[editIdx],
+          raw = b._raw;
+        const newDur = document.getElementById("editDuration").value,
+          newDate = document.getElementById("editDate").value;
         if (!newDate) {
           alert("Please select a pickup date.");
           return;
@@ -1859,7 +2069,7 @@
             credentials: "include",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              rental_type: newDuration,
+              rental_type: newDur,
               pickup_datetime: newDate,
               drop_datetime: raw.drop_datetime,
               notes: raw.notes,
@@ -1873,8 +2083,6 @@
           alert("Update failed: " + err.message);
         }
       }
-
-      /* ── DELETE ── */
       function deleteBooking(idx) {
         deleteIdx = idx;
         openModal("deleteModal");
@@ -1898,32 +2106,12 @@
           alert("Cancel failed: " + err.message);
         }
       }
-
-      /* ── VIEW ── */
       function viewBooking(idx) {
         const b = bookings[idx];
-        document.getElementById("viewModalBody").innerHTML = `
-      <div class="detail-veh">
-        <div class="detail-veh-icon">${thumbHtml(b, "large")}</div>  <!-- ✅ real photo -->
-        <div>
-          <div class="detail-veh-name">${b.vehicle}</div>
-          <div class="detail-veh-plate">${b.plate}</div>
-        </div>
-        <div style="margin-left:auto">${badge(b.status)}</div>
-      </div>
-      <div class="detail-grid">
-        <div class="detail-item"><div class="detail-label">Booking ID</div><div class="detail-value">${b.id}</div></div>
-        <div class="detail-item"><div class="detail-label">Duration</div><div class="detail-value">${b.duration}</div></div>
-        <div class="detail-item"><div class="detail-label">Date</div><div class="detail-value">${b.date}</div></div>
-        <div class="detail-item"><div class="detail-label">Amount</div><div class="detail-value">Rs ${b.amount.toLocaleString()}</div></div>
-        <div class="detail-item"><div class="detail-label">Number Plate</div><div class="detail-value">${b.plate}</div></div>
-        <div class="detail-item"><div class="detail-label">Status</div><div class="detail-value">${b._raw.status}</div></div>
-      </div>
-    `;
+        document.getElementById("viewModalBody").innerHTML =
+          `<div class="detail-veh"><div class="detail-veh-icon">${thumbHtml(b, "large")}</div><div><div class="detail-veh-name">${b.vehicle}</div><div class="detail-veh-plate">${b.plate}</div></div><div style="margin-left:auto">${badge(b.status)}</div></div><div class="detail-grid"><div class="detail-item"><div class="detail-label">Booking ID</div><div class="detail-value">${b.id}</div></div><div class="detail-item"><div class="detail-label">Duration</div><div class="detail-value">${b.duration}</div></div><div class="detail-item"><div class="detail-label">Date</div><div class="detail-value">${b.date}</div></div><div class="detail-item"><div class="detail-label">Amount</div><div class="detail-value">Rs ${b.amount.toLocaleString()}</div></div><div class="detail-item"><div class="detail-label">Number Plate</div><div class="detail-value">${b.plate}</div></div><div class="detail-item"><div class="detail-label">Status</div><div class="detail-value">${b._raw.status}</div></div></div>`;
         openModal("viewModal");
       }
-
-      /* ── MODALS ── */
       function openModal(id) {
         document.getElementById(id).classList.add("open");
       }
@@ -1936,26 +2124,6 @@
         }),
       );
 
-      /* ── SIDEBAR ── */
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.getElementById("sidebarOverlay");
-      const toggle = document.getElementById("sidebarToggle");
-      toggle?.addEventListener("click", () => {
-        sidebar.classList.toggle("open");
-        overlay.classList.toggle("open");
-      });
-      overlay?.addEventListener("click", () => {
-        sidebar.classList.remove("open");
-        overlay.classList.remove("open");
-      });
-      window.addEventListener("resize", () => {
-        if (toggle)
-          toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
-      });
-      if (toggle)
-        toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
-
-      /* ── INIT ── */
       loadBookings();
       loadUserProfile();
     </script>

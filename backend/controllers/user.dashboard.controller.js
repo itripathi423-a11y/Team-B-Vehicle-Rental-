@@ -54,7 +54,7 @@ exports.getDashboardStats = (req, res) => {
       COUNT(*) AS total,
       SUM(CASE WHEN status = 'Completed' THEN 1 ELSE 0 END) AS completed,
       SUM(CASE WHEN status IN ('Active','Confirmed') THEN 1 ELSE 0 END) AS active,
-      SUM(CASE WHEN status = 'Completed' THEN total_price ELSE 0 END) AS total_spent
+      COALESCE(SUM(CASE WHEN status = 'Completed' THEN total_price ELSE 0 END), 0) AS total_spent
     FROM bookings
     WHERE user_id = ?
   `;
