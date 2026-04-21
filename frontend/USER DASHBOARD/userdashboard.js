@@ -39,7 +39,7 @@ async function apiFetch(endpoint, options = {}) {
 
   if (res.status === 401) {
     // Not logged in — send to login page
-    window.location.href = "/login.html";
+    window.location.href = "/index.html";
     return;
   }
 

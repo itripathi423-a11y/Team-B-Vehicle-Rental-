@@ -1,0 +1,1988 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AUTO DEALER — KYC Verification</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --orange: #ff5c1a;
+        --orange-light: #ff7a3d;
+        --orange-dim: rgba(255, 92, 26, 0.12);
+        --bg: #f4f5f7;
+        --white: #fff;
+        --sidebar-bg: #0a0a0a;
+        --sidebar-w: 240px;
+        --dark: #111827;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --radius: 14px;
+        --shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+        --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.1);
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        font-size: 15px;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        width: var(--sidebar-w);
+        min-height: 100vh;
+        background: var(--sidebar-bg);
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        z-index: 200;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .sidebar-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 24px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .logo-mark {
+        width: 36px;
+        height: 36px;
+        background: var(--orange);
+        color: #fff;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        flex-shrink: 0;
+      }
+      .logo-text-block {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+      .logo-brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 17px;
+        letter-spacing: 2.5px;
+        color: #fff;
+        line-height: 1;
+      }
+      .logo-sub {
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        color: rgba(255, 255, 255, 0.3);
+        font-family: "Space Mono", monospace;
+      }
+      .sidebar-nav {
+        flex: 1;
+        padding: 16px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 9px;
+        color: rgba(255, 255, 255, 0.45);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 400;
+        transition: all 0.18s;
+      }
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .nav-item.active {
+        background: var(--orange-dim);
+        color: var(--orange);
+        font-weight: 500;
+      }
+      .nav-item.active .nav-icon {
+        stroke: var(--orange);
+      }
+      .nav-icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+      }
+      .sidebar-footer {
+        padding: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .sidebar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .user-name {
+        display: block;
+        font-size: 13px;
+        color: #fff;
+        font-weight: 500;
+      }
+      .user-role {
+        display: block;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.35);
+      }
+
+      /* ── MAIN ── */
+      .main-wrap {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* ── TOPBAR ── */
+      .topbar {
+        height: 64px;
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        padding: 0 28px;
+        gap: 16px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .search-wrap {
+        flex: 1;
+        max-width: 380px;
+        position: relative;
+      }
+      .search-wrap svg {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        color: var(--muted);
+      }
+      .search-wrap input {
+        width: 100%;
+        padding: 9px 12px 9px 38px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        color: var(--text);
+        outline: none;
+        transition: border 0.2s;
+      }
+      .search-wrap input:focus {
+        border-color: var(--orange);
+      }
+      .search-wrap input::placeholder {
+        color: var(--muted);
+      }
+      .topbar-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .icon-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 9px;
+        background: none;
+        border: 1px solid var(--border);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        transition: background 0.2s;
+      }
+      .icon-btn:hover {
+        background: var(--bg);
+      }
+      .icon-btn svg {
+        width: 17px;
+        height: 17px;
+        color: var(--muted);
+      }
+      .notif-btn .badge {
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        background: var(--orange);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .topbar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 12px;
+        border-radius: 9px;
+        cursor: pointer;
+        transition: background 0.2s;
+        margin-left: 4px;
+        position: relative;
+        user-select: none;
+      }
+      .topbar-user:hover {
+        background: var(--bg);
+      }
+      .topbar-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .topbar-info {
+        display: flex;
+        flex-direction: column;
+      }
+      .topbar-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        line-height: 1.3;
+      }
+      .topbar-role {
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.3;
+      }
+      .topbar-chevron {
+        flex-shrink: 0;
+        color: #9ca3af;
+        transition: transform 0.2s;
+      }
+      .topbar-user.open .topbar-chevron {
+        transform: rotate(180deg);
+      }
+      .user-dropdown {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+        min-width: 210px;
+        z-index: 999;
+        opacity: 0;
+        transform: translateY(-6px) scale(0.97);
+        pointer-events: none;
+        transition:
+          opacity 0.18s,
+          transform 0.18s;
+        transform-origin: top right;
+      }
+      .user-dropdown.visible {
+        opacity: 1;
+        transform: none;
+        pointer-events: all;
+      }
+      .dropdown-header {
+        padding: 14px 16px 12px;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .dh-name {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .dh-email {
+        font-size: 11.5px;
+        color: #9ca3af;
+        margin-top: 2px;
+      }
+      .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px;
+        font-size: 13.5px;
+        font-family: "DM Sans", sans-serif;
+        color: var(--text);
+        cursor: pointer;
+        transition: background 0.12s;
+        text-decoration: none;
+      }
+      .dropdown-item:hover {
+        background: #f9fafb;
+      }
+      .dropdown-item svg {
+        flex-shrink: 0;
+        color: #9ca3af;
+      }
+      .dropdown-divider {
+        height: 1px;
+        background: #f3f4f6;
+        margin: 4px 0;
+      }
+      .dropdown-item.logout {
+        color: #ef4444;
+      }
+      .dropdown-item.logout svg {
+        color: #ef4444;
+      }
+      .dropdown-item.logout:hover {
+        background: #fef2f2;
+      }
+
+      /* ── CONTENT ── */
+      .content {
+        flex: 1;
+        padding: 28px;
+        overflow-y: auto;
+      }
+      .page-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 24px;
+      }
+      .page-title {
+        font-size: 26px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .page-sub {
+        font-size: 14px;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+
+      /* ── STAT STRIP ── */
+      .stat-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 24px;
+      }
+      .stat-tile {
+        background: var(--white);
+        border-radius: 12px;
+        padding: 18px 20px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        cursor: default;
+      }
+      .stat-tile:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+      .st-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .st-val {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 32px;
+        color: var(--dark);
+        line-height: 1;
+      }
+      .st-lbl {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 1px;
+      }
+
+      /* ── FILTERS ── */
+      .filters-bar {
+        display: flex;
+        gap: 10px;
+        align-items: flex-end;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        background: var(--white);
+        padding: 16px 20px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+      }
+      .fg {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .flbl {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+      }
+      .fsel {
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        color: var(--text);
+        background: var(--bg);
+        outline: none;
+        cursor: pointer;
+        transition: border 0.2s;
+      }
+      .fsel:focus {
+        border-color: var(--orange);
+      }
+      .freset {
+        padding: 8px 14px;
+        border: 1px solid var(--border);
+        background: none;
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .freset:hover {
+        background: var(--bg);
+        color: var(--text);
+      }
+      .fsummary {
+        margin-left: auto;
+        font-size: 12px;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      /* ── TABLE ── */
+      .table-card {
+        background: var(--white);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .table-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 24px;
+        border-bottom: 1px solid var(--border);
+      }
+      .card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .card-sub {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .table-wrap {
+        overflow-x: auto;
+      }
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .data-table th {
+        text-align: left;
+        padding: 11px 16px;
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--muted);
+        border-bottom: 1px solid var(--border);
+        font-family: "Space Mono", monospace;
+        white-space: nowrap;
+      }
+      .data-table td {
+        padding: 13px 16px;
+        font-size: 13.5px;
+        color: var(--text);
+        border-bottom: 1px solid #f3f4f6;
+        vertical-align: middle;
+      }
+      .data-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .data-table tbody tr {
+        transition: background 0.15s;
+      }
+      .data-table tbody tr:hover td {
+        background: #fafafa;
+      }
+
+      .user-cell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .uc-av {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--orange), #ff9500);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+      .uc-av img {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+      }
+      .uc-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--dark);
+      }
+      .uc-email {
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      .status-sel {
+        padding: 5px 10px;
+        border-radius: 99px;
+        font-size: 11px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        font-family: "DM Sans", sans-serif;
+        appearance: none;
+        min-width: 120px;
+        text-align: center;
+      }
+      .s-pending {
+        background: #fffbeb;
+        color: #d97706;
+      }
+      .s-verified {
+        background: #ecfdf5;
+        color: #16a34a;
+      }
+      .s-rejected {
+        background: #fff1f2;
+        color: #dc2626;
+      }
+      .s-not_submitted {
+        background: #f3f4f6;
+        color: #6b7280;
+      }
+
+      .bdg {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 99px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .bdg-green {
+        background: #ecfdf5;
+        color: #16a34a;
+      }
+      .bdg-amber {
+        background: #fffbeb;
+        color: #d97706;
+      }
+      .bdg-red {
+        background: #fff1f2;
+        color: #dc2626;
+      }
+      .bdg-grey {
+        background: #f3f4f6;
+        color: #6b7280;
+      }
+      .bdg .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+        flex-shrink: 0;
+      }
+
+      .act-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 12px;
+        border-radius: 7px;
+        font-size: 12px;
+        font-weight: 500;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: var(--white);
+        color: var(--text);
+        transition: all 0.15s;
+        white-space: nowrap;
+      }
+      .act-btn:hover {
+        background: var(--bg);
+      }
+      .act-btn.primary {
+        background: var(--orange);
+        color: #fff;
+        border-color: var(--orange);
+      }
+      .act-btn.primary:hover {
+        background: var(--orange-light);
+      }
+
+      /* ── MODAL ── */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 8000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s;
+      }
+      .overlay.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .modal {
+        background: #fff;
+        border-radius: 20px;
+        width: 100%;
+        max-width: 680px;
+        max-height: 92vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transform: scale(0.95) translateY(20px);
+        transition: transform 0.28s cubic-bezier(0.34, 1.4, 0.64, 1);
+      }
+      .overlay.open .modal {
+        transform: scale(1) translateY(0);
+      }
+      .modal-hdr {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+      .modal-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .modal-close {
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: var(--bg);
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+        color: var(--muted);
+      }
+      .modal-close:hover {
+        background: #e5e7eb;
+        color: var(--dark);
+      }
+      .modal-body {
+        overflow-y: auto;
+        padding: 24px;
+      }
+
+      .kyc-profile-top {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 24px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border);
+      }
+      .kyc-big-av {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--orange), #ff9500);
+        color: #fff;
+        font-size: 24px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+      .kyc-av-img {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+      }
+      .kyc-profile-name {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--dark);
+        line-height: 1.2;
+      }
+      .kyc-profile-sub {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+      .kyc-status-badge {
+        margin-top: 8px;
+      }
+
+      .info-section {
+        margin-bottom: 22px;
+      }
+      .info-section-title {
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .info-section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+      .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .info-lbl {
+        font-size: 11px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-family: "Space Mono", monospace;
+      }
+      .info-val {
+        font-size: 13.5px;
+        color: var(--dark);
+        font-weight: 500;
+      }
+
+      .doc-images {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-top: 12px;
+      }
+      .doc-img-wrap {
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        aspect-ratio: 3/2;
+        background: #f3f4f6;
+        position: relative;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .doc-img-wrap:hover {
+        transform: scale(1.02);
+        box-shadow: var(--shadow-md);
+      }
+      .doc-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .doc-img-label {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 6px 10px;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.55));
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        font-family: "Space Mono", monospace;
+      }
+      .doc-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 12px;
+        text-align: center;
+      }
+      .doc-placeholder svg {
+        width: 28px;
+        height: 28px;
+        opacity: 0.4;
+      }
+
+      .modal-action-bar {
+        flex-shrink: 0;
+        padding: 18px 24px;
+        border-top: 1px solid var(--border);
+        background: #fafafa;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .mab-label {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 500;
+        margin-right: 4px;
+      }
+      .big-status-sel {
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        border: 1px solid var(--border);
+        font-family: "DM Sans", sans-serif;
+        background: var(--white);
+        color: var(--text);
+        outline: none;
+        cursor: pointer;
+        transition: border 0.2s;
+      }
+      .big-status-sel:focus {
+        border-color: var(--orange);
+      }
+      .save-status-btn {
+        padding: 8px 20px;
+        background: var(--orange);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+      }
+      .save-status-btn:hover {
+        background: var(--orange-light);
+        transform: translateY(-1px);
+      }
+      .save-status-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .reject-form {
+        margin-top: 14px;
+        padding: 16px;
+        background: #fff5f5;
+        border: 1px solid #fecaca;
+        border-radius: 10px;
+        animation: slideDown 0.2s ease;
+        width: 100%;
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .reject-form label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #dc2626;
+        display: block;
+        margin-bottom: 6px;
+      }
+      .reject-form textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        resize: vertical;
+        min-height: 80px;
+        outline: none;
+        color: var(--dark);
+        background: #fff;
+      }
+      .reject-form textarea:focus {
+        border-color: #ef4444;
+      }
+      .reject-form-btns {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .btn-confirm-reject {
+        padding: 8px 18px;
+        background: #dc2626;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .btn-confirm-reject:hover {
+        background: #b91c1c;
+      }
+      .btn-cancel-reject {
+        padding: 8px 14px;
+        background: none;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 13px;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        color: var(--muted);
+        transition: all 0.2s;
+      }
+      .btn-cancel-reject:hover {
+        background: var(--bg);
+      }
+
+      /* ── LIGHTBOX ── */
+      .lightbox {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.92);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+      }
+      .lightbox.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .lightbox img {
+        max-width: 90vw;
+        max-height: 88vh;
+        border-radius: 8px;
+        object-fit: contain;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+      .lb-close {
+        position: absolute;
+        top: 20px;
+        right: 24px;
+        color: #fff;
+        font-size: 28px;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.1);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+      }
+      .lb-close:hover {
+        background: rgba(255, 255, 255, 0.25);
+      }
+
+      /* ── TOAST ── */
+      .toast {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        background: var(--dark);
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 500;
+        z-index: 9999;
+        transform: translateY(20px);
+        opacity: 0;
+        transition: all 0.3s;
+        pointer-events: none;
+        max-width: 320px;
+      }
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .toast.success {
+        border-left: 3px solid #16a34a;
+      }
+      .toast.error {
+        border-left: 3px solid #dc2626;
+      }
+
+      .empty-cell {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 900px) {
+        .stat-strip {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .main-wrap {
+          margin-left: 0;
+        }
+        .content {
+          padding: 20px 16px;
+        }
+        .topbar {
+          padding: 0 16px;
+        }
+        .topbar-info {
+          display: none;
+        }
+        .info-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div style="display: flex; width: 100%">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-logo">
+          <div class="logo-mark">AD</div>
+          <div class="logo-text-block">
+            <span class="logo-brand">AUTO DEALER</span>
+            <span class="logo-sub">FLEET MANAGEMENT</span>
+          </div>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="7" height="7" rx="1" /></svg
+            >Dashboard
+          </a>
+          <a href="admin.vehicle.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+              />
+              <circle cx="7" cy="17" r="2" />
+              <circle cx="17" cy="17" r="2" />
+              <path d="M5 17h8M3 9h18" /></svg
+            >Vehicles
+          </a>
+          <a href="admin.bookings.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" /></svg
+            >Bookings
+          </a>
+          <a href="admin.kyc.html" class="nav-item active">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+            >KYC
+          </a>
+          <a href="admin.payments.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="2" y="5" width="20" height="14" rx="2" />
+              <line x1="2" y1="10" x2="22" y2="10" /></svg
+            >Payments
+          </a>
+          <a href="admin.enquiries.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" /></svg
+            >Enquiries
+          </a>
+          <a href="admin.reviews.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" /></svg
+            >Reviews
+          </a>
+          <a href="admin.servicing.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
+              /></svg
+            >Servicing
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="sidebar-user">
+            <div class="user-avatar" id="sidebarAv">AD</div>
+            <div>
+              <span class="user-name" id="sidebarName">Admin</span>
+              <span class="user-role" id="sidebarRole">Super Admin</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN -->
+      <div class="main-wrap">
+        <header class="topbar">
+          <div class="search-wrap">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              id="kycSearch"
+              placeholder="Search name, email, document number…"
+            />
+          </div>
+          <div class="topbar-right">
+            <button class="icon-btn notif-btn">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              <span class="badge">3</span>
+            </button>
+            <div class="topbar-user" id="topbarUser">
+              <div class="topbar-avatar" id="topbarAv">AD</div>
+              <div class="topbar-info">
+                <p class="topbar-name" id="topbarName">Admin</p>
+                <p class="topbar-role" id="topbarRole">Super Admin</p>
+              </div>
+              <svg
+                class="topbar-chevron"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+              <div class="user-dropdown" id="userDropdown">
+                <div class="dropdown-header">
+                  <p class="dh-name" id="ddName">Admin</p>
+                  <p class="dh-email" id="ddEmail">admin@autodealer.com</p>
+                </div>
+                <a class="dropdown-item" href="#"
+                  ><svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" /></svg
+                  >My Profile</a
+                >
+                <a class="dropdown-item" href="#"
+                  ><svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  >
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                      d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                    /></svg
+                  >Settings</a
+                >
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item logout" href="../index.html"
+                  ><svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  >
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" /></svg
+                  >Logout</a
+                >
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main class="content">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">KYC Verification</h1>
+              <p class="page-sub">
+                Review and manage customer identity documents
+              </p>
+            </div>
+          </div>
+
+          <!-- STAT STRIP -->
+          <div class="stat-strip">
+            <div class="stat-tile">
+              <div class="st-icon" style="background: #f3f4f6">📋</div>
+              <div>
+                <div class="st-val" id="statTotal">0</div>
+                <div class="st-lbl">Total</div>
+              </div>
+            </div>
+            <div class="stat-tile">
+              <div class="st-icon" style="background: #fffbeb">⏳</div>
+              <div>
+                <div class="st-val" id="statPending">0</div>
+                <div class="st-lbl">Pending</div>
+              </div>
+            </div>
+            <div class="stat-tile">
+              <div class="st-icon" style="background: #ecfdf5">✅</div>
+              <div>
+                <div class="st-val" id="statVerified">0</div>
+                <div class="st-lbl">Verified</div>
+              </div>
+            </div>
+            <div class="stat-tile">
+              <div class="st-icon" style="background: #fff1f2">❌</div>
+              <div>
+                <div class="st-val" id="statRejected">0</div>
+                <div class="st-lbl">Rejected</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FILTERS -->
+          <!-- ⚠️ Doc Type options match the mapped labels from the controller (License → "Driving License") -->
+          <div class="filters-bar">
+            <div class="fg">
+              <span class="flbl">Status</span>
+              <select class="fsel" id="filterStatus" onchange="applyFilters()">
+                <option value="">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="verified">Verified</option>
+                <option value="rejected">Rejected</option>
+                <option value="not_submitted">Not Submitted</option>
+              </select>
+            </div>
+            <div class="fg">
+              <span class="flbl">Doc Type</span>
+              <select class="fsel" id="filterDocType" onchange="applyFilters()">
+                <option value="">All Types</option>
+                <option value="Citizenship">Citizenship</option>
+                <option value="Passport">Passport</option>
+                <option value="Driving License">Driving License</option>
+              </select>
+            </div>
+            <button class="freset" onclick="resetFilters()">✕ Reset</button>
+            <span class="fsummary" id="fsummary">All submissions</span>
+          </div>
+
+          <!-- TABLE -->
+          <div class="table-card">
+            <div class="table-toolbar">
+              <div>
+                <h3 class="card-title">KYC Submissions</h3>
+                <p class="card-sub" id="tableCount">Loading…</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Customer</th>
+                    <th>Phone</th>
+                    <th>Document Type</th>
+                    <th>Doc Number</th>
+                    <th>Submitted</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="kycTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- KYC DETAIL MODAL -->
+    <div class="overlay" id="kycModal">
+      <div class="modal" style="max-width: 700px">
+        <div class="modal-hdr">
+          <span class="modal-title">KYC Details</span>
+          <button class="modal-close" onclick="closeKycModal()">✕</button>
+        </div>
+        <div class="modal-body" id="kycModalBody"></div>
+        <div class="modal-action-bar" id="kycModalActions"></div>
+      </div>
+    </div>
+
+    <!-- IMAGE LIGHTBOX -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+      <span class="lb-close" onclick="closeLightbox()">✕</span>
+      <img id="lbImg" src="" alt="" />
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+      const API = "http://localhost:5000/api/admin/kyc";
+      const ADMIN_API = "http://localhost:5000/api/admin/me";
+
+      let ADMIN = { name: "", role: "", email: "" };
+
+      let data = [];
+      let filtered = [];
+      let openId = null;
+
+      // ── BOOT ──
+      async function fetchKyc() {
+        try {
+          // Fetch admin info and KYC data in parallel
+          const [adminRes, kycRes] = await Promise.all([
+            fetch(ADMIN_API, { credentials: "include" }),
+            fetch(API, { credentials: "include" }),
+          ]);
+
+          const adminJson = await adminRes.json();
+          const kycJson = await kycRes.json();
+
+          if (adminJson.success) {
+            ADMIN = adminJson.data;
+            // Capitalise role label: "admin" → "Admin"
+            ADMIN.role =
+              ADMIN.role.charAt(0).toUpperCase() + ADMIN.role.slice(1);
+          }
+
+          if (kycJson.success) {
+            data = kycJson.data;
+            filtered = [...data];
+          } else {
+            showToast("Failed to load KYC data", "error");
+          }
+
+          populateAdmin();
+          updateStats();
+          renderTable();
+          setupDropdown();
+        } catch (e) {
+          console.error(e);
+          showToast("Network error — could not reach server", "error");
+        }
+      }
+
+      function populateAdmin() {
+        const ini = ADMIN.name
+          ? ADMIN.name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase()
+              .slice(0, 2)
+          : "AD";
+        ["sidebarAv", "topbarAv"].forEach(
+          (id) => (document.getElementById(id).textContent = ini),
+        );
+        document.getElementById("sidebarName").textContent =
+          ADMIN.name || "Admin";
+        document.getElementById("topbarName").textContent =
+          ADMIN.name || "Admin";
+        document.getElementById("sidebarRole").textContent =
+          ADMIN.role || "Admin";
+        document.getElementById("topbarRole").textContent =
+          ADMIN.role || "Admin";
+        document.getElementById("ddName").textContent = ADMIN.name || "Admin";
+        document.getElementById("ddEmail").textContent = ADMIN.email || "";
+      }
+
+      function updateStats() {
+        document.getElementById("statTotal").textContent = data.length;
+        document.getElementById("statPending").textContent = data.filter(
+          (k) => k.status === "pending",
+        ).length;
+        document.getElementById("statVerified").textContent = data.filter(
+          (k) => k.status === "verified",
+        ).length;
+        document.getElementById("statRejected").textContent = data.filter(
+          (k) => k.status === "rejected",
+        ).length;
+      }
+
+      // ── STATUS HELPERS ──
+      const STATUS_META = {
+        pending: {
+          cls: "s-pending",
+          label: "Pending",
+          bdgCls: "bdg bdg-amber",
+        },
+        verified: {
+          cls: "s-verified",
+          label: "Verified",
+          bdgCls: "bdg bdg-green",
+        },
+        rejected: {
+          cls: "s-rejected",
+          label: "Rejected",
+          bdgCls: "bdg bdg-red",
+        },
+        not_submitted: {
+          cls: "s-not_submitted",
+          label: "Not Submitted",
+          bdgCls: "bdg bdg-grey",
+        },
+      };
+      function badge(s) {
+        const m = STATUS_META[s] || STATUS_META.not_submitted;
+        return `<span class="${m.bdgCls}"><span class="dot"></span>${m.label}</span>`;
+      }
+      function initials(name = "") {
+        return (
+          name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2) || "??"
+        );
+      }
+
+      // ── RENDER TABLE ──
+      function renderTable() {
+        const tbody = document.getElementById("kycTableBody");
+        document.getElementById("tableCount").textContent =
+          `${filtered.length} submission${filtered.length !== 1 ? "s" : ""}`;
+
+        if (!filtered.length) {
+          tbody.innerHTML = `<tr><td colspan="8" class="empty-cell">🔍 No KYC submissions match your filters</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = filtered
+          .map((k, i) => {
+            // Avatar: show selfie image if available, else initials
+            const avContent = k.photo
+              ? `<img src="${k.photo}" alt="${initials(k.user_name)}" onerror="this.style.display='none';this.parentElement.textContent='${initials(k.user_name)}'">`
+              : initials(k.user_name);
+
+            return `
+<tr>
+  <td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:12px">${String(i + 1).padStart(2, "0")}</td>
+  <td>
+    <div class="user-cell">
+      <div class="uc-av">${avContent}</div>
+      <div>
+        <div class="uc-name">${k.user_name}</div>
+        <div class="uc-email">${k.user_email}</div>
+      </div>
+    </div>
+  </td>
+  <td style="font-family:'Space Mono',monospace;font-size:12px">${k.phone || "—"}</td>
+  <td>${k.doc_type || "—"}</td>
+  <td style="font-family:'Space Mono',monospace;font-size:12px;color:var(--muted)">${k.doc_number || "—"}</td>
+  <td style="font-size:12.5px;color:var(--muted)">${k.submitted || "—"}</td>
+  <td>
+    <select class="status-sel ${STATUS_META[k.status]?.cls || "s-not_submitted"}"
+            onchange="inlineStatusChange(${k.id}, this)">
+      <option value="pending"        ${k.status === "pending" ? "selected" : ""}>⏳ Pending</option>
+      <option value="verified"       ${k.status === "verified" ? "selected" : ""}>✅ Verified</option>
+      <option value="rejected"       ${k.status === "rejected" ? "selected" : ""}>❌ Rejected</option>
+      <option value="not_submitted"  ${k.status === "not_submitted" ? "selected" : ""}>— Not Submitted</option>
+    </select>
+  </td>
+  <td>
+    <button class="act-btn primary" onclick="openKycModal(${k.id})">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      View
+    </button>
+  </td>
+</tr>`;
+          })
+          .join("");
+      }
+
+      // ── INLINE STATUS CHANGE ──
+      function inlineStatusChange(id, sel) {
+        const newStatus = sel.value;
+        sel.className = `status-sel ${STATUS_META[newStatus]?.cls || "s-not_submitted"}`;
+        if (newStatus === "rejected") {
+          openKycModal(id, true); // open modal so admin can enter rejection reason
+        } else {
+          persistStatus(id, newStatus, "");
+        }
+      }
+
+      // ── PERSIST TO BACKEND ──
+      async function persistStatus(id, status, rejection_reason) {
+        try {
+          const res = await fetch(`${API}/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status, rejection_reason }),
+          });
+          const json = await res.json();
+          if (!json.success) throw new Error(json.message);
+
+          // Update local data
+          const item = data.find((k) => k.id === id);
+          if (item) {
+            item.status = status;
+            item.reason = rejection_reason || "";
+          }
+          applyFilters();
+          updateStats();
+          showToast(
+            `KYC #${id} set to "${STATUS_META[status]?.label || status}"`,
+            "success",
+          );
+        } catch (e) {
+          console.error(e);
+          showToast(`Save failed: ${e.message}`, "error");
+          // Reload from server to restore correct state
+          fetchKyc();
+        }
+      }
+
+      // ── MODAL ──
+      function openKycModal(id, forceReject = false) {
+        const k = data.find((x) => x.id === id);
+        if (!k) return;
+        openId = id;
+        document.getElementById("kycModalBody").innerHTML = buildKycCard(k);
+        document.getElementById("kycModalActions").innerHTML =
+          buildActionBar(k);
+        if (forceReject) setTimeout(() => showRejectForm(id), 50);
+        document.getElementById("kycModal").classList.add("open");
+      }
+
+      function closeKycModal() {
+        document.getElementById("kycModal").classList.remove("open");
+        openId = null;
+      }
+
+      function buildKycCard(k) {
+        const avHTML = k.photo
+          ? `<img class="kyc-av-img" src="${k.photo}" alt="${k.user_name}"
+               onerror="this.style.display='none';this.parentElement.textContent='${initials(k.user_name)}'">`
+          : `<span style="font-size:24px;font-weight:600">${initials(k.user_name)}</span>`;
+
+        const imgSlot = (src, label) =>
+          src
+            ? `<div class="doc-img-wrap" onclick="openLightbox('${src}','${label}')">
+               <img class="doc-img" src="${src}" alt="${label}"
+                    onerror="this.parentElement.innerHTML=noDocHTML('${label}')">
+               <div class="doc-img-label">${label}</div>
+             </div>`
+            : `<div class="doc-img-wrap" style="cursor:default">${noDocHTML(label)}</div>`;
+
+        return `
+<div class="kyc-profile-top">
+  <div class="kyc-big-av">${avHTML}</div>
+  <div style="flex:1">
+    <div class="kyc-profile-name">${k.user_name}</div>
+    <div class="kyc-profile-sub">${k.user_email} · ${k.phone || "—"}</div>
+    <div class="kyc-status-badge">${badge(k.status)}</div>
+  </div>
+</div>
+
+<div class="info-section">
+  <div class="info-section-title">Personal Information</div>
+  <div class="info-grid">
+    <div class="info-item"><span class="info-lbl">Full Name</span><span class="info-val">${k.user_name}</span></div>
+    <div class="info-item"><span class="info-lbl">Phone Number</span><span class="info-val">${k.phone || "—"}</span></div>
+    <div class="info-item"><span class="info-lbl">Email Address</span><span class="info-val">${k.user_email}</span></div>
+    <div class="info-item"><span class="info-lbl">Address</span><span class="info-val">${k.address || "—"}</span></div>
+  </div>
+</div>
+
+<div class="info-section">
+  <div class="info-section-title">Document Information</div>
+  <div class="info-grid">
+    <div class="info-item"><span class="info-lbl">Document Type</span><span class="info-val">${k.doc_type || "—"}</span></div>
+    <div class="info-item"><span class="info-lbl">Document Number</span><span class="info-val" style="font-family:'Space Mono',monospace">${k.doc_number || "—"}</span></div>
+    <div class="info-item"><span class="info-lbl">Submitted On</span><span class="info-val">${k.submitted || "—"}</span></div>
+    <div class="info-item"><span class="info-lbl">Current Status</span><span class="info-val">${badge(k.status)}</span></div>
+  </div>
+</div>
+
+<div class="info-section">
+  <div class="info-section-title">Document Images</div>
+  <div class="doc-images">
+    ${imgSlot(k.front_img, "Front Side")}
+    ${imgSlot(k.back_img, "Back Side")}
+  </div>
+</div>
+
+${
+  k.status === "rejected" && k.reason
+    ? `
+<div class="info-section">
+  <div class="info-section-title">Rejection Reason</div>
+  <div style="background:#fff5f5;border:1px solid #fecaca;border-radius:10px;padding:14px 16px;font-size:13.5px;color:#b91c1c;line-height:1.6">${k.reason}</div>
+</div>`
+    : ""
+}`;
+      }
+
+      function noDocHTML(label) {
+        return `<div class="doc-placeholder">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h4"/></svg>
+  <span>${label}<br><small>Not uploaded</small></span>
+</div>`;
+      }
+
+      function buildActionBar(k) {
+        return `
+<span class="mab-label">Change Status:</span>
+<select class="big-status-sel" id="modalStatusSel" onchange="onModalStatusChange(${k.id})">
+  <option value="pending"        ${k.status === "pending" ? "selected" : ""}>⏳ Pending</option>
+  <option value="verified"       ${k.status === "verified" ? "selected" : ""}>✅ Verified</option>
+  <option value="rejected"       ${k.status === "rejected" ? "selected" : ""}>❌ Rejected</option>
+  <option value="not_submitted"  ${k.status === "not_submitted" ? "selected" : ""}>— Not Submitted</option>
+</select>
+<button class="save-status-btn" id="saveStatusBtn" onclick="saveModalStatus(${k.id})">Save Status</button>
+<div id="rejectFormWrap" style="width:100%;margin-top:0"></div>`;
+      }
+
+      function onModalStatusChange(id) {
+        if (document.getElementById("modalStatusSel").value === "rejected") {
+          showRejectForm(id);
+        } else {
+          document.getElementById("rejectFormWrap").innerHTML = "";
+        }
+      }
+
+      function showRejectForm(id) {
+        const wrap = document.getElementById("rejectFormWrap");
+        if (!wrap) return;
+        const k = data.find((x) => x.id === id);
+        wrap.innerHTML = `
+<div class="reject-form">
+  <label>⚠️ Rejection Reason (required)</label>
+  <textarea id="rejectReasonTA" placeholder="Explain why this KYC is being rejected…">${k?.reason || ""}</textarea>
+  <div class="reject-form-btns">
+    <button class="btn-confirm-reject" onclick="confirmReject(${id})">Confirm Rejection</button>
+    <button class="btn-cancel-reject"  onclick="cancelReject()">Cancel</button>
+  </div>
+</div>`;
+      }
+
+      async function confirmReject(id) {
+        const reason = (
+          document.getElementById("rejectReasonTA")?.value || ""
+        ).trim();
+        if (!reason) {
+          showToast("Please enter a rejection reason", "error");
+          return;
+        }
+        await persistStatus(id, "rejected", reason);
+        // Refresh modal
+        const k = data.find((x) => x.id === id);
+        if (k) {
+          document.getElementById("kycModalBody").innerHTML = buildKycCard(k);
+          document.getElementById("kycModalActions").innerHTML =
+            buildActionBar(k);
+        }
+      }
+
+      function cancelReject() {
+        const k = data.find((x) => x.id === openId);
+        const sel = document.getElementById("modalStatusSel");
+        if (sel && k) sel.value = k.status;
+        document.getElementById("rejectFormWrap").innerHTML = "";
+      }
+
+      async function saveModalStatus(id) {
+        const sel = document.getElementById("modalStatusSel");
+        const newStatus = sel.value;
+        if (newStatus === "rejected") {
+          showRejectForm(id);
+          showToast("Please fill in the rejection reason", "error");
+          return;
+        }
+        const btn = document.getElementById("saveStatusBtn");
+        btn.disabled = true;
+        btn.textContent = "Saving…";
+        await persistStatus(id, newStatus, "");
+        btn.disabled = false;
+        btn.textContent = "Save Status";
+        const k = data.find((x) => x.id === id);
+        if (k) {
+          document.getElementById("kycModalBody").innerHTML = buildKycCard(k);
+          document.getElementById("kycModalActions").innerHTML =
+            buildActionBar(k);
+        }
+      }
+
+      // ── FILTERS ──
+      function applyFilters() {
+        const status = document.getElementById("filterStatus").value;
+        const docType = document.getElementById("filterDocType").value;
+        const search = document.getElementById("kycSearch").value.toLowerCase();
+
+        filtered = data.filter((k) => {
+          if (status && k.status !== status) return false;
+          if (docType && k.doc_type !== docType) return false;
+          if (search) {
+            const hay =
+              `${k.user_name} ${k.user_email} ${k.doc_number} ${k.phone}`.toLowerCase();
+            if (!hay.includes(search)) return false;
+          }
+          return true;
+        });
+        renderTable();
+        const active = [status, docType, search].filter(Boolean).length;
+        document.getElementById("fsummary").textContent = active
+          ? `${active} filter${active > 1 ? "s" : ""} · ${filtered.length} result${filtered.length !== 1 ? "s" : ""}`
+          : `All ${data.length} submissions`;
+      }
+
+      function resetFilters() {
+        document.getElementById("filterStatus").value = "";
+        document.getElementById("filterDocType").value = "";
+        document.getElementById("kycSearch").value = "";
+        filtered = [...data];
+        renderTable();
+        document.getElementById("fsummary").textContent =
+          `All ${data.length} submissions`;
+      }
+
+      // ── LIGHTBOX ──
+      function openLightbox(src) {
+        document.getElementById("lbImg").src = src;
+        document.getElementById("lightbox").classList.add("open");
+      }
+      function closeLightbox() {
+        document.getElementById("lightbox").classList.remove("open");
+      }
+
+      // ── DROPDOWN ──
+      function setupDropdown() {
+        document
+          .getElementById("topbarUser")
+          .addEventListener("click", function (e) {
+            e.stopPropagation();
+            document.getElementById("userDropdown").classList.toggle("visible");
+            this.classList.toggle("open");
+          });
+        document.addEventListener("click", () => {
+          document.getElementById("userDropdown")?.classList.remove("visible");
+          document.getElementById("topbarUser")?.classList.remove("open");
+        });
+      }
+
+      // ── TOAST ──
+      function showToast(msg, type = "success") {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = `toast ${type} show`;
+        setTimeout(() => t.classList.remove("show"), 3000);
+      }
+
+      // ── EVENTS ──
+      document
+        .getElementById("kycSearch")
+        .addEventListener("input", applyFilters);
+      document
+        .getElementById("kycModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeKycModal();
+        });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeLightbox();
+          closeKycModal();
+        }
+      });
+
+      fetchKyc();
+    </script>
+  </body>
+</html>

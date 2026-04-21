@@ -30,6 +30,8 @@ const kycRoutes = require("./routes/kyc.routes");
 
 const mybookingRoutes = require("./routes/mybooking.routes");
 
+const adminKycRoutes = require("./routes/admin.kyc.routes");
+
 // Create Express app
 const app = express();
 
@@ -89,7 +91,11 @@ app.use("/api", userRoutes);
 // Admin vehicle routes
 app.use("/api/vehicles", vehicleRoutes);
 
-// Admin dashboard
+// ✅ SPECIFIC admin routes BEFORE the generic /api/admin catch-all
+app.use("/api/admin/vehicles", vehicleRoutes);
+app.use("/api/admin/kyc", adminKycRoutes);
+
+// Generic admin dashboard (registered AFTER specific sub-routes)
 app.use("/api/admin", adminRoutes);
 
 // User dashboard
@@ -100,9 +106,6 @@ app.use("/api/user/vehicles", userVehicleListingRoutes);
 
 // Vehicle details
 app.use("/api/user/vehicle-details", vehicleDetailsRoutes);
-
-// Admin vehicles (duplicate safe if needed)
-app.use("/api/admin/vehicles", vehicleRoutes);
 
 // Public booking vehicles
 app.use("/api/vehicles", vehicleRoutes_booking);
