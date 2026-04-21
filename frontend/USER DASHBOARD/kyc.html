@@ -1146,12 +1146,13 @@
       </nav>
       <div class="sidebar-footer">
         <div class="sidebar-user">
-          <div class="user-avatar"><span>SR</span></div>
+          <div class="user-avatar"><span></span></div>
           <div class="user-info">
-            <span class="user-name">Swikar Regmi</span>
-            <span class="user-kyc-status unverified" id="sidebarKycStatus"
-              >⚠ KYC Pending</span
-            >
+            <span class="user-name"></span>
+            <span
+              class="user-kyc-status unverified"
+              id="sidebarKycStatus"
+            ></span>
           </div>
         </div>
       </div>
@@ -1187,10 +1188,10 @@
             </svg>
           </button>
           <div class="topbar-user">
-            <div class="topbar-avatar"><span>SR</span></div>
+            <div class="topbar-avatar"><span></span></div>
             <div>
-              <p class="topbar-name">Swikar Regmi</p>
-              <p class="topbar-role">Customer</p>
+              <p class="topbar-name"></p>
+              <p class="topbar-role">Member</p>
             </div>
           </div>
         </div>
@@ -1809,7 +1810,7 @@
           desc.textContent =
             "Your identity has been verified. You can now book vehicles.";
           iconWrap.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
-          kycStatus.textContent = "✔ KYC Verified";
+          kycStatus.textContent = "KYC Verified";
           kycStatus.className = "user-kyc-status verified";
         } else if (status === "rejected") {
           iconWrap.classList.add("rejected");
@@ -1820,7 +1821,7 @@
             ? `Reason: ${rejectionReason}. Please resubmit with correct documents.`
             : "Your KYC was rejected. Please resubmit with correct documents.";
           iconWrap.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
-          kycStatus.textContent = "✖ KYC Rejected";
+          kycStatus.textContent = "KYC Rejected";
           kycStatus.className = "user-kyc-status unverified";
         } else {
           // pending / not_submitted
@@ -1831,7 +1832,7 @@
           desc.textContent =
             "Your documents have been submitted. Our team will review within 24–48 hours.";
           iconWrap.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`;
-          kycStatus.textContent = "⏳ Under Review";
+          kycStatus.textContent = "Under Review";
           kycStatus.className = "user-kyc-status unverified";
         }
 

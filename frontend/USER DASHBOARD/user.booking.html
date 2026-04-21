@@ -310,7 +310,7 @@
         font-weight: 500;
         color: var(--text);
       }
-      .topbar-role {
+      .topbars-role {
         font-size: 11px;
         color: var(--muted);
       }
@@ -1255,13 +1255,11 @@
       <div class="sidebar-footer">
         <div class="sidebar-user">
           <div class="user-avatar" id="sidebarAvatar">
-            <span id="sidebarInitials">SR</span>
+            <span id="sidebarInitials"></span>
           </div>
           <div>
-            <span class="user-name" id="sidebarName">Loading…</span>
-            <span class="user-kyc-status unverified" id="sidebarKyc"
-              >⚠ KYC Pending</span
-            >
+            <span class="user-name" id="sidebarName"></span>
+            <span class="user-kyc-status unverified" id="sidebarKyc"></span>
           </div>
         </div>
       </div>
@@ -1298,11 +1296,11 @@
           </button>
           <div class="topbar-user">
             <div class="topbar-avatar" id="topbarAvatar">
-              <span id="topbarInitials">SR</span>
+              <span id="topbarInitials"></span>
             </div>
             <div>
-              <p class="topbar-name" id="topbarName">Loading…</p>
-              <p class="topbar-role" id="topbarRole">Member</p>
+              <p class="topbar-name" id="topbarName"></p>
+              <p class="topbars-role" id="topbarsRole">Member</p>
             </div>
           </div>
         </div>
@@ -1861,7 +1859,7 @@
           const fullName = `${user.first_name} ${user.last_name}`;
           const initials =
             `${user.first_name?.[0] ?? ""}${user.last_name?.[0] ?? ""}`.toUpperCase();
-          const isVerified = user.kyc_status === "Verified";
+          const isVerified = user.kyc_status === "verified";
           const hasPhoto = !!user.profile_photo;
 
           /* ── Helper: avatar photo or initials ── */
@@ -1882,7 +1880,7 @@
                 .querySelectorAll(".avatar-tick,.avatar-verified-badge")
                 .forEach((t) => t.remove());
               const tick = document.createElement("span");
-              tick.className = "avatar-tick";
+
               tick.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>`;
               containerEl.appendChild(tick);
             }
@@ -1898,13 +1896,13 @@
           const sidebarKycEl = document.getElementById("sidebarKyc");
           if (sidebarKycEl) {
             if (isVerified) {
-              sidebarKycEl.textContent = "✔ KYC Verified";
+              sidebarKycEl.textContent = "KYC Verified";
               sidebarKycEl.className = "user-kyc-status verified";
-            } else if (user.kyc_status === "Rejected") {
-              sidebarKycEl.textContent = "✖ KYC Rejected";
+            } else if (user.kyc_status === "rejected") {
+              sidebarKycEl.textContent = "KYC Rejected";
               sidebarKycEl.className = "user-kyc-status unverified";
             } else {
-              sidebarKycEl.textContent = "⚠ KYC Pending";
+              sidebarKycEl.textContent = "KYC Pending";
               sidebarKycEl.className = "user-kyc-status unverified";
             }
           }
@@ -1919,7 +1917,7 @@
           const topbarRoleEl = document.getElementById("topbarRole");
           if (topbarRoleEl) {
             topbarRoleEl.textContent = isVerified
-              ? "✔ Verified Member"
+              ? "Verified Member"
               : "Member";
             topbarRoleEl.style.color = isVerified ? "#16a34a" : "";
           }

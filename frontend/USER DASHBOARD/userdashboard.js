@@ -140,10 +140,14 @@ async function loadUserProfile() {
     const initials =
       `${user.first_name?.[0] ?? ""}${user.last_name?.[0] ?? ""}`.toUpperCase();
 
-    const isVerified = user.kyc_status === "Verified";
-    const hasPhoto = !!user.profile_photo;
+    /* ── NORMALIZE KYC STATUS ── */
+    const kycStatus = (user.kyc_status || "not_submitted").toLowerCase();
 
-    /* ── TOP WELCOME TEXT ── */
+    const isVerified = kycStatus === "verified";
+    const isPending = kycStatus === "pending";
+    const isRejected = kycStatus === "rejected";
+
+    /* ── WELCOME TEXT ── */
     const hour = new Date().getHours();
     const greet =
       hour < 12
@@ -158,31 +162,30 @@ async function loadUserProfile() {
     }
 
     /* ── SIDEBAR NAME ── */
-    const sidebarNameEl = document.getElementById("sidebarName");
-    if (sidebarNameEl) sidebarNameEl.textContent = fullName;
+    document.getElementById("sidebarName").textContent = fullName;
 
     /* ── TOPBAR NAME ── */
-    const topbarNameEl = document.getElementById("topbarName");
-    if (topbarNameEl) topbarNameEl.textContent = fullName;
+    document.getElementById("topbarName").textContent = fullName;
 
-    /* ── 🔥 DROPDOWN MENU (FIXED PART) ── */
-    const ddName = document.getElementById("ddName");
-    const ddEmail = document.getElementById("ddEmail");
+    /* ── DROPDOWN ── */
+    document.getElementById("ddName").textContent = fullName;
+    document.getElementById("ddEmail").textContent = user.email;
 
-    if (ddName) ddName.textContent = fullName;
-    if (ddEmail) ddEmail.textContent = user.email;
-
-    /* ── KYC STATUS ── */
+    /* ── SIDEBAR KYC STATUS (FIXED) ── */
     const sidebarKycEl = document.getElementById("sidebarKyc");
+
     if (sidebarKycEl) {
       if (isVerified) {
         sidebarKycEl.textContent = "✔ KYC Verified";
         sidebarKycEl.className = "user-kyc-status verified";
-      } else if (user.kyc_status === "Rejected") {
+      } else if (isRejected) {
         sidebarKycEl.textContent = "✖ KYC Rejected";
         sidebarKycEl.className = "user-kyc-status unverified";
+      } else if (isPending) {
+        sidebarKycEl.textContent = "⏳ KYC Pending";
+        sidebarKycEl.className = "user-kyc-status unverified";
       } else {
-        sidebarKycEl.textContent = "⚠ KYC Pending";
+        sidebarKycEl.textContent = "⚠ KYC Not Submitted";
         sidebarKycEl.className = "user-kyc-status unverified";
       }
     }
@@ -191,47 +194,36 @@ async function loadUserProfile() {
     const topbarRoleEl = document.getElementById("topbarRole");
     if (topbarRoleEl) {
       topbarRoleEl.textContent = isVerified ? "✔ Verified Member" : "Member";
+
       topbarRoleEl.style.color = isVerified ? "#16a34a" : "";
     }
 
-    /* ── AVATAR HANDLING ── */
-    function populateAvatar(containerEl, initialsEl) {
-      if (!containerEl) return;
+    /* ── AVATAR ── */
+    function setAvatar(container, initialsEl) {
+      if (!container) return;
 
-      if (hasPhoto) {
-        if (initialsEl) initialsEl.style.display = "none";
-
-        containerEl.querySelectorAll("img").forEach((i) => i.remove());
+      if (user.profile_photo) {
+        initialsEl && (initialsEl.style.display = "none");
 
         const img = document.createElement("img");
         img.src = user.profile_photo;
         img.alt = fullName;
-        containerEl.appendChild(img);
+        container.appendChild(img);
       } else {
-        if (initialsEl) initialsEl.textContent = initials;
-      }
-
-      if (isVerified) {
-        containerEl.querySelectorAll(".avatar-tick").forEach((t) => t.remove());
-
-        const tick = document.createElement("span");
-        tick.className = "avatar-tick";
-        tick.innerHTML = `✔`;
-        containerEl.appendChild(tick);
+        initialsEl && (initialsEl.textContent = initials);
       }
     }
 
-    populateAvatar(
+    setAvatar(
       document.getElementById("sidebarAvatar"),
       document.getElementById("sidebarInitials"),
     );
 
-    populateAvatar(
+    setAvatar(
       document.getElementById("topbarAvatar"),
       document.getElementById("topbarInitials"),
     );
 
-    /* ── STORE USER ID ── */
     window._userId = user.id;
   } catch (err) {
     console.error("Profile load failed:", err.message);
