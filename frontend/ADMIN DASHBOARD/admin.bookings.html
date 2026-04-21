@@ -1,0 +1,1893 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AUTO DEALER — Bookings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --orange: #ff5c1a;
+        --orange-light: #ff7a3d;
+        --orange-dim: rgba(255, 92, 26, 0.12);
+        --bg: #f4f5f7;
+        --white: #fff;
+        --sidebar-bg: #0a0a0a;
+        --sidebar-w: 240px;
+        --dark: #111827;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --radius: 14px;
+        --shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+        --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.1);
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        font-size: 15px;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      .sidebar {
+        width: var(--sidebar-w);
+        min-height: 100vh;
+        background: var(--sidebar-bg);
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        z-index: 200;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .sidebar-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 24px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .logo-mark {
+        width: 36px;
+        height: 36px;
+        background: var(--orange);
+        color: #fff;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        flex-shrink: 0;
+      }
+      .logo-brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 17px;
+        letter-spacing: 2.5px;
+        color: #fff;
+        line-height: 1;
+      }
+      .logo-sub {
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        color: rgba(255, 255, 255, 0.3);
+        font-family: "Space Mono", monospace;
+      }
+      .sidebar-nav {
+        flex: 1;
+        padding: 16px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 9px;
+        color: rgba(255, 255, 255, 0.45);
+        text-decoration: none;
+        font-size: 14px;
+        transition: all 0.18s;
+      }
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .nav-item.active {
+        background: var(--orange-dim);
+        color: var(--orange);
+        font-weight: 500;
+      }
+      .nav-item.active .nav-icon {
+        stroke: var(--orange);
+      }
+      .nav-icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+      }
+      .sidebar-footer {
+        padding: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .sb-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .sb-av {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .sb-name {
+        display: block;
+        font-size: 13px;
+        color: #fff;
+        font-weight: 500;
+      }
+      .sb-role {
+        display: block;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.35);
+      }
+      .main-wrap {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .topbar {
+        height: 64px;
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        padding: 0 28px;
+        gap: 16px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .search-wrap {
+        flex: 1;
+        max-width: 380px;
+        position: relative;
+      }
+      .search-wrap svg {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        color: var(--muted);
+      }
+      .search-wrap input {
+        width: 100%;
+        padding: 9px 12px 9px 38px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        color: var(--text);
+        outline: none;
+        transition: border 0.2s;
+      }
+      .search-wrap input:focus {
+        border-color: var(--orange);
+      }
+      .search-wrap input::placeholder {
+        color: var(--muted);
+      }
+      .topbar-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .icon-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 9px;
+        background: none;
+        border: 1px solid var(--border);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        transition: background 0.2s;
+      }
+      .icon-btn:hover {
+        background: var(--bg);
+      }
+      .icon-btn svg {
+        width: 17px;
+        height: 17px;
+        color: var(--muted);
+      }
+      .notif-badge {
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        background: var(--orange);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .tb-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 12px;
+        border-radius: 9px;
+        cursor: pointer;
+        transition: background 0.2s;
+        margin-left: 4px;
+        position: relative;
+        user-select: none;
+      }
+      .tb-user:hover {
+        background: var(--bg);
+      }
+      .tb-av {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .tb-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        line-height: 1.3;
+      }
+      .tb-role {
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.3;
+      }
+      .tb-chevron {
+        flex-shrink: 0;
+        color: #9ca3af;
+        transition: transform 0.2s;
+      }
+      .tb-user.open .tb-chevron {
+        transform: rotate(180deg);
+      }
+      .dd {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+        min-width: 210px;
+        z-index: 999;
+        opacity: 0;
+        transform: translateY(-6px) scale(0.97);
+        pointer-events: none;
+        transition:
+          opacity 0.18s,
+          transform 0.18s;
+        transform-origin: top right;
+      }
+      .dd.visible {
+        opacity: 1;
+        transform: none;
+        pointer-events: all;
+      }
+      .dd-hdr {
+        padding: 14px 16px 12px;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .dd-name {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .dd-email {
+        font-size: 11.5px;
+        color: #9ca3af;
+        margin-top: 2px;
+      }
+      .dd-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px;
+        font-size: 13.5px;
+        font-family: "DM Sans", sans-serif;
+        color: var(--text);
+        cursor: pointer;
+        transition: background 0.12s;
+        text-decoration: none;
+      }
+      .dd-item:hover {
+        background: #f9fafb;
+      }
+      .dd-item svg {
+        flex-shrink: 0;
+        color: #9ca3af;
+      }
+      .dd-div {
+        height: 1px;
+        background: #f3f4f6;
+        margin: 4px 0;
+      }
+      .dd-item.logout {
+        color: #ef4444;
+      }
+      .dd-item.logout svg {
+        color: #ef4444;
+      }
+      .dd-item.logout:hover {
+        background: #fef2f2;
+      }
+      .content {
+        flex: 1;
+        padding: 28px;
+        overflow-y: auto;
+      }
+      .pg-hdr {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .page-title {
+        font-size: 26px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .page-sub {
+        font-size: 14px;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+      .btn-ghost {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 16px;
+        border: 1px solid var(--border);
+        background: #fff;
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-ghost:hover {
+        background: var(--bg);
+      }
+      .filters-bar {
+        display: flex;
+        gap: 10px;
+        align-items: flex-end;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        background: #fff;
+        padding: 16px 20px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+      }
+      .fg {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .flbl {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+      }
+      .fsel,
+      .finp {
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        color: var(--text);
+        background: var(--bg);
+        outline: none;
+        transition: border 0.2s;
+      }
+      .fsel {
+        cursor: pointer;
+      }
+      .finp {
+        min-width: 130px;
+        cursor: text;
+      }
+      .fsel:focus,
+      .finp:focus {
+        border-color: var(--orange);
+      }
+      .freset {
+        padding: 8px 14px;
+        border: 1px solid var(--border);
+        background: none;
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .freset:hover {
+        background: var(--bg);
+        color: var(--text);
+      }
+      .fsummary {
+        margin-left: auto;
+        font-size: 12px;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .table-card {
+        background: #fff;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .table-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 24px;
+        border-bottom: 1px solid var(--border);
+      }
+      .card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .card-sub {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .table-wrap {
+        overflow-x: auto;
+      }
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .data-table th {
+        text-align: left;
+        padding: 11px 16px;
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--muted);
+        border-bottom: 1px solid var(--border);
+        font-family: "Space Mono", monospace;
+        white-space: nowrap;
+      }
+      .data-table td {
+        padding: 14px 16px;
+        font-size: 13.5px;
+        color: var(--text);
+        border-bottom: 1px solid #f3f4f6;
+        vertical-align: middle;
+      }
+      .data-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .data-table tbody tr:hover td {
+        background: #fafafa;
+      }
+      .user-cell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .uc-av {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        overflow: hidden;
+        flex-shrink: 0;
+        background: linear-gradient(135deg, var(--orange), #ff9500);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .uc-av img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .uc-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--dark);
+      }
+      .uc-email {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .v-cell {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+      }
+      .v-thumb {
+        width: 52px;
+        height: 36px;
+        border-radius: 7px;
+        object-fit: cover;
+        border: 1px solid var(--border);
+        background: #f3f4f6;
+        flex-shrink: 0;
+      }
+      .v-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--dark);
+      }
+      .v-plate {
+        font-size: 11px;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+      }
+      /* BADGE ONLY — no dropdown */
+      .bdg {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 12px;
+        border-radius: 99px;
+        font-size: 11.5px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .bdg .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+        flex-shrink: 0;
+      }
+      .bdg-green {
+        background: #ecfdf5;
+        color: #16a34a;
+      }
+      .bdg-amber {
+        background: #fffbeb;
+        color: #d97706;
+      }
+      .bdg-red {
+        background: #fff1f2;
+        color: #dc2626;
+      }
+      .bdg-grey {
+        background: #f3f4f6;
+        color: #6b7280;
+      }
+      .bdg-blue {
+        background: #eff6ff;
+        color: #2563eb;
+      }
+      .bdg-orange {
+        background: var(--orange-dim);
+        color: var(--orange);
+      }
+      /* VIEW BUTTON */
+      .view-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 15px;
+        border-radius: 8px;
+        font-size: 12.5px;
+        font-weight: 500;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        border: 1px solid var(--orange);
+        background: var(--orange-dim);
+        color: var(--orange);
+        transition: all 0.17s;
+        white-space: nowrap;
+      }
+      .view-btn:hover {
+        background: var(--orange);
+        color: #fff;
+      }
+      .view-btn svg {
+        width: 13px;
+        height: 13px;
+      }
+      /* pagination */
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 24px;
+        border-top: 1px solid var(--border);
+      }
+      .pag-info {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .pag-btns {
+        display: flex;
+        gap: 5px;
+      }
+      .pag-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 7px;
+        border: 1px solid var(--border);
+        background: #fff;
+        cursor: pointer;
+        font-size: 13px;
+        font-family: "DM Sans", sans-serif;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+      }
+      .pag-btn:hover {
+        background: var(--bg);
+      }
+      .pag-btn.cur {
+        background: var(--orange);
+        color: #fff;
+        border-color: var(--orange);
+      }
+      .pag-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      /* MODAL */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(6px);
+        z-index: 8000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s;
+      }
+      .overlay.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .modal {
+        background: #fff;
+        border-radius: 22px;
+        width: 100%;
+        max-width: 720px;
+        max-height: 92vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transform: scale(0.94) translateY(24px);
+        transition: transform 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
+      }
+      .overlay.open .modal {
+        transform: scale(1) translateY(0);
+      }
+      /* hero image header */
+      .modal-hero {
+        position: relative;
+        height: 210px;
+        flex-shrink: 0;
+        overflow: hidden;
+        background: #1a1a2e;
+      }
+      .hero-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        opacity: 0.85;
+      }
+      .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(transparent 20%, rgba(0, 0, 0, 0.72));
+      }
+      .hero-close {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 34px;
+        height: 34px;
+        border: none;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 9px;
+        cursor: pointer;
+        color: #fff;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+        z-index: 2;
+      }
+      .hero-close:hover {
+        background: rgba(0, 0, 0, 0.65);
+      }
+      /* booking status badge top-right of hero */
+      .hero-status {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        z-index: 2;
+      }
+      .hero-bottom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 16px 24px;
+        z-index: 2;
+      }
+      .hero-vehicle-name {
+        color: #fff;
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 1.2;
+      }
+      .hero-vehicle-sub {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 12px;
+        font-family: "Space Mono", monospace;
+        margin-top: 3px;
+      }
+      /* modal body */
+      .modal-body {
+        overflow-y: auto;
+        padding: 24px 28px;
+        flex: 1;
+      }
+      /* customer strip */
+      .cust-strip {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: var(--bg);
+        border-radius: 12px;
+        padding: 16px 18px;
+        margin-bottom: 20px;
+      }
+      .cust-av {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        overflow: hidden;
+        background: linear-gradient(135deg, var(--orange), #ff9500);
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .cust-av img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .cust-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .cust-sub {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      /* 2-col info */
+      .info-cols {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 20px;
+      }
+      .info-box {
+        background: var(--bg);
+        border-radius: 12px;
+        padding: 16px 18px;
+      }
+      .info-box-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1.1px;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+        margin-bottom: 12px;
+      }
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 9px;
+      }
+      .info-row:last-child {
+        margin-bottom: 0;
+      }
+      .ir-lbl {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .ir-val {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--dark);
+        text-align: right;
+      }
+      /* price table */
+      .price-box {
+        background: var(--bg);
+        border-radius: 12px;
+        padding: 16px 18px;
+        margin-bottom: 20px;
+      }
+      .price-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .price-table td {
+        padding: 7px 0;
+        font-size: 13px;
+        color: var(--text);
+        border-bottom: 1px solid var(--border);
+      }
+      .price-table tr:last-child td {
+        border-bottom: none;
+      }
+      .price-total td {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--dark);
+        padding-top: 11px;
+      }
+      .price-total td:last-child {
+        color: var(--orange);
+      }
+      /* notes */
+      .notes-box {
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 20px;
+        font-size: 13.5px;
+        color: #92400e;
+        line-height: 1.6;
+      }
+      /* footer action bar */
+      .modal-footer {
+        flex-shrink: 0;
+        padding: 18px 28px;
+        border-top: 1px solid var(--border);
+        background: #fafafa;
+      }
+      .footer-ttl {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+        margin-bottom: 10px;
+      }
+      .status-btns {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .st-btn {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text);
+        transition: all 0.17s;
+      }
+      .st-btn.is-current {
+        opacity: 0.45;
+        pointer-events: none;
+      }
+      .st-btn.btn-pending {
+        border-color: #d97706;
+        color: #d97706;
+      }
+      .st-btn.btn-pending:not(.is-current):hover {
+        background: #fffbeb;
+      }
+      .st-btn.btn-confirmed {
+        border-color: #2563eb;
+        color: #2563eb;
+      }
+      .st-btn.btn-confirmed:not(.is-current):hover {
+        background: #eff6ff;
+      }
+      .st-btn.btn-active {
+        border-color: #16a34a;
+        color: #16a34a;
+      }
+      .st-btn.btn-active:not(.is-current):hover {
+        background: #ecfdf5;
+      }
+      .st-btn.btn-completed {
+        border-color: var(--muted);
+        color: var(--muted);
+      }
+      .st-btn.btn-completed:not(.is-current):hover {
+        background: #f3f4f6;
+      }
+      .st-btn.btn-cancelled {
+        border-color: #dc2626;
+        color: #dc2626;
+      }
+      .st-btn.btn-cancelled:not(.is-current):hover {
+        background: #fff5f5;
+      }
+      /* toast */
+      .toast {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        background: var(--dark);
+        color: #fff;
+        padding: 13px 20px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 500;
+        z-index: 9999;
+        transform: translateY(20px);
+        opacity: 0;
+        transition: all 0.3s;
+        pointer-events: none;
+      }
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .toast.ok {
+        border-left: 3px solid #16a34a;
+      }
+      .toast.err {
+        border-left: 3px solid #dc2626;
+      }
+      .empty-cell {
+        text-align: center;
+        padding: 60px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .main-wrap {
+          margin-left: 0;
+        }
+        .content {
+          padding: 20px 16px;
+        }
+        .topbar {
+          padding: 0 16px;
+        }
+        .tb-name,
+        .tb-role {
+          display: none;
+        }
+        .info-cols {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div style="display: flex; width: 100%">
+      <aside class="sidebar">
+        <div class="sidebar-logo">
+          <div class="logo-mark">AD</div>
+          <div style="display: flex; flex-direction: column; gap: 1px">
+            <span class="logo-brand">AUTO DEALER</span
+            ><span class="logo-sub">FLEET MANAGEMENT</span>
+          </div>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" class="nav-item"
+            ><svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="7" height="7" rx="1" /></svg
+            >Dashboard</a
+          >
+          <a href="admin.vehicle.html" class="nav-item"
+            ><svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+              />
+              <circle cx="7" cy="17" r="2" />
+              <circle cx="17" cy="17" r="2" />
+              <path d="M5 17h8M3 9h18" /></svg
+            >Vehicles</a
+          >
+          <a href="admin.bookings.html" class="nav-item active"
+            ><svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" /></svg
+            >Bookings</a
+          >
+          <a href="admin.kyc.html" class="nav-item"
+            ><svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+            >KYC</a
+          >
+          <a href="admin.payments.html" class="nav-item"
+            ><svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="2" y="5" width="20" height="14" rx="2" />
+              <line x1="2" y1="10" x2="22" y2="10" /></svg
+            >Payments</a
+          >
+          <a href="admin.enquiries.html" class="nav-item"
+            ><svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" /></svg
+            >Enquiries</a
+          >
+          <a href="admin.reviews.html" class="nav-item"
+            ><svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" /></svg
+            >Reviews</a
+          >
+          <a href="admin.servicing.html" class="nav-item"
+            ><svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
+              /></svg
+            >Servicing</a
+          >
+        </nav>
+        <div class="sidebar-footer">
+          <div class="sb-user">
+            <div class="sb-av" id="sbAv">AD</div>
+            <div>
+              <span class="sb-name" id="sbName">Admin</span
+              ><span class="sb-role" id="sbRole">Super Admin</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="main-wrap">
+        <header class="topbar">
+          <div class="search-wrap">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              id="bSearch"
+              placeholder="Search bookings, customers, vehicles…"
+            />
+          </div>
+          <div class="topbar-right">
+            <button class="icon-btn">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg
+              ><span class="notif-badge">3</span>
+            </button>
+            <div class="tb-user" id="tbUser">
+              <div class="tb-av" id="tbAv">AD</div>
+              <div>
+                <p class="tb-name" id="tbName">Admin</p>
+                <p class="tb-role" id="tbRole">Super Admin</p>
+              </div>
+              <svg
+                class="tb-chevron"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+              <div class="dd" id="dd">
+                <div class="dd-hdr">
+                  <p class="dd-name" id="ddName">Admin</p>
+                  <p class="dd-email" id="ddEmail">admin@autodealer.com</p>
+                </div>
+                <a class="dd-item" href="#"
+                  ><svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" /></svg
+                  >My Profile</a
+                >
+                <div class="dd-div"></div>
+                <a class="dd-item logout" href="#"
+                  ><svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  >
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" /></svg
+                  >Logout</a
+                >
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main class="content">
+          <div class="pg-hdr">
+            <div>
+              <h1 class="page-title">Bookings</h1>
+              <p class="page-sub">Manage and track all rental bookings</p>
+            </div>
+            <button class="btn-ghost" onclick="exportCSV()">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                width="15"
+                height="15"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" /></svg
+              >Export CSV
+            </button>
+          </div>
+
+          <div class="filters-bar">
+            <div class="fg">
+              <span class="flbl">Status</span>
+              <select class="fsel" id="fStatus" onchange="applyFilters()">
+                <option value="">All Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Active">Active</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+            <div class="fg">
+              <span class="flbl">Date From</span
+              ><input
+                type="date"
+                class="finp"
+                id="fFrom"
+                onchange="applyFilters()"
+              />
+            </div>
+            <div class="fg">
+              <span class="flbl">Date To</span
+              ><input
+                type="date"
+                class="finp"
+                id="fTo"
+                onchange="applyFilters()"
+              />
+            </div>
+            <div class="fg">
+              <span class="flbl">KYC Status</span>
+              <select class="fsel" id="fKyc" onchange="applyFilters()">
+                <option value="">All KYC</option>
+                <option value="verified">Verified</option>
+                <option value="pending">Pending</option>
+                <option value="not_submitted">Not Submitted</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+            <button class="freset" onclick="resetFilters()">✕ Reset</button>
+            <span class="fsummary" id="fsummary">All bookings</span>
+          </div>
+
+          <div class="table-card">
+            <div class="table-toolbar">
+              <div>
+                <h3 class="card-title">All Bookings</h3>
+                <p class="card-sub" id="tCount">—</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Booking ID</th>
+                    <th>Customer</th>
+                    <th>Vehicle</th>
+                    <th>Schedule</th>
+                    <th>Location</th>
+                    <th>Total</th>
+                    <th>KYC</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+              </table>
+            </div>
+            <div class="pagination">
+              <span class="pag-info" id="pagInfo">—</span>
+              <div class="pag-btns" id="pagBtns"></div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- BOOKING MODAL -->
+    <div class="overlay" id="overlay">
+      <div class="modal">
+        <!-- hero vehicle image -->
+        <div class="modal-hero">
+          <img class="hero-img" id="heroImg" src="" alt="" />
+          <div class="hero-overlay"></div>
+          <button class="hero-close" onclick="closeModal()">✕</button>
+          <div class="hero-status" id="heroStatus"></div>
+          <div class="hero-bottom">
+            <div class="hero-vehicle-name" id="heroVehicleName">—</div>
+            <div class="hero-vehicle-sub" id="heroVehicleSub">—</div>
+          </div>
+        </div>
+        <div class="modal-body" id="mBody"></div>
+        <div class="modal-footer" id="mFooter"></div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      const ADMIN = {
+        name: "Saurav Shrestha",
+        role: "Super Admin",
+        email: "saurav@autodealer.com",
+      };
+      let data = JSON.parse(
+        JSON.stringify([
+          {
+            id: 1001,
+            user_name: "Aarav Poudel",
+            user_email: "aarav@gmail.com",
+            user_phone: "9841-234567",
+            user_photo: "https://i.pravatar.cc/150?img=11",
+            kyc_status: "verified",
+            vehicle_name: "Toyota Fortuner",
+            vehicle_plate: "BA 1 CHA 1234",
+            vehicle_type: "SUV",
+            vehicle_img: "https://picsum.photos/seed/fortuner/800/450",
+            start_date: "2025-04-15",
+            end_date: "2025-04-18",
+            total_days: 3,
+            pickup_location: "Kathmandu, Thamel",
+            dropoff_location: "Kathmandu, Thamel",
+            total_price: 15000,
+            per_day: 5000,
+            extra_charges: 0,
+            discount: 0,
+            payment_status: "Paid",
+            payment_method: "eSewa",
+            status: "Active",
+            booked_on: "2025-04-14",
+            notes: "Please have the car ready by 8am",
+          },
+          {
+            id: 1002,
+            user_name: "Sita Tamang",
+            user_email: "sita.tamang@gmail.com",
+            user_phone: "9802-345678",
+            user_photo: "https://i.pravatar.cc/150?img=5",
+            kyc_status: "verified",
+            vehicle_name: "Honda City",
+            vehicle_plate: "BA 2 PA 5678",
+            vehicle_type: "Sedan",
+            vehicle_img: "https://picsum.photos/seed/hondacity/800/450",
+            start_date: "2025-04-20",
+            end_date: "2025-04-22",
+            total_days: 2,
+            pickup_location: "Lalitpur, Patan",
+            dropoff_location: "Bhaktapur",
+            total_price: 8000,
+            per_day: 4000,
+            extra_charges: 0,
+            discount: 0,
+            payment_status: "Paid",
+            payment_method: "Khalti",
+            status: "Confirmed",
+            booked_on: "2025-04-17",
+            notes: "",
+          },
+          {
+            id: 1003,
+            user_name: "Bibek Gurung",
+            user_email: "bibek.g@yahoo.com",
+            user_phone: "9855-456789",
+            user_photo: "https://i.pravatar.cc/150?img=13",
+            kyc_status: "rejected",
+            vehicle_name: "Hyundai Tucson",
+            vehicle_plate: "BA 3 KA 9012",
+            vehicle_type: "SUV",
+            vehicle_img: "https://picsum.photos/seed/tucson/800/450",
+            start_date: "2025-04-10",
+            end_date: "2025-04-12",
+            total_days: 2,
+            pickup_location: "Kathmandu, New Baneshwor",
+            dropoff_location: "Kathmandu, Airport",
+            total_price: 12000,
+            per_day: 6000,
+            extra_charges: 0,
+            discount: 0,
+            payment_status: "Pending",
+            payment_method: "Cash",
+            status: "Cancelled",
+            booked_on: "2025-04-08",
+            notes: "KYC was rejected",
+          },
+          {
+            id: 1004,
+            user_name: "Priya Shrestha",
+            user_email: "priya.s@gmail.com",
+            user_phone: "9861-567890",
+            user_photo: "https://i.pravatar.cc/150?img=20",
+            kyc_status: "pending",
+            vehicle_name: "Maruti Swift",
+            vehicle_plate: "BA 4 GA 3456",
+            vehicle_type: "Hatchback",
+            vehicle_img: "https://picsum.photos/seed/swift/800/450",
+            start_date: "2025-04-25",
+            end_date: "2025-04-27",
+            total_days: 2,
+            pickup_location: "Pokhara, Lakeside",
+            dropoff_location: "Pokhara, Airport",
+            total_price: 5500,
+            per_day: 2500,
+            extra_charges: 500,
+            discount: 0,
+            payment_status: "Pending",
+            payment_method: "eSewa",
+            status: "Pending",
+            booked_on: "2025-04-19",
+            notes: "",
+          },
+          {
+            id: 1005,
+            user_name: "Rohan KC",
+            user_email: "rohan.kc@gmail.com",
+            user_phone: "9818-678901",
+            user_photo: "https://i.pravatar.cc/150?img=33",
+            kyc_status: "not_submitted",
+            vehicle_name: "Tesla Model 3",
+            vehicle_plate: "BA 5 CA 7890",
+            vehicle_type: "Electric",
+            vehicle_img: "https://picsum.photos/seed/tesla3/800/450",
+            start_date: "2025-03-01",
+            end_date: "2025-03-05",
+            total_days: 4,
+            pickup_location: "Kathmandu, Naxal",
+            dropoff_location: "Kathmandu, Naxal",
+            total_price: 27000,
+            per_day: 7000,
+            extra_charges: 0,
+            discount: 1000,
+            payment_status: "Paid",
+            payment_method: "Bank Transfer",
+            status: "Completed",
+            booked_on: "2025-02-26",
+            notes: "Returning customer — premium service",
+          },
+          {
+            id: 1006,
+            user_name: "Anisha Maharjan",
+            user_email: "anisha.m@hotmail.com",
+            user_phone: "9843-789012",
+            user_photo: "https://i.pravatar.cc/150?img=47",
+            kyc_status: "verified",
+            vehicle_name: "Kia Sportage",
+            vehicle_plate: "BA 6 JA 2345",
+            vehicle_type: "SUV",
+            vehicle_img: "https://picsum.photos/seed/sportage/800/450",
+            start_date: "2025-05-02",
+            end_date: "2025-05-06",
+            total_days: 4,
+            pickup_location: "Kathmandu, Kupondole",
+            dropoff_location: "Kathmandu, Kupondole",
+            total_price: 20000,
+            per_day: 5000,
+            extra_charges: 0,
+            discount: 0,
+            payment_status: "Paid",
+            payment_method: "Khalti",
+            status: "Confirmed",
+            booked_on: "2025-04-20",
+            notes: "",
+          },
+        ]),
+      );
+      let filtered = [...data],
+        openId = null,
+        page = 1;
+      const PER = 10;
+
+      const BKS = {
+        Pending: { bdg: "bdg bdg-amber", label: "Pending" },
+        Confirmed: { bdg: "bdg bdg-blue", label: "Confirmed" },
+        Active: { bdg: "bdg bdg-green", label: "Active" },
+        Completed: { bdg: "bdg bdg-grey", label: "Completed" },
+        Cancelled: { bdg: "bdg bdg-red", label: "Cancelled" },
+      };
+      const KYS = {
+        verified: { bdg: "bdg bdg-green", label: "✓ Verified" },
+        pending: { bdg: "bdg bdg-amber", label: "⏳ Pending" },
+        rejected: { bdg: "bdg bdg-red", label: "✕ Rejected" },
+        not_submitted: { bdg: "bdg bdg-grey", label: "Not Submitted" },
+      };
+
+      const bkBadge = (s) => {
+        const m = BKS[s] || BKS.Pending;
+        return `<span class="${m.bdg}"><span class="dot"></span>${m.label}</span>`;
+      };
+      const kycBadge = (s) => {
+        const m = KYS[s] || KYS.not_submitted;
+        return `<span class="${m.bdg}">${m.label}</span>`;
+      };
+      const ini = (n) =>
+        n
+          .split(" ")
+          .map((c) => c[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 2);
+      const fmtMoney = (n) => "Rs " + Number(n).toLocaleString("en-NP");
+      const fmtDate = (d) =>
+        d && d !== "—"
+          ? new Date(d + "T00:00:00").toLocaleDateString("en-NP", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })
+          : "—";
+
+      (function () {
+        const i = ADMIN.name
+          .split(" ")
+          .map((c) => c[0])
+          .join("");
+        document.getElementById("sbAv").textContent = i;
+        document.getElementById("tbAv").textContent = i;
+        document.getElementById("sbName").textContent = ADMIN.name;
+        document.getElementById("tbName").textContent = ADMIN.name;
+        document.getElementById("sbRole").textContent = ADMIN.role;
+        document.getElementById("tbRole").textContent = ADMIN.role;
+        document.getElementById("ddName").textContent = ADMIN.name;
+        document.getElementById("ddEmail").textContent = ADMIN.email;
+        render();
+        document
+          .getElementById("tbUser")
+          .addEventListener("click", function (e) {
+            e.stopPropagation();
+            document.getElementById("dd").classList.toggle("visible");
+            this.classList.toggle("open");
+          });
+        document.addEventListener("click", () => {
+          document.getElementById("dd").classList.remove("visible");
+          document.getElementById("tbUser").classList.remove("open");
+        });
+        document
+          .getElementById("bSearch")
+          .addEventListener("input", applyFilters);
+        document
+          .getElementById("overlay")
+          .addEventListener("click", function (e) {
+            if (e.target === this) closeModal();
+          });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") closeModal();
+        });
+      })();
+
+      function render() {
+        const tb = document.getElementById("tbody");
+        const total = filtered.length,
+          start = (page - 1) * PER,
+          end = Math.min(start + PER, total),
+          slice = filtered.slice(start, end);
+        document.getElementById("tCount").textContent =
+          `${total} booking${total !== 1 ? "s" : ""}`;
+        document.getElementById("pagInfo").textContent = total
+          ? `Showing ${start + 1}–${end} of ${total}`
+          : "No results";
+        if (!slice.length) {
+          tb.innerHTML = `<tr><td colspan="9" class="empty-cell">📋 No bookings match your filters</td></tr>`;
+          renderPag(0);
+          return;
+        }
+        tb.innerHTML = slice
+          .map(
+            (b) => `
+    <tr>
+      <td><span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">#</span><strong>${b.id}</strong></td>
+      <td>
+        <div class="user-cell">
+          <div class="uc-av">${b.user_photo ? `<img src="${b.user_photo}" alt="" onerror="this.parentElement.innerHTML='${ini(b.user_name)}'">` : `${ini(b.user_name)}`}</div>
+          <div><div class="uc-name">${b.user_name}</div><div class="uc-email">${b.user_email}</div></div>
+        </div>
+      </td>
+      <td>
+        <div class="v-cell">
+          <img class="v-thumb" src="${b.vehicle_img}" alt="" onerror="this.style.display='none'"/>
+          <div><div class="v-name">${b.vehicle_name}</div><div class="v-plate">${b.vehicle_plate}</div></div>
+        </div>
+      </td>
+      <td><div style="font-size:12.5px">${fmtDate(b.start_date)} → ${fmtDate(b.end_date)}</div><div style="font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:2px">${b.total_days} day${b.total_days !== 1 ? "s" : ""}</div></td>
+      <td style="font-size:12.5px;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.pickup_location}</td>
+      <td style="font-family:'Space Mono',monospace;font-size:12.5px;font-weight:600">${fmtMoney(b.total_price)}</td>
+      <td>${kycBadge(b.kyc_status)}</td>
+      <td>${bkBadge(b.status)}</td>
+      <td><button class="view-btn" onclick="openModal(${b.id})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button></td>
+    </tr>
+  `,
+          )
+          .join("");
+        renderPag(total);
+      }
+
+      function renderPag(total) {
+        const pages = Math.ceil(total / PER),
+          btns = document.getElementById("pagBtns");
+        if (pages <= 1) {
+          btns.innerHTML = "";
+          return;
+        }
+        let h = `<button class="pag-btn" onclick="goPage(${page - 1})" ${page === 1 ? "disabled" : ""}>‹</button>`;
+        for (let i = 1; i <= pages; i++) {
+          if (i === 1 || i === pages || Math.abs(i - page) <= 1)
+            h += `<button class="pag-btn ${i === page ? "cur" : ""}" onclick="goPage(${i})">${i}</button>`;
+          else if (Math.abs(i - page) === 2)
+            h += `<span style="padding:0 4px;color:var(--muted);align-self:center">…</span>`;
+        }
+        h += `<button class="pag-btn" onclick="goPage(${page + 1})" ${page === pages ? "disabled" : ""}>›</button>`;
+        btns.innerHTML = h;
+      }
+      function goPage(p) {
+        const pages = Math.ceil(filtered.length / PER);
+        if (p < 1 || p > pages) return;
+        page = p;
+        render();
+      }
+
+      function openModal(id) {
+        const b = data.find((x) => x.id === id);
+        if (!b) return;
+        openId = id;
+        // hero
+        document.getElementById("heroImg").src = b.vehicle_img;
+        document.getElementById("heroStatus").innerHTML = bkBadge(b.status);
+        document.getElementById("heroVehicleName").textContent = b.vehicle_name;
+        document.getElementById("heroVehicleSub").textContent =
+          `${b.vehicle_plate}  ·  ${b.vehicle_type}`;
+        document.getElementById("mBody").innerHTML = buildBody(b);
+        document.getElementById("mFooter").innerHTML = buildFooter(b);
+        document.getElementById("overlay").classList.add("open");
+      }
+      function closeModal() {
+        document.getElementById("overlay").classList.remove("open");
+        openId = null;
+      }
+
+      function refreshModal() {
+        const b = data.find((x) => x.id === openId);
+        if (!b) return;
+        document.getElementById("heroStatus").innerHTML = bkBadge(b.status);
+        document.getElementById("mBody").innerHTML = buildBody(b);
+        document.getElementById("mFooter").innerHTML = buildFooter(b);
+        render();
+      }
+
+      function buildBody(b) {
+        const net = b.total_price - (b.discount || 0) + (b.extra_charges || 0);
+        return `
+    <div class="cust-strip">
+      <div class="cust-av">${b.user_photo ? `<img src="${b.user_photo}" alt="" onerror="this.parentElement.innerHTML='${ini(b.user_name)}'">` : `${ini(b.user_name)}`}</div>
+      <div style="flex:1"><div class="cust-name">${b.user_name}</div><div class="cust-sub">${b.user_email}  ·  ${b.user_phone}</div></div>
+      <div>${kycBadge(b.kyc_status)}</div>
+    </div>
+    <div class="info-cols">
+      <div class="info-box">
+        <div class="info-box-title">Booking Info</div>
+        <div class="info-row"><span class="ir-lbl">Booking ID</span><span class="ir-val" style="font-family:'Space Mono',monospace">#${b.id}</span></div>
+        <div class="info-row"><span class="ir-lbl">Booked On</span><span class="ir-val">${fmtDate(b.booked_on)}</span></div>
+        <div class="info-row"><span class="ir-lbl">Start Date</span><span class="ir-val">${fmtDate(b.start_date)}</span></div>
+        <div class="info-row"><span class="ir-lbl">End Date</span><span class="ir-val">${fmtDate(b.end_date)}</span></div>
+        <div class="info-row"><span class="ir-lbl">Duration</span><span class="ir-val">${b.total_days} day${b.total_days !== 1 ? "s" : ""}</span></div>
+        <div class="info-row"><span class="ir-lbl">Status</span><span class="ir-val">${bkBadge(b.status)}</span></div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-title">Location & Payment</div>
+        <div class="info-row"><span class="ir-lbl">Pickup</span><span class="ir-val">${b.pickup_location}</span></div>
+        <div class="info-row"><span class="ir-lbl">Drop-off</span><span class="ir-val">${b.dropoff_location}</span></div>
+        <div class="info-row"><span class="ir-lbl">Method</span><span class="ir-val">${b.payment_method}</span></div>
+        <div class="info-row"><span class="ir-lbl">Payment</span><span class="ir-val">${b.payment_status === "Paid" ? `<span class="bdg bdg-green"><span class="dot"></span>Paid</span>` : `<span class="bdg bdg-amber"><span class="dot"></span>${b.payment_status}</span>`}</span></div>
+      </div>
+    </div>
+    <div class="price-box">
+      <div class="info-box-title" style="margin-bottom:10px">Price Breakdown</div>
+      <table class="price-table">
+        <tr><td>Daily Rate × ${b.total_days} day${b.total_days !== 1 ? "s" : ""}</td><td style="text-align:right;color:var(--muted)">${fmtMoney(b.per_day)} each</td><td style="text-align:right;font-weight:500">${fmtMoney(b.per_day * b.total_days)}</td></tr>
+        ${b.extra_charges ? `<tr><td>Extra Charges</td><td></td><td style="text-align:right;font-weight:500">+${fmtMoney(b.extra_charges)}</td></tr>` : ""}
+        ${b.discount ? `<tr><td>Discount</td><td></td><td style="text-align:right;font-weight:500;color:#16a34a">−${fmtMoney(b.discount)}</td></tr>` : ""}
+        <tr class="price-total"><td>Total</td><td></td><td style="text-align:right">${fmtMoney(net)}</td></tr>
+      </table>
+    </div>
+    ${b.notes ? `<div class="notes-box">📝 ${b.notes}</div>` : ""}
+  `;
+      }
+
+      function buildFooter(b) {
+        const s = b.status;
+        return `
+    <div class="footer-ttl">Update Booking Status</div>
+    <div class="status-btns">
+      <button class="st-btn btn-pending   ${s === "Pending" ? "is-current" : ""}" onclick="doStatus(${b.id},'Pending')">Pending</button>
+      <button class="st-btn btn-confirmed ${s === "Confirmed" ? "is-current" : ""}" onclick="doStatus(${b.id},'Confirmed')">Confirmed</button>
+      <button class="st-btn btn-active    ${s === "Active" ? "is-current" : ""}" onclick="doStatus(${b.id},'Active')">Active</button>
+      <button class="st-btn btn-completed ${s === "Completed" ? "is-current" : ""}" onclick="doStatus(${b.id},'Completed')">Completed</button>
+      <button class="st-btn btn-cancelled ${s === "Cancelled" ? "is-current" : ""}" onclick="doStatus(${b.id},'Cancelled')">Cancelled</button>
+    </div>
+  `;
+      }
+
+      function doStatus(id, s) {
+        const b = data.find((x) => x.id === id);
+        if (!b) return;
+        b.status = s;
+        refreshModal();
+        showToast(`Booking #${id} → ${s}`, "ok");
+      }
+
+      function applyFilters() {
+        const s = document.getElementById("fStatus").value,
+          fr = document.getElementById("fFrom").value,
+          to = document.getElementById("fTo").value,
+          k = document.getElementById("fKyc").value,
+          q = document.getElementById("bSearch").value.toLowerCase();
+        filtered = data.filter((b) => {
+          if (s && b.status !== s) return false;
+          if (k && b.kyc_status !== k) return false;
+          if (fr && b.start_date < fr) return false;
+          if (to && b.end_date > to) return false;
+          if (
+            q &&
+            !`${b.id} ${b.user_name} ${b.user_email} ${b.vehicle_name} ${b.vehicle_plate} ${b.pickup_location}`
+              .toLowerCase()
+              .includes(q)
+          )
+            return false;
+          return true;
+        });
+        page = 1;
+        render();
+        const ac = [s, fr, to, k, q].filter(Boolean).length;
+        document.getElementById("fsummary").textContent = ac
+          ? `${ac} filter${ac > 1 ? "s" : ""} · ${filtered.length} result${filtered.length !== 1 ? "s" : ""}`
+          : `All ${data.length} bookings`;
+      }
+      function resetFilters() {
+        ["fStatus", "fFrom", "fTo", "fKyc"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        document.getElementById("bSearch").value = "";
+        filtered = [...data];
+        page = 1;
+        render();
+        document.getElementById("fsummary").textContent =
+          `All ${data.length} bookings`;
+      }
+
+      function exportCSV() {
+        const hdr = [
+          "ID",
+          "Customer",
+          "Email",
+          "Phone",
+          "Vehicle",
+          "Plate",
+          "Start",
+          "End",
+          "Days",
+          "Pickup",
+          "Total",
+          "Payment",
+          "KYC",
+          "Status",
+        ];
+        const rows = filtered.map((b) => [
+          b.id,
+          b.user_name,
+          b.user_email,
+          b.user_phone,
+          b.vehicle_name,
+          b.vehicle_plate,
+          b.start_date,
+          b.end_date,
+          b.total_days,
+          b.pickup_location,
+          `Rs ${b.total_price}`,
+          b.payment_status,
+          b.kyc_status,
+          b.status,
+        ]);
+        const csv = [hdr, ...rows]
+          .map((r) => r.map((v) => `"${v}"`).join(","))
+          .join("\n");
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+        a.download = `bookings_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+      }
+
+      function showToast(msg, type = "ok") {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = `toast ${type} show`;
+        setTimeout(() => t.classList.remove("show"), 3200);
+      }
+    </script>
+  </body>
+</html>
