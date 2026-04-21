@@ -1,3 +1,4 @@
+const transporter = require("../utils/mailer");
 const db = require("../config/db");
 
 // ───────── GET ALL KYC (FRONTEND READY) ─────────
@@ -86,7 +87,6 @@ exports.updateKycStatus = (req, res) => {
   const { id } = req.params;
   const { status, rejection_reason } = req.body;
 
-  // Map frontend label back to DB enum if needed
   const STATUS_MAP = {
     not_submitted: "not_submitted",
     pending: "pending",
@@ -95,33 +95,92 @@ exports.updateKycStatus = (req, res) => {
   };
 
   const dbStatus = STATUS_MAP[status];
+
   if (!dbStatus) {
-    return res
-      .status(400)
-      .json({ success: false, message: `Invalid status: ${status}` });
+    return res.status(400).json({
+      success: false,
+      message: `Invalid status: ${status}`,
+    });
   }
 
-  const sql = `
-    UPDATE kyc 
-    SET 
-      status           = ?,
-      rejection_reason = ?,
-      reviewed_at      = NOW()
-    WHERE id = ?
+  // 1. Get user email first
+  const getSql = `
+    SELECT u.name, u.email
+    FROM kyc k
+    LEFT JOIN users u ON k.user_id = u.id
+    WHERE k.id = ?
   `;
 
-  db.query(sql, [dbStatus, rejection_reason || null, id], (err, result) => {
+  db.query(getSql, [id], (err, rows) => {
     if (err) {
-      console.error("updateKycStatus error:", err);
       return res.status(500).json({ success: false, message: err.message });
     }
 
-    if (result.affectedRows === 0) {
-      return res
-        .status(404)
-        .json({ success: false, message: `KYC #${id} not found` });
+    if (rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: `KYC #${id} not found`,
+      });
     }
 
-    res.json({ success: true, message: "KYC status updated" });
+    const user = rows[0];
+
+    // 2. Update KYC status
+    const updateSql = `
+      UPDATE kyc 
+      SET status = ?, rejection_reason = ?, reviewed_at = NOW()
+      WHERE id = ?
+    `;
+
+    db.query(
+      updateSql,
+      [dbStatus, rejection_reason || null, id],
+      async (err2) => {
+        if (err2) {
+          return res
+            .status(500)
+            .json({ success: false, message: err2.message });
+        }
+
+        // 3. Send email to user
+        try {
+          if (user.email) {
+            await transporter.sendMail({
+              from: process.env.EMAIL_USER,
+              to: user.email,
+              subject: `KYC Status Update`,
+              html: `
+              <h2>KYC Status Updated</h2>
+              <p>Hi <b>${user.name || "User"}</b>,</p>
+
+              <p>Your KYC verification status has been updated.</p>
+
+              <p><b>Status:</b> ${dbStatus}</p>
+
+              ${
+                dbStatus === "rejected"
+                  ? `<p><b>Reason:</b> ${rejection_reason || "Not provided"}</p>`
+                  : ""
+              }
+
+              <br/>
+              <p>Thank you.</p>
+            `,
+            });
+
+            console.log("✅ KYC email sent");
+          } else {
+            console.log("⚠️ No email found for user");
+          }
+        } catch (mailErr) {
+          console.error("❌ KYC Email error:", mailErr);
+        }
+
+        return res.json({
+          success: true,
+          message: "KYC status updated and email sent",
+        });
+      },
+    );
   });
 };
