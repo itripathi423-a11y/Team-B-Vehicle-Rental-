@@ -180,6 +180,9 @@
         letter-spacing: 0.5px;
         color: #f59e0b;
       }
+      .user-kyc-status.verified {
+        color: #22c55e;
+      }
 
       /* Overlay */
       .sidebar-overlay {
@@ -1146,10 +1149,10 @@
       </nav>
       <div class="sidebar-footer">
         <div class="sidebar-user">
-          <div class="user-avatar">SR</div>
+          <div class="user-avatar"></div>
           <div class="user-info">
-            <span class="user-name">Swikar Regmi</span>
-            <span class="user-kyc-status">⚠ KYC Pending</span>
+            <span class="user-name"></span>
+            <span class="user-kyc-status"></span>
           </div>
         </div>
       </div>
@@ -1185,10 +1188,10 @@
             </svg>
           </button>
           <div class="topbar-user">
-            <div class="topbar-avatar">SR</div>
+            <div class="topbar-avatar"></div>
             <div>
-              <p class="topbar-name">Swikar Regmi</p>
-              <p class="topbar-role">Customer</p>
+              <p class="topbar-name"></p>
+              <p class="topbar-role"></p>
             </div>
           </div>
         </div>
@@ -1522,6 +1525,85 @@
       const PER_PAGE = 7;
       let currentPage = 1;
 
+      /* ════════════════════════════════════════
+   LOAD USER PROFILE
+   GET /api/user/profile
+   DB columns: name (single field, not first_name/last_name)
+════════════════════════════════════════ */
+      async function loadUserProfile() {
+        try {
+          const res = await fetch("/api/user/profile", {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include", // IMPORTANT if using cookies/session
+          });
+
+          if (!res.ok) throw new Error("Failed to load profile");
+
+          const user = await res.json();
+
+          if (!user) return;
+
+          const fullName =
+            `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User";
+
+          const initials = fullName
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase();
+
+          const kycStatus = (user.kyc_status || "not_submitted").toLowerCase();
+
+          let kycText = "KYC Not Submitted";
+          let kycClass = "user-kyc-status unverified";
+
+          if (kycStatus === "verified") {
+            kycText = "KYC Verified";
+            kycClass = "user-kyc-status verified";
+          } else if (kycStatus === "pending") {
+            kycText = "KYC Pending";
+          } else if (kycStatus === "rejected") {
+            kycText = "KYC Rejected";
+          }
+
+          const setText = (selector, value) => {
+            const el = document.querySelector(selector);
+            if (el) el.textContent = value;
+          };
+
+          /* TOPBAR */
+          setText(".topbar-name", fullName);
+          setText(".topbar-role", user.role || "Member");
+
+          /* SIDEBAR */
+          setText(".user-name", fullName);
+
+          /* KYC (preserve pulse) */
+          const kycEl = document.querySelector(".user-kyc-status");
+          if (kycEl) {
+            const pulse = kycEl.querySelector(".kyc-pulse");
+
+            kycEl.className = kycClass;
+            kycEl.innerHTML = "";
+
+            if (pulse) kycEl.appendChild(pulse);
+            kycEl.appendChild(document.createTextNode(" " + kycText));
+          }
+
+          /* AVATARS */
+          const avatar = document.querySelector(".topbar-avatar");
+          if (avatar) avatar.textContent = initials;
+
+          const sidebarAvatar = document.querySelector(
+            ".sidebar-user .user-avatar",
+          );
+          if (sidebarAvatar) sidebarAvatar.textContent = initials;
+        } catch (err) {
+          console.error("Profile load failed:", err);
+        }
+      }
       const API_BASE = "http://localhost:5000/api/bookings";
       const IMG_BASE = "http://localhost:5000/uploads/vehicles/";
 
@@ -1602,7 +1684,7 @@
           if (!res.ok || !data.success) {
             if (res.status === 401) {
               alert("Session expired. Please log in again.");
-              window.location.href = "/login.html";
+              window.location.href = "/index.html";
               return;
             }
             throw new Error(data.message || "Failed to load bookings");
@@ -1875,6 +1957,7 @@
 
       /* ── INIT ── */
       loadBookings();
+      loadUserProfile();
     </script>
   </body>
 </html>

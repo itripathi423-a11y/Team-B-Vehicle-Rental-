@@ -952,11 +952,11 @@
       </nav>
       <div class="sidebar-footer">
         <div class="sidebar-user">
-          <div class="user-avatar">SR</div>
+          <div class="user-avatar"></div>
           <div class="user-info">
-            <span class="user-name">Swikar Regmi</span>
+            <span class="user-name"></span>
             <span class="user-kyc-status unverified">
-              <span class="kyc-pulse"></span>KYC Pending
+              <span class="kyc-pulse"></span>
             </span>
           </div>
         </div>
@@ -993,10 +993,10 @@
             <span class="notif-badge">3</span>
           </button>
           <div class="topbar-user">
-            <div class="topbar-avatar">SR</div>
+            <div class="topbar-avatar"></div>
             <div>
-              <p class="topbar-name">Swikar Regmi</p>
-              <p class="topbar-role">Member</p>
+              <p class="topbar-name"></p>
+              <p class="topbar-role"></p>
             </div>
           </div>
         </div>
@@ -1202,7 +1202,81 @@
       let vehicle = null;
       let selectedDur = "4h";
       const VAT_RATE = 0.13;
+      /* ---------------- LOAD USER PROFILE ---------------- */
+      async function loadUserProfile() {
+        try {
+          const res = await fetch("/api/user/profile", {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include", // IMPORTANT if using cookies/session
+          });
 
+          if (!res.ok) throw new Error("Failed to load profile");
+
+          const user = await res.json();
+
+          if (!user) return;
+
+          const fullName =
+            `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User";
+
+          const initials = fullName
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase();
+
+          const kycStatus = (user.kyc_status || "not_submitted").toLowerCase();
+
+          let kycText = "KYC Not Submitted";
+          let kycClass = "user-kyc-status unverified";
+
+          if (kycStatus === "verified") {
+            kycText = "KYC Verified";
+            kycClass = "user-kyc-status verified";
+          } else if (kycStatus === "pending") {
+            kycText = "KYC Pending";
+          } else if (kycStatus === "rejected") {
+            kycText = "KYC Rejected";
+          }
+
+          const setText = (selector, value) => {
+            const el = document.querySelector(selector);
+            if (el) el.textContent = value;
+          };
+
+          /* TOPBAR */
+          setText(".topbar-name", fullName);
+          setText(".topbar-role", user.role || "Member");
+
+          /* SIDEBAR */
+          setText(".user-name", fullName);
+
+          /* KYC (preserve pulse) */
+          const kycEl = document.querySelector(".user-kyc-status");
+          if (kycEl) {
+            //const pulse = kycEl.querySelector(".kyc-pulse");
+
+            kycEl.className = kycClass;
+            kycEl.innerHTML = "";
+
+            //if (pulse) kycEl.appendChild(pulse);
+            kycEl.appendChild(document.createTextNode(kycText));
+          }
+
+          /* AVATARS */
+          const avatar = document.querySelector(".topbar-avatar");
+          if (avatar) avatar.textContent = initials;
+
+          const sidebarAvatar = document.querySelector(
+            ".sidebar-user .user-avatar",
+          );
+          if (sidebarAvatar) sidebarAvatar.textContent = initials;
+        } catch (err) {
+          console.error("Profile load failed:", err);
+        }
+      }
       async function loadVehicle() {
         const params = new URLSearchParams(location.search);
         const id = params.get("id");
@@ -1214,15 +1288,24 @@
 
         try {
           const token = localStorage.getItem("token") || "";
+
           const res = await fetch(`/api/vehicles/${id}`, {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           });
-          if (!res.ok) throw new Error("Not found");
+
+          if (!res.ok) throw new Error("Failed to fetch vehicle");
+
           const json = await res.json();
+
+          if (!json?.data) throw new Error("No vehicle data found");
+
           vehicle = json.data;
+
           const BASE_URL = "http://localhost:5000/uploads/vehicles/";
 
-          // Build images array from your DB columns
+          // ── SAFE IMAGE BUILD ──
           vehicle.images = [
             vehicle.thumbnail,
             vehicle.image_1,
@@ -1232,43 +1315,59 @@
             vehicle.image_5,
           ]
             .filter(Boolean)
-            .map((img) => (img.startsWith("http") ? img : BASE_URL + img));
+            .map((img) =>
+              typeof img === "string" && img.startsWith("http")
+                ? img
+                : BASE_URL + img,
+            );
 
-          // Map DB column names to what render() expects
-          vehicle.seats = vehicle.seating_capacity;
+          vehicle.images = vehicle.images.length ? vehicle.images : [];
+
+          // normalize fields safely
+          vehicle.seats = vehicle.seating_capacity || "—";
           vehicle.color = vehicle.color || "—";
 
           render();
         } catch (err) {
-          console.error("Failed to load vehicle:", err.message);
+          console.error("Failed to load vehicle:", err);
+
           document.getElementById("vhName").textContent = "Vehicle not found";
           document.getElementById("topbarTitle").textContent = "Error";
+
+          document.getElementById("mainImgWrap").innerHTML =
+            "<div class='gallery-main-placeholder'>❌</div>";
         }
       }
 
       function render() {
+        if (!vehicle) return;
+
         const v = vehicle;
 
-        document.getElementById("topbarTitle").textContent = v.name;
-        document.getElementById("bookingVhName").textContent = v.name;
-        document.getElementById("vhName").textContent = v.name;
-        document.title = `AUTO DEALER — ${v.name}`;
+        document.getElementById("topbarTitle").textContent =
+          v.name || "Vehicle";
+        document.getElementById("bookingVhName").textContent = v.name || "—";
+        document.getElementById("vhName").textContent = v.name || "—";
+        document.title = `AUTO DEALER — ${v.name || "Vehicle"}`;
 
-        // Status badge
+        // ── STATUS ──
         const badge = document.getElementById("availBadge");
-        badge.textContent = v.status;
+        badge.textContent = v.status || "Unavailable";
         badge.className =
           "avail-badge " + (v.status === "Available" ? "available" : "booked");
 
-        // Main image
+        // ── MAIN IMAGE ──
         const mainWrap = document.getElementById("mainImgWrap");
-        if (v.images[0]) {
-          mainWrap.innerHTML = `<img id="mainImg" src="${v.images[0]}" alt="${v.name}" style="width:100%;height:100%;object-fit:cover;transition:0.3s">`;
+
+        if (v.images?.length > 0) {
+          mainWrap.innerHTML = `
+        <img id="mainImg" src="${v.images[0]}" alt="${v.name}" />
+      `;
         }
 
         renderThumbs();
 
-        // Pills
+        // ── PILLS ──
         const fuelClass =
           {
             Petrol: "fuel-petrol",
@@ -1276,17 +1375,18 @@
             Electric: "fuel-electric",
             Hybrid: "fuel-hybrid",
           }[v.fuel_type] || "";
+
         document.getElementById("vhPills").innerHTML = `
-      <span class="pill ${fuelClass}">${v.fuel_type}</span>
-      <span class="pill">${v.body_type}</span>
-      <span class="pill">⚙ ${v.transmission}</span>
-      <span class="pill">👤 ${v.seats} Seats</span>
+      <span class="pill ${fuelClass}">${v.fuel_type || "—"}</span>
+      <span class="pill">${v.body_type || "—"}</span>
+      <span class="pill">⚙ ${v.transmission || "—"}</span>
+      <span class="pill">👤 ${v.seats || "—"} Seats</span>
     `;
 
-        // Specs
+        // ── SPECS ──
         document.getElementById("specsGrid").innerHTML = [
           { label: "Year", val: v.year },
-          { label: "Color", val: v.color || "—" },
+          { label: "Color", val: v.color },
           { label: "License Plate", val: v.license_plate || "—" },
           { label: "Fuel", val: v.fuel_type },
           { label: "Transmission", val: v.transmission },
@@ -1294,57 +1394,79 @@
         ]
           .map(
             (s) => `
-      <div class="spec-box">
-        <div class="spec-label">${s.label}</div>
-        <div class="spec-val">${s.val}</div>
-      </div>
-    `,
+        <div class="spec-box">
+          <div class="spec-label">${s.label}</div>
+          <div class="spec-val">${s.val || "—"}</div>
+        </div>
+      `,
           )
           .join("");
 
-        // Description
+        // ── DESCRIPTION ──
         const descEl = document.getElementById("descText");
         descEl.textContent = v.description || "No description available.";
-        const readBtn = document.getElementById("readMoreBtn");
-        if (v.description && v.description.length > 220)
-          readBtn.style.display = "block";
 
-        // Features
+        const readBtn = document.getElementById("readMoreBtn");
+        if (v.description && v.description.length > 220) {
+          readBtn.style.display = "block";
+        }
+
+        // ── FEATURES (SAFE PARSE) ──
         let features = [];
+
         try {
-          if (typeof v.features === "string") features = JSON.parse(v.features);
-          else if (Array.isArray(v.features)) features = v.features;
-        } catch {
+          if (typeof v.features === "string") {
+            features = JSON.parse(v.features || "[]");
+          } else if (Array.isArray(v.features)) {
+            features = v.features;
+          }
+        } catch (e) {
           features = [];
         }
 
-        document.getElementById("featuresGrid").innerHTML = features.length
-          ? features
-              .map((f) =>
-                typeof f === "string"
-                  ? `<div class="feature-item"><div class="feature-icon">✔️</div>${f}</div>`
-                  : `<div class="feature-item"><div class="feature-icon">${f.icon || "✔️"}</div>${f.label || ""}</div>`,
-              )
-              .join("")
-          : `<div class="feature-item">No features listed</div>`;
+        document.getElementById("featuresGrid").innerHTML =
+          features.length > 0
+            ? features
+                .map((f) => {
+                  if (typeof f === "string") {
+                    return `
+                  <div class="feature-item">
+                    <div class="feature-icon">✔️</div>
+                    ${f}
+                  </div>`;
+                  }
 
-        // Prices — DB column is price_1d
+                  return `
+                <div class="feature-item">
+                  <div class="feature-icon">${f.icon || "✔️"}</div>
+                  ${f.label || ""}
+                </div>`;
+                })
+                .join("")
+            : `<div class="feature-item">No features listed</div>`;
+
+        // ── PRICES (SAFE) ──
+        const p4h = Number(v.price_4h || 0);
+        const p8h = Number(v.price_8h || 0);
+        const p1d = Number(v.price_1d || 0);
+
         document.getElementById("price4h").textContent =
-          `NPR ${Number(v.price_4h).toLocaleString()}`;
+          `NPR ${p4h.toLocaleString()}`;
         document.getElementById("price8h").textContent =
-          `NPR ${Number(v.price_8h).toLocaleString()}`;
+          `NPR ${p8h.toLocaleString()}`;
         document.getElementById("price1d").textContent =
-          `NPR ${Number(v.price_1d).toLocaleString()}`;
+          `NPR ${p1d.toLocaleString()}`;
 
         document.getElementById("pickupDate").value = new Date()
           .toISOString()
-          .slice(0, 10);
+          .split("T")[0];
 
         calcPrice();
       }
 
+      // ── THUMBS ──
       function renderThumbs() {
-        const images = vehicle.images || [];
+        const images = vehicle?.images || [];
         const showCount = Math.min(images.length, 5);
         const extra = images.length - 5;
 
@@ -1353,12 +1475,18 @@
           (_, i) => {
             const src = images[i];
             const isLast = i === 4 && extra > 0;
+
             return `
-        <div class="thumb-wrap ${i === 0 ? "active" : ""}" onclick="switchMain(${i}, this)">
-          ${src ? `<img src="${src}" alt="thumb ${i + 1}">` : `<div class="thumb-placeholder">🚗</div>`}
-          ${isLast ? `<div class="thumb-overflow">+${extra}</div>` : ""}
-        </div>
-      `;
+          <div class="thumb-wrap ${i === 0 ? "active" : ""}"
+               onclick="switchMain(${i}, this)">
+            ${
+              src
+                ? `<img src="${src}" />`
+                : `<div class="thumb-placeholder">🚗</div>`
+            }
+            ${isLast ? `<div class="thumb-overflow">+${extra}</div>` : ""}
+          </div>
+        `;
           },
         ).join("");
       }
@@ -1367,31 +1495,41 @@
         document
           .querySelectorAll(".thumb-wrap")
           .forEach((t) => t.classList.remove("active"));
+
         el.classList.add("active");
-        const src = vehicle.images?.[idx];
+
+        const src = vehicle?.images?.[idx];
         const mainImg = document.getElementById("mainImg");
+
         if (mainImg && src) mainImg.src = src;
       }
 
+      // ── DURATION ──
       function selectDuration(btn) {
         document
           .querySelectorAll(".dur-btn")
           .forEach((b) => b.classList.remove("active"));
+
         btn.classList.add("active");
         selectedDur = btn.dataset.dur;
+
         calcPrice();
       }
 
+      // ── PRICE CALC ──
       function calcPrice() {
         if (!vehicle) return;
+
         const base =
           selectedDur === "4h"
-            ? vehicle.price_4h
+            ? Number(vehicle.price_4h || 0)
             : selectedDur === "8h"
-              ? vehicle.price_8h
-              : vehicle.price_1d;
+              ? Number(vehicle.price_8h || 0)
+              : Number(vehicle.price_1d || 0);
+
         const vat = Math.round(base * VAT_RATE);
-        const total = Number(base) + vat;
+        const total = base + vat;
+
         const label =
           selectedDur === "4h"
             ? "4 hrs"
@@ -1401,32 +1539,41 @@
 
         document.getElementById("baseLabel").textContent =
           `Base rate (${label})`;
+
         document.getElementById("baseVal").textContent =
-          `NPR ${Number(base).toLocaleString()}`;
+          `NPR ${base.toLocaleString()}`;
+
         document.getElementById("vatVal").textContent =
           `NPR ${vat.toLocaleString()}`;
+
         document.getElementById("totalVal").textContent =
           `NPR ${total.toLocaleString()}`;
       }
 
-      // ── BOOK NOW — passes vehicle id to booking page ──
+      // ── BOOK ──
       function goToBooking() {
-        if (!vehicle) return alert("Vehicle not loaded yet.");
+        if (!vehicle?.id) return alert("Vehicle not loaded yet.");
+
         window.location.href = `user.booking.html?id=${vehicle.id}`;
       }
 
+      // ── DESCRIPTION TOGGLE ──
       let descExpanded = false;
+
       function toggleDesc() {
         descExpanded = !descExpanded;
+
         document
           .getElementById("descText")
           .classList.toggle("clamped", !descExpanded);
+
         document.getElementById("readMoreBtn").textContent = descExpanded
           ? "Show less"
           : "Read more";
       }
 
       loadVehicle();
+      loadUserProfile();
     </script>
   </body>
 </html>

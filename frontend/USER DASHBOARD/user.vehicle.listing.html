@@ -530,10 +530,10 @@
       </nav>
       <div class="sidebar-footer">
         <div class="sidebar-user">
-          <div class="user-avatar">SR</div>
+          <div class="user-avatar"></div>
           <div class="user-info">
-            <span class="user-name">Swikar Regmi</span>
-            <span class="user-kyc-status unverified">⚠ KYC Pending</span>
+            <span class="user-name"></span>
+            <span class="user-kyc-status unverified"></span>
           </div>
         </div>
       </div>
@@ -569,9 +569,9 @@
             <span class="notif-badge">3</span>
           </button>
           <div class="topbar-user" id="userMenuTrigger">
-            <div class="topbar-avatar">SR</div>
+            <div class="topbar-avatar"></div>
             <div>
-              <p class="topbar-name">Swikar Regmi</p>
+              <p class="topbar-name"></p>
               <p class="topbar-role">Member</p>
             </div>
             <svg
@@ -593,8 +593,8 @@
           </div>
           <div class="user-dropdown" id="userDropdown">
             <div class="dropdown-header">
-              <div class="dropdown-name">Swikar Regmi</div>
-              <div class="dropdown-email">swikar.regmi@email.com</div>
+              <div class="dropdown-name"></div>
+              <div class="dropdown-email"></div>
             </div>
             <div class="dropdown-body">
               <button class="dropdown-item">
@@ -747,53 +747,47 @@
     </div>
     <script>
       /* =======================
-         GLOBAL STATE
-      ======================= */
+     GLOBAL STATE
+  ======================= */
       let VEHICLES = [];
       let filtered = [];
+
       const PAGE_SIZE = 9;
       let currentPage = 1;
 
       /* =======================
-         FUEL ICONS
-      ======================= */
-      const fuelIcons = {
-        Petrol: "⛽",
-        Diesel: "🛢️",
-        Electric: "⚡",
-        Hybrid: "🔋",
-        CNG: "🔵",
-      };
-
-      /* =======================
-         SAFE API FETCH
-      ======================= */
+     SAFE API FETCH
+  ======================= */
       async function apiFetch(url, options = {}) {
-        const res = await fetch(url, {
-          ...options,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        try {
+          const res = await fetch(url, {
+            ...options,
+            headers: {
+              "Content-Type": "application/json",
+              ...(options.headers || {}),
+            },
+          });
 
-        if (!res.ok) {
-          throw new Error("API error: " + res.status);
+          if (!res.ok) {
+            throw new Error("API error: " + res.status);
+          }
+
+          return await res.json();
+        } catch (err) {
+          console.error("Fetch error:", err);
+          return null;
         }
-
-        return res.json();
       }
 
       /* =======================
-         LOAD VEHICLES
-      ======================= */
+     LOAD VEHICLES
+  ======================= */
       async function loadVehicles() {
         try {
-          const res = await fetch("/api/user/vehicles");
-          const json = await res.json();
+          const json = await apiFetch("/api/user/vehicles");
 
-          console.log("VEHICLES RESPONSE:", json);
+          VEHICLES = Array.isArray(json) ? json : json?.data || [];
 
-          VEHICLES = Array.isArray(json) ? json : json.data || [];
           filtered = [...VEHICLES];
 
           renderGrid();
@@ -803,11 +797,13 @@
       }
 
       /* =======================
-         LOAD USER PROFILE
-      ======================= */
+     LOAD USER PROFILE (FIXED)
+  ======================= */
       async function loadUserProfile() {
         try {
-          const user = await apiFetch("/api/user/profile");
+          const user = await apiFetch("/api/user/profile"); // FIXED PATH
+
+          if (!user) return;
 
           const fullName =
             `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User";
@@ -818,53 +814,92 @@
             .join("")
             .toUpperCase();
 
-          const nameEl = document.querySelector(".topbar-name");
-          if (nameEl) nameEl.textContent = fullName;
+          /* ---------- KYC STATUS ---------- */
+          const kycStatus = (user.kyc_status || "not_submitted").toLowerCase();
 
-          const avatarEl = document.querySelector(".topbar-avatar");
-          if (avatarEl) avatarEl.textContent = initials;
+          let kycText = "⚠ KYC Not Submitted";
+          let kycClass = "user-kyc-status unverified";
+
+          if (kycStatus === "verified") {
+            kycText = "KYC Verified";
+            kycClass = "user-kyc-status verified";
+          } else if (kycStatus === "pending") {
+            kycText = "KYC Pending";
+          } else if (kycStatus === "rejected") {
+            kycText = "KYC Rejected";
+          }
+
+          /* ---------- UPDATE UI ---------- */
+          const setText = (selector, value) => {
+            const el = document.querySelector(selector);
+            if (el) el.textContent = value;
+          };
+
+          setText(".topbar-name", fullName);
+          setText(".user-name", fullName);
+          setText(".dropdown-name", fullName);
+          setText(".dropdown-email", user.email || "");
+
+          /* KYC */
+          const kycEl = document.querySelector(".user-kyc-status");
+          if (kycEl) {
+            kycEl.textContent = kycText;
+            kycEl.className = kycClass;
+          }
+
+          /* AVATAR */
+          const avatar = document.querySelector(".topbar-avatar");
+          if (avatar) avatar.textContent = initials;
+
+          const sidebarAvatar = document.querySelector(
+            ".sidebar-user .user-avatar",
+          );
+          if (sidebarAvatar) sidebarAvatar.textContent = initials;
         } catch (err) {
           console.error("Profile load failed:", err);
         }
       }
 
       /* =======================
-         RENDER GRID (CARD UI)
-      ======================= */
+     RENDER GRID
+  ======================= */
       function renderGrid() {
         const sort = document.getElementById("sortSelect").value;
         let data = [...filtered];
 
-        if (sort === "price-asc") data.sort((a, b) => a.price_4h - b.price_4h);
-        if (sort === "price-desc") data.sort((a, b) => b.price_4h - a.price_4h);
-        if (sort === "name-asc")
-          data.sort((a, b) => a.name.localeCompare(b.name));
+        /* ---------- SORT ---------- */
+        if (sort === "price-asc") {
+          data.sort((a, b) => (a.price_4h || 0) - (b.price_4h || 0));
+        }
+        if (sort === "price-desc") {
+          data.sort((a, b) => (b.price_4h || 0) - (a.price_4h || 0));
+        }
+        if (sort === "name-asc") {
+          data.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+        }
 
         const grid = document.getElementById("vehicleGrid");
-        document.getElementById("resultCount").textContent = data.length;
+        const countEl = document.getElementById("resultCount");
 
+        if (countEl) countEl.textContent = data.length;
+
+        /* ---------- EMPTY STATE ---------- */
         if (!data.length) {
           grid.innerHTML = `
-            <div class="empty-state">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M5 17h8M3 9h18"/></svg>
-              <h3>No vehicles found</h3>
-              <p>Try adjusting your filters</p>
-            </div>`;
+        <div class="empty-state">
+          <h3>No vehicles found</h3>
+          <p>Try adjusting filters</p>
+        </div>
+      `;
           return;
         }
 
+        /* ---------- CARDS ---------- */
         grid.innerHTML = data
           .map((v, i) => {
-            const img = v.thumbnail ? `/uploads/vehicles/${v.thumbnail}` : null;
+            const img = v.thumbnail ? `/uploads/vehicles/${v.thumbnail}` : "";
+
             const isAvail = v.status === "Available";
-            const fuelClass =
-              {
-                Petrol: "fuel-petrol",
-                Diesel: "fuel-diesel",
-                Electric: "fuel-electric",
-                Hybrid: "fuel-hybrid",
-                CNG: "fuel-cng",
-              }[v.fuel_type] || "";
 
             return `
           <div class="vehicle-card" style="animation-delay:${i * 0.05}s">
@@ -872,9 +907,10 @@
             <div class="vehicle-img-wrap">
               ${
                 img
-                  ? `<img src="${img}" alt="${v.name}" loading="lazy">`
+                  ? `<img src="${img}" alt="${v.name || "vehicle"}">`
                   : `<div class="vehicle-img-placeholder">🚗</div>`
               }
+
               <span class="avail-badge ${isAvail ? "available" : "booked"}">
                 ${isAvail ? "Available" : "Booked"}
               </span>
@@ -882,87 +918,92 @@
 
             <div class="vehicle-card-body">
 
-              <div class="vc-name">${v.name}</div>
+              <div class="vc-name">${v.name || "Unknown"}</div>
 
               <div class="vc-meta">
-                <span class="vc-meta-pill ${fuelClass}">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22V8l9-6 9 6v14"/></svg>
-                  ${v.fuel_type}
-                </span>
-                <span class="vc-meta-pill">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/></svg>
-                  ${v.body_type}
-                </span>
-                <span class="vc-meta-pill">⚙ ${v.transmission}</span>
+                <span class="vc-meta-pill">⛽ ${v.fuel_type || "-"}</span>
+                <span class="vc-meta-pill">🚘 ${v.body_type || "-"}</span>
+                <span class="vc-meta-pill">⚙ ${v.transmission || "-"}</span>
               </div>
 
               <div class="vc-prices">
                 <div class="price-box">
-                  <span class="price-box-dur">4 hours</span>
-                  <span class="price-box-val">${Number(v.price_4h).toLocaleString()}</span>
-                  <span class="price-box-cur">NPR</span>
+                  <span class="price-box-dur">4h</span>
+                  <span class="price-box-val">
+                    ${(v.price_4h || 0).toLocaleString()}
+                  </span>
                 </div>
+
                 <div class="price-box">
-                  <span class="price-box-dur">8 hours</span>
-                  <span class="price-box-val">${Number(v.price_8h).toLocaleString()}</span>
-                  <span class="price-box-cur">NPR</span>
+                  <span class="price-box-dur">8h</span>
+                  <span class="price-box-val">
+                    ${(v.price_8h || 0).toLocaleString()}
+                  </span>
                 </div>
+
                 <div class="price-box">
-                  <span class="price-box-dur">1 day</span>
-                  <span class="price-box-val">${Number(v.price_1d).toLocaleString()}</span>
-                  <span class="price-box-cur">NPR</span>
+                  <span class="price-box-dur">1d</span>
+                  <span class="price-box-val">
+                    ${(v.price_1d || 0).toLocaleString()}
+                  </span>
                 </div>
               </div>
 
-              <a href="vehicle-details.html?id=${v.id}" class="view-btn">View Details →</a>
+              <a href="vehicle-details.html?id=${v.id}" class="view-btn">
+                View Details →
+              </a>
 
             </div>
-          </div>`;
+          </div>
+        `;
           })
           .join("");
       }
+
       /* =======================
-         FILTER SYSTEM
-      ======================= */
+     FILTER SYSTEM
+  ======================= */
       function applyFilters() {
         const text = document.getElementById("searchText").value.toLowerCase();
+
         const body = document.getElementById("filterBody").value;
         const fuel = document.getElementById("filterFuel").value;
 
-        filtered = VEHICLES.filter(
-          (v) =>
-            (!text ||
-              v.name.toLowerCase().includes(text) ||
-              v.brand.toLowerCase().includes(text) ||
-              v.model.toLowerCase().includes(text)) &&
-            (!body || v.body_type === body) &&
-            (!fuel || v.fuel_type === fuel),
-        );
+        filtered = VEHICLES.filter((v) => {
+          const matchText =
+            !text ||
+            (v.name || "").toLowerCase().includes(text) ||
+            (v.brand || "").toLowerCase().includes(text) ||
+            (v.model || "").toLowerCase().includes(text);
+
+          const matchBody = !body || v.body_type === body;
+          const matchFuel = !fuel || v.fuel_type === fuel;
+
+          return matchText && matchBody && matchFuel;
+        });
 
         renderGrid();
       }
 
       /* =======================
-         CLEAR FILTERS
-      ======================= */
+     CLEAR FILTERS
+  ======================= */
       function clearFilters() {
         document.getElementById("searchText").value = "";
         document.getElementById("filterBody").value = "";
         document.getElementById("filterFuel").value = "";
-        document.getElementById("filterPrice").value = "";
 
         filtered = [...VEHICLES];
         renderGrid();
       }
 
       /* =======================
-         INIT PAGE
-      ======================= */
+     INIT
+  ======================= */
       async function initPage() {
         await Promise.all([loadVehicles(), loadUserProfile()]);
       }
 
-      /* RUN */
       initPage();
     </script>
   </body>
