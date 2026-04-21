@@ -169,23 +169,6 @@
         position: absolute;
         inset: 0;
       }
-      .avatar-tick {
-        position: absolute;
-        bottom: -1px;
-        right: -1px;
-        width: 13px;
-        height: 13px;
-        background: #22c55e;
-        border-radius: 50%;
-        border: 2px solid var(--sidebar-bg);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .avatar-tick svg {
-        width: 6px;
-        height: 6px;
-      }
       .user-name {
         display: block;
         font-size: 13px;
@@ -228,6 +211,8 @@
         min-height: 100vh;
         width: calc(100% - var(--sidebar-w));
       }
+
+      /* ── TOPBAR ── */
       .topbar {
         height: 64px;
         background: var(--white);
@@ -293,6 +278,21 @@
         position: absolute;
         inset: 0;
       }
+      .topbar-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+      }
+      .topbar-role {
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      /* ── USER DROPDOWN ── */
+      .user-dropdown-wrap {
+        position: relative;
+        cursor: pointer;
+      }
       .topbar-user {
         display: flex;
         align-items: center;
@@ -301,19 +301,95 @@
         border-radius: 9px;
         cursor: pointer;
         transition: background 0.2s;
+        margin-left: 4px;
       }
       .topbar-user:hover {
         background: var(--bg);
       }
-      .topbar-name {
+      .topbar-chevron {
+        transition: transform 0.2s;
+        color: #9ca3af;
+        flex-shrink: 0;
+      }
+      .topbar-chevron.open {
+        transform: rotate(180deg);
+      }
+      .user-dropdown-menu {
+        display: none;
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        min-width: 210px;
+        background: #fff;
+        border: 0.5px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 6px;
+        z-index: 999;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      }
+      .user-dropdown-menu.open {
+        display: block;
+      }
+      .dd-header {
+        padding: 10px 10px 8px;
+        border-bottom: 0.5px solid #f0f0f0;
+        margin-bottom: 4px;
+      }
+      .dd-header-name {
         font-size: 13px;
-        font-weight: 500;
-        color: var(--text);
+        font-weight: 600;
+        color: #111;
       }
-      .topbars-role {
+      .dd-header-email {
         font-size: 11px;
-        color: var(--muted);
+        color: #9ca3af;
       }
+      .dd-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 8px 10px;
+        border: none;
+        background: none;
+        border-radius: 8px;
+        font-size: 13px;
+        color: #111;
+        cursor: pointer;
+        text-align: left;
+      }
+      .dd-item:hover {
+        background: #f9fafb;
+      }
+      .dd-item svg {
+        color: #6b7280;
+        flex-shrink: 0;
+      }
+      .dd-kyc-badge {
+        margin-left: auto;
+        font-size: 10px;
+        padding: 2px 7px;
+        border-radius: 99px;
+        background: #fff8e1;
+        color: #b45309;
+        font-weight: 500;
+      }
+      .dd-divider {
+        height: 0.5px;
+        background: #f0f0f0;
+        margin: 4px 0;
+      }
+      .dd-danger {
+        color: #dc2626;
+      }
+      .dd-danger svg {
+        color: #dc2626;
+      }
+      .dd-danger:hover {
+        background: #fef2f2;
+      }
+
+      /* ── CONTENT ── */
       .content {
         flex: 1;
         padding: 28px;
@@ -428,7 +504,7 @@
         background: #22c55e;
       }
 
-      /* ── SINGLE COLUMN ── */
+      /* ── BOOKING COL ── */
       .booking-col {
         max-width: 820px;
         margin: 0 auto;
@@ -558,7 +634,7 @@
         color: var(--muted);
       }
 
-      /* ── PROFILE LOADING STATE ── */
+      /* ── PROFILE LOADING ── */
       .profile-loading {
         display: flex;
         align-items: center;
@@ -726,9 +802,7 @@
         margin-top: 4px;
       }
 
-      /* ══════════════════════════════
-       BOOKING SUMMARY — FULL WIDTH BOTTOM CARD
-    ══════════════════════════════ */
+      /* ── SUMMARY CARD ── */
       .summary-card {
         background: var(--dark);
         border-radius: var(--radius);
@@ -766,7 +840,6 @@
         pointer-events: none;
         user-select: none;
       }
-
       .sc-head {
         font-family: "Bebas Neue", sans-serif;
         font-size: 26px;
@@ -786,8 +859,6 @@
         margin-left: auto;
         opacity: 0.3;
       }
-
-      /* 8-cell info grid */
       .sc-info-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -815,12 +886,6 @@
       .sc-cell:nth-child(4) {
         border-bottom: 1px solid rgba(255, 255, 255, 0.06);
       }
-      .sc-cell:nth-child(5),
-      .sc-cell:nth-child(6),
-      .sc-cell:nth-child(7),
-      .sc-cell:nth-child(8) {
-        border-bottom: none;
-      }
       .sc-cell-lbl {
         font-size: 9px;
         color: rgba(255, 255, 255, 0.3);
@@ -839,8 +904,6 @@
       .sc-cell-val.hi {
         color: var(--orange);
       }
-
-      /* bottom row: total + button */
       .sc-bottom {
         display: flex;
         align-items: flex-end;
@@ -885,7 +948,6 @@
         stroke: var(--orange);
         flex-shrink: 0;
       }
-
       .sc-right {
         display: flex;
         flex-direction: column;
@@ -1089,25 +1151,6 @@
         .sc-info-grid {
           grid-template-columns: repeat(2, 1fr);
         }
-        .sc-cell:nth-child(2) {
-          border-right: none;
-        }
-        .sc-cell:nth-child(3) {
-          border-right: 1px solid rgba(255, 255, 255, 0.06);
-        }
-        .sc-cell:nth-child(5) {
-          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        }
-        .sc-cell:nth-child(6) {
-          border-right: none;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        }
-        .sc-cell:nth-child(7) {
-          border-bottom: none;
-        }
-        .sc-cell:nth-child(8) {
-          border-right: none;
-        }
         .sc-bottom {
           flex-direction: column;
           align-items: flex-start;
@@ -1294,15 +1337,116 @@
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
           </button>
-          <div class="topbar-user">
+
+          <!-- ── USER DROPDOWN ── -->
+          <div class="topbar-user user-dropdown-wrap" id="userDropdownWrap">
             <div class="topbar-avatar" id="topbarAvatar">
               <span id="topbarInitials"></span>
             </div>
             <div>
               <p class="topbar-name" id="topbarName"></p>
-              <p class="topbars-role" id="topbarsRole">Member</p>
+              <p class="topbar-role" id="topbarRole">Member</p>
+            </div>
+            <svg
+              class="topbar-chevron"
+              id="topbarChevron"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              width="14"
+              height="14"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+
+            <div class="user-dropdown-menu" id="userDropdownMenu">
+              <div class="dd-header">
+                <div class="dd-header-name" id="ddName"></div>
+                <div class="dd-header-email" id="ddEmail"></div>
+              </div>
+              <button class="dd-item" onclick="location.href = '#'">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="15"
+                  height="15"
+                >
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                </svg>
+                My profile
+              </button>
+              <button
+                class="dd-item"
+                onclick="location.href = 'mybooking.html'"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="15"
+                  height="15"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                My bookings
+              </button>
+              <button class="dd-item" onclick="location.href = 'kyc.html'">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="15"
+                  height="15"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                KYC verification
+                <span class="dd-kyc-badge" id="ddKycBadge">Pending</span>
+              </button>
+              <button class="dd-item" onclick="location.href = '#'">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="15"
+                  height="15"
+                >
+                  <circle cx="12" cy="12" r="3" />
+                  <path
+                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                  />
+                </svg>
+                Settings
+              </button>
+              <div class="dd-divider"></div>
+              <button class="dd-item dd-danger" id="logoutBtn">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="15"
+                  height="15"
+                >
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Log out
+              </button>
             </div>
           </div>
+          <!-- ── END USER DROPDOWN ── -->
         </div>
       </header>
 
@@ -1355,7 +1499,7 @@
         </div>
 
         <div class="booking-col">
-          <!-- ── SEC 1: USER DETAILS ── -->
+          <!-- SEC 1: USER DETAILS -->
           <div class="form-section" style="animation-delay: 0.05s">
             <div class="fs-head">
               <div class="fs-num">1</div>
@@ -1368,7 +1512,6 @@
                 </div>
               </div>
             </div>
-
             <div class="profile-loading" id="profileLoadingState">
               <svg
                 class="spin-icon"
@@ -1384,7 +1527,6 @@
               </svg>
               Fetching your profile from the database…
             </div>
-
             <div id="userFields" style="display: none">
               <div class="form-row">
                 <div class="form-group">
@@ -1420,7 +1562,7 @@
             </div>
           </div>
 
-          <!-- ── SEC 2: VEHICLE SUMMARY ── -->
+          <!-- SEC 2: VEHICLE SUMMARY -->
           <div class="form-section" style="animation-delay: 0.1s">
             <div class="fs-head">
               <div class="fs-num">2</div>
@@ -1452,7 +1594,7 @@
             </div>
           </div>
 
-          <!-- ── SEC 3: LOCATION ── -->
+          <!-- SEC 3: LOCATION -->
           <div class="form-section" style="animation-delay: 0.15s">
             <div class="fs-head">
               <div class="fs-num">3</div>
@@ -1495,7 +1637,7 @@
             </div>
           </div>
 
-          <!-- ── SEC 4: DATE & TIME ── -->
+          <!-- SEC 4: DATE & TIME -->
           <div class="form-section" style="animation-delay: 0.2s">
             <div class="fs-head">
               <div class="fs-num">4</div>
@@ -1531,7 +1673,7 @@
             </div>
           </div>
 
-          <!-- ── SEC 5: DURATION ── -->
+          <!-- SEC 5: DURATION -->
           <div class="form-section" style="animation-delay: 0.25s">
             <div class="fs-head">
               <div class="fs-num">5</div>
@@ -1594,9 +1736,7 @@
             </div>
           </div>
 
-          <!-- ══════════════════════════════════════
-           SEC 6: BOOKING SUMMARY — FULL WIDTH
-      ══════════════════════════════════════ -->
+          <!-- SEC 6: BOOKING SUMMARY -->
           <div class="summary-card">
             <div class="sc-head">
               Booking <span class="accent">Summary</span>
@@ -1615,8 +1755,6 @@
                 <line x1="3" y1="10" x2="21" y2="10" />
               </svg>
             </div>
-
-            <!-- 8-cell info grid -->
             <div class="sc-info-grid">
               <div class="sc-cell">
                 <div class="sc-cell-lbl">Passenger</div>
@@ -1651,8 +1789,6 @@
                 <div class="sc-cell-val" id="scPhone">—</div>
               </div>
             </div>
-
-            <!-- Total + submit -->
             <div class="sc-bottom">
               <div>
                 <div class="sc-total-lbl">TOTAL AMOUNT</div>
@@ -1710,7 +1846,7 @@
       </main>
     </div>
 
-    <!-- ── SUCCESS MODAL ── -->
+    <!-- SUCCESS MODAL -->
     <div class="modal-overlay" id="successModal">
       <div class="modal">
         <div class="modal-icon">🎉</div>
@@ -1726,7 +1862,7 @@
         <div class="modal-divider"></div>
         <div class="modal-btns">
           <a href="userdashboard.html" class="modal-btn">🏠 Go to Dashboard</a>
-          <a href="user.vehicle.html" class="modal-btn-sec"
+          <a href="user.vehicle.listing.html" class="modal-btn-sec"
             >Browse More Vehicles</a
           >
         </div>
@@ -1735,12 +1871,11 @@
 
     <script>
       /* ════════════════════════════════════════
-   CONFIG
-════════════════════════════════════════ */
+         CONFIG
+      ════════════════════════════════════════ */
       const BASE_URL = "/api";
       const urlParams = new URLSearchParams(location.search);
       const vehicleId = parseInt(urlParams.get("id"));
-
       const fuelIcons = {
         Petrol: "⛽",
         Diesel: "🛢️",
@@ -1754,8 +1889,28 @@
       let currentPrice = 0;
 
       /* ════════════════════════════════════════
-   API HELPER
-════════════════════════════════════════ */
+         USER DROPDOWN
+      ════════════════════════════════════════ */
+      const userDropdownWrap = document.getElementById("userDropdownWrap");
+      const userDropdownMenu = document.getElementById("userDropdownMenu");
+      const topbarChevron = document.getElementById("topbarChevron");
+
+      userDropdownWrap?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const open = userDropdownMenu.classList.toggle("open");
+        topbarChevron.classList.toggle("open", open);
+      });
+      document.addEventListener("click", () => {
+        userDropdownMenu?.classList.remove("open");
+        topbarChevron?.classList.remove("open");
+      });
+      document.getElementById("logoutBtn")?.addEventListener("click", () => {
+        window.location.href = "/index.html";
+      });
+
+      /* ════════════════════════════════════════
+         API HELPER
+      ════════════════════════════════════════ */
       async function apiFetch(path, options = {}) {
         const token = localStorage.getItem("token") || "";
         const res = await fetch(`${BASE_URL}${path}`, {
@@ -1771,17 +1926,13 @@
       }
 
       /* ════════════════════════════════════════
-   LOAD VEHICLE FROM DB
-   GET /api/vehicles/:id
-   DB columns: price_4h, price_8h, price_1d,
-               body_type, fuel_type, thumbnail, image_1..5
-════════════════════════════════════════ */
+         LOAD VEHICLE
+      ════════════════════════════════════════ */
       async function loadVehicle() {
         if (!vehicleId) {
           document.getElementById("vsName").textContent = "No vehicle selected";
           return;
         }
-
         try {
           const res = await apiFetch(`/vehicles/${vehicleId}`);
           vehicle = res.data;
@@ -1800,7 +1951,6 @@
 
           currentPrice = parseFloat(vehicle.price_4h) || 0;
 
-          // Populate vehicle summary card
           document.getElementById("bcVehicle").textContent = vehicle.name;
           document.title = `AUTO DEALER — Book ${vehicle.name}`;
 
@@ -1808,16 +1958,14 @@
           if (vehicle.images[0]) {
             vsImg.innerHTML = `<img src="${vehicle.images[0]}" alt="${vehicle.name}" onerror="this.parentNode.textContent='🚗'">`;
           }
-
           document.getElementById("vsName").textContent = vehicle.name;
           document.getElementById("vsChips").innerHTML = `
-      <span class="vs-chip">${fuelIcons[vehicle.fuel_type] || "⛽"} ${vehicle.fuel_type}</span>
-      <span class="vs-chip">🚘 ${vehicle.body_type}</span>
-      <span class="vs-chip">⚙️ ${vehicle.transmission}</span>
-      <span class="vs-chip">👥 ${vehicle.seating_capacity} seats</span>
-    `;
+            <span class="vs-chip">${fuelIcons[vehicle.fuel_type] || "⛽"} ${vehicle.fuel_type}</span>
+            <span class="vs-chip">🚘 ${vehicle.body_type}</span>
+            <span class="vs-chip">⚙️ ${vehicle.transmission}</span>
+            <span class="vs-chip">👥 ${vehicle.seating_capacity} seats</span>
+          `;
 
-          // Duration price tiles — DB uses price_1d (not price_1day)
           document.getElementById("dp4h").textContent =
             `Rs ${parseFloat(vehicle.price_4h).toLocaleString()}`;
           document.getElementById("dp8h").textContent =
@@ -1825,7 +1973,6 @@
           document.getElementById("dp1d").textContent =
             `Rs ${parseFloat(vehicle.price_1d).toLocaleString()}`;
 
-          // Default pickup: now + 1hr, rounded to hour
           const now = new Date();
           now.setMinutes(0, 0, 0);
           now.setHours(now.getHours() + 1);
@@ -1847,10 +1994,8 @@
       }
 
       /* ════════════════════════════════════════
-   LOAD USER PROFILE
-   GET /api/user/profile
-   DB columns: name (single field, not first_name/last_name)
-════════════════════════════════════════ */
+         LOAD USER PROFILE
+      ════════════════════════════════════════ */
       async function loadUserProfile() {
         try {
           const user = await apiFetch("/user/profile");
@@ -1862,7 +2007,7 @@
           const isVerified = user.kyc_status === "verified";
           const hasPhoto = !!user.profile_photo;
 
-          /* ── Helper: avatar photo or initials ── */
+          /* Helper: avatar photo or initials */
           function populateAvatar(containerEl, initialsEl) {
             if (!containerEl) return;
             if (hasPhoto) {
@@ -1875,18 +2020,9 @@
             } else {
               if (initialsEl) initialsEl.textContent = initials;
             }
-            if (isVerified) {
-              containerEl
-                .querySelectorAll(".avatar-tick,.avatar-verified-badge")
-                .forEach((t) => t.remove());
-              const tick = document.createElement("span");
-
-              tick.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>`;
-              containerEl.appendChild(tick);
-            }
           }
 
-          /* ── Sidebar avatar, name, KYC status ── */
+          /* Sidebar */
           populateAvatar(
             document.getElementById("sidebarAvatar"),
             document.getElementById("sidebarInitials"),
@@ -1907,7 +2043,7 @@
             }
           }
 
-          /* ── Topbar avatar, name, role ── */
+          /* Topbar */
           populateAvatar(
             document.getElementById("topbarAvatar"),
             document.getElementById("topbarInitials"),
@@ -1922,7 +2058,17 @@
             topbarRoleEl.style.color = isVerified ? "#16a34a" : "";
           }
 
-          /* ── Pre-fill booking form with user data ── */
+          /* Dropdown header */
+          const ddName = document.getElementById("ddName");
+          const ddEmail = document.getElementById("ddEmail");
+          if (ddName) ddName.textContent = fullName;
+          if (ddEmail) ddEmail.textContent = user.email;
+
+          /* Hide KYC badge if verified */
+          const ddKycBadge = document.getElementById("ddKycBadge");
+          if (ddKycBadge && isVerified) ddKycBadge.style.display = "none";
+
+          /* Pre-fill form */
           const nameEl = document.getElementById("userName");
           const emailEl = document.getElementById("userEmail");
           const phoneEl = document.getElementById("userPhone");
@@ -1930,12 +2076,11 @@
           if (emailEl) emailEl.value = user.email || "";
           if (phoneEl) phoneEl.value = user.phone || "";
 
-          /* Store globally for submission */
           window._userId = user.id;
           window._userEmail = user.email;
           window._userName = fullName;
 
-          /* ── Remove spinner, reveal fields, show loaded badge ── */
+          /* Remove spinner, reveal fields, show loaded badge */
           const loader = document.getElementById("profileLoadingState");
           if (loader) loader.remove();
 
@@ -1948,27 +2093,16 @@
             .querySelector(".fs-head");
           const badge = document.createElement("div");
           badge.className = "profile-loaded-badge";
-          badge.innerHTML = `
-      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
-      Profile loaded from your account
-    `;
+          badge.innerHTML = `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Profile loaded from your account`;
           fsHead.insertAdjacentElement("afterend", badge);
 
           markStep(1, "done");
           updateSummary();
         } catch (err) {
-          console.warn(
-            "Profile fetch failed — showing fields for manual entry:",
-            err.message,
-          );
-
-          /* Fallback: show warning + reveal empty fields */
+          console.warn("Profile fetch failed:", err.message);
           const loader = document.getElementById("profileLoadingState");
           if (loader) {
-            loader.innerHTML = `
-        <svg width="15" height="15" fill="none" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-        Could not load your profile — please enter your details manually.
-      `;
+            loader.innerHTML = `<svg width="15" height="15" fill="none" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Could not load your profile — please enter your details manually.`;
             loader.style.borderColor = "#fde68a";
             loader.style.background = "#fff8ec";
           }
@@ -1978,8 +2112,8 @@
       }
 
       /* ════════════════════════════════════════
-   DURATION LOGIC
-════════════════════════════════════════ */
+         DURATION LOGIC
+      ════════════════════════════════════════ */
       function selectDuration(dur, el) {
         selectedDuration = dur;
         document
@@ -2026,7 +2160,7 @@
         if (selectedDuration === "4h") return parseFloat(vehicle.price_4h) || 0;
         if (selectedDuration === "8h") return parseFloat(vehicle.price_8h) || 0;
         if (selectedDuration === "1day")
-          return parseFloat(vehicle.price_1d) || 0; // price_1d not price_1day
+          return parseFloat(vehicle.price_1d) || 0;
         if (selectedDuration === "custom") {
           const days =
             parseInt(document.getElementById("customDays")?.value) || 2;
@@ -2039,17 +2173,15 @@
         if (selectedDuration === "4h") return "4 Hours";
         if (selectedDuration === "8h") return "8 Hours";
         if (selectedDuration === "1day") return "1 Day";
-        if (selectedDuration === "custom") {
+        if (selectedDuration === "custom")
           return `${parseInt(document.getElementById("customDays")?.value) || 2} Days (Custom)`;
-        }
         return "—";
       }
 
-      // Maps UI duration key → DB enum value
       function rentalTypeForDB() {
         if (selectedDuration === "4h") return "4h";
         if (selectedDuration === "8h") return "8h";
-        if (selectedDuration === "1day") return "1d"; // DB enum is '1d' not '1day'
+        if (selectedDuration === "1day") return "1d";
         if (selectedDuration === "custom") return "custom";
         return "4h";
       }
@@ -2063,11 +2195,10 @@
       }
 
       /* ════════════════════════════════════════
-   LIVE SUMMARY UPDATE
-════════════════════════════════════════ */
+         LIVE SUMMARY UPDATE
+      ════════════════════════════════════════ */
       function updateSummary() {
         currentPrice = calcPrice();
-
         const name = document.getElementById("userName")?.value || "—";
         const phone = document.getElementById("userPhone")?.value || "—";
         const pickup = document.getElementById("pickupLoc")?.value || "—";
@@ -2102,10 +2233,8 @@
       }
 
       /* ════════════════════════════════════════
-   SUBMIT BOOKING
-   POST /api/bookings
-   Sends fields that match your bookings table exactly
-════════════════════════════════════════ */
+         SUBMIT BOOKING
+      ════════════════════════════════════════ */
       async function submitBooking() {
         const name = document.getElementById("userName")?.value.trim();
         const email = document.getElementById("userEmail")?.value.trim();
@@ -2118,7 +2247,6 @@
           alert("Please fill in all required fields before confirming.");
           return;
         }
-
         if (!vehicle) {
           alert("Vehicle data not loaded. Please refresh the page.");
           return;
@@ -2128,18 +2256,13 @@
         btn.disabled = true;
         btn.innerHTML = `<svg style="animation:spin .8s linear infinite" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" opacity=".25"/><path d="M21 12a9 9 0 0 1-9 9"/></svg> Processing…`;
 
-        // Calculate total_days for custom
         let totalDays = 1;
-        if (selectedDuration === "custom") {
+        if (selectedDuration === "custom")
           totalDays =
             parseInt(document.getElementById("customDays")?.value) || 2;
-        } else if (selectedDuration === "1day") {
-          totalDays = 1;
-        } else if (selectedDuration === "8h") {
-          totalDays = 0.33;
-        } else {
-          totalDays = 0.17; // 4h
-        }
+        else if (selectedDuration === "1day") totalDays = 1;
+        else if (selectedDuration === "8h") totalDays = 0.33;
+        else totalDays = 0.17;
 
         const payload = {
           user_id: window._userId || null,
@@ -2148,7 +2271,7 @@
           user_email: email,
           user_phone: phone,
           pickup_location: pickup,
-          rental_type: rentalTypeForDB(), // '4h'|'8h'|'1d'|'custom'
+          rental_type: rentalTypeForDB(),
           pickup_datetime: pdt,
           drop_datetime: ddt,
           total_days: totalDays,
@@ -2161,7 +2284,6 @@
             method: "POST",
             body: JSON.stringify(payload),
           });
-
           if (!res.success) throw new Error(res.message || "Booking failed");
 
           [1, 2, 3, 4, 5, 6].forEach((n) => markStep(n, "done"));

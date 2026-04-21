@@ -173,6 +173,7 @@ async function loadUserProfile() {
 
     /* ── SIDEBAR KYC STATUS (FIXED) ── */
     const sidebarKycEl = document.getElementById("sidebarKyc");
+    setElText("statSpent", kycStatus.replace("_", " "));
 
     if (sidebarKycEl) {
       if (isVerified) {
@@ -239,10 +240,14 @@ async function loadUserProfile() {
      total_spent: 87000
    }
 ─────────────────────────────────────────────────────── */
+function setElText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
 async function loadStats() {
   try {
     const res = await apiFetch("/user/bookings/stats");
-    const stats = res.data;
+    const stats = res;
 
     if (!stats) return;
 
@@ -250,16 +255,9 @@ async function loadStats() {
     setElText("statCompleted", stats.completed ?? 0);
     setElText("statActive", stats.active ?? 0);
 
-    let kycStatus = stats.kyc_status || "not_submitted";
-
-    if (kycStatus === "verified") kycStatus = "Verified ✅";
-    else if (kycStatus === "rejected") kycStatus = "Rejected ❌";
-    else if (kycStatus === "pending") kycStatus = "Pending ⏳";
-    else kycStatus = "Not Submitted ⚠️";
-
-    setElText("statSpent", kycStatus);
+    // KYC will come from profile API (NOT stats API)
   } catch (err) {
-    console.error(err.message);
+    console.error("Stats load failed:", err.message);
   }
 }
 /* ── 3. RECENT BOOKINGS TABLE ────────────────────────

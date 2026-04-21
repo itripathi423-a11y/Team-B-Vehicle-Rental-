@@ -72,17 +72,6 @@
         border-color: var(--orange);
         box-shadow: 0 0 0 3px rgba(255, 92, 26, 0.1);
       }
-      .search-input[type="number"]::-webkit-inner-spin-button,
-      .search-input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-      .search-input[type="number"] {
-        -moz-appearance: textfield;
-      }
-      .search-input option {
-        background: white;
-      }
       .search-btn {
         background: var(--orange);
         height: 40px;
@@ -100,7 +89,6 @@
         align-items: center;
         gap: 7px;
       }
-
       .search-btn svg {
         width: 15px;
         height: 15px;
@@ -122,8 +110,6 @@
         border-color: var(--orange);
         color: var(--orange);
       }
-
-      /* RESULTS META */
       .results-meta {
         display: flex;
         align-items: center;
@@ -149,13 +135,7 @@
         background: var(--white);
         outline: none;
         cursor: pointer;
-        transition: border-color 0.2s;
       }
-      .sort-select:focus {
-        border-color: var(--orange);
-      }
-
-      /* ACTIVE FILTERS */
       .active-filters {
         display: flex;
         gap: 8px;
@@ -174,32 +154,12 @@
         color: var(--orange);
         font-weight: 500;
       }
-      .filter-chip button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: var(--orange);
-        display: flex;
-        align-items: center;
-        padding: 0;
-        font-size: 14px;
-        line-height: 1;
-        opacity: 0.7;
-        transition: opacity 0.2s;
-      }
-      .filter-chip button:hover {
-        opacity: 1;
-      }
-
-      /* VEHICLE GRID */
       .vehicles-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 18px;
         margin-bottom: 28px;
       }
-
-      /* VEHICLE CARD */
       .vehicle-card {
         background: var(--white);
         border: 1px solid var(--border);
@@ -249,7 +209,6 @@
         border-radius: 99px;
         font-size: 10px;
         font-weight: 700;
-        letter-spacing: 0.3px;
       }
       .avail-badge.available {
         background: #ecfdf5;
@@ -291,27 +250,6 @@
         color: var(--text);
         font-weight: 500;
       }
-      .vc-meta-pill svg {
-        width: 11px;
-        height: 11px;
-        flex-shrink: 0;
-      }
-      .fuel-petrol {
-        color: #ea580c;
-      }
-      .fuel-diesel {
-        color: #1d4ed8;
-      }
-      .fuel-electric {
-        color: #16a34a;
-      }
-      .fuel-hybrid {
-        color: #7c3aed;
-      }
-      .fuel-cng {
-        color: #0891b2;
-      }
-
       .vc-prices {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -342,12 +280,6 @@
         letter-spacing: 0.5px;
         line-height: 1;
       }
-      .price-box-cur {
-        display: block;
-        font-size: 9px;
-        color: var(--muted);
-        margin-top: 1px;
-      }
       .view-btn {
         display: block;
         width: 100%;
@@ -369,19 +301,11 @@
       .view-btn:hover {
         transform: translateY(-1px);
       }
-
-      /* EMPTY STATE */
       .empty-state {
-        grid-column: 1 / -1;
+        grid-column: 1/-1;
         text-align: center;
         padding: 64px 24px;
         color: var(--muted);
-      }
-      .empty-state svg {
-        width: 48px;
-        height: 48px;
-        stroke: #d1d5db;
-        margin-bottom: 16px;
       }
       .empty-state h3 {
         font-size: 16px;
@@ -392,8 +316,6 @@
       .empty-state p {
         font-size: 13px;
       }
-
-      /* PAGINATION */
       .pagination {
         display: flex;
         align-items: center;
@@ -428,7 +350,6 @@
         opacity: 0.4;
         cursor: not-allowed;
       }
-
       @media (max-width: 1100px) {
         .vehicles-grid {
           grid-template-columns: repeat(2, 1fr);
@@ -441,6 +362,94 @@
         .search-row {
           grid-template-columns: 1fr;
         }
+      }
+
+      /* ══ USER DROPDOWN ══ */
+      .user-dropdown-wrap {
+        position: relative;
+        cursor: pointer;
+      }
+      .topbar-chevron {
+        transition: transform 0.2s;
+        color: #9ca3af;
+        flex-shrink: 0;
+      }
+      .topbar-chevron.open {
+        transform: rotate(180deg);
+      }
+      .user-dropdown-menu {
+        display: none;
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        min-width: 210px;
+        background: #fff;
+        border: 0.5px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 6px;
+        z-index: 999;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      }
+      .user-dropdown-menu.open {
+        display: block;
+      }
+      .dd-header {
+        padding: 10px 10px 8px;
+        border-bottom: 0.5px solid #f0f0f0;
+        margin-bottom: 4px;
+      }
+      .dd-header-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #111;
+      }
+      .dd-header-email {
+        font-size: 11px;
+        color: #9ca3af;
+      }
+      .dd-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 8px 10px;
+        border: none;
+        background: none;
+        border-radius: 8px;
+        font-size: 13px;
+        color: #111;
+        cursor: pointer;
+        text-align: left;
+      }
+      .dd-item:hover {
+        background: #f9fafb;
+      }
+      .dd-item svg {
+        color: #6b7280;
+        flex-shrink: 0;
+      }
+      .dd-kyc-badge {
+        margin-left: auto;
+        font-size: 10px;
+        padding: 2px 7px;
+        border-radius: 99px;
+        background: #fff8e1;
+        color: #b45309;
+        font-weight: 500;
+      }
+      .dd-divider {
+        height: 0.5px;
+        background: #f0f0f0;
+        margin: 4px 0;
+      }
+      .dd-danger {
+        color: #dc2626;
+      }
+      .dd-danger svg {
+        color: #dc2626;
+      }
+      .dd-danger:hover {
+        background: #fef2f2;
       }
     </style>
   </head>
@@ -514,7 +523,7 @@
           </svg>
           KYC
         </a>
-        <a href="#" class="nav-item">
+        <a href="payment.html" class="nav-item">
           <svg
             class="nav-icon"
             viewBox="0 0 24 24"
@@ -530,10 +539,12 @@
       </nav>
       <div class="sidebar-footer">
         <div class="sidebar-user">
-          <div class="user-avatar"></div>
+          <div class="user-avatar" id="sidebarAvatar">
+            <span id="sidebarInitials"></span>
+          </div>
           <div class="user-info">
-            <span class="user-name"></span>
-            <span class="user-kyc-status unverified"></span>
+            <span class="user-name" id="sidebarName"></span>
+            <span class="user-kyc-status unverified" id="sidebarKyc"></span>
           </div>
         </div>
       </div>
@@ -556,7 +567,7 @@
         </button>
         <span class="topbar-page-title">Vehicles</span>
         <div class="topbar-right">
-          <button class="icon-btn" title="Notifications">
+          <button class="icon-btn" id="notifBtn" title="Notifications">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -566,76 +577,117 @@
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
-            <span class="notif-badge">3</span>
           </button>
-          <div class="topbar-user" id="userMenuTrigger">
-            <div class="topbar-avatar"></div>
+
+          <!-- USER DROPDOWN -->
+          <div class="topbar-user user-dropdown-wrap" id="userDropdownWrap">
+            <div class="topbar-avatar" id="topbarAvatar">
+              <span id="topbarInitials"></span>
+            </div>
             <div>
-              <p class="topbar-name"></p>
-              <p class="topbar-role">Member</p>
+              <p class="topbar-name" id="topbarName"></p>
+              <p class="topbar-role" id="topbarRole">Member</p>
             </div>
             <svg
-              width="13"
-              height="13"
+              class="topbar-chevron"
+              id="topbarChevron"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               stroke-width="2"
-              style="
-                color: #9ca3af;
-                margin-left: 2px;
-                transition: transform 0.2s;
-              "
-              id="dropChevron"
+              width="14"
+              height="14"
             >
               <polyline points="6 9 12 15 18 9" />
             </svg>
-          </div>
-          <div class="user-dropdown" id="userDropdown">
-            <div class="dropdown-header">
-              <div class="dropdown-name"></div>
-              <div class="dropdown-email"></div>
-            </div>
-            <div class="dropdown-body">
-              <button class="dropdown-item">
+
+            <div class="user-dropdown-menu" id="userDropdownMenu">
+              <div class="dd-header">
+                <div class="dd-header-name" id="ddName"></div>
+                <div class="dd-header-email" id="ddEmail"></div>
+              </div>
+              <button class="dd-item" onclick="location.href = '#'">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   stroke-width="1.8"
+                  width="15"
+                  height="15"
                 >
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" /></svg
-                >My Profile
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                </svg>
+                My profile
               </button>
-              <button class="dropdown-item">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                >
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
-                >KYC Verification
-              </button>
-              <div class="dropdown-divider"></div>
               <button
-                class="dropdown-item logout"
-                onclick="alert('Logging out…')"
+                class="dd-item"
+                onclick="location.href = 'mybooking.html'"
               >
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   stroke-width="1.8"
+                  width="15"
+                  height="15"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                My bookings
+              </button>
+              <button class="dd-item" onclick="location.href = 'kyc.html'">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="15"
+                  height="15"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                KYC verification
+                <span class="dd-kyc-badge" id="ddKycBadge">Pending</span>
+              </button>
+              <button class="dd-item" onclick="location.href = '#'">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="15"
+                  height="15"
+                >
+                  <circle cx="12" cy="12" r="3" />
+                  <path
+                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                  />
+                </svg>
+                Settings
+              </button>
+              <div class="dd-divider"></div>
+              <button class="dd-item dd-danger" id="logoutBtn">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="15"
+                  height="15"
                 >
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                   <polyline points="16 17 21 12 16 7" />
-                  <line x1="21" y1="12" x2="9" y2="12" /></svg
-                >Log Out
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Log out
               </button>
             </div>
           </div>
+          <!-- END USER DROPDOWN -->
         </div>
       </header>
 
@@ -696,7 +748,6 @@
                 <option>CNG</option>
               </select>
             </div>
-
             <div style="display: flex; gap: 8px">
               <button class="search-btn" onclick="applyFilters()">
                 <svg
@@ -715,10 +766,8 @@
           </div>
         </div>
 
-        <!-- Active Filters -->
         <div class="active-filters" id="activeFilters"></div>
 
-        <!-- Results Meta -->
         <div class="results-meta">
           <p class="results-count">
             Showing <strong id="resultCount">0</strong> vehicles
@@ -731,10 +780,7 @@
           </select>
         </div>
 
-        <!-- Vehicle Grid -->
         <div class="vehicles-grid" id="vehicleGrid"></div>
-
-        <!-- Pagination -->
         <div class="pagination" id="pagination"></div>
 
         <div class="footer-strip">
@@ -745,19 +791,50 @@
         </div>
       </main>
     </div>
+
     <script>
-      /* =======================
-     GLOBAL STATE
-  ======================= */
+      /* ── STATE ── */
       let VEHICLES = [];
       let filtered = [];
 
-      const PAGE_SIZE = 9;
-      let currentPage = 1;
+      /* ── USER DROPDOWN ── */
+      const userDropdownWrap = document.getElementById("userDropdownWrap");
+      const userDropdownMenu = document.getElementById("userDropdownMenu");
+      const topbarChevron = document.getElementById("topbarChevron");
 
-      /* =======================
-     SAFE API FETCH
-  ======================= */
+      userDropdownWrap?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const open = userDropdownMenu.classList.toggle("open");
+        topbarChevron.classList.toggle("open", open);
+      });
+      document.addEventListener("click", () => {
+        userDropdownMenu?.classList.remove("open");
+        topbarChevron?.classList.remove("open");
+      });
+      document.getElementById("logoutBtn")?.addEventListener("click", () => {
+        window.location.href = "/index.html";
+      });
+
+      /* ── MOBILE SIDEBAR ── */
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("sidebarOverlay");
+      const toggle = document.getElementById("sidebarToggle");
+      toggle?.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("open");
+      });
+      overlay?.addEventListener("click", () => {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("open");
+      });
+      window.addEventListener("resize", () => {
+        if (toggle)
+          toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
+      });
+      if (toggle)
+        toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
+
+      /* ── API FETCH ── */
       async function apiFetch(url, options = {}) {
         try {
           const res = await fetch(url, {
@@ -767,11 +844,7 @@
               ...(options.headers || {}),
             },
           });
-
-          if (!res.ok) {
-            throw new Error("API error: " + res.status);
-          }
-
+          if (!res.ok) throw new Error("API error: " + res.status);
           return await res.json();
         } catch (err) {
           console.error("Fetch error:", err);
@@ -779,232 +852,158 @@
         }
       }
 
-      /* =======================
-     LOAD VEHICLES
-  ======================= */
+      /* ── LOAD VEHICLES ── */
       async function loadVehicles() {
-        try {
-          const json = await apiFetch("/api/user/vehicles");
-
-          VEHICLES = Array.isArray(json) ? json : json?.data || [];
-
-          filtered = [...VEHICLES];
-
-          renderGrid();
-        } catch (err) {
-          console.error("Vehicle load failed:", err);
-        }
+        const json = await apiFetch("/api/user/vehicles");
+        VEHICLES = Array.isArray(json) ? json : json?.data || [];
+        filtered = [...VEHICLES];
+        renderGrid();
       }
 
-      /* =======================
-     LOAD USER PROFILE (FIXED)
-  ======================= */
+      /* ── LOAD USER PROFILE ── */
       async function loadUserProfile() {
-        try {
-          const user = await apiFetch("/api/user/profile"); // FIXED PATH
+        const user = await apiFetch("/api/user/profile");
+        if (!user) return;
 
-          if (!user) return;
+        const fullName =
+          `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User";
+        const initials = fullName
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .toUpperCase();
+        const kycStatus = (user.kyc_status || "not_submitted").toLowerCase();
+        const isVerified = kycStatus === "verified";
 
-          const fullName =
-            `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User";
+        /* topbar */
+        const setTxt = (id, v) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = v;
+        };
+        setTxt("topbarName", fullName);
+        setTxt("topbarInitials", initials);
+        setTxt("topbarRole", isVerified ? "✔ Verified Member" : "Member");
+        setTxt("ddName", fullName);
+        setTxt("ddEmail", user.email || "");
 
-          const initials = fullName
-            .split(" ")
-            .map((n) => n[0])
-            .join("")
-            .toUpperCase();
+        /* sidebar */
+        setTxt("sidebarName", fullName);
+        setTxt("sidebarInitials", initials);
 
-          /* ---------- KYC STATUS ---------- */
-          const kycStatus = (user.kyc_status || "not_submitted").toLowerCase();
-
-          let kycText = "⚠ KYC Not Submitted";
-          let kycClass = "user-kyc-status unverified";
-
-          if (kycStatus === "verified") {
-            kycText = "KYC Verified";
-            kycClass = "user-kyc-status verified";
-          } else if (kycStatus === "pending") {
-            kycText = "KYC Pending";
+        /* KYC badge in dropdown */
+        const kycBadge = document.getElementById("ddKycBadge");
+        if (kycBadge) {
+          if (isVerified) {
+            kycBadge.textContent = "Verified";
+            kycBadge.style.background = "#ecfdf5";
+            kycBadge.style.color = "#16a34a";
           } else if (kycStatus === "rejected") {
-            kycText = "KYC Rejected";
+            kycBadge.textContent = "Rejected";
+            kycBadge.style.background = "#fff1f2";
+            kycBadge.style.color = "#dc2626";
+          } else {
+            kycBadge.textContent = "Pending";
           }
-
-          /* ---------- UPDATE UI ---------- */
-          const setText = (selector, value) => {
-            const el = document.querySelector(selector);
-            if (el) el.textContent = value;
-          };
-
-          setText(".topbar-name", fullName);
-          setText(".user-name", fullName);
-          setText(".dropdown-name", fullName);
-          setText(".dropdown-email", user.email || "");
-
-          /* KYC */
-          const kycEl = document.querySelector(".user-kyc-status");
-          if (kycEl) {
-            kycEl.textContent = kycText;
-            kycEl.className = kycClass;
-          }
-
-          /* AVATAR */
-          const avatar = document.querySelector(".topbar-avatar");
-          if (avatar) avatar.textContent = initials;
-
-          const sidebarAvatar = document.querySelector(
-            ".sidebar-user .user-avatar",
-          );
-          if (sidebarAvatar) sidebarAvatar.textContent = initials;
-        } catch (err) {
-          console.error("Profile load failed:", err);
         }
+
+        /* sidebar KYC */
+        const sidebarKyc = document.getElementById("sidebarKyc");
+        if (sidebarKyc) {
+          if (isVerified) {
+            sidebarKyc.textContent = "✔ KYC Verified";
+            sidebarKyc.className = "user-kyc-status verified";
+          } else if (kycStatus === "rejected") {
+            sidebarKyc.textContent = "✖ KYC Rejected";
+            sidebarKyc.className = "user-kyc-status unverified";
+          } else if (kycStatus === "pending") {
+            sidebarKyc.textContent = "⏳ KYC Pending";
+            sidebarKyc.className = "user-kyc-status unverified";
+          } else {
+            sidebarKyc.textContent = "⚠ KYC Not Submitted";
+            sidebarKyc.className = "user-kyc-status unverified";
+          }
+        }
+
+        /* topbar role color */
+        const roleEl = document.getElementById("topbarRole");
+        if (roleEl && isVerified) roleEl.style.color = "#16a34a";
       }
 
-      /* =======================
-     RENDER GRID
-  ======================= */
+      /* ── RENDER GRID ── */
       function renderGrid() {
         const sort = document.getElementById("sortSelect").value;
         let data = [...filtered];
-
-        /* ---------- SORT ---------- */
-        if (sort === "price-asc") {
+        if (sort === "price-asc")
           data.sort((a, b) => (a.price_4h || 0) - (b.price_4h || 0));
-        }
-        if (sort === "price-desc") {
+        if (sort === "price-desc")
           data.sort((a, b) => (b.price_4h || 0) - (a.price_4h || 0));
-        }
-        if (sort === "name-asc") {
+        if (sort === "name-asc")
           data.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
-        }
 
         const grid = document.getElementById("vehicleGrid");
         const countEl = document.getElementById("resultCount");
-
         if (countEl) countEl.textContent = data.length;
 
-        /* ---------- EMPTY STATE ---------- */
         if (!data.length) {
-          grid.innerHTML = `
-        <div class="empty-state">
-          <h3>No vehicles found</h3>
-          <p>Try adjusting filters</p>
-        </div>
-      `;
+          grid.innerHTML = `<div class="empty-state"><h3>No vehicles found</h3><p>Try adjusting filters</p></div>`;
           return;
         }
-
-        /* ---------- CARDS ---------- */
         grid.innerHTML = data
           .map((v, i) => {
             const img = v.thumbnail ? `/uploads/vehicles/${v.thumbnail}` : "";
-
             const isAvail = v.status === "Available";
-
             return `
           <div class="vehicle-card" style="animation-delay:${i * 0.05}s">
-
             <div class="vehicle-img-wrap">
-              ${
-                img
-                  ? `<img src="${img}" alt="${v.name || "vehicle"}">`
-                  : `<div class="vehicle-img-placeholder">🚗</div>`
-              }
-
-              <span class="avail-badge ${isAvail ? "available" : "booked"}">
-                ${isAvail ? "Available" : "Booked"}
-              </span>
+              ${img ? `<img src="${img}" alt="${v.name || "vehicle"}">` : `<div class="vehicle-img-placeholder">🚗</div>`}
+              <span class="avail-badge ${isAvail ? "available" : "booked"}">${isAvail ? "Available" : "Booked"}</span>
             </div>
-
             <div class="vehicle-card-body">
-
               <div class="vc-name">${v.name || "Unknown"}</div>
-
               <div class="vc-meta">
                 <span class="vc-meta-pill">⛽ ${v.fuel_type || "-"}</span>
                 <span class="vc-meta-pill">🚘 ${v.body_type || "-"}</span>
                 <span class="vc-meta-pill">⚙ ${v.transmission || "-"}</span>
               </div>
-
               <div class="vc-prices">
-                <div class="price-box">
-                  <span class="price-box-dur">4h</span>
-                  <span class="price-box-val">
-                    ${(v.price_4h || 0).toLocaleString()}
-                  </span>
-                </div>
-
-                <div class="price-box">
-                  <span class="price-box-dur">8h</span>
-                  <span class="price-box-val">
-                    ${(v.price_8h || 0).toLocaleString()}
-                  </span>
-                </div>
-
-                <div class="price-box">
-                  <span class="price-box-dur">1d</span>
-                  <span class="price-box-val">
-                    ${(v.price_1d || 0).toLocaleString()}
-                  </span>
-                </div>
+                <div class="price-box"><span class="price-box-dur">4h</span><span class="price-box-val">${(v.price_4h || 0).toLocaleString()}</span></div>
+                <div class="price-box"><span class="price-box-dur">8h</span><span class="price-box-val">${(v.price_8h || 0).toLocaleString()}</span></div>
+                <div class="price-box"><span class="price-box-dur">1d</span><span class="price-box-val">${(v.price_1d || 0).toLocaleString()}</span></div>
               </div>
-
-              <a href="vehicle-details.html?id=${v.id}" class="view-btn">
-                View Details →
-              </a>
-
+              <a href="vehicle-details.html?id=${v.id}" class="view-btn">View Details →</a>
             </div>
-          </div>
-        `;
+          </div>`;
           })
           .join("");
       }
 
-      /* =======================
-     FILTER SYSTEM
-  ======================= */
+      /* ── FILTERS ── */
       function applyFilters() {
         const text = document.getElementById("searchText").value.toLowerCase();
-
         const body = document.getElementById("filterBody").value;
         const fuel = document.getElementById("filterFuel").value;
-
         filtered = VEHICLES.filter((v) => {
           const matchText =
             !text ||
             (v.name || "").toLowerCase().includes(text) ||
             (v.brand || "").toLowerCase().includes(text) ||
             (v.model || "").toLowerCase().includes(text);
-
           const matchBody = !body || v.body_type === body;
           const matchFuel = !fuel || v.fuel_type === fuel;
-
           return matchText && matchBody && matchFuel;
         });
-
         renderGrid();
       }
-
-      /* =======================
-     CLEAR FILTERS
-  ======================= */
       function clearFilters() {
         document.getElementById("searchText").value = "";
         document.getElementById("filterBody").value = "";
         document.getElementById("filterFuel").value = "";
-
         filtered = [...VEHICLES];
         renderGrid();
       }
 
-      /* =======================
-     INIT
-  ======================= */
-      async function initPage() {
-        await Promise.all([loadVehicles(), loadUserProfile()]);
-      }
-
-      initPage();
+      /* ── INIT ── */
+      Promise.all([loadVehicles(), loadUserProfile()]);
     </script>
   </body>
 </html>
