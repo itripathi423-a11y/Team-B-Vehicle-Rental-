@@ -452,6 +452,7 @@
       }
       .finp {
         min-width: 130px;
+        cursor: text;
       }
       .fsel:focus,
       .finp:focus {
@@ -592,6 +593,7 @@
         color: var(--muted);
         font-family: "Space Mono", monospace;
       }
+      /* BADGE ONLY — no dropdown */
       .bdg {
         display: inline-flex;
         align-items: center;
@@ -633,6 +635,7 @@
         background: var(--orange-dim);
         color: var(--orange);
       }
+      /* VIEW BUTTON */
       .view-btn {
         display: inline-flex;
         align-items: center;
@@ -657,6 +660,7 @@
         width: 13px;
         height: 13px;
       }
+      /* pagination */
       .pagination {
         display: flex;
         align-items: center;
@@ -699,6 +703,7 @@
         opacity: 0.4;
         cursor: not-allowed;
       }
+      /* MODAL */
       .overlay {
         position: fixed;
         inset: 0;
@@ -732,6 +737,7 @@
       .overlay.open .modal {
         transform: scale(1) translateY(0);
       }
+      /* hero image header */
       .modal-hero {
         position: relative;
         height: 210px;
@@ -772,6 +778,7 @@
       .hero-close:hover {
         background: rgba(0, 0, 0, 0.65);
       }
+      /* booking status badge top-right of hero */
       .hero-status {
         position: absolute;
         top: 14px;
@@ -798,11 +805,13 @@
         font-family: "Space Mono", monospace;
         margin-top: 3px;
       }
+      /* modal body */
       .modal-body {
         overflow-y: auto;
         padding: 24px 28px;
         flex: 1;
       }
+      /* customer strip */
       .cust-strip {
         display: flex;
         align-items: center;
@@ -842,6 +851,7 @@
         color: var(--muted);
         margin-top: 2px;
       }
+      /* 2-col info */
       .info-cols {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -882,6 +892,7 @@
         color: var(--dark);
         text-align: right;
       }
+      /* price table */
       .price-box {
         background: var(--bg);
         border-radius: 12px;
@@ -910,6 +921,7 @@
       .price-total td:last-child {
         color: var(--orange);
       }
+      /* notes */
       .notes-box {
         background: #fffbeb;
         border: 1px solid #fde68a;
@@ -920,6 +932,7 @@
         color: #92400e;
         line-height: 1.6;
       }
+      /* footer action bar */
       .modal-footer {
         flex-shrink: 0;
         padding: 18px 28px;
@@ -951,10 +964,6 @@
         background: #fff;
         color: var(--text);
         transition: all 0.17s;
-      }
-      .st-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
       }
       .st-btn.is-current {
         opacity: 0.45;
@@ -995,6 +1004,107 @@
       .st-btn.btn-cancelled:not(.is-current):hover {
         background: #fff5f5;
       }
+      /* cancel reason form */
+      .cancel-form {
+        margin-top: 14px;
+        padding: 16px;
+        background: #fff5f5;
+        border: 1px solid #fecaca;
+        border-radius: 12px;
+        animation: csl 0.22s ease;
+      }
+      @keyframes csl {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .cancel-form-lbl {
+        font-size: 12px;
+        font-weight: 600;
+        color: #dc2626;
+        display: block;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .cancel-form textarea {
+        width: 100%;
+        padding: 11px 13px;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        resize: vertical;
+        min-height: 90px;
+        outline: none;
+        color: var(--dark);
+        background: #fff;
+        line-height: 1.5;
+        transition: border 0.2s;
+      }
+      .cancel-form textarea:focus {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.08);
+      }
+      .cancel-form-hint {
+        font-size: 11px;
+        color: #b91c1c;
+        margin-top: 6px;
+        opacity: 0.8;
+      }
+      .cancel-form-btns {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .btn-do-cancel {
+        padding: 9px 20px;
+        background: #dc2626;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .btn-do-cancel:hover {
+        background: #b91c1c;
+        transform: translateY(-1px);
+      }
+      .btn-do-cancel:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .btn-keep {
+        padding: 9px 16px;
+        background: none;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 13px;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        color: var(--muted);
+        transition: all 0.2s;
+      }
+      .btn-keep:hover {
+        background: var(--bg);
+        color: var(--text);
+      }
+      /* toast */
       .toast {
         position: fixed;
         bottom: 28px;
@@ -1056,8 +1166,8 @@
         <div class="sidebar-logo">
           <div class="logo-mark">AD</div>
           <div style="display: flex; flex-direction: column; gap: 1px">
-            <span class="logo-brand">AUTO DEALER</span>
-            <span class="logo-sub">FLEET MANAGEMENT</span>
+            <span class="logo-brand">AUTO DEALER</span
+            ><span class="logo-sub">FLEET MANAGEMENT</span>
           </div>
         </div>
         <nav class="sidebar-nav">
@@ -1171,8 +1281,8 @@
           <div class="sb-user">
             <div class="sb-av" id="sbAv">AD</div>
             <div>
-              <span class="sb-name" id="sbName">Admin</span>
-              <span class="sb-role" id="sbRole">Admin</span>
+              <span class="sb-name" id="sbName">Admin</span
+              ><span class="sb-role" id="sbRole">Super Admin</span>
             </div>
           </div>
         </div>
@@ -1205,15 +1315,14 @@
                 stroke-width="1.8"
               >
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-              </svg>
-              <span class="notif-badge">3</span>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg
+              ><span class="notif-badge">3</span>
             </button>
             <div class="tb-user" id="tbUser">
               <div class="tb-av" id="tbAv">AD</div>
               <div>
                 <p class="tb-name" id="tbName">Admin</p>
-                <p class="tb-role" id="tbRole">Admin</p>
+                <p class="tb-role" id="tbRole">Super Admin</p>
               </div>
               <svg
                 class="tb-chevron"
@@ -1229,7 +1338,7 @@
               <div class="dd" id="dd">
                 <div class="dd-hdr">
                   <p class="dd-name" id="ddName">Admin</p>
-                  <p class="dd-email" id="ddEmail">—</p>
+                  <p class="dd-email" id="ddEmail">admin@autodealer.com</p>
                 </div>
                 <a class="dd-item" href="#"
                   ><svg
@@ -1281,9 +1390,8 @@
               >
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              Export CSV
+                <line x1="12" y1="15" x2="12" y2="3" /></svg
+              >Export CSV
             </button>
           </div>
 
@@ -1300,8 +1408,8 @@
               </select>
             </div>
             <div class="fg">
-              <span class="flbl">Date From</span>
-              <input
+              <span class="flbl">Date From</span
+              ><input
                 type="date"
                 class="finp"
                 id="fFrom"
@@ -1309,8 +1417,8 @@
               />
             </div>
             <div class="fg">
-              <span class="flbl">Date To</span>
-              <input
+              <span class="flbl">Date To</span
+              ><input
                 type="date"
                 class="finp"
                 id="fTo"
@@ -1335,7 +1443,7 @@
             <div class="table-toolbar">
               <div>
                 <h3 class="card-title">All Bookings</h3>
-                <p class="card-sub" id="tCount">Loading…</p>
+                <p class="card-sub" id="tCount">—</p>
               </div>
             </div>
             <div class="table-wrap">
@@ -1368,6 +1476,7 @@
     <!-- BOOKING MODAL -->
     <div class="overlay" id="overlay">
       <div class="modal">
+        <!-- hero vehicle image -->
         <div class="modal-hero">
           <img class="hero-img" id="heroImg" src="" alt="" />
           <div class="hero-overlay"></div>
@@ -1395,7 +1504,6 @@
         page = 1;
       const PER = 10;
 
-      // ── STATUS MAPS ──
       const BKS = {
         Pending: { bdg: "bdg bdg-amber", label: "Pending" },
         Confirmed: { bdg: "bdg bdg-blue", label: "Confirmed" },
@@ -1437,6 +1545,30 @@
 
       // ── BOOT ──
       async function boot() {
+        // wire up events first so UI is responsive
+        document
+          .getElementById("tbUser")
+          .addEventListener("click", function (e) {
+            e.stopPropagation();
+            document.getElementById("dd").classList.toggle("visible");
+            this.classList.toggle("open");
+          });
+        document.addEventListener("click", () => {
+          document.getElementById("dd").classList.remove("visible");
+          document.getElementById("tbUser").classList.remove("open");
+        });
+        document
+          .getElementById("bSearch")
+          .addEventListener("input", applyFilters);
+        document
+          .getElementById("overlay")
+          .addEventListener("click", function (e) {
+            if (e.target === this) closeModal();
+          });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") closeModal();
+        });
+
         try {
           const [adminRes, bookRes] = await Promise.all([
             fetch(ADMIN_API, { credentials: "include" }),
@@ -1445,20 +1577,24 @@
           const adminJson = await adminRes.json();
           const bookJson = await bookRes.json();
 
-          if (adminJson.success) populateAdmin(adminJson.data);
+          if (adminJson.success || adminJson.name)
+            populateAdmin(adminJson.data || adminJson);
           if (bookJson.success) {
             data = bookJson.data;
             filtered = [...data];
-          } else showToast("Failed to load bookings", "err");
-
+          } else {
+            showToast("Failed to load bookings", "err");
+          }
           render();
         } catch (e) {
           console.error(e);
           showToast("Network error — could not reach server", "err");
+          render();
         }
       }
 
       function populateAdmin(a) {
+        if (!a) return;
         const i = a.name
           ? a.name
               .split(" ")
@@ -1480,7 +1616,8 @@
         document.getElementById("ddEmail").textContent = a.email || "—";
       }
 
-      // ── RENDER TABLE ──
+      boot();
+
       function render() {
         const tb = document.getElementById("tbody");
         const total = filtered.length,
@@ -1492,7 +1629,6 @@
         document.getElementById("pagInfo").textContent = total
           ? `Showing ${start + 1}–${end} of ${total}`
           : "No results";
-
         if (!slice.length) {
           tb.innerHTML = `<tr><td colspan="9" class="empty-cell">📋 No bookings match your filters</td></tr>`;
           renderPag(0);
@@ -1501,27 +1637,28 @@
         tb.innerHTML = slice
           .map(
             (b) => `
-<tr>
-  <td><span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">#</span><strong>${b.id}</strong><br><span style="font-size:10px;color:var(--muted);font-family:'Space Mono',monospace">${b.booking_ref || ""}</span></td>
-  <td>
-    <div class="user-cell">
-      <div class="uc-av">${b.user_photo ? `<img src="${b.user_photo}" alt="" onerror="this.parentElement.innerHTML='${ini(b.user_name)}'">` : ini(b.user_name)}</div>
-      <div><div class="uc-name">${b.user_name}</div><div class="uc-email">${b.user_email}</div></div>
-    </div>
-  </td>
-  <td>
-    <div class="v-cell">
-      ${b.vehicle_img ? `<img class="v-thumb" src="${b.vehicle_img}" alt="" onerror="this.style.display='none'"/>` : `<div class="v-thumb" style="display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:10px">N/A</div>`}
-      <div><div class="v-name">${b.vehicle_name}</div><div class="v-plate">${b.vehicle_plate}</div></div>
-    </div>
-  </td>
-  <td><div style="font-size:12.5px">${fmtDate(b.start_date)} → ${fmtDate(b.end_date)}</div><div style="font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:2px">${b.total_days} day${b.total_days !== 1 ? "s" : ""}</div></td>
-  <td style="font-size:12.5px;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.pickup_location}</td>
-  <td style="font-family:'Space Mono',monospace;font-size:12.5px;font-weight:600">${fmtMoney(b.total_price)}</td>
-  <td>${kycBadge(b.kyc_status)}</td>
-  <td>${bkBadge(b.status)}</td>
-  <td><button class="view-btn" onclick="openModal(${b.id})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button></td>
-</tr>`,
+    <tr>
+      <td><span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">#</span><strong>${b.id}</strong></td>
+      <td>
+        <div class="user-cell">
+          <div class="uc-av">${b.user_photo ? `<img src="${b.user_photo}" alt="" onerror="this.parentElement.innerHTML='${ini(b.user_name)}'">` : `${ini(b.user_name)}`}</div>
+          <div><div class="uc-name">${b.user_name}</div><div class="uc-email">${b.user_email}</div></div>
+        </div>
+      </td>
+      <td>
+        <div class="v-cell">
+          <img class="v-thumb" src="${b.vehicle_img}" alt="" onerror="this.style.display='none'"/>
+          <div><div class="v-name">${b.vehicle_name}</div><div class="v-plate">${b.vehicle_plate}</div></div>
+        </div>
+      </td>
+      <td><div style="font-size:12.5px">${fmtDate(b.start_date)} → ${fmtDate(b.end_date)}</div><div style="font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:2px">${b.total_days} day${b.total_days !== 1 ? "s" : ""}</div></td>
+      <td style="font-size:12.5px;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.pickup_location}</td>
+      <td style="font-family:'Space Mono',monospace;font-size:12.5px;font-weight:600">${fmtMoney(b.total_price)}</td>
+      <td>${kycBadge(b.kyc_status)}</td>
+      <td>${bkBadge(b.status)}</td>
+      <td><button class="view-btn" onclick="openModal(${b.id})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button></td>
+    </tr>
+  `,
           )
           .join("");
         renderPag(total);
@@ -1551,12 +1688,12 @@
         render();
       }
 
-      // ── MODAL ──
       function openModal(id) {
         const b = data.find((x) => x.id === id);
         if (!b) return;
         openId = id;
-        document.getElementById("heroImg").src = b.vehicle_img || "";
+        // hero
+        document.getElementById("heroImg").src = b.vehicle_img;
         document.getElementById("heroStatus").innerHTML = bkBadge(b.status);
         document.getElementById("heroVehicleName").textContent = b.vehicle_name;
         document.getElementById("heroVehicleSub").textContent =
@@ -1582,82 +1719,155 @@
       function buildBody(b) {
         const net = b.total_price - (b.discount || 0) + (b.extra_charges || 0);
         return `
-<div class="cust-strip">
-  <div class="cust-av">${b.user_photo ? `<img src="${b.user_photo}" alt="" onerror="this.parentElement.innerHTML='${ini(b.user_name)}'">` : ini(b.user_name)}</div>
-  <div style="flex:1"><div class="cust-name">${b.user_name}</div><div class="cust-sub">${b.user_email}  ·  ${b.user_phone}</div></div>
-  <div>${kycBadge(b.kyc_status)}</div>
-</div>
-<div class="info-cols">
-  <div class="info-box">
-    <div class="info-box-title">Booking Info</div>
-    <div class="info-row"><span class="ir-lbl">Booking ID</span><span class="ir-val" style="font-family:'Space Mono',monospace">#${b.id}</span></div>
-    <div class="info-row"><span class="ir-lbl">Ref</span><span class="ir-val" style="font-family:'Space Mono',monospace">${b.booking_ref || "—"}</span></div>
-    <div class="info-row"><span class="ir-lbl">Booked On</span><span class="ir-val">${fmtDate(b.booked_on)}</span></div>
-    <div class="info-row"><span class="ir-lbl">Pickup</span><span class="ir-val">${fmtDate(b.start_date)}</span></div>
-    <div class="info-row"><span class="ir-lbl">Drop-off</span><span class="ir-val">${fmtDate(b.end_date)}</span></div>
-    <div class="info-row"><span class="ir-lbl">Duration</span><span class="ir-val">${b.total_days} day${b.total_days !== 1 ? "s" : ""}</span></div>
-    <div class="info-row"><span class="ir-lbl">Status</span><span class="ir-val">${bkBadge(b.status)}</span></div>
-  </div>
-  <div class="info-box">
-    <div class="info-box-title">Location & Payment</div>
-    <div class="info-row"><span class="ir-lbl">Pickup Location</span><span class="ir-val">${b.pickup_location}</span></div>
-    <div class="info-row"><span class="ir-lbl">Rental Type</span><span class="ir-val">${b.rental_type || "—"}</span></div>
-    <div class="info-row"><span class="ir-lbl">Method</span><span class="ir-val">${b.payment_method}</span></div>
-    <div class="info-row"><span class="ir-lbl">Payment</span><span class="ir-val">${b.payment_status === "Paid" ? `<span class="bdg bdg-green"><span class="dot"></span>Paid</span>` : `<span class="bdg bdg-amber"><span class="dot"></span>${b.payment_status}</span>`}</span></div>
-    ${b.paid_at && b.paid_at !== "—" ? `<div class="info-row"><span class="ir-lbl">Paid At</span><span class="ir-val">${fmtDate(b.paid_at)}</span></div>` : ""}
-  </div>
-</div>
-<div class="price-box">
-  <div class="info-box-title" style="margin-bottom:10px">Price Breakdown</div>
-  <table class="price-table">
-    <tr><td>Rate × ${b.total_days} day${b.total_days !== 1 ? "s" : ""}</td><td style="text-align:right;color:var(--muted)">${fmtMoney(b.per_day)} each</td><td style="text-align:right;font-weight:500">${fmtMoney(b.per_day * b.total_days)}</td></tr>
-    ${b.extra_charges ? `<tr><td>Extra Charges</td><td></td><td style="text-align:right;font-weight:500">+${fmtMoney(b.extra_charges)}</td></tr>` : ""}
-    ${b.discount ? `<tr><td>Discount</td><td></td><td style="text-align:right;font-weight:500;color:#16a34a">−${fmtMoney(b.discount)}</td></tr>` : ""}
-    <tr class="price-total"><td>Total</td><td></td><td style="text-align:right">${fmtMoney(net)}</td></tr>
-  </table>
-</div>
-${b.cancel_reason ? `<div class="notes-box" style="background:#fff5f5;border-color:#fecaca;color:#b91c1c">⚠️ Cancel reason: ${b.cancel_reason}</div>` : ""}
-${b.notes ? `<div class="notes-box">📝 ${b.notes}</div>` : ""}`;
+    <div class="cust-strip">
+      <div class="cust-av">${b.user_photo ? `<img src="${b.user_photo}" alt="" onerror="this.parentElement.innerHTML='${ini(b.user_name)}'">` : `${ini(b.user_name)}`}</div>
+      <div style="flex:1"><div class="cust-name">${b.user_name}</div><div class="cust-sub">${b.user_email}  ·  ${b.user_phone}</div></div>
+      <div>${kycBadge(b.kyc_status)}</div>
+    </div>
+    <div class="info-cols">
+      <div class="info-box">
+        <div class="info-box-title">Booking Info</div>
+        <div class="info-row"><span class="ir-lbl">Booking ID</span><span class="ir-val" style="font-family:'Space Mono',monospace">#${b.id}</span></div>
+        <div class="info-row"><span class="ir-lbl">Booked On</span><span class="ir-val">${fmtDate(b.booked_on)}</span></div>
+        <div class="info-row"><span class="ir-lbl">Start Date</span><span class="ir-val">${fmtDate(b.start_date)}</span></div>
+        <div class="info-row"><span class="ir-lbl">End Date</span><span class="ir-val">${fmtDate(b.end_date)}</span></div>
+        <div class="info-row"><span class="ir-lbl">Duration</span><span class="ir-val">${b.total_days} day${b.total_days !== 1 ? "s" : ""}</span></div>
+        <div class="info-row"><span class="ir-lbl">Status</span><span class="ir-val">${bkBadge(b.status)}</span></div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-title">Location & Payment</div>
+        <div class="info-row"><span class="ir-lbl">Pickup</span><span class="ir-val">${b.pickup_location}</span></div>
+        <div class="info-row"><span class="ir-lbl">Drop-off</span><span class="ir-val">${b.dropoff_location}</span></div>
+        <div class="info-row"><span class="ir-lbl">Method</span><span class="ir-val">${b.payment_method}</span></div>
+        <div class="info-row"><span class="ir-lbl">Payment</span><span class="ir-val">${b.payment_status === "Paid" ? `<span class="bdg bdg-green"><span class="dot"></span>Paid</span>` : `<span class="bdg bdg-amber"><span class="dot"></span>${b.payment_status}</span>`}</span></div>
+      </div>
+    </div>
+    <div class="price-box">
+      <div class="info-box-title" style="margin-bottom:10px">Price Breakdown</div>
+      <table class="price-table">
+        <tr><td>Daily Rate × ${b.total_days} day${b.total_days !== 1 ? "s" : ""}</td><td style="text-align:right;color:var(--muted)">${fmtMoney(b.per_day)} each</td><td style="text-align:right;font-weight:500">${fmtMoney(b.per_day * b.total_days)}</td></tr>
+        ${b.extra_charges ? `<tr><td>Extra Charges</td><td></td><td style="text-align:right;font-weight:500">+${fmtMoney(b.extra_charges)}</td></tr>` : ""}
+        ${b.discount ? `<tr><td>Discount</td><td></td><td style="text-align:right;font-weight:500;color:#16a34a">−${fmtMoney(b.discount)}</td></tr>` : ""}
+        <tr class="price-total"><td>Total</td><td></td><td style="text-align:right">${fmtMoney(net)}</td></tr>
+      </table>
+    </div>
+    ${b.cancel_reason ? `<div class="notes-box" style="background:#fff5f5;border-color:#fecaca;color:#b91c1c"><strong>⚠️ Cancellation Reason:</strong> ${b.cancel_reason}</div>` : ""}
+    ${b.notes ? `<div class="notes-box">📝 ${b.notes}</div>` : ""}
+  `;
       }
 
       function buildFooter(b) {
         const s = b.status;
         return `
-<div class="footer-ttl">Update Booking Status</div>
-<div class="status-btns">
-  <button class="st-btn btn-pending   ${s === "Pending" ? "is-current" : ""}" onclick="doStatus(${b.id},'Pending')">Pending</button>
-  <button class="st-btn btn-confirmed ${s === "Confirmed" ? "is-current" : ""}" onclick="doStatus(${b.id},'Confirmed')">Confirmed</button>
-  <button class="st-btn btn-active    ${s === "Active" ? "is-current" : ""}" onclick="doStatus(${b.id},'Active')">Active</button>
-  <button class="st-btn btn-completed ${s === "Completed" ? "is-current" : ""}" onclick="doStatus(${b.id},'Completed')">Completed</button>
-  <button class="st-btn btn-cancelled ${s === "Cancelled" ? "is-current" : ""}" onclick="doStatus(${b.id},'Cancelled')">Cancelled</button>
-</div>`;
+    <div class="footer-ttl">Update Booking Status</div>
+    <div class="status-btns">
+      <button class="st-btn btn-pending   ${s === "Pending" ? "is-current" : ""}" onclick="doStatus(${b.id},'Pending')">Pending</button>
+      <button class="st-btn btn-confirmed ${s === "Confirmed" ? "is-current" : ""}" onclick="doStatus(${b.id},'Confirmed')">Confirmed</button>
+      <button class="st-btn btn-active    ${s === "Active" ? "is-current" : ""}" onclick="doStatus(${b.id},'Active')">Active</button>
+      <button class="st-btn btn-completed ${s === "Completed" ? "is-current" : ""}" onclick="doStatus(${b.id},'Completed')">Completed</button>
+      <button class="st-btn btn-cancelled ${s === "Cancelled" ? "is-current" : ""}" onclick="triggerCancel(${b.id})">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        Cancelled
+      </button>
+    </div>
+    <div id="cancelSlot"></div>
+  `;
+      }
+
+      // ── CANCELLED: show inline reason form first ──
+      function triggerCancel(id) {
+        const slot = document.getElementById("cancelSlot");
+        if (!slot) return;
+        // already open — just focus
+        if (slot.innerHTML.trim()) {
+          document.getElementById("cancelReasonTA")?.focus();
+          return;
+        }
+        const b = data.find((x) => x.id === id);
+        slot.innerHTML = `
+    <div class="cancel-form">
+      <span class="cancel-form-lbl">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Cancellation Reason — required
+      </span>
+      <textarea id="cancelReasonTA" placeholder="Explain why this booking is being cancelled…&#10;e.g. Customer requested cancellation, Vehicle unavailable, Duplicate booking…" rows="4">${b?.cancel_reason || ""}</textarea>
+      <p class="cancel-form-hint">This reason will be saved to the database and emailed to the customer.</p>
+      <div class="cancel-form-btns">
+        <button class="btn-do-cancel" id="confirmCancelBtn" onclick="confirmCancel(${id})">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          Confirm Cancellation
+        </button>
+        <button class="btn-keep" onclick="document.getElementById('cancelSlot').innerHTML=''">Keep Booking</button>
+      </div>
+    </div>
+  `;
+        slot.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        document.getElementById("cancelReasonTA")?.focus();
+      }
+
+      async function confirmCancel(id) {
+        const reason = (
+          document.getElementById("cancelReasonTA")?.value || ""
+        ).trim();
+        if (!reason) {
+          showToast("Please enter a cancellation reason", "err");
+          document.getElementById("cancelReasonTA")?.focus();
+          return;
+        }
+        // disable buttons while saving
+        const btn = document.getElementById("confirmCancelBtn");
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = "Saving…";
+        }
+
+        await doStatus(id, "Cancelled", reason);
       }
 
       // ── PERSIST STATUS TO BACKEND ──
-      async function doStatus(id, status) {
-        // Disable all buttons while saving
+      async function doStatus(id, status, cancelReason = "") {
+        const API_BASE = "http://localhost:5000/api/admin/bookings";
         document
           .querySelectorAll(".st-btn")
           .forEach((b) => (b.disabled = true));
         try {
-          const res = await fetch(`${API}/${id}`, {
+          const body = { status };
+          if (status === "Cancelled" && cancelReason)
+            body.cancel_reason = cancelReason;
+
+          const res = await fetch(`${API_BASE}/${id}`, {
             method: "PUT",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ status }),
+            body: JSON.stringify(body),
           });
           const json = await res.json();
-          if (!json.success) throw new Error(json.message);
+          if (!json.success) throw new Error(json.message || "Server error");
 
-          // Update local array
+          // update local array
           const item = data.find((x) => x.id === id);
-          if (item) item.status = status;
+          if (item) {
+            item.status = status;
+            if (cancelReason) item.cancel_reason = cancelReason;
+          }
+          // also update filtered array
+          const fi = filtered.find((x) => x.id === id);
+          if (fi) {
+            fi.status = status;
+            if (cancelReason) fi.cancel_reason = cancelReason;
+          }
 
           refreshModal();
           showToast(`Booking #${id} → ${status}`, "ok");
         } catch (e) {
           console.error(e);
-          showToast(`Save failed: ${e.message}`, "err");
+          showToast(`Failed: ${e.message}`, "err");
+          // re-enable buttons on error
+          const btn = document.getElementById("confirmCancelBtn");
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = "Confirm Cancellation";
+          }
         } finally {
           document
             .querySelectorAll(".st-btn")
@@ -1665,7 +1875,6 @@ ${b.notes ? `<div class="notes-box">📝 ${b.notes}</div>` : ""}`;
         }
       }
 
-      // ── FILTERS ──
       function applyFilters() {
         const s = document.getElementById("fStatus").value,
           fr = document.getElementById("fFrom").value,
@@ -1679,7 +1888,7 @@ ${b.notes ? `<div class="notes-box">📝 ${b.notes}</div>` : ""}`;
           if (to && b.end_date > to) return false;
           if (
             q &&
-            !`${b.id} ${b.booking_ref} ${b.user_name} ${b.user_email} ${b.vehicle_name} ${b.vehicle_plate} ${b.pickup_location}`
+            !`${b.id} ${b.user_name} ${b.user_email} ${b.vehicle_name} ${b.vehicle_plate} ${b.pickup_location}`
               .toLowerCase()
               .includes(q)
           )
@@ -1705,11 +1914,9 @@ ${b.notes ? `<div class="notes-box">📝 ${b.notes}</div>` : ""}`;
           `All ${data.length} bookings`;
       }
 
-      // ── EXPORT CSV ──
       function exportCSV() {
         const hdr = [
           "ID",
-          "Ref",
           "Customer",
           "Email",
           "Phone",
@@ -1726,7 +1933,6 @@ ${b.notes ? `<div class="notes-box">📝 ${b.notes}</div>` : ""}`;
         ];
         const rows = filtered.map((b) => [
           b.id,
-          b.booking_ref,
           b.user_name,
           b.user_email,
           b.user_phone,
@@ -1750,37 +1956,12 @@ ${b.notes ? `<div class="notes-box">📝 ${b.notes}</div>` : ""}`;
         a.click();
       }
 
-      // ── TOAST ──
       function showToast(msg, type = "ok") {
         const t = document.getElementById("toast");
         t.textContent = msg;
         t.className = `toast ${type} show`;
         setTimeout(() => t.classList.remove("show"), 3200);
       }
-
-      // ── EVENTS ──
-      document.getElementById("tbUser").addEventListener("click", function (e) {
-        e.stopPropagation();
-        document.getElementById("dd").classList.toggle("visible");
-        this.classList.toggle("open");
-      });
-      document.addEventListener("click", () => {
-        document.getElementById("dd").classList.remove("visible");
-        document.getElementById("tbUser").classList.remove("open");
-      });
-      document
-        .getElementById("bSearch")
-        .addEventListener("input", applyFilters);
-      document
-        .getElementById("overlay")
-        .addEventListener("click", function (e) {
-          if (e.target === this) closeModal();
-        });
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeModal();
-      });
-
-      boot();
     </script>
   </body>
 </html>

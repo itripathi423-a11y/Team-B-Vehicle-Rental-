@@ -18,6 +18,7 @@ exports.createBooking = (req, res) => {
     total_days,
     price_per_unit,
     total_price,
+    notes, // ← new field (optional)
   } = req.body;
 
   // Validation
@@ -47,8 +48,9 @@ exports.createBooking = (req, res) => {
       user_name, user_email, user_phone,
       pickup_location, rental_type,
       pickup_datetime, drop_datetime,
-      total_days, price_per_unit, total_price
-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+      total_days, price_per_unit, total_price,
+      notes
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   `;
 
   db.query(
@@ -67,6 +69,7 @@ exports.createBooking = (req, res) => {
       total_days || 1,
       price_per_unit || total_price,
       total_price,
+      notes || null, // ← inserted here
     ],
     async (err, result) => {
       if (err) {
@@ -107,6 +110,7 @@ From        : ${pickup_datetime}
 To          : ${drop_datetime}
 
 Total Price : Rs ${total_price}
+Notes       : ${notes || "None"}
 
 -----------------------------------
 Please check admin dashboard for details.
@@ -131,6 +135,7 @@ Auto Dealer System
     },
   );
 };
+
 // GET ALL BOOKINGS FOR A USER
 exports.getUserBookings = (req, res) => {
   const userId = req.params.userId;

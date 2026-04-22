@@ -600,9 +600,13 @@
         font-weight: 700;
         letter-spacing: 0.5px;
       }
+      .field-badge.optional {
+        background: #f0fdf4;
+        color: #16a34a;
+      }
       .form-group input,
-      .form-group select {
-        height: 44px;
+      .form-group select,
+      .form-group textarea {
         border: 1.5px solid var(--border);
         border-radius: 9px;
         padding: 0 14px;
@@ -616,12 +620,24 @@
           box-shadow 0.2s;
         width: 100%;
       }
+      .form-group input,
+      .form-group select {
+        height: 44px;
+      }
+      .form-group textarea {
+        padding: 12px 14px;
+        resize: vertical;
+        min-height: 110px;
+        line-height: 1.65;
+      }
       .form-group input:focus,
-      .form-group select:focus {
+      .form-group select:focus,
+      .form-group textarea:focus {
         border-color: var(--orange);
         box-shadow: 0 0 0 3px var(--orange-dim);
       }
-      .form-group input::placeholder {
+      .form-group input::placeholder,
+      .form-group textarea::placeholder {
         color: #c0c5cd;
       }
       .form-group input[readonly] {
@@ -632,6 +648,26 @@
       .form-group .hint {
         font-size: 11px;
         color: var(--muted);
+      }
+
+      /* ── CHAR COUNTER ── */
+      .notes-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 2px;
+      }
+      .char-counter {
+        font-size: 11px;
+        font-family: "Space Mono", monospace;
+        color: var(--muted);
+        transition: color 0.2s;
+      }
+      .char-counter.warn {
+        color: #f59e0b;
+      }
+      .char-counter.over {
+        color: #dc2626;
       }
 
       /* ── PROFILE LOADING ── */
@@ -802,6 +838,50 @@
         margin-top: 4px;
       }
 
+      /* ── NOTES SECTION EXTRAS ── */
+      .notes-suggestions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 10px;
+      }
+      .notes-chip {
+        font-size: 11.5px;
+        padding: 5px 13px;
+        border-radius: 99px;
+        border: 1px solid var(--border);
+        background: var(--bg);
+        color: var(--text);
+        cursor: pointer;
+        transition: all 0.17s;
+        font-family: "DM Sans", sans-serif;
+        user-select: none;
+      }
+      .notes-chip:hover {
+        border-color: var(--orange);
+        background: var(--orange-dim);
+        color: var(--orange);
+      }
+      .notes-info-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 14px;
+        background: #fffbf5;
+        border: 1px solid #fed7aa;
+        border-radius: 9px;
+        margin-top: 14px;
+      }
+      .notes-info-row svg {
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .notes-info-row p {
+        font-size: 12px;
+        color: #92400e;
+        line-height: 1.6;
+      }
+
       /* ── SUMMARY CARD ── */
       .summary-card {
         background: var(--dark);
@@ -810,7 +890,7 @@
         box-shadow: var(--shadow-md);
         margin-bottom: 24px;
         animation: fadeUp 0.4s ease both;
-        animation-delay: 0.3s;
+        animation-delay: 0.35s;
         position: relative;
         overflow: hidden;
       }
@@ -903,6 +983,19 @@
       }
       .sc-cell-val.hi {
         color: var(--orange);
+      }
+      /* Notes cell spans full width */
+      .sc-cell.full-width {
+        grid-column: 1 / -1;
+        border-right: none;
+        border-bottom: none;
+      }
+      .sc-cell.full-width .sc-cell-val {
+        font-size: 12.5px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.65);
+        font-style: italic;
+        line-height: 1.6;
       }
       .sc-bottom {
         display: flex;
@@ -1208,6 +1301,9 @@
         .sc-total-amt {
           font-size: 44px;
         }
+        .notes-suggestions {
+          gap: 5px;
+        }
       }
     </style>
   </head>
@@ -1446,7 +1542,6 @@
               </button>
             </div>
           </div>
-          <!-- ── END USER DROPDOWN ── -->
         </div>
       </header>
 
@@ -1494,6 +1589,11 @@
           <div class="step-line"></div>
           <div class="step" id="step6">
             <div class="step-num">6</div>
+            <span class="step-label">Notes</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step" id="step7">
+            <div class="step-num">7</div>
             <span class="step-label">Confirm</span>
           </div>
         </div>
@@ -1736,7 +1836,116 @@
             </div>
           </div>
 
-          <!-- SEC 6: BOOKING SUMMARY -->
+          <!-- SEC 6: ADDITIONAL NOTES -->
+          <div class="form-section" style="animation-delay: 0.3s">
+            <div class="fs-head">
+              <div class="fs-num">6</div>
+              <div>
+                <div class="fs-title">
+                  Additional Notes
+                  <span class="field-badge optional">OPTIONAL</span>
+                </div>
+                <div class="fs-sub">
+                  Special requests, instructions, or details for our operations
+                  team
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row single">
+              <div class="form-group">
+                <label>
+                  <svg
+                    width="13"
+                    height="13"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    style="flex-shrink: 0"
+                  >
+                    <path
+                      d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                    />
+                    <path
+                      d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                    />
+                  </svg>
+                  Notes / Special Requests
+                </label>
+                <textarea
+                  id="bookingNotes"
+                  maxlength="500"
+                  placeholder="e.g. Please bring the vehicle with a full tank. I'll need a child seat. Contact me 30 mins before arrival…"
+                  oninput="
+                    updateCharCount();
+                    updateSummary();
+                  "
+                ></textarea>
+                <div class="notes-footer">
+                  <span class="hint"
+                    >Visible to our operations team only — not shared
+                    publicly</span
+                  >
+                  <span class="char-counter" id="charCounter">0 / 500</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick-add suggestion chips -->
+            <div class="notes-suggestions">
+              <span
+                class="notes-chip"
+                onclick="appendNote('Full tank on delivery')"
+                >⛽ Full tank on delivery</span
+              >
+              <span
+                class="notes-chip"
+                onclick="appendNote('Child seat required')"
+                >🪑 Child seat required</span
+              >
+              <span
+                class="notes-chip"
+                onclick="appendNote('Call 30 mins before arrival')"
+                >📞 Call 30 mins before arrival</span
+              >
+              <span class="notes-chip" onclick="appendNote('GPS device needed')"
+                >🗺️ GPS device needed</span
+              >
+              <span
+                class="notes-chip"
+                onclick="appendNote('Early morning pickup preferred')"
+                >🌅 Early morning pickup</span
+              >
+              <span
+                class="notes-chip"
+                onclick="appendNote('Airport pickup required')"
+                >✈️ Airport pickup</span
+              >
+            </div>
+
+            <!-- Info notice -->
+            <div class="notes-info-row">
+              <svg
+                width="15"
+                height="15"
+                fill="none"
+                stroke="#d97706"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 8v4M12 16h.01" />
+              </svg>
+              <p>
+                Notes are reviewed by our team before your pickup. For urgent
+                requests please also contact us directly via phone after
+                booking.
+              </p>
+            </div>
+          </div>
+
+          <!-- SEC 7: BOOKING SUMMARY -->
           <div class="summary-card">
             <div class="sc-head">
               Booking <span class="accent">Summary</span>
@@ -1787,6 +1996,15 @@
               <div class="sc-cell">
                 <div class="sc-cell-lbl">Contact</div>
                 <div class="sc-cell-val" id="scPhone">—</div>
+              </div>
+              <!-- Notes row — full width, only shown when notes are present -->
+              <div
+                class="sc-cell full-width"
+                id="scNotesRow"
+                style="display: none"
+              >
+                <div class="sc-cell-lbl">📝 Notes</div>
+                <div class="sc-cell-val" id="scNotes">—</div>
               </div>
             </div>
             <div class="sc-bottom">
@@ -2007,7 +2225,6 @@
           const isVerified = user.kyc_status === "verified";
           const hasPhoto = !!user.profile_photo;
 
-          /* Helper: avatar photo or initials */
           function populateAvatar(containerEl, initialsEl) {
             if (!containerEl) return;
             if (hasPhoto) {
@@ -2022,7 +2239,6 @@
             }
           }
 
-          /* Sidebar */
           populateAvatar(
             document.getElementById("sidebarAvatar"),
             document.getElementById("sidebarInitials"),
@@ -2043,7 +2259,6 @@
             }
           }
 
-          /* Topbar */
           populateAvatar(
             document.getElementById("topbarAvatar"),
             document.getElementById("topbarInitials"),
@@ -2058,17 +2273,14 @@
             topbarRoleEl.style.color = isVerified ? "#16a34a" : "";
           }
 
-          /* Dropdown header */
           const ddName = document.getElementById("ddName");
           const ddEmail = document.getElementById("ddEmail");
           if (ddName) ddName.textContent = fullName;
           if (ddEmail) ddEmail.textContent = user.email;
 
-          /* Hide KYC badge if verified */
           const ddKycBadge = document.getElementById("ddKycBadge");
           if (ddKycBadge && isVerified) ddKycBadge.style.display = "none";
 
-          /* Pre-fill form */
           const nameEl = document.getElementById("userName");
           const emailEl = document.getElementById("userEmail");
           const phoneEl = document.getElementById("userPhone");
@@ -2080,7 +2292,6 @@
           window._userEmail = user.email;
           window._userName = fullName;
 
-          /* Remove spinner, reveal fields, show loaded badge */
           const loader = document.getElementById("profileLoadingState");
           if (loader) loader.remove();
 
@@ -2195,6 +2406,27 @@
       }
 
       /* ════════════════════════════════════════
+         NOTES HELPERS
+      ════════════════════════════════════════ */
+      function appendNote(text) {
+        const ta = document.getElementById("bookingNotes");
+        const current = ta.value.trim();
+        ta.value = current ? current + ". " + text : text;
+        updateCharCount();
+        updateSummary();
+        ta.focus();
+      }
+
+      function updateCharCount() {
+        const ta = document.getElementById("bookingNotes");
+        const counter = document.getElementById("charCounter");
+        const len = ta.value.length;
+        counter.textContent = `${len} / 500`;
+        counter.className =
+          "char-counter" + (len >= 500 ? " over" : len >= 400 ? " warn" : "");
+      }
+
+      /* ════════════════════════════════════════
          LIVE SUMMARY UPDATE
       ════════════════════════════════════════ */
       function updateSummary() {
@@ -2205,11 +2437,14 @@
         const dropoff = document.getElementById("dropoffLoc")?.value || pickup;
         const pdt = document.getElementById("pickupDT")?.value;
         const ddt = document.getElementById("dropoffDT")?.value;
+        const notes =
+          document.getElementById("bookingNotes")?.value.trim() || "";
 
         const set = (id, v) => {
           const el = document.getElementById(id);
           if (el) el.textContent = v;
         };
+
         set("scName", name);
         set("scVehicle", vehicle?.name || "—");
         set("scPickup", pickup);
@@ -2219,6 +2454,21 @@
         set("scDropoffDT", fmtDT(ddt));
         set("scPhone", phone);
         set("scTotal", currentPrice.toLocaleString());
+
+        // Show/hide notes row in summary
+        const notesRow = document.getElementById("scNotesRow");
+        const notesVal = document.getElementById("scNotes");
+        if (notes) {
+          notesRow.style.display = "";
+          notesVal.textContent = notes;
+          markStep(6, "done");
+        } else {
+          notesRow.style.display = "none";
+          // Step 6 stays active/default if no notes (it's optional)
+          const el = document.getElementById("step6");
+          if (el && !el.classList.contains("done"))
+            el.className = "step active";
+        }
 
         if (name && name !== "—") markStep(1, "done");
         markStep(2, "done");
@@ -2242,6 +2492,8 @@
         const pickup = document.getElementById("pickupLoc")?.value.trim();
         const pdt = document.getElementById("pickupDT")?.value;
         const ddt = document.getElementById("dropoffDT")?.value;
+        const notes =
+          document.getElementById("bookingNotes")?.value.trim() || null;
 
         if (!name || !email || !phone || !pickup || !pdt) {
           alert("Please fill in all required fields before confirming.");
@@ -2277,6 +2529,7 @@
           total_days: totalDays,
           price_per_unit: currentPrice,
           total_price: currentPrice,
+          notes: notes,
         };
 
         try {
@@ -2286,7 +2539,7 @@
           });
           if (!res.success) throw new Error(res.message || "Booking failed");
 
-          [1, 2, 3, 4, 5, 6].forEach((n) => markStep(n, "done"));
+          [1, 2, 3, 4, 5, 6, 7].forEach((n) => markStep(n, "done"));
           document.getElementById("modalRef").textContent =
             `REF: ${res.booking_ref}`;
           document.getElementById("successModal").classList.add("show");
