@@ -58,12 +58,10 @@ exports.updateBooking = (req, res) => {
           .status(404)
           .json({ success: false, message: "Booking not found." });
       if (rows[0].status !== "Pending")
-        return res
-          .status(400)
-          .json({
-            success: false,
-            message: `Only Pending bookings can be edited. Current status: ${rows[0].status}`,
-          });
+        return res.status(400).json({
+          success: false,
+          message: `Only Pending bookings can be edited. Current status: ${rows[0].status}`,
+        });
       const fields = [],
         values = [];
       if (pickup_location !== undefined) {
@@ -94,12 +92,10 @@ exports.updateBooking = (req, res) => {
         const p = new Date(pickup_datetime),
           d = new Date(drop_datetime);
         if (d <= p)
-          return res
-            .status(400)
-            .json({
-              success: false,
-              message: "Drop datetime must be after pickup datetime.",
-            });
+          return res.status(400).json({
+            success: false,
+            message: "Drop datetime must be after pickup datetime.",
+          });
         fields.push("total_days = ?");
         values.push(parseFloat(((d - p) / (1000 * 60 * 60 * 24)).toFixed(2)));
       }
@@ -144,12 +140,10 @@ exports.deleteBooking = (req, res) => {
           .json({ success: false, message: "Booking not found." });
       const booking = rows[0];
       if (!["Pending", "Confirmed"].includes(booking.status))
-        return res
-          .status(400)
-          .json({
-            success: false,
-            message: `Cannot cancel a booking with status: ${booking.status}`,
-          });
+        return res.status(400).json({
+          success: false,
+          message: `Cannot cancel a booking with status: ${booking.status}`,
+        });
       db.query(
         "UPDATE bookings SET status = 'Cancelled', cancel_reason = ? WHERE id = ?",
         [cancel_reason || null, bookingId],
