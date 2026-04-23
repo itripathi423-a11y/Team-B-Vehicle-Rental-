@@ -55,19 +55,31 @@ exports.getStats = (req, res) => {
 
 // ================= RECENT BOOKINGS =================
 exports.getBookings = (req, res) => {
-  const limit = parseInt(req.query.limit) || 5;
-
   const sql = `
-    SELECT b.*, v.name AS vehicle_name
-    FROM bookings b
-    LEFT JOIN vehicles v ON b.vehicle_id = v.id
-    ORDER BY b.created_at DESC
-    LIMIT ?
-  `;
+  SELECT 
+    b.id,
+    b.booking_ref,
+    b.user_name,
+    b.vehicle_name,
+    b.total_days,
+    b.total_price,
+    b.status
+  FROM bookings b
+  ORDER BY b.booked_on DESC
+  LIMIT 3
+`;
 
-  db.query(sql, [limit], (err, results) => {
-    if (err) return res.status(500).json(err);
+  db.query(sql, (err, results) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: "Database error",
+      });
+    }
 
-    return res.json(results);
+    return res.json({
+      success: true,
+      data: results,
+    });
   });
 };

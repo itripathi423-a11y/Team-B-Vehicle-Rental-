@@ -12,12 +12,13 @@
     />
     <link rel="stylesheet" href="dashboard.css" />
     <style>
-      .sidebar-nav { padding-top: 20px; }
+      .sidebar-nav {
+        padding-top: 20px;
+      }
     </style>
   </head>
   <body>
     <div class="layout">
-
       <!-- SIDEBAR -->
       <aside class="sidebar" id="sidebar">
         <div class="sidebar-logo">
@@ -29,58 +30,110 @@
         </div>
         <nav class="sidebar-nav">
           <a href="dashboard.html" class="nav-item active">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
               <rect x="3" y="3" width="7" height="7" rx="1" />
               <rect x="14" y="3" width="7" height="7" rx="1" />
               <rect x="3" y="14" width="7" height="7" rx="1" />
-              <rect x="14" y="14" width="7" height="7" rx="1" />
-            </svg>Dashboard
+              <rect x="14" y="14" width="7" height="7" rx="1" /></svg
+            >Dashboard
           </a>
           <a href="admin.vehicle.html" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2" />
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+              />
               <circle cx="7" cy="17" r="2" />
               <circle cx="17" cy="17" r="2" />
               <path d="M5 17h8" />
-              <path d="M3 9h18" />
-            </svg>Vehicles
+              <path d="M3 9h18" /></svg
+            >Vehicles
           </a>
           <a href="admin.bookings.html" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
               <rect x="3" y="4" width="18" height="18" rx="2" />
               <line x1="16" y1="2" x2="16" y2="6" />
               <line x1="8" y1="2" x2="8" y2="6" />
-              <line x1="3" y1="10" x2="21" y2="10" />
-            </svg>Bookings
+              <line x1="3" y1="10" x2="21" y2="10" /></svg
+            >Bookings
           </a>
           <a href="admin.kyc.html" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>KYC
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+            >KYC
           </a>
           <a href="admin.payments.html" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
               <rect x="2" y="5" width="20" height="14" rx="2" />
-              <line x1="2" y1="10" x2="22" y2="10" />
-            </svg>Payments
+              <line x1="2" y1="10" x2="22" y2="10" /></svg
+            >Payments
           </a>
           <a href="admin.enquiries.html" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
               <circle cx="12" cy="12" r="10" />
               <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-              <line x1="12" y1="17" x2="12.01" y2="17" />
-            </svg>Enquiries
+              <line x1="12" y1="17" x2="12.01" y2="17" /></svg
+            >Enquiries
           </a>
           <a href="admin.reviews.html" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>Reviews
+              <circle cx="12" cy="7" r="4" /></svg
+            >Reviews
           </a>
           <a href="admin.servicing.html" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-            </svg>Servicing
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
+              /></svg
+            >Servicing
           </a>
         </nav>
         <div class="sidebar-footer">
@@ -96,19 +149,32 @@
 
       <!-- MAIN WRAP -->
       <div class="main-wrap">
-
         <!-- TOPBAR -->
         <header class="topbar">
           <div class="search-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
-            <input type="text" id="dashboardSearch" placeholder="Search bookings, vehicles, customers…" />
+            <input
+              type="text"
+              id="dashboardSearch"
+              placeholder="Search bookings, vehicles, customers…"
+            />
           </div>
           <div class="topbar-right">
             <button class="icon-btn notif-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
                 <path d="M13.73 21a2 2 0 0 1-3.46 0" />
               </svg>
@@ -122,8 +188,16 @@
                 <p class="topbar-name" id="topbarAdminName">Loading…</p>
                 <p class="topbar-role" id="topbarAdminRole">—</p>
               </div>
-              <svg class="topbar-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <polyline points="6 9 12 15 18 9"/>
+              <svg
+                class="topbar-chevron"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <polyline points="6 9 12 15 18 9" />
               </svg>
 
               <!-- DROPDOWN -->
@@ -133,32 +207,39 @@
                   <p class="dh-email" id="dropdownAdminEmail">—</p>
                 </div>
                 <a class="dropdown-item" href="#">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
                   </svg>
                   My Profile
                 </a>
-                <a class="dropdown-item" href="#">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                  </svg>
-                  Settings
-                </a>
+
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item logout" href="#" id="logoutBtn">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    <polyline points="16 17 21 12 16 7"/>
-                    <line x1="21" y1="12" x2="9" y2="12"/>
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  >
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
                   </svg>
                   Logout
                 </a>
               </div>
             </div>
             <!-- END TOPBAR USER -->
-
           </div>
         </header>
 
@@ -167,23 +248,39 @@
           <div class="page-header">
             <div>
               <h1 class="page-title">Dashboard Overview</h1>
-              <p class="page-sub">Real-time fleet health &amp; performance metrics</p>
+              <p class="page-sub">
+                Real-time fleet health &amp; performance metrics
+              </p>
             </div>
             <div class="page-actions">
               <button class="btn-ghost">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  width="15"
+                  height="15"
+                >
                   <rect x="3" y="4" width="18" height="18" rx="2" />
                   <line x1="16" y1="2" x2="16" y2="6" />
                   <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>Last 30 Days
+                  <line x1="3" y1="10" x2="21" y2="10" /></svg
+                >Last 30 Days
               </button>
               <button class="btn-primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  width="15"
+                  height="15"
+                >
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                   <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>Export Report
+                  <line x1="12" y1="15" x2="12" y2="3" /></svg
+                >Export Report
               </button>
             </div>
           </div>
@@ -193,8 +290,17 @@
             <div class="stat-card" style="--delay: 0s">
               <div class="stat-top">
                 <div class="stat-icon" style="--ic: #fff0e8">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#FF5C1A" stroke-width="1.8" width="22" height="22">
-                    <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2" />
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#FF5C1A"
+                    stroke-width="1.8"
+                    width="22"
+                    height="22"
+                  >
+                    <path
+                      d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+                    />
                     <circle cx="7" cy="17" r="2" />
                     <circle cx="17" cy="17" r="2" />
                     <path d="M5 17h8" />
@@ -209,7 +315,14 @@
             <div class="stat-card" style="--delay: 0.08s">
               <div class="stat-top">
                 <div class="stat-icon" style="--ic: #eff6ff">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.8" width="22" height="22">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#2563EB"
+                    stroke-width="1.8"
+                    width="22"
+                    height="22"
+                  >
                     <rect x="3" y="4" width="18" height="18" rx="2" />
                     <line x1="16" y1="2" x2="16" y2="6" />
                     <line x1="8" y1="2" x2="8" y2="6" />
@@ -225,7 +338,14 @@
             <div class="stat-card" style="--delay: 0.16s">
               <div class="stat-top">
                 <div class="stat-icon" style="--ic: #ecfdf5">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="1.8" width="22" height="22">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#16A34A"
+                    stroke-width="1.8"
+                    width="22"
+                    height="22"
+                  >
                     <rect x="2" y="5" width="20" height="14" rx="2" />
                     <line x1="2" y1="10" x2="22" y2="10" />
                   </svg>
@@ -233,13 +353,22 @@
                 <span class="stat-badge up">+8.2%</span>
               </div>
               <p class="stat-label">Total Revenue</p>
-              <p class="stat-value" id="statRevenue" style="font-size: 36px">—</p>
+              <p class="stat-value" id="statRevenue" style="font-size: 36px">
+                —
+              </p>
               <p class="stat-hint">Earned this month</p>
             </div>
             <div class="stat-card" style="--delay: 0.24s">
               <div class="stat-top">
                 <div class="stat-icon" style="--ic: #fffbeb">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="1.8" width="22" height="22">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#D97706"
+                    stroke-width="1.8"
+                    width="22"
+                    height="22"
+                  >
                     <circle cx="12" cy="12" r="10" />
                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
                     <line x1="12" y1="17" x2="12.01" y2="17" />
@@ -262,8 +391,13 @@
                   <p class="chart-sub">Jan – Dec performance comparison</p>
                 </div>
                 <div class="chart-legend">
-                  <span class="leg-dot" style="background: #ff5c1a"></span>&nbsp;Revenue
-                  <span class="leg-dot" style="background: #e5e7eb; margin-left: 10px"></span>&nbsp;Bookings
+                  <span class="leg-dot" style="background: #ff5c1a"></span
+                  >&nbsp;Revenue
+                  <span
+                    class="leg-dot"
+                    style="background: #e5e7eb; margin-left: 10px"
+                  ></span
+                  >&nbsp;Bookings
                 </div>
               </div>
               <div class="bar-wrap"><canvas id="barChart"></canvas></div>
@@ -273,32 +407,47 @@
               <div class="util-list">
                 <div>
                   <div class="util-row">
-                    <span class="util-name">Electric Fleet</span><span class="util-pct">94%</span>
+                    <span class="util-name">Electric Fleet</span
+                    ><span class="util-pct">94%</span>
                   </div>
-                  <div class="util-bar"><div class="util-fill" style="--w: 94%"></div></div>
+                  <div class="util-bar">
+                    <div class="util-fill" style="--w: 94%"></div>
+                  </div>
                 </div>
                 <div>
                   <div class="util-row">
-                    <span class="util-name">SUVs</span><span class="util-pct">88%</span>
+                    <span class="util-name">SUVs</span
+                    ><span class="util-pct">88%</span>
                   </div>
-                  <div class="util-bar"><div class="util-fill" style="--w: 88%"></div></div>
+                  <div class="util-bar">
+                    <div class="util-fill" style="--w: 88%"></div>
+                  </div>
                 </div>
                 <div>
                   <div class="util-row">
-                    <span class="util-name">Luxury Sedans</span><span class="util-pct">62%</span>
+                    <span class="util-name">Luxury Sedans</span
+                    ><span class="util-pct">62%</span>
                   </div>
-                  <div class="util-bar"><div class="util-fill" style="--w: 62%"></div></div>
+                  <div class="util-bar">
+                    <div class="util-fill" style="--w: 62%"></div>
+                  </div>
                 </div>
                 <div>
                   <div class="util-row">
-                    <span class="util-name">Hatchbacks</span><span class="util-pct">45%</span>
+                    <span class="util-name">Hatchbacks</span
+                    ><span class="util-pct">45%</span>
                   </div>
-                  <div class="util-bar"><div class="util-fill" style="--w: 45%"></div></div>
+                  <div class="util-bar">
+                    <div class="util-fill" style="--w: 45%"></div>
+                  </div>
                 </div>
               </div>
               <div class="insight">
                 <p class="ins-tag">INSIGHT</p>
-                <p class="ins-txt">"EV demand exceeds SUV demand by 6% this quarter. Consider expanding the electric fleet."</p>
+                <p class="ins-txt">
+                  "EV demand exceeds SUV demand by 6% this quarter. Consider
+                  expanding the electric fleet."
+                </p>
               </div>
             </div>
           </div>
@@ -310,7 +459,9 @@
                 <h3 class="card-title">Recent Bookings</h3>
                 <p class="card-sub" id="bookingSubtitle">Loading…</p>
               </div>
-              <a href="admin.bookings.html" class="btn-ghost btn-sm">View All →</a>
+              <a href="admin.bookings.html" class="btn-ghost btn-sm"
+                >View All →</a
+              >
             </div>
             <div class="table-wrap">
               <table class="data-table">
@@ -326,28 +477,28 @@
                 </thead>
                 <tbody id="bookingsTableBody">
                   <tr class="skeleton-row">
-                    <td><span class="skeleton" style="width:70px"></span></td>
-                    <td><span class="skeleton" style="width:100px"></span></td>
-                    <td><span class="skeleton" style="width:140px"></span></td>
-                    <td><span class="skeleton" style="width:50px"></span></td>
-                    <td><span class="skeleton" style="width:70px"></span></td>
-                    <td><span class="skeleton" style="width:60px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                    <td><span class="skeleton" style="width: 100px"></span></td>
+                    <td><span class="skeleton" style="width: 140px"></span></td>
+                    <td><span class="skeleton" style="width: 50px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                    <td><span class="skeleton" style="width: 60px"></span></td>
                   </tr>
                   <tr class="skeleton-row">
-                    <td><span class="skeleton" style="width:70px"></span></td>
-                    <td><span class="skeleton" style="width:120px"></span></td>
-                    <td><span class="skeleton" style="width:130px"></span></td>
-                    <td><span class="skeleton" style="width:50px"></span></td>
-                    <td><span class="skeleton" style="width:70px"></span></td>
-                    <td><span class="skeleton" style="width:60px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                    <td><span class="skeleton" style="width: 120px"></span></td>
+                    <td><span class="skeleton" style="width: 130px"></span></td>
+                    <td><span class="skeleton" style="width: 50px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                    <td><span class="skeleton" style="width: 60px"></span></td>
                   </tr>
                   <tr class="skeleton-row">
-                    <td><span class="skeleton" style="width:70px"></span></td>
-                    <td><span class="skeleton" style="width:90px"></span></td>
-                    <td><span class="skeleton" style="width:150px"></span></td>
-                    <td><span class="skeleton" style="width:50px"></span></td>
-                    <td><span class="skeleton" style="width:70px"></span></td>
-                    <td><span class="skeleton" style="width:60px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                    <td><span class="skeleton" style="width: 90px"></span></td>
+                    <td><span class="skeleton" style="width: 150px"></span></td>
+                    <td><span class="skeleton" style="width: 50px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                    <td><span class="skeleton" style="width: 60px"></span></td>
                   </tr>
                 </tbody>
               </table>
@@ -365,18 +516,25 @@
       // ===== STATUS BADGE =====
       function statusBadge(s) {
         const m = {
-          active:    ["badge-green", "Active"],
+          active: ["badge-green", "Active"],
           confirmed: ["badge-green", "Confirmed"],
-          pending:   ["badge-amber", "Pending"],
-          completed: ["badge-grey",  "Completed"],
-          cancelled: ["badge-red",   "Cancelled"],
+          pending: ["badge-amber", "Pending"],
+          completed: ["badge-grey", "Completed"],
+          cancelled: ["badge-red", "Cancelled"],
         };
-        const [cls, label] = m[(s || "").toLowerCase()] || ["badge-grey", s || "—"];
+        const [cls, label] = m[(s || "").toLowerCase()] || [
+          "badge-grey",
+          s || "—",
+        ];
         return `<span class="${cls}"><span class="dot"></span>${label}</span>`;
       }
 
-      function fmtMoney(n) { return "Rs " + Number(n).toLocaleString("en-NP"); }
-      function fmtDur(d)   { return !d ? "—" : d === 1 ? "1 day" : d + " days"; }
+      function fmtMoney(n) {
+        return "Rs " + Number(n).toLocaleString("en-NP");
+      }
+      function fmtDur(d) {
+        return !d ? "—" : d === 1 ? "1 day" : d + " days";
+      }
 
       // ===== LOAD ADMIN PROFILE =====
       async function loadAdmin() {
@@ -384,18 +542,25 @@
           const res = await fetch(`${API}/me`, { credentials: "include" });
           if (!res.ok) throw new Error();
           const d = await res.json();
-          document.getElementById("dropdownAdminEmail").textContent = d.email || "No email";
+          document.getElementById("dropdownAdminEmail").textContent =
+            d.email || "No email";
 
           const name = d.name || "Admin";
           const role = d.role || "Admin";
-          const initials = name.split(" ").map((n) => n[0]).join("").toUpperCase();
+          const initials = name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase();
 
           document.getElementById("sidebarAdminName").textContent = name;
-          document.getElementById("topbarAdminName").textContent  = name;
+          document.getElementById("topbarAdminName").textContent = name;
           document.getElementById("sidebarAdminRole").textContent = role;
-          document.getElementById("topbarAdminRole").textContent  = role;
-          document.getElementById("sidebarAvatarInitials").textContent = initials;
-          document.getElementById("topbarAvatarInitials").textContent  = initials;
+          document.getElementById("topbarAdminRole").textContent = role;
+          document.getElementById("sidebarAvatarInitials").textContent =
+            initials;
+          document.getElementById("topbarAvatarInitials").textContent =
+            initials;
 
           const dropdownName = document.getElementById("dropdownAdminName");
           if (dropdownName) dropdownName.textContent = name;
@@ -411,10 +576,15 @@
           if (!res.ok) throw new Error();
           const d = await res.json();
 
-          document.getElementById("statVehicles").textContent  = d.total_vehicles ?? 0;
-          document.getElementById("statBookings").textContent  = d.active_bookings ?? 0;
-          document.getElementById("statRevenue").textContent   = fmtMoney(d.revenue_this_month ?? 0);
-          document.getElementById("statEnquiries").textContent = d.enquiries_today ?? 0;
+          document.getElementById("statVehicles").textContent =
+            d.total_vehicles ?? 0;
+          document.getElementById("statBookings").textContent =
+            d.active_bookings ?? 0;
+          document.getElementById("statRevenue").textContent = fmtMoney(
+            d.revenue_this_month ?? 0,
+          );
+          document.getElementById("statEnquiries").textContent =
+            d.enquiries_today ?? 0;
         } catch (err) {
           console.log("Failed to load stats");
         }
@@ -423,19 +593,24 @@
       // ===== LOAD BOOKINGS =====
       async function loadBookings() {
         try {
-          const res = await fetch(`${API}/bookings?limit=5`, { credentials: "include" });
+          const res = await fetch(`${API}/bookings`, {
+            credentials: "include",
+          });
           if (!res.ok) throw new Error();
           const data = await res.json();
-          const list = Array.isArray(data) ? data : data.bookings || [];
+          const list = (data.data || []).slice(0, 3);
           const tbody = document.getElementById("bookingsTableBody");
 
           if (!list.length) {
             tbody.innerHTML = `<tr><td colspan="6" class="empty-state">📋 No bookings found</td></tr>`;
-            document.getElementById("bookingSubtitle").textContent = "No recent bookings";
+            document.getElementById("bookingSubtitle").textContent =
+              "No recent bookings";
             return;
           }
 
-          tbody.innerHTML = list.map((b) => `
+          tbody.innerHTML = list
+            .map(
+              (b) => `
             <tr>
               <td>#${b.booking_id || b.id}</td>
               <td>${b.user_name || b.customer_name || "—"}</td>
@@ -444,7 +619,9 @@
               <td>${fmtMoney(b.total_price || b.total_amount)}</td>
               <td>${statusBadge(b.status)}</td>
             </tr>
-          `).join("");
+          `,
+            )
+            .join("");
 
           document.getElementById("bookingSubtitle").textContent =
             `Showing ${list.length} most recent booking${list.length !== 1 ? "s" : ""}`;
@@ -454,13 +631,15 @@
       }
 
       // ===== DROPDOWN TOGGLE =====
-      document.getElementById("topbarUser").addEventListener("click", function (e) {
-        e.stopPropagation();
-        const dropdown = document.getElementById("userDropdown");
-        const isOpen = dropdown.classList.contains("visible");
-        dropdown.classList.toggle("visible", !isOpen);
-        this.classList.toggle("open", !isOpen);
-      });
+      document
+        .getElementById("topbarUser")
+        .addEventListener("click", function (e) {
+          e.stopPropagation();
+          const dropdown = document.getElementById("userDropdown");
+          const isOpen = dropdown.classList.contains("visible");
+          dropdown.classList.toggle("visible", !isOpen);
+          this.classList.toggle("open", !isOpen);
+        });
 
       // Close on outside click
       document.addEventListener("click", function () {
@@ -469,23 +648,32 @@
       });
 
       // ===== LOGOUT =====
-      document.getElementById("logoutBtn").addEventListener("click", async function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        try {
-          await fetch(`${API}/logout`, { method: "POST", credentials: "include" });
-        } finally {
-          window.location.href = "../index.html";
-        }
-      });
+      document
+        .getElementById("logoutBtn")
+        .addEventListener("click", async function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          try {
+            await fetch(`${API}/logout`, {
+              method: "POST",
+              credentials: "include",
+            });
+          } finally {
+            window.location.href = "../index.html";
+          }
+        });
 
       // ===== SEARCH =====
-      document.getElementById("dashboardSearch")?.addEventListener("input", function () {
-        const q = this.value.toLowerCase();
-        document.querySelectorAll("#bookingsTableBody tr").forEach((row) => {
-          row.style.display = row.textContent.toLowerCase().includes(q) ? "" : "none";
+      document
+        .getElementById("dashboardSearch")
+        ?.addEventListener("input", function () {
+          const q = this.value.toLowerCase();
+          document.querySelectorAll("#bookingsTableBody tr").forEach((row) => {
+            row.style.display = row.textContent.toLowerCase().includes(q)
+              ? ""
+              : "none";
+          });
         });
-      });
 
       // ===== INIT =====
       loadAdmin();

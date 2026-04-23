@@ -45,6 +45,8 @@
         min-height: 100vh;
         overflow-x: hidden;
       }
+
+      /* SIDEBAR */
       .sidebar {
         width: var(--sidebar-w);
         min-height: 100vh;
@@ -160,6 +162,8 @@
         font-size: 11px;
         color: rgba(255, 255, 255, 0.35);
       }
+
+      /* MAIN */
       .main-wrap {
         margin-left: var(--sidebar-w);
         flex: 1;
@@ -167,6 +171,8 @@
         flex-direction: column;
         min-height: 100vh;
       }
+
+      /* TOPBAR */
       .topbar {
         height: 64px;
         background: #fff;
@@ -299,6 +305,8 @@
       .tb-user.open .tb-chevron {
         transform: rotate(180deg);
       }
+
+      /* DROPDOWN */
       .dd {
         position: absolute;
         top: calc(100% + 8px);
@@ -369,6 +377,8 @@
       .dd-item.logout:hover {
         background: #fef2f2;
       }
+
+      /* CONTENT */
       .content {
         flex: 1;
         padding: 28px;
@@ -410,6 +420,8 @@
       .btn-ghost:hover {
         background: var(--bg);
       }
+
+      /* FILTERS */
       .filters-bar {
         display: flex;
         gap: 10px;
@@ -452,7 +464,6 @@
       }
       .finp {
         min-width: 130px;
-        cursor: text;
       }
       .fsel:focus,
       .finp:focus {
@@ -479,6 +490,8 @@
         color: var(--muted);
         white-space: nowrap;
       }
+
+      /* TABLE */
       .table-card {
         background: #fff;
         border-radius: var(--radius);
@@ -593,7 +606,8 @@
         color: var(--muted);
         font-family: "Space Mono", monospace;
       }
-      /* BADGE ONLY — no dropdown */
+
+      /* BADGES */
       .bdg {
         display: inline-flex;
         align-items: center;
@@ -635,7 +649,8 @@
         background: var(--orange-dim);
         color: var(--orange);
       }
-      /* VIEW BUTTON */
+
+      /* VIEW BTN */
       .view-btn {
         display: inline-flex;
         align-items: center;
@@ -660,7 +675,8 @@
         width: 13px;
         height: 13px;
       }
-      /* pagination */
+
+      /* PAGINATION */
       .pagination {
         display: flex;
         align-items: center;
@@ -703,6 +719,7 @@
         opacity: 0.4;
         cursor: not-allowed;
       }
+
       /* MODAL */
       .overlay {
         position: fixed;
@@ -737,7 +754,6 @@
       .overlay.open .modal {
         transform: scale(1) translateY(0);
       }
-      /* hero image header */
       .modal-hero {
         position: relative;
         height: 210px;
@@ -778,7 +794,6 @@
       .hero-close:hover {
         background: rgba(0, 0, 0, 0.65);
       }
-      /* booking status badge top-right of hero */
       .hero-status {
         position: absolute;
         top: 14px;
@@ -805,13 +820,11 @@
         font-family: "Space Mono", monospace;
         margin-top: 3px;
       }
-      /* modal body */
       .modal-body {
         overflow-y: auto;
         padding: 24px 28px;
         flex: 1;
       }
-      /* customer strip */
       .cust-strip {
         display: flex;
         align-items: center;
@@ -851,7 +864,6 @@
         color: var(--muted);
         margin-top: 2px;
       }
-      /* 2-col info */
       .info-cols {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -892,7 +904,6 @@
         color: var(--dark);
         text-align: right;
       }
-      /* price table */
       .price-box {
         background: var(--bg);
         border-radius: 12px;
@@ -921,7 +932,6 @@
       .price-total td:last-child {
         color: var(--orange);
       }
-      /* notes */
       .notes-box {
         background: #fffbeb;
         border: 1px solid #fde68a;
@@ -932,7 +942,6 @@
         color: #92400e;
         line-height: 1.6;
       }
-      /* footer action bar */
       .modal-footer {
         flex-shrink: 0;
         padding: 18px 28px;
@@ -1004,7 +1013,6 @@
       .st-btn.btn-cancelled:not(.is-current):hover {
         background: #fff5f5;
       }
-      /* cancel reason form */
       .cancel-form {
         margin-top: 14px;
         padding: 16px;
@@ -1027,11 +1035,10 @@
         font-size: 12px;
         font-weight: 600;
         color: #dc2626;
-        display: block;
-        margin-bottom: 8px;
         display: flex;
         align-items: center;
         gap: 6px;
+        margin-bottom: 8px;
       }
       .cancel-form textarea {
         width: 100%;
@@ -1104,7 +1111,8 @@
         background: var(--bg);
         color: var(--text);
       }
-      /* toast */
+
+      /* TOAST */
       .toast {
         position: fixed;
         bottom: 28px;
@@ -1137,6 +1145,7 @@
         color: var(--muted);
         font-size: 14px;
       }
+
       @media (max-width: 768px) {
         .sidebar {
           transform: translateX(-100%);
@@ -1162,17 +1171,18 @@
   </head>
   <body>
     <div style="display: flex; width: 100%">
+      <!-- SIDEBAR -->
       <aside class="sidebar">
         <div class="sidebar-logo">
           <div class="logo-mark">AD</div>
           <div style="display: flex; flex-direction: column; gap: 1px">
-            <span class="logo-brand">AUTO DEALER</span
-            ><span class="logo-sub">FLEET MANAGEMENT</span>
+            <span class="logo-brand">AUTO DEALER</span>
+            <span class="logo-sub">FLEET MANAGEMENT</span>
           </div>
         </div>
         <nav class="sidebar-nav">
-          <a href="dashboard.html" class="nav-item"
-            ><svg
+          <a href="dashboard.html" class="nav-item">
+            <svg
               class="nav-icon"
               viewBox="0 0 24 24"
               fill="none"
@@ -1182,11 +1192,12 @@
               <rect x="3" y="3" width="7" height="7" rx="1" />
               <rect x="14" y="3" width="7" height="7" rx="1" />
               <rect x="3" y="14" width="7" height="7" rx="1" />
-              <rect x="14" y="14" width="7" height="7" rx="1" /></svg
-            >Dashboard</a
-          >
-          <a href="admin.vehicle.html" class="nav-item"
-            ><svg
+              <rect x="14" y="14" width="7" height="7" rx="1" />
+            </svg>
+            Dashboard
+          </a>
+          <a href="admin.vehicle.html" class="nav-item">
+            <svg
               class="nav-icon"
               viewBox="0 0 24 24"
               fill="none"
@@ -1198,11 +1209,12 @@
               />
               <circle cx="7" cy="17" r="2" />
               <circle cx="17" cy="17" r="2" />
-              <path d="M5 17h8M3 9h18" /></svg
-            >Vehicles</a
-          >
-          <a href="admin.bookings.html" class="nav-item active"
-            ><svg
+              <path d="M5 17h8M3 9h18" />
+            </svg>
+            Vehicles
+          </a>
+          <a href="admin.bookings.html" class="nav-item active">
+            <svg
               class="nav-icon"
               viewBox="0 0 24 24"
               fill="none"
@@ -1212,22 +1224,24 @@
               <rect x="3" y="4" width="18" height="18" rx="2" />
               <line x1="16" y1="2" x2="16" y2="6" />
               <line x1="8" y1="2" x2="8" y2="6" />
-              <line x1="3" y1="10" x2="21" y2="10" /></svg
-            >Bookings</a
-          >
-          <a href="admin.kyc.html" class="nav-item"
-            ><svg
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            Bookings
+          </a>
+          <a href="admin.kyc.html" class="nav-item">
+            <svg
               class="nav-icon"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               stroke-width="1.8"
             >
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
-            >KYC</a
-          >
-          <a href="admin.payments.html" class="nav-item"
-            ><svg
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+            KYC
+          </a>
+          <a href="admin.payments.html" class="nav-item">
+            <svg
               class="nav-icon"
               viewBox="0 0 24 24"
               fill="none"
@@ -1235,11 +1249,12 @@
               stroke-width="1.8"
             >
               <rect x="2" y="5" width="20" height="14" rx="2" />
-              <line x1="2" y1="10" x2="22" y2="10" /></svg
-            >Payments</a
-          >
-          <a href="admin.enquiries.html" class="nav-item"
-            ><svg
+              <line x1="2" y1="10" x2="22" y2="10" />
+            </svg>
+            Payments
+          </a>
+          <a href="admin.enquiries.html" class="nav-item">
+            <svg
               class="nav-icon"
               viewBox="0 0 24 24"
               fill="none"
@@ -1248,11 +1263,12 @@
             >
               <circle cx="12" cy="12" r="10" />
               <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-              <line x1="12" y1="17" x2="12.01" y2="17" /></svg
-            >Enquiries</a
-          >
-          <a href="admin.reviews.html" class="nav-item"
-            ><svg
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            Enquiries
+          </a>
+          <a href="admin.reviews.html" class="nav-item">
+            <svg
               class="nav-icon"
               viewBox="0 0 24 24"
               fill="none"
@@ -1260,11 +1276,12 @@
               stroke-width="1.8"
             >
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" /></svg
-            >Reviews</a
-          >
-          <a href="admin.servicing.html" class="nav-item"
-            ><svg
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            Reviews
+          </a>
+          <a href="admin.servicing.html" class="nav-item">
+            <svg
               class="nav-icon"
               viewBox="0 0 24 24"
               fill="none"
@@ -1273,21 +1290,23 @@
             >
               <path
                 d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
-              /></svg
-            >Servicing</a
-          >
+              />
+            </svg>
+            Servicing
+          </a>
         </nav>
         <div class="sidebar-footer">
           <div class="sb-user">
             <div class="sb-av" id="sbAv">AD</div>
             <div>
-              <span class="sb-name" id="sbName">Admin</span
-              ><span class="sb-role" id="sbRole">Super Admin</span>
+              <span class="sb-name" id="sbName">Admin</span>
+              <span class="sb-role" id="sbRole">Admin</span>
             </div>
           </div>
         </div>
       </aside>
 
+      <!-- MAIN -->
       <div class="main-wrap">
         <header class="topbar">
           <div class="search-wrap">
@@ -1315,14 +1334,15 @@
                 stroke-width="1.8"
               >
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                <path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg
-              ><span class="notif-badge">3</span>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              <span class="notif-badge">3</span>
             </button>
             <div class="tb-user" id="tbUser">
               <div class="tb-av" id="tbAv">AD</div>
               <div>
                 <p class="tb-name" id="tbName">Admin</p>
-                <p class="tb-role" id="tbRole">Super Admin</p>
+                <p class="tb-role" id="tbRole">Admin</p>
               </div>
               <svg
                 class="tb-chevron"
@@ -1338,10 +1358,10 @@
               <div class="dd" id="dd">
                 <div class="dd-hdr">
                   <p class="dd-name" id="ddName">Admin</p>
-                  <p class="dd-email" id="ddEmail">admin@autodealer.com</p>
+                  <p class="dd-email" id="ddEmail">—</p>
                 </div>
-                <a class="dd-item" href="#"
-                  ><svg
+                <a class="dd-item" href="#">
+                  <svg
                     width="15"
                     height="15"
                     viewBox="0 0 24 24"
@@ -1350,12 +1370,13 @@
                     stroke-width="1.8"
                   >
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" /></svg
-                  >My Profile</a
-                >
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                  My Profile
+                </a>
                 <div class="dd-div"></div>
-                <a class="dd-item logout" href="#"
-                  ><svg
+                <a class="dd-item logout" href="#" id="logoutBtn">
+                  <svg
                     width="15"
                     height="15"
                     viewBox="0 0 24 24"
@@ -1365,9 +1386,10 @@
                   >
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                     <polyline points="16 17 21 12 16 7" />
-                    <line x1="21" y1="12" x2="9" y2="12" /></svg
-                  >Logout</a
-                >
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                  </svg>
+                  Logout
+                </a>
               </div>
             </div>
           </div>
@@ -1390,8 +1412,9 @@
               >
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" /></svg
-              >Export CSV
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Export CSV
             </button>
           </div>
 
@@ -1408,8 +1431,8 @@
               </select>
             </div>
             <div class="fg">
-              <span class="flbl">Date From</span
-              ><input
+              <span class="flbl">Date From</span>
+              <input
                 type="date"
                 class="finp"
                 id="fFrom"
@@ -1417,8 +1440,8 @@
               />
             </div>
             <div class="fg">
-              <span class="flbl">Date To</span
-              ><input
+              <span class="flbl">Date To</span>
+              <input
                 type="date"
                 class="finp"
                 id="fTo"
@@ -1476,7 +1499,6 @@
     <!-- BOOKING MODAL -->
     <div class="overlay" id="overlay">
       <div class="modal">
-        <!-- hero vehicle image -->
         <div class="modal-hero">
           <img class="hero-img" id="heroImg" src="" alt="" />
           <div class="hero-overlay"></div>
@@ -1497,6 +1519,7 @@
     <script>
       const API = "http://localhost:5000/api/admin/bookings";
       const ADMIN_API = "http://localhost:5000/api/admin/me";
+      const LOGOUT_API = "http://localhost:5000/api/admin/logout";
 
       let data = [],
         filtered = [],
@@ -1543,9 +1566,31 @@
             })
           : "—";
 
+      // ── POPULATE ADMIN ──
+      function populateAdmin(a) {
+        if (!a || !a.name) return;
+        const initials = a.name
+          .split(" ")
+          .map((c) => c[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 2);
+        const role = a.role
+          ? a.role.charAt(0).toUpperCase() + a.role.slice(1)
+          : "Admin";
+        document.getElementById("sbAv").textContent = initials;
+        document.getElementById("sbName").textContent = a.name;
+        document.getElementById("sbRole").textContent = role;
+        document.getElementById("tbAv").textContent = initials;
+        document.getElementById("tbName").textContent = a.name;
+        document.getElementById("tbRole").textContent = role;
+        document.getElementById("ddName").textContent = a.name;
+        document.getElementById("ddEmail").textContent = a.email || "—";
+      }
+
       // ── BOOT ──
       async function boot() {
-        // wire up events first so UI is responsive
+        // Dropdown toggle
         document
           .getElementById("tbUser")
           .addEventListener("click", function (e) {
@@ -1557,6 +1602,24 @@
           document.getElementById("dd").classList.remove("visible");
           document.getElementById("tbUser").classList.remove("open");
         });
+
+        // Logout
+        document
+          .getElementById("logoutBtn")
+          .addEventListener("click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            try {
+              await fetch(LOGOUT_API, {
+                method: "POST",
+                credentials: "include",
+              });
+            } finally {
+              window.location.href = "../index.html";
+            }
+          });
+
+        // Search & modal close
         document
           .getElementById("bSearch")
           .addEventListener("input", applyFilters);
@@ -1574,11 +1637,16 @@
             fetch(ADMIN_API, { credentials: "include" }),
             fetch(API, { credentials: "include" }),
           ]);
-          const adminJson = await adminRes.json();
-          const bookJson = await bookRes.json();
 
-          if (adminJson.success || adminJson.name)
-            populateAdmin(adminJson.data || adminJson);
+          if (adminRes.status === 401) {
+            window.location.href = "../index.html";
+            return;
+          }
+
+          const adminJson = await adminRes.json();
+          populateAdmin(adminJson); // /me returns object directly — no .data wrapper
+
+          const bookJson = await bookRes.json();
           if (bookJson.success) {
             data = bookJson.data;
             filtered = [...data];
@@ -1593,80 +1661,70 @@
         }
       }
 
-      function populateAdmin(a) {
-        if (!a) return;
-        const i = a.name
-          ? a.name
-              .split(" ")
-              .map((c) => c[0])
-              .join("")
-              .toUpperCase()
-              .slice(0, 2)
-          : "AD";
-        const role = a.role
-          ? a.role.charAt(0).toUpperCase() + a.role.slice(1)
-          : "Admin";
-        document.getElementById("sbAv").textContent = i;
-        document.getElementById("tbAv").textContent = i;
-        document.getElementById("sbName").textContent = a.name || "Admin";
-        document.getElementById("tbName").textContent = a.name || "Admin";
-        document.getElementById("sbRole").textContent = role;
-        document.getElementById("tbRole").textContent = role;
-        document.getElementById("ddName").textContent = a.name || "Admin";
-        document.getElementById("ddEmail").textContent = a.email || "—";
-      }
-
       boot();
 
+      // ── RENDER ──
       function render() {
         const tb = document.getElementById("tbody");
-        const total = filtered.length,
-          start = (page - 1) * PER,
-          end = Math.min(start + PER, total),
-          slice = filtered.slice(start, end);
+        const total = filtered.length;
+        const start = (page - 1) * PER;
+        const end = Math.min(start + PER, total);
+        const slice = filtered.slice(start, end);
+
         document.getElementById("tCount").textContent =
           `${total} booking${total !== 1 ? "s" : ""}`;
         document.getElementById("pagInfo").textContent = total
           ? `Showing ${start + 1}–${end} of ${total}`
           : "No results";
+
         if (!slice.length) {
           tb.innerHTML = `<tr><td colspan="9" class="empty-cell">📋 No bookings match your filters</td></tr>`;
           renderPag(0);
           return;
         }
+
         tb.innerHTML = slice
           .map(
             (b) => `
-    <tr>
-      <td><span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">#</span><strong>${b.id}</strong></td>
-      <td>
-        <div class="user-cell">
-          <div class="uc-av">${b.user_photo ? `<img src="${b.user_photo}" alt="" onerror="this.parentElement.innerHTML='${ini(b.user_name)}'">` : `${ini(b.user_name)}`}</div>
-          <div><div class="uc-name">${b.user_name}</div><div class="uc-email">${b.user_email}</div></div>
-        </div>
-      </td>
-      <td>
-        <div class="v-cell">
-          <img class="v-thumb" src="${b.vehicle_img}" alt="" onerror="this.style.display='none'"/>
-          <div><div class="v-name">${b.vehicle_name}</div><div class="v-plate">${b.vehicle_plate}</div></div>
-        </div>
-      </td>
-      <td><div style="font-size:12.5px">${fmtDate(b.start_date)} → ${fmtDate(b.end_date)}</div><div style="font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:2px">${b.total_days} day${b.total_days !== 1 ? "s" : ""}</div></td>
-      <td style="font-size:12.5px;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.pickup_location}</td>
-      <td style="font-family:'Space Mono',monospace;font-size:12.5px;font-weight:600">${fmtMoney(b.total_price)}</td>
-      <td>${kycBadge(b.kyc_status)}</td>
-      <td>${bkBadge(b.status)}</td>
-      <td><button class="view-btn" onclick="openModal(${b.id})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button></td>
-    </tr>
-  `,
+          <tr>
+            <td><span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">#</span><strong>${b.id}</strong></td>
+            <td>
+              <div class="user-cell">
+                <div class="uc-av">${b.user_photo ? `<img src="${b.user_photo}" alt="" onerror="this.parentElement.innerHTML='${ini(b.user_name)}'">` : ini(b.user_name)}</div>
+                <div><div class="uc-name">${b.user_name}</div><div class="uc-email">${b.user_email}</div></div>
+              </div>
+            </td>
+            <td>
+              <div class="v-cell">
+                <img class="v-thumb" src="${b.vehicle_img}" alt="" onerror="this.style.display='none'" />
+                <div><div class="v-name">${b.vehicle_name}</div><div class="v-plate">${b.vehicle_plate}</div></div>
+              </div>
+            </td>
+            <td>
+              <div style="font-size:12.5px">${fmtDate(b.start_date)} → ${fmtDate(b.end_date)}</div>
+              <div style="font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:2px">${b.total_days} day${b.total_days !== 1 ? "s" : ""}</div>
+            </td>
+            <td style="font-size:12.5px;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.pickup_location}</td>
+            <td style="font-family:'Space Mono',monospace;font-size:12.5px;font-weight:600">${fmtMoney(b.total_price)}</td>
+            <td>${kycBadge(b.kyc_status)}</td>
+            <td>${bkBadge(b.status)}</td>
+            <td>
+              <button class="view-btn" onclick="openModal(${b.id})">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                View
+              </button>
+            </td>
+          </tr>
+        `,
           )
           .join("");
+
         renderPag(total);
       }
 
       function renderPag(total) {
-        const pages = Math.ceil(total / PER),
-          btns = document.getElementById("pagBtns");
+        const pages = Math.ceil(total / PER);
+        const btns = document.getElementById("pagBtns");
         if (pages <= 1) {
           btns.innerHTML = "";
           return;
@@ -1681,6 +1739,7 @@
         h += `<button class="pag-btn" onclick="goPage(${page + 1})" ${page === pages ? "disabled" : ""}>›</button>`;
         btns.innerHTML = h;
       }
+
       function goPage(p) {
         const pages = Math.ceil(filtered.length / PER);
         if (p < 1 || p > pages) return;
@@ -1688,11 +1747,11 @@
         render();
       }
 
+      // ── MODAL ──
       function openModal(id) {
         const b = data.find((x) => x.id === id);
         if (!b) return;
         openId = id;
-        // hero
         document.getElementById("heroImg").src = b.vehicle_img;
         document.getElementById("heroStatus").innerHTML = bkBadge(b.status);
         document.getElementById("heroVehicleName").textContent = b.vehicle_name;
@@ -1702,6 +1761,7 @@
         document.getElementById("mFooter").innerHTML = buildFooter(b);
         document.getElementById("overlay").classList.add("open");
       }
+
       function closeModal() {
         document.getElementById("overlay").classList.remove("open");
         openId = null;
@@ -1719,88 +1779,97 @@
       function buildBody(b) {
         const net = b.total_price - (b.discount || 0) + (b.extra_charges || 0);
         return `
-    <div class="cust-strip">
-      <div class="cust-av">${b.user_photo ? `<img src="${b.user_photo}" alt="" onerror="this.parentElement.innerHTML='${ini(b.user_name)}'">` : `${ini(b.user_name)}`}</div>
-      <div style="flex:1"><div class="cust-name">${b.user_name}</div><div class="cust-sub">${b.user_email}  ·  ${b.user_phone}</div></div>
-      <div>${kycBadge(b.kyc_status)}</div>
-    </div>
-    <div class="info-cols">
-      <div class="info-box">
-        <div class="info-box-title">Booking Info</div>
-        <div class="info-row"><span class="ir-lbl">Booking ID</span><span class="ir-val" style="font-family:'Space Mono',monospace">#${b.id}</span></div>
-        <div class="info-row"><span class="ir-lbl">Booked On</span><span class="ir-val">${fmtDate(b.booked_on)}</span></div>
-        <div class="info-row"><span class="ir-lbl">Start Date</span><span class="ir-val">${fmtDate(b.start_date)}</span></div>
-        <div class="info-row"><span class="ir-lbl">End Date</span><span class="ir-val">${fmtDate(b.end_date)}</span></div>
-        <div class="info-row"><span class="ir-lbl">Duration</span><span class="ir-val">${b.total_days} day${b.total_days !== 1 ? "s" : ""}</span></div>
-        <div class="info-row"><span class="ir-lbl">Status</span><span class="ir-val">${bkBadge(b.status)}</span></div>
-      </div>
-      <div class="info-box">
-        <div class="info-box-title">Location & Payment</div>
-        <div class="info-row"><span class="ir-lbl">Pickup</span><span class="ir-val">${b.pickup_location}</span></div>
-        <div class="info-row"><span class="ir-lbl">Drop-off</span><span class="ir-val">${b.dropoff_location}</span></div>
-        <div class="info-row"><span class="ir-lbl">Method</span><span class="ir-val">${b.payment_method}</span></div>
-        <div class="info-row"><span class="ir-lbl">Payment</span><span class="ir-val">${b.payment_status === "Paid" ? `<span class="bdg bdg-green"><span class="dot"></span>Paid</span>` : `<span class="bdg bdg-amber"><span class="dot"></span>${b.payment_status}</span>`}</span></div>
-      </div>
-    </div>
-    <div class="price-box">
-      <div class="info-box-title" style="margin-bottom:10px">Price Breakdown</div>
-      <table class="price-table">
-        <tr><td>Daily Rate × ${b.total_days} day${b.total_days !== 1 ? "s" : ""}</td><td style="text-align:right;color:var(--muted)">${fmtMoney(b.per_day)} each</td><td style="text-align:right;font-weight:500">${fmtMoney(b.per_day * b.total_days)}</td></tr>
-        ${b.extra_charges ? `<tr><td>Extra Charges</td><td></td><td style="text-align:right;font-weight:500">+${fmtMoney(b.extra_charges)}</td></tr>` : ""}
-        ${b.discount ? `<tr><td>Discount</td><td></td><td style="text-align:right;font-weight:500;color:#16a34a">−${fmtMoney(b.discount)}</td></tr>` : ""}
-        <tr class="price-total"><td>Total</td><td></td><td style="text-align:right">${fmtMoney(net)}</td></tr>
-      </table>
-    </div>
-    ${b.cancel_reason ? `<div class="notes-box" style="background:#fff5f5;border-color:#fecaca;color:#b91c1c"><strong>⚠️ Cancellation Reason:</strong> ${b.cancel_reason}</div>` : ""}
-    ${b.notes ? `<div class="notes-box">📝 ${b.notes}</div>` : ""}
-  `;
+          <div class="cust-strip">
+            <div class="cust-av">${b.user_photo ? `<img src="${b.user_photo}" alt="" onerror="this.parentElement.innerHTML='${ini(b.user_name)}'">` : ini(b.user_name)}</div>
+            <div style="flex:1"><div class="cust-name">${b.user_name}</div><div class="cust-sub">${b.user_email}  ·  ${b.user_phone}</div></div>
+            <div>${kycBadge(b.kyc_status)}</div>
+          </div>
+          <div class="info-cols">
+            <div class="info-box">
+              <div class="info-box-title">Booking Info</div>
+              <div class="info-row"><span class="ir-lbl">Booking ID</span><span class="ir-val" style="font-family:'Space Mono',monospace">#${b.id}</span></div>
+              <div class="info-row"><span class="ir-lbl">Booked On</span><span class="ir-val">${fmtDate(b.booked_on)}</span></div>
+              <div class="info-row"><span class="ir-lbl">Start Date</span><span class="ir-val">${fmtDate(b.start_date)}</span></div>
+              <div class="info-row"><span class="ir-lbl">End Date</span><span class="ir-val">${fmtDate(b.end_date)}</span></div>
+              <div class="info-row"><span class="ir-lbl">Duration</span><span class="ir-val">${b.total_days} day${b.total_days !== 1 ? "s" : ""}</span></div>
+              <div class="info-row"><span class="ir-lbl">Status</span><span class="ir-val">${bkBadge(b.status)}</span></div>
+            </div>
+            <div class="info-box">
+              <div class="info-box-title">Location & Payment</div>
+              <div class="info-row"><span class="ir-lbl">Pickup</span><span class="ir-val">${b.pickup_location}</span></div>
+              <div class="info-row"><span class="ir-lbl">Drop-off</span><span class="ir-val">${b.dropoff_location}</span></div>
+              <div class="info-row"><span class="ir-lbl">Method</span><span class="ir-val">${b.payment_method}</span></div>
+              <div class="info-row"><span class="ir-lbl">Payment</span><span class="ir-val">
+                ${
+                  b.payment_status === "Paid"
+                    ? `<span class="bdg bdg-green"><span class="dot"></span>Paid</span>`
+                    : `<span class="bdg bdg-amber"><span class="dot"></span>${b.payment_status}</span>`
+                }
+              </span></div>
+            </div>
+          </div>
+          <div class="price-box">
+            <div class="info-box-title" style="margin-bottom:10px">Price Breakdown</div>
+            <table class="price-table">
+              <tr>
+                <td>Daily Rate × ${b.total_days} day${b.total_days !== 1 ? "s" : ""}</td>
+                <td style="text-align:right;color:var(--muted)">${fmtMoney(b.per_day)} each</td>
+                <td style="text-align:right;font-weight:500">${fmtMoney(b.per_day * b.total_days)}</td>
+              </tr>
+              ${b.extra_charges ? `<tr><td>Extra Charges</td><td></td><td style="text-align:right;font-weight:500">+${fmtMoney(b.extra_charges)}</td></tr>` : ""}
+              ${b.discount ? `<tr><td>Discount</td><td></td><td style="text-align:right;font-weight:500;color:#16a34a">−${fmtMoney(b.discount)}</td></tr>` : ""}
+              <tr class="price-total"><td>Total</td><td></td><td style="text-align:right">${fmtMoney(net)}</td></tr>
+            </table>
+          </div>
+          ${b.cancel_reason ? `<div class="notes-box" style="background:#fff5f5;border-color:#fecaca;color:#b91c1c"><strong>⚠️ Cancellation Reason:</strong> ${b.cancel_reason}</div>` : ""}
+          ${b.notes ? `<div class="notes-box">📝 ${b.notes}</div>` : ""}
+        `;
       }
 
       function buildFooter(b) {
         const s = b.status;
         return `
-    <div class="footer-ttl">Update Booking Status</div>
-    <div class="status-btns">
-      <button class="st-btn btn-pending   ${s === "Pending" ? "is-current" : ""}" onclick="doStatus(${b.id},'Pending')">Pending</button>
-      <button class="st-btn btn-confirmed ${s === "Confirmed" ? "is-current" : ""}" onclick="doStatus(${b.id},'Confirmed')">Confirmed</button>
-      <button class="st-btn btn-active    ${s === "Active" ? "is-current" : ""}" onclick="doStatus(${b.id},'Active')">Active</button>
-      <button class="st-btn btn-completed ${s === "Completed" ? "is-current" : ""}" onclick="doStatus(${b.id},'Completed')">Completed</button>
-      <button class="st-btn btn-cancelled ${s === "Cancelled" ? "is-current" : ""}" onclick="triggerCancel(${b.id})">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-        Cancelled
-      </button>
-    </div>
-    <div id="cancelSlot"></div>
-  `;
+          <div class="footer-ttl">Update Booking Status</div>
+          <div class="status-btns">
+            <button class="st-btn btn-pending   ${s === "Pending" ? "is-current" : ""}" onclick="doStatus(${b.id},'Pending')">Pending</button>
+            <button class="st-btn btn-confirmed ${s === "Confirmed" ? "is-current" : ""}" onclick="doStatus(${b.id},'Confirmed')">Confirmed</button>
+            <button class="st-btn btn-active    ${s === "Active" ? "is-current" : ""}" onclick="doStatus(${b.id},'Active')">Active</button>
+            <button class="st-btn btn-completed ${s === "Completed" ? "is-current" : ""}" onclick="doStatus(${b.id},'Completed')">Completed</button>
+            <button class="st-btn btn-cancelled ${s === "Cancelled" ? "is-current" : ""}" onclick="triggerCancel(${b.id})">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              Cancelled
+            </button>
+          </div>
+          <div id="cancelSlot"></div>
+        `;
       }
 
-      // ── CANCELLED: show inline reason form first ──
+      // ── CANCEL FLOW ──
       function triggerCancel(id) {
         const slot = document.getElementById("cancelSlot");
         if (!slot) return;
-        // already open — just focus
         if (slot.innerHTML.trim()) {
           document.getElementById("cancelReasonTA")?.focus();
           return;
         }
         const b = data.find((x) => x.id === id);
         slot.innerHTML = `
-    <div class="cancel-form">
-      <span class="cancel-form-lbl">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        Cancellation Reason — required
-      </span>
-      <textarea id="cancelReasonTA" placeholder="Explain why this booking is being cancelled…&#10;e.g. Customer requested cancellation, Vehicle unavailable, Duplicate booking…" rows="4">${b?.cancel_reason || ""}</textarea>
-      <p class="cancel-form-hint">This reason will be saved to the database and emailed to the customer.</p>
-      <div class="cancel-form-btns">
-        <button class="btn-do-cancel" id="confirmCancelBtn" onclick="confirmCancel(${id})">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-          Confirm Cancellation
-        </button>
-        <button class="btn-keep" onclick="document.getElementById('cancelSlot').innerHTML=''">Keep Booking</button>
-      </div>
-    </div>
-  `;
+          <div class="cancel-form">
+            <span class="cancel-form-lbl">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Cancellation Reason — required
+            </span>
+            <textarea id="cancelReasonTA" placeholder="Explain why this booking is being cancelled…" rows="4">${b?.cancel_reason || ""}</textarea>
+            <p class="cancel-form-hint">This reason will be saved and emailed to the customer.</p>
+            <div class="cancel-form-btns">
+              <button class="btn-do-cancel" id="confirmCancelBtn" onclick="confirmCancel(${id})">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                Confirm Cancellation
+              </button>
+              <button class="btn-keep" onclick="document.getElementById('cancelSlot').innerHTML=''">Keep Booking</button>
+            </div>
+          </div>
+        `;
         slot.scrollIntoView({ behavior: "smooth", block: "nearest" });
         document.getElementById("cancelReasonTA")?.focus();
       }
@@ -1814,19 +1883,16 @@
           document.getElementById("cancelReasonTA")?.focus();
           return;
         }
-        // disable buttons while saving
         const btn = document.getElementById("confirmCancelBtn");
         if (btn) {
           btn.disabled = true;
           btn.textContent = "Saving…";
         }
-
         await doStatus(id, "Cancelled", reason);
       }
 
-      // ── PERSIST STATUS TO BACKEND ──
+      // ── STATUS UPDATE ──
       async function doStatus(id, status, cancelReason = "") {
-        const API_BASE = "http://localhost:5000/api/admin/bookings";
         document
           .querySelectorAll(".st-btn")
           .forEach((b) => (b.disabled = true));
@@ -1835,7 +1901,7 @@
           if (status === "Cancelled" && cancelReason)
             body.cancel_reason = cancelReason;
 
-          const res = await fetch(`${API_BASE}/${id}`, {
+          const res = await fetch(`${API}/${id}`, {
             method: "PUT",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
@@ -1844,13 +1910,11 @@
           const json = await res.json();
           if (!json.success) throw new Error(json.message || "Server error");
 
-          // update local array
           const item = data.find((x) => x.id === id);
           if (item) {
             item.status = status;
             if (cancelReason) item.cancel_reason = cancelReason;
           }
-          // also update filtered array
           const fi = filtered.find((x) => x.id === id);
           if (fi) {
             fi.status = status;
@@ -1862,7 +1926,6 @@
         } catch (e) {
           console.error(e);
           showToast(`Failed: ${e.message}`, "err");
-          // re-enable buttons on error
           const btn = document.getElementById("confirmCancelBtn");
           if (btn) {
             btn.disabled = false;
@@ -1875,12 +1938,14 @@
         }
       }
 
+      // ── FILTERS ──
       function applyFilters() {
-        const s = document.getElementById("fStatus").value,
-          fr = document.getElementById("fFrom").value,
-          to = document.getElementById("fTo").value,
-          k = document.getElementById("fKyc").value,
-          q = document.getElementById("bSearch").value.toLowerCase();
+        const s = document.getElementById("fStatus").value;
+        const fr = document.getElementById("fFrom").value;
+        const to = document.getElementById("fTo").value;
+        const k = document.getElementById("fKyc").value;
+        const q = document.getElementById("bSearch").value.toLowerCase();
+
         filtered = data.filter((b) => {
           if (s && b.status !== s) return false;
           if (k && b.kyc_status !== k) return false;
@@ -1895,6 +1960,7 @@
             return false;
           return true;
         });
+
         page = 1;
         render();
         const ac = [s, fr, to, k, q].filter(Boolean).length;
@@ -1902,6 +1968,7 @@
           ? `${ac} filter${ac > 1 ? "s" : ""} · ${filtered.length} result${filtered.length !== 1 ? "s" : ""}`
           : `All ${data.length} bookings`;
       }
+
       function resetFilters() {
         ["fStatus", "fFrom", "fTo", "fKyc"].forEach(
           (id) => (document.getElementById(id).value = ""),
@@ -1914,6 +1981,7 @@
           `All ${data.length} bookings`;
       }
 
+      // ── EXPORT ──
       function exportCSV() {
         const hdr = [
           "ID",
@@ -1956,6 +2024,7 @@
         a.click();
       }
 
+      // ── TOAST ──
       function showToast(msg, type = "ok") {
         const t = document.getElementById("toast");
         t.textContent = msg;

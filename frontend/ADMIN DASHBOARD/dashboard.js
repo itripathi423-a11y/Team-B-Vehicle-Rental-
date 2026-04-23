@@ -63,23 +63,23 @@ async function loadStats() {
 // ===== LOAD BOOKINGS =====
 async function loadBookings() {
   try {
-    const res = await fetch(`${API}/bookings?limit=5`, {
+    const res = await fetch(`${API}/bookings`, {
       credentials: "include",
     });
 
-    if (!res.ok) throw new Error();
-
     const data = await res.json();
 
-    const list = Array.isArray(data) ? data : data.bookings || [];
+    console.log("BOOKINGS RESPONSE:", data); // DEBUG
+
+    const list = data.data || []; // ✅ YOUR API USES "data"
 
     const tbody = document.getElementById("bookingsTableBody");
 
     if (!list.length) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="6" class="empty-state">
-            📋 No bookings found
+          <td colspan="6" style="text-align:center;padding:20px;">
+            No bookings found
           </td>
         </tr>
       `;
@@ -90,21 +90,20 @@ async function loadBookings() {
       .map(
         (b) => `
       <tr>
-        <td>#${b.booking_id}</td>
-        <td>${b.user_name}</td>
-        <td>${b.vehicle_name}</td>
-        <td>${b.total_days} days</td>
-        <td>Rs ${Number(b.total_price).toLocaleString("en-NP")}</td>
-        <td>${b.status}</td>
+        <td>#${b.booking_id || b.id}</td>
+        <td>${b.user_name || "-"}</td>
+        <td>${b.vehicle_name || "-"}</td>
+        <td>${b.total_days ?? "-"} days</td>
+        <td>Rs ${Number(b.total_price || 0).toLocaleString("en-NP")}</td>
+        <td>${b.status || "-"}</td>
       </tr>
     `,
       )
       .join("");
   } catch (err) {
-    console.log("Failed to load bookings");
+    console.log("ERROR:", err);
   }
 }
-
 // ===== SEARCH FUNCTION =====
 document
   .getElementById("dashboardSearch")
