@@ -46,7 +46,7 @@
         overflow-x: hidden;
       }
 
-      /* ── SIDEBAR ── */
+      /* SIDEBAR */
       .sidebar {
         width: var(--sidebar-w);
         min-height: 100vh;
@@ -81,11 +81,6 @@
         border-radius: 8px;
         flex-shrink: 0;
       }
-      .logo-text-block {
-        display: flex;
-        flex-direction: column;
-        gap: 1px;
-      }
       .logo-brand {
         font-family: "Bebas Neue", sans-serif;
         font-size: 17px;
@@ -115,7 +110,6 @@
         color: rgba(255, 255, 255, 0.45);
         text-decoration: none;
         font-size: 14px;
-        font-weight: 400;
         transition: all 0.18s;
       }
       .nav-item:hover {
@@ -169,7 +163,7 @@
         color: rgba(255, 255, 255, 0.35);
       }
 
-      /* ── MAIN ── */
+      /* MAIN */
       .main-wrap {
         margin-left: var(--sidebar-w);
         flex: 1;
@@ -178,7 +172,7 @@
         min-height: 100vh;
       }
 
-      /* ── TOPBAR ── */
+      /* TOPBAR */
       .topbar {
         height: 64px;
         background: var(--white);
@@ -386,7 +380,7 @@
         background: #fef2f2;
       }
 
-      /* ── CONTENT ── */
+      /* CONTENT */
       .content {
         flex: 1;
         padding: 28px;
@@ -409,7 +403,7 @@
         margin-top: 3px;
       }
 
-      /* ── STAT STRIP ── */
+      /* STAT STRIP */
       .stat-strip {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -428,7 +422,6 @@
         transition:
           transform 0.2s,
           box-shadow 0.2s;
-        cursor: default;
       }
       .stat-tile:hover {
         transform: translateY(-2px);
@@ -456,7 +449,7 @@
         margin-top: 1px;
       }
 
-      /* ── FILTERS ── */
+      /* FILTERS */
       .filters-bar {
         display: flex;
         gap: 10px;
@@ -519,7 +512,7 @@
         white-space: nowrap;
       }
 
-      /* ── TABLE ── */
+      /* TABLE */
       .table-card {
         background: var(--white);
         border-radius: var(--radius);
@@ -573,13 +566,9 @@
       .data-table tbody tr:last-child td {
         border-bottom: none;
       }
-      .data-table tbody tr {
-        transition: background 0.15s;
-      }
       .data-table tbody tr:hover td {
         background: #fafafa;
       }
-
       .user-cell {
         display: flex;
         align-items: center;
@@ -707,7 +696,7 @@
         background: var(--orange-light);
       }
 
-      /* ── MODAL ── */
+      /* MODAL */
       .overlay {
         position: fixed;
         inset: 0;
@@ -775,6 +764,7 @@
       .modal-body {
         overflow-y: auto;
         padding: 24px;
+        flex: 1;
       }
 
       .kyc-profile-top {
@@ -1056,7 +1046,7 @@
         background: var(--bg);
       }
 
-      /* ── LIGHTBOX ── */
+      /* LIGHTBOX */
       .lightbox {
         position: fixed;
         inset: 0;
@@ -1100,7 +1090,7 @@
         background: rgba(255, 255, 255, 0.25);
       }
 
-      /* ── TOAST ── */
+      /* TOAST */
       .toast {
         position: fixed;
         bottom: 28px;
@@ -1128,7 +1118,6 @@
       .toast.error {
         border-left: 3px solid #dc2626;
       }
-
       .empty-cell {
         text-align: center;
         padding: 60px 20px;
@@ -1169,7 +1158,7 @@
       <aside class="sidebar">
         <div class="sidebar-logo">
           <div class="logo-mark">AD</div>
-          <div class="logo-text-block">
+          <div style="display: flex; flex-direction: column; gap: 1px">
             <span class="logo-brand">AUTO DEALER</span>
             <span class="logo-sub">FLEET MANAGEMENT</span>
           </div>
@@ -1186,8 +1175,9 @@
               <rect x="3" y="3" width="7" height="7" rx="1" />
               <rect x="14" y="3" width="7" height="7" rx="1" />
               <rect x="3" y="14" width="7" height="7" rx="1" />
-              <rect x="14" y="14" width="7" height="7" rx="1" /></svg
-            >Dashboard
+              <rect x="14" y="14" width="7" height="7" rx="1" />
+            </svg>
+            Dashboard
           </a>
           <a href="admin.vehicle.html" class="nav-item">
             <svg
@@ -1202,8 +1192,9 @@
               />
               <circle cx="7" cy="17" r="2" />
               <circle cx="17" cy="17" r="2" />
-              <path d="M5 17h8M3 9h18" /></svg
-            >Vehicles
+              <path d="M5 17h8M3 9h18" />
+            </svg>
+            Vehicles
           </a>
           <a href="admin.bookings.html" class="nav-item">
             <svg
@@ -1216,8 +1207,9 @@
               <rect x="3" y="4" width="18" height="18" rx="2" />
               <line x1="16" y1="2" x2="16" y2="6" />
               <line x1="8" y1="2" x2="8" y2="6" />
-              <line x1="3" y1="10" x2="21" y2="10" /></svg
-            >Bookings
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            Bookings
           </a>
           <a href="admin.kyc.html" class="nav-item active">
             <svg
@@ -1227,8 +1219,9 @@
               stroke="currentColor"
               stroke-width="1.8"
             >
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
-            >KYC
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+            KYC
           </a>
           <a href="admin.payments.html" class="nav-item">
             <svg
@@ -1239,8 +1232,9 @@
               stroke-width="1.8"
             >
               <rect x="2" y="5" width="20" height="14" rx="2" />
-              <line x1="2" y1="10" x2="22" y2="10" /></svg
-            >Payments
+              <line x1="2" y1="10" x2="22" y2="10" />
+            </svg>
+            Payments
           </a>
           <a href="admin.enquiries.html" class="nav-item">
             <svg
@@ -1252,8 +1246,9 @@
             >
               <circle cx="12" cy="12" r="10" />
               <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-              <line x1="12" y1="17" x2="12.01" y2="17" /></svg
-            >Enquiries
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            Enquiries
           </a>
           <a href="admin.reviews.html" class="nav-item">
             <svg
@@ -1264,8 +1259,9 @@
               stroke-width="1.8"
             >
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" /></svg
-            >Reviews
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            Reviews
           </a>
           <a href="admin.servicing.html" class="nav-item">
             <svg
@@ -1277,8 +1273,9 @@
             >
               <path
                 d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
-              /></svg
-            >Servicing
+              />
+            </svg>
+            Servicing
           </a>
         </nav>
         <div class="sidebar-footer">
@@ -1286,7 +1283,7 @@
             <div class="user-avatar" id="sidebarAv">AD</div>
             <div>
               <span class="user-name" id="sidebarName">Admin</span>
-              <span class="user-role" id="sidebarRole">Super Admin</span>
+              <span class="user-role" id="sidebarRole">Admin</span>
             </div>
           </div>
         </div>
@@ -1328,7 +1325,7 @@
               <div class="topbar-avatar" id="topbarAv">AD</div>
               <div class="topbar-info">
                 <p class="topbar-name" id="topbarName">Admin</p>
-                <p class="topbar-role" id="topbarRole">Super Admin</p>
+                <p class="topbar-role" id="topbarRole">Admin</p>
               </div>
               <svg
                 class="topbar-chevron"
@@ -1344,10 +1341,10 @@
               <div class="user-dropdown" id="userDropdown">
                 <div class="dropdown-header">
                   <p class="dh-name" id="ddName">Admin</p>
-                  <p class="dh-email" id="ddEmail">admin@autodealer.com</p>
+                  <p class="dh-email" id="ddEmail">—</p>
                 </div>
-                <a class="dropdown-item" href="#"
-                  ><svg
+                <a class="dropdown-item" href="#">
+                  <svg
                     width="15"
                     height="15"
                     viewBox="0 0 24 24"
@@ -1356,11 +1353,12 @@
                     stroke-width="1.8"
                   >
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" /></svg
-                  >My Profile</a
-                >
-                <a class="dropdown-item" href="#"
-                  ><svg
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                  My Profile
+                </a>
+                <a class="dropdown-item" href="#">
+                  <svg
                     width="15"
                     height="15"
                     viewBox="0 0 24 24"
@@ -1371,12 +1369,13 @@
                     <circle cx="12" cy="12" r="3" />
                     <path
                       d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
-                    /></svg
-                  >Settings</a
-                >
+                    />
+                  </svg>
+                  Settings
+                </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item logout" href="../index.html"
-                  ><svg
+                <a class="dropdown-item logout" href="#" id="logoutBtn">
+                  <svg
                     width="15"
                     height="15"
                     viewBox="0 0 24 24"
@@ -1386,9 +1385,10 @@
                   >
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                     <polyline points="16 17 21 12 16 7" />
-                    <line x1="21" y1="12" x2="9" y2="12" /></svg
-                  >Logout</a
-                >
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                  </svg>
+                  Logout
+                </a>
               </div>
             </div>
           </div>
@@ -1404,7 +1404,6 @@
             </div>
           </div>
 
-          <!-- STAT STRIP -->
           <div class="stat-strip">
             <div class="stat-tile">
               <div class="st-icon" style="background: #f3f4f6">📋</div>
@@ -1436,8 +1435,6 @@
             </div>
           </div>
 
-          <!-- FILTERS -->
-          <!-- ⚠️ Doc Type options match the mapped labels from the controller (License → "Driving License") -->
           <div class="filters-bar">
             <div class="fg">
               <span class="flbl">Status</span>
@@ -1462,7 +1459,6 @@
             <span class="fsummary" id="fsummary">All submissions</span>
           </div>
 
-          <!-- TABLE -->
           <div class="table-card">
             <div class="table-toolbar">
               <div>
@@ -1492,7 +1488,7 @@
       </div>
     </div>
 
-    <!-- KYC DETAIL MODAL -->
+    <!-- KYC MODAL -->
     <div class="overlay" id="kycModal">
       <div class="modal" style="max-width: 700px">
         <div class="modal-hdr">
@@ -1504,44 +1500,108 @@
       </div>
     </div>
 
-    <!-- IMAGE LIGHTBOX -->
+    <!-- LIGHTBOX -->
     <div class="lightbox" id="lightbox" onclick="closeLightbox()">
       <span class="lb-close" onclick="closeLightbox()">✕</span>
       <img id="lbImg" src="" alt="" />
     </div>
 
-    <!-- TOAST -->
     <div class="toast" id="toast"></div>
 
     <script>
       const API = "http://localhost:5000/api/admin/kyc";
       const ADMIN_API = "http://localhost:5000/api/admin/me";
+      const LOGOUT_API = "http://localhost:5000/api/admin/logout";
 
-      let ADMIN = { name: "", role: "", email: "" };
+      let data = [],
+        filtered = [],
+        openId = null;
 
-      let data = [];
-      let filtered = [];
-      let openId = null;
+      // ── POPULATE ADMIN ──
+      function populateAdmin(a) {
+        if (!a || !a.name) return;
+        const initials = a.name
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 2);
+        const role = a.role
+          ? a.role.charAt(0).toUpperCase() + a.role.slice(1)
+          : "Admin";
+
+        document.getElementById("sidebarAv").textContent = initials;
+        document.getElementById("sidebarName").textContent = a.name;
+        document.getElementById("sidebarRole").textContent = role;
+        document.getElementById("topbarAv").textContent = initials;
+        document.getElementById("topbarName").textContent = a.name;
+        document.getElementById("topbarRole").textContent = role;
+        document.getElementById("ddName").textContent = a.name;
+        document.getElementById("ddEmail").textContent = a.email || "—";
+      }
 
       // ── BOOT ──
       async function fetchKyc() {
+        // Dropdown
+        document
+          .getElementById("topbarUser")
+          .addEventListener("click", function (e) {
+            e.stopPropagation();
+            document.getElementById("userDropdown").classList.toggle("visible");
+            this.classList.toggle("open");
+          });
+        document.addEventListener("click", () => {
+          document.getElementById("userDropdown")?.classList.remove("visible");
+          document.getElementById("topbarUser")?.classList.remove("open");
+        });
+
+        // Logout
+        document
+          .getElementById("logoutBtn")
+          .addEventListener("click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            try {
+              await fetch(LOGOUT_API, {
+                method: "POST",
+                credentials: "include",
+              });
+            } finally {
+              window.location.href = "../index.html";
+            }
+          });
+
+        // Search & modal close
+        document
+          .getElementById("kycSearch")
+          .addEventListener("input", applyFilters);
+        document
+          .getElementById("kycModal")
+          .addEventListener("click", function (e) {
+            if (e.target === this) closeKycModal();
+          });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            closeLightbox();
+            closeKycModal();
+          }
+        });
+
         try {
-          // Fetch admin info and KYC data in parallel
           const [adminRes, kycRes] = await Promise.all([
             fetch(ADMIN_API, { credentials: "include" }),
             fetch(API, { credentials: "include" }),
           ]);
 
-          const adminJson = await adminRes.json();
-          const kycJson = await kycRes.json();
-
-          if (adminJson.success) {
-            ADMIN = adminJson.data;
-            // Capitalise role label: "admin" → "Admin"
-            ADMIN.role =
-              ADMIN.role.charAt(0).toUpperCase() + ADMIN.role.slice(1);
+          if (adminRes.status === 401) {
+            window.location.href = "../index.html";
+            return;
           }
 
+          const adminJson = await adminRes.json();
+          populateAdmin(adminJson); // /me returns object directly — no .data wrapper
+
+          const kycJson = await kycRes.json();
           if (kycJson.success) {
             data = kycJson.data;
             filtered = [...data];
@@ -1549,40 +1609,17 @@
             showToast("Failed to load KYC data", "error");
           }
 
-          populateAdmin();
           updateStats();
           renderTable();
-          setupDropdown();
         } catch (e) {
           console.error(e);
           showToast("Network error — could not reach server", "error");
         }
       }
 
-      function populateAdmin() {
-        const ini = ADMIN.name
-          ? ADMIN.name
-              .split(" ")
-              .map((n) => n[0])
-              .join("")
-              .toUpperCase()
-              .slice(0, 2)
-          : "AD";
-        ["sidebarAv", "topbarAv"].forEach(
-          (id) => (document.getElementById(id).textContent = ini),
-        );
-        document.getElementById("sidebarName").textContent =
-          ADMIN.name || "Admin";
-        document.getElementById("topbarName").textContent =
-          ADMIN.name || "Admin";
-        document.getElementById("sidebarRole").textContent =
-          ADMIN.role || "Admin";
-        document.getElementById("topbarRole").textContent =
-          ADMIN.role || "Admin";
-        document.getElementById("ddName").textContent = ADMIN.name || "Admin";
-        document.getElementById("ddEmail").textContent = ADMIN.email || "";
-      }
+      fetchKyc();
 
+      // ── STATS ──
       function updateStats() {
         document.getElementById("statTotal").textContent = data.length;
         document.getElementById("statPending").textContent = data.filter(
@@ -1596,7 +1633,7 @@
         ).length;
       }
 
-      // ── STATUS HELPERS ──
+      // ── STATUS META ──
       const STATUS_META = {
         pending: {
           cls: "s-pending",
@@ -1619,6 +1656,7 @@
           bdgCls: "bdg bdg-grey",
         },
       };
+
       function badge(s) {
         const m = STATUS_META[s] || STATUS_META.not_submitted;
         return `<span class="${m.bdgCls}"><span class="dot"></span>${m.label}</span>`;
@@ -1647,43 +1685,40 @@
 
         tbody.innerHTML = filtered
           .map((k, i) => {
-            // Avatar: show selfie image if available, else initials
             const avContent = k.photo
               ? `<img src="${k.photo}" alt="${initials(k.user_name)}" onerror="this.style.display='none';this.parentElement.textContent='${initials(k.user_name)}'">`
               : initials(k.user_name);
 
             return `
-<tr>
-  <td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:12px">${String(i + 1).padStart(2, "0")}</td>
-  <td>
-    <div class="user-cell">
-      <div class="uc-av">${avContent}</div>
-      <div>
-        <div class="uc-name">${k.user_name}</div>
-        <div class="uc-email">${k.user_email}</div>
-      </div>
-    </div>
-  </td>
-  <td style="font-family:'Space Mono',monospace;font-size:12px">${k.phone || "—"}</td>
-  <td>${k.doc_type || "—"}</td>
-  <td style="font-family:'Space Mono',monospace;font-size:12px;color:var(--muted)">${k.doc_number || "—"}</td>
-  <td style="font-size:12.5px;color:var(--muted)">${k.submitted || "—"}</td>
-  <td>
-    <select class="status-sel ${STATUS_META[k.status]?.cls || "s-not_submitted"}"
-            onchange="inlineStatusChange(${k.id}, this)">
-      <option value="pending"        ${k.status === "pending" ? "selected" : ""}>⏳ Pending</option>
-      <option value="verified"       ${k.status === "verified" ? "selected" : ""}>✅ Verified</option>
-      <option value="rejected"       ${k.status === "rejected" ? "selected" : ""}>❌ Rejected</option>
-      <option value="not_submitted"  ${k.status === "not_submitted" ? "selected" : ""}>— Not Submitted</option>
-    </select>
-  </td>
-  <td>
-    <button class="act-btn primary" onclick="openKycModal(${k.id})">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-      View
-    </button>
-  </td>
-</tr>`;
+            <tr>
+              <td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:12px">${String(i + 1).padStart(2, "0")}</td>
+              <td>
+                <div class="user-cell">
+                  <div class="uc-av">${avContent}</div>
+                  <div><div class="uc-name">${k.user_name}</div><div class="uc-email">${k.user_email}</div></div>
+                </div>
+              </td>
+              <td style="font-family:'Space Mono',monospace;font-size:12px">${k.phone || "—"}</td>
+              <td>${k.doc_type || "—"}</td>
+              <td style="font-family:'Space Mono',monospace;font-size:12px;color:var(--muted)">${k.doc_number || "—"}</td>
+              <td style="font-size:12.5px;color:var(--muted)">${k.submitted || "—"}</td>
+              <td>
+                <select class="status-sel ${STATUS_META[k.status]?.cls || "s-not_submitted"}"
+                        onchange="inlineStatusChange(${k.id}, this)">
+                  <option value="pending"       ${k.status === "pending" ? "selected" : ""}>⏳ Pending</option>
+                  <option value="verified"      ${k.status === "verified" ? "selected" : ""}>✅ Verified</option>
+                  <option value="rejected"      ${k.status === "rejected" ? "selected" : ""}>❌ Rejected</option>
+                  <option value="not_submitted" ${k.status === "not_submitted" ? "selected" : ""}>— Not Submitted</option>
+                </select>
+              </td>
+              <td>
+                <button class="act-btn primary" onclick="openKycModal(${k.id})">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  View
+                </button>
+              </td>
+            </tr>
+          `;
           })
           .join("");
       }
@@ -1693,7 +1728,7 @@
         const newStatus = sel.value;
         sel.className = `status-sel ${STATUS_META[newStatus]?.cls || "s-not_submitted"}`;
         if (newStatus === "rejected") {
-          openKycModal(id, true); // open modal so admin can enter rejection reason
+          openKycModal(id, true);
         } else {
           persistStatus(id, newStatus, "");
         }
@@ -1705,27 +1740,27 @@
           const res = await fetch(`${API}/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify({ status, rejection_reason }),
           });
           const json = await res.json();
           if (!json.success) throw new Error(json.message);
 
-          // Update local data
           const item = data.find((k) => k.id === id);
           if (item) {
             item.status = status;
             item.reason = rejection_reason || "";
           }
+
           applyFilters();
           updateStats();
           showToast(
-            `KYC #${id} set to "${STATUS_META[status]?.label || status}"`,
+            `KYC #${id} → "${STATUS_META[status]?.label || status}"`,
             "success",
           );
         } catch (e) {
           console.error(e);
           showToast(`Save failed: ${e.message}`, "error");
-          // Reload from server to restore correct state
           fetchKyc();
         }
       }
@@ -1749,86 +1784,82 @@
 
       function buildKycCard(k) {
         const avHTML = k.photo
-          ? `<img class="kyc-av-img" src="${k.photo}" alt="${k.user_name}"
-               onerror="this.style.display='none';this.parentElement.textContent='${initials(k.user_name)}'">`
+          ? `<img class="kyc-av-img" src="${k.photo}" alt="${k.user_name}" onerror="this.style.display='none';this.parentElement.textContent='${initials(k.user_name)}'">`
           : `<span style="font-size:24px;font-weight:600">${initials(k.user_name)}</span>`;
 
         const imgSlot = (src, label) =>
           src
-            ? `<div class="doc-img-wrap" onclick="openLightbox('${src}','${label}')">
-               <img class="doc-img" src="${src}" alt="${label}"
-                    onerror="this.parentElement.innerHTML=noDocHTML('${label}')">
+            ? `<div class="doc-img-wrap" onclick="openLightbox('${src}')">
+               <img class="doc-img" src="${src}" alt="${label}" onerror="this.parentElement.innerHTML=noDocHTML('${label}')">
                <div class="doc-img-label">${label}</div>
              </div>`
             : `<div class="doc-img-wrap" style="cursor:default">${noDocHTML(label)}</div>`;
 
         return `
-<div class="kyc-profile-top">
-  <div class="kyc-big-av">${avHTML}</div>
-  <div style="flex:1">
-    <div class="kyc-profile-name">${k.user_name}</div>
-    <div class="kyc-profile-sub">${k.user_email} · ${k.phone || "—"}</div>
-    <div class="kyc-status-badge">${badge(k.status)}</div>
-  </div>
-</div>
-
-<div class="info-section">
-  <div class="info-section-title">Personal Information</div>
-  <div class="info-grid">
-    <div class="info-item"><span class="info-lbl">Full Name</span><span class="info-val">${k.user_name}</span></div>
-    <div class="info-item"><span class="info-lbl">Phone Number</span><span class="info-val">${k.phone || "—"}</span></div>
-    <div class="info-item"><span class="info-lbl">Email Address</span><span class="info-val">${k.user_email}</span></div>
-    <div class="info-item"><span class="info-lbl">Address</span><span class="info-val">${k.address || "—"}</span></div>
-  </div>
-</div>
-
-<div class="info-section">
-  <div class="info-section-title">Document Information</div>
-  <div class="info-grid">
-    <div class="info-item"><span class="info-lbl">Document Type</span><span class="info-val">${k.doc_type || "—"}</span></div>
-    <div class="info-item"><span class="info-lbl">Document Number</span><span class="info-val" style="font-family:'Space Mono',monospace">${k.doc_number || "—"}</span></div>
-    <div class="info-item"><span class="info-lbl">Submitted On</span><span class="info-val">${k.submitted || "—"}</span></div>
-    <div class="info-item"><span class="info-lbl">Current Status</span><span class="info-val">${badge(k.status)}</span></div>
-  </div>
-</div>
-
-<div class="info-section">
-  <div class="info-section-title">Document Images</div>
-  <div class="doc-images">
-    ${imgSlot(k.front_img, "Front Side")}
-    ${imgSlot(k.back_img, "Back Side")}
-  </div>
-</div>
-
-${
-  k.status === "rejected" && k.reason
-    ? `
-<div class="info-section">
-  <div class="info-section-title">Rejection Reason</div>
-  <div style="background:#fff5f5;border:1px solid #fecaca;border-radius:10px;padding:14px 16px;font-size:13.5px;color:#b91c1c;line-height:1.6">${k.reason}</div>
-</div>`
-    : ""
-}`;
+          <div class="kyc-profile-top">
+            <div class="kyc-big-av">${avHTML}</div>
+            <div style="flex:1">
+              <div class="kyc-profile-name">${k.user_name}</div>
+              <div class="kyc-profile-sub">${k.user_email} · ${k.phone || "—"}</div>
+              <div class="kyc-status-badge">${badge(k.status)}</div>
+            </div>
+          </div>
+          <div class="info-section">
+            <div class="info-section-title">Personal Information</div>
+            <div class="info-grid">
+              <div class="info-item"><span class="info-lbl">Full Name</span><span class="info-val">${k.user_name}</span></div>
+              <div class="info-item"><span class="info-lbl">Phone Number</span><span class="info-val">${k.phone || "—"}</span></div>
+              <div class="info-item"><span class="info-lbl">Email Address</span><span class="info-val">${k.user_email}</span></div>
+              <div class="info-item"><span class="info-lbl">Address</span><span class="info-val">${k.address || "—"}</span></div>
+            </div>
+          </div>
+          <div class="info-section">
+            <div class="info-section-title">Document Information</div>
+            <div class="info-grid">
+              <div class="info-item"><span class="info-lbl">Document Type</span><span class="info-val">${k.doc_type || "—"}</span></div>
+              <div class="info-item"><span class="info-lbl">Document Number</span><span class="info-val" style="font-family:'Space Mono',monospace">${k.doc_number || "—"}</span></div>
+              <div class="info-item"><span class="info-lbl">Submitted On</span><span class="info-val">${k.submitted || "—"}</span></div>
+              <div class="info-item"><span class="info-lbl">Current Status</span><span class="info-val">${badge(k.status)}</span></div>
+            </div>
+          </div>
+          <div class="info-section">
+            <div class="info-section-title">Document Images</div>
+            <div class="doc-images">
+              ${imgSlot(k.front_img, "Front Side")}
+              ${imgSlot(k.back_img, "Back Side")}
+            </div>
+          </div>
+          ${
+            k.status === "rejected" && k.reason
+              ? `
+            <div class="info-section">
+              <div class="info-section-title">Rejection Reason</div>
+              <div style="background:#fff5f5;border:1px solid #fecaca;border-radius:10px;padding:14px 16px;font-size:13.5px;color:#b91c1c;line-height:1.6">${k.reason}</div>
+            </div>`
+              : ""
+          }
+        `;
       }
 
       function noDocHTML(label) {
         return `<div class="doc-placeholder">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h4"/></svg>
-  <span>${label}<br><small>Not uploaded</small></span>
-</div>`;
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h4"/></svg>
+          <span>${label}<br><small>Not uploaded</small></span>
+        </div>`;
       }
 
       function buildActionBar(k) {
         return `
-<span class="mab-label">Change Status:</span>
-<select class="big-status-sel" id="modalStatusSel" onchange="onModalStatusChange(${k.id})">
-  <option value="pending"        ${k.status === "pending" ? "selected" : ""}>⏳ Pending</option>
-  <option value="verified"       ${k.status === "verified" ? "selected" : ""}>✅ Verified</option>
-  <option value="rejected"       ${k.status === "rejected" ? "selected" : ""}>❌ Rejected</option>
-  <option value="not_submitted"  ${k.status === "not_submitted" ? "selected" : ""}>— Not Submitted</option>
-</select>
-<button class="save-status-btn" id="saveStatusBtn" onclick="saveModalStatus(${k.id})">Save Status</button>
-<div id="rejectFormWrap" style="width:100%;margin-top:0"></div>`;
+          <span class="mab-label">Change Status:</span>
+          <select class="big-status-sel" id="modalStatusSel" onchange="onModalStatusChange(${k.id})">
+            <option value="pending"       ${k.status === "pending" ? "selected" : ""}>⏳ Pending</option>
+            <option value="verified"      ${k.status === "verified" ? "selected" : ""}>✅ Verified</option>
+            <option value="rejected"      ${k.status === "rejected" ? "selected" : ""}>❌ Rejected</option>
+            <option value="not_submitted" ${k.status === "not_submitted" ? "selected" : ""}>— Not Submitted</option>
+          </select>
+          <button class="save-status-btn" id="saveStatusBtn" onclick="saveModalStatus(${k.id})">Save Status</button>
+          <div id="rejectFormWrap" style="width:100%;margin-top:0"></div>
+        `;
       }
 
       function onModalStatusChange(id) {
@@ -1844,14 +1875,15 @@ ${
         if (!wrap) return;
         const k = data.find((x) => x.id === id);
         wrap.innerHTML = `
-<div class="reject-form">
-  <label>⚠️ Rejection Reason (required)</label>
-  <textarea id="rejectReasonTA" placeholder="Explain why this KYC is being rejected…">${k?.reason || ""}</textarea>
-  <div class="reject-form-btns">
-    <button class="btn-confirm-reject" onclick="confirmReject(${id})">Confirm Rejection</button>
-    <button class="btn-cancel-reject"  onclick="cancelReject()">Cancel</button>
-  </div>
-</div>`;
+          <div class="reject-form">
+            <label>⚠️ Rejection Reason (required)</label>
+            <textarea id="rejectReasonTA" placeholder="Explain why this KYC is being rejected…">${k?.reason || ""}</textarea>
+            <div class="reject-form-btns">
+              <button class="btn-confirm-reject" onclick="confirmReject(${id})">Confirm Rejection</button>
+              <button class="btn-cancel-reject"  onclick="cancelReject()">Cancel</button>
+            </div>
+          </div>
+        `;
       }
 
       async function confirmReject(id) {
@@ -1863,7 +1895,6 @@ ${
           return;
         }
         await persistStatus(id, "rejected", reason);
-        // Refresh modal
         const k = data.find((x) => x.id === id);
         if (k) {
           document.getElementById("kycModalBody").innerHTML = buildKycCard(k);
@@ -1910,13 +1941,16 @@ ${
         filtered = data.filter((k) => {
           if (status && k.status !== status) return false;
           if (docType && k.doc_type !== docType) return false;
-          if (search) {
-            const hay =
-              `${k.user_name} ${k.user_email} ${k.doc_number} ${k.phone}`.toLowerCase();
-            if (!hay.includes(search)) return false;
-          }
+          if (
+            search &&
+            !`${k.user_name} ${k.user_email} ${k.doc_number} ${k.phone}`
+              .toLowerCase()
+              .includes(search)
+          )
+            return false;
           return true;
         });
+
         renderTable();
         const active = [status, docType, search].filter(Boolean).length;
         document.getElementById("fsummary").textContent = active
@@ -1943,21 +1977,6 @@ ${
         document.getElementById("lightbox").classList.remove("open");
       }
 
-      // ── DROPDOWN ──
-      function setupDropdown() {
-        document
-          .getElementById("topbarUser")
-          .addEventListener("click", function (e) {
-            e.stopPropagation();
-            document.getElementById("userDropdown").classList.toggle("visible");
-            this.classList.toggle("open");
-          });
-        document.addEventListener("click", () => {
-          document.getElementById("userDropdown")?.classList.remove("visible");
-          document.getElementById("topbarUser")?.classList.remove("open");
-        });
-      }
-
       // ── TOAST ──
       function showToast(msg, type = "success") {
         const t = document.getElementById("toast");
@@ -1965,24 +1984,6 @@ ${
         t.className = `toast ${type} show`;
         setTimeout(() => t.classList.remove("show"), 3000);
       }
-
-      // ── EVENTS ──
-      document
-        .getElementById("kycSearch")
-        .addEventListener("input", applyFilters);
-      document
-        .getElementById("kycModal")
-        .addEventListener("click", function (e) {
-          if (e.target === this) closeKycModal();
-        });
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-          closeLightbox();
-          closeKycModal();
-        }
-      });
-
-      fetchKyc();
     </script>
   </body>
 </html>

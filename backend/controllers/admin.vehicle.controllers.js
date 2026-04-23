@@ -52,9 +52,9 @@ exports.createVehicle = (req, res) => {
     INSERT INTO vehicles 
     (name, brand, model, year, license_plate, body_type, fuel_type, transmission,
      seating_capacity, price_4h, price_8h, price_1d, status, description, color,
-     features,
+     features, last_service_date,
      thumbnail, image_1, image_2, image_3, image_4, image_5)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   `;
 
   const values = [
@@ -73,9 +73,8 @@ exports.createVehicle = (req, res) => {
     v.status || "Available",
     v.description || null,
     v.color || null,
-
-    features, // ✅ FIXED HERE
-
+    features,
+    v.last_service_date || null, // ✅ NEW
     req.files?.thumbnail?.[0]?.filename || null,
     req.files?.image_1?.[0]?.filename || null,
     req.files?.image_2?.[0]?.filename || null,
@@ -109,25 +108,14 @@ exports.updateVehicle = (req, res) => {
     : JSON.stringify(v.features ? [v.features] : []);
 
   const sql = `
-    UPDATE vehicles SET
-      name=?,
-      brand=?,
-      model=?,
-      year=?,
-      license_plate=?,
-      body_type=?,
-      fuel_type=?,
-      transmission=?,
-      seating_capacity=?,
-      price_4h=?,
-      price_8h=?,
-      price_1d=?,
-      status=?,
-      description=?,
-      color=?,
-      features=?
-    WHERE id=?
-  `;
+  UPDATE vehicles SET
+    name=?, brand=?, model=?, year=?, license_plate=?,
+    body_type=?, fuel_type=?, transmission=?, seating_capacity=?,
+    price_4h=?, price_8h=?, price_1d=?, status=?, description=?,
+    color=?, features=?,
+    last_service_date=?, service_status=?
+  WHERE id=?
+`;
 
   const values = [
     v.name,
@@ -145,9 +133,9 @@ exports.updateVehicle = (req, res) => {
     v.status,
     v.description || null,
     v.color || null,
-
-    features, // ✅ FIXED
-
+    features,
+    v.last_service_date || null,
+    v.service_status || "Serviced",
     id,
   ];
 
