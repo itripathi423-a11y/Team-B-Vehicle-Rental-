@@ -1,4 +1,4 @@
-//For Booking
+//For Booking user get the vehicles and details of the vehicle
 const db = require("../config/db");
 
 // GET ALL AVAILABLE VEHICLES
