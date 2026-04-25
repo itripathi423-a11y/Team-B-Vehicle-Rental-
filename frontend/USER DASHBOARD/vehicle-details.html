@@ -931,6 +931,259 @@
           grid-template-columns: 1fr;
         }
       }
+      /* ── CHATBOT WIDGET ── */
+
+      #chat-bubble {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #ff5c1a;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 12px rgba(255, 92, 26, 0.35);
+        z-index: 1000;
+        transition:
+          transform 0.15s,
+          background 0.15s;
+      }
+      #chat-bubble:hover {
+        background: #e04a0e;
+        transform: scale(1.07);
+      }
+      #chat-bubble svg {
+        color: #fff;
+      }
+
+      .chat-notif-dot {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 10px;
+        height: 10px;
+        background: #22c55e;
+        border-radius: 50%;
+        border: 2px solid #fff;
+      }
+
+      #chat-panel {
+        position: fixed;
+        bottom: 88px;
+        right: 24px;
+        width: 320px;
+        height: 420px;
+        background: #fff;
+        border: 0.5px solid #e5e7eb;
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        z-index: 999;
+        overflow: hidden;
+        transform: scale(0.92) translateY(12px);
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+          opacity 0.18s;
+      }
+      #chat-panel.open {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      .cp-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 16px;
+        border-bottom: 0.5px solid #f0f0f0;
+        background: #fff;
+      }
+      .cp-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #fff0e8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .cp-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #111;
+      }
+      .cp-sub {
+        font-size: 11px;
+        color: #22c55e;
+      }
+      .cp-close {
+        margin-left: auto;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        padding: 4px;
+      }
+      .cp-close:hover {
+        background: #f9fafb;
+      }
+
+      .cp-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 14px 14px 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .cp-msg {
+        display: flex;
+        gap: 8px;
+        align-items: flex-end;
+      }
+      .cp-msg.user {
+        flex-direction: row-reverse;
+      }
+
+      .cp-bubble {
+        max-width: 76%;
+        padding: 9px 12px;
+        border-radius: 12px;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .cp-msg.bot .cp-bubble {
+        background: #f3f4f6;
+        color: #111;
+        border-bottom-left-radius: 4px;
+      }
+      .cp-msg.user .cp-bubble {
+        background: #ff5c1a;
+        color: #fff;
+        border-bottom-right-radius: 4px;
+      }
+
+      .cp-av {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: #fff0e8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 600;
+        color: #ff5c1a;
+        flex-shrink: 0;
+      }
+
+      .cp-typing {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        padding: 9px 12px;
+        background: #f3f4f6;
+        border-radius: 12px;
+        border-bottom-left-radius: 4px;
+        width: fit-content;
+      }
+      .cp-typing span {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #9ca3af;
+        animation: cpbounce 1.2s infinite;
+      }
+      .cp-typing span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .cp-typing span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      @keyframes cpbounce {
+        0%,
+        60%,
+        100% {
+          transform: translateY(0);
+        }
+        30% {
+          transform: translateY(-5px);
+        }
+      }
+
+      .cp-quick {
+        padding: 6px 14px 10px;
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .cp-chip {
+        font-size: 11px;
+        padding: 5px 10px;
+        border-radius: 99px;
+        border: 0.5px solid #e5e7eb;
+        background: none;
+        color: #6b7280;
+        cursor: pointer;
+      }
+      .cp-chip:hover {
+        background: #fff0e8;
+        color: #ff5c1a;
+        border-color: #ff5c1a;
+      }
+
+      .cp-input-row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        padding: 10px 12px;
+        border-top: 0.5px solid #f0f0f0;
+      }
+      .cp-input {
+        flex: 1;
+        border: 0.5px solid #e5e7eb;
+        border-radius: 20px;
+        padding: 8px 14px;
+        font-size: 13px;
+        outline: none;
+        font-family: inherit;
+      }
+      .cp-input:focus {
+        border-color: #ff5c1a;
+      }
+
+      .cp-send {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #ff5c1a;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .cp-send:hover {
+        background: #e04a0e;
+      }
+      .cp-send svg {
+        color: #fff;
+      }
     </style>
   </head>
   <body>
@@ -1335,6 +1588,88 @@
         </div>
       </main>
     </div>
+
+    <!-- ChatBot -->
+    <button id="chat-bubble" title="Chat with us">
+      <div class="chat-notif-dot"></div>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        width="22"
+        height="22"
+      >
+        <path
+          d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+        />
+      </svg>
+    </button>
+
+    <div id="chat-panel">
+      <div class="cp-header">
+        <div class="cp-avatar">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#FF5C1A"
+            stroke-width="1.8"
+            width="16"
+            height="16"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </div>
+        <div>
+          <div class="cp-title">Auto Dealer Support</div>
+          <div class="cp-sub">● Online now</div>
+        </div>
+        <button class="cp-close" id="chat-close">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            width="16"
+            height="16"
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="cp-messages" id="cpMessages">
+        <div class="cp-msg bot">
+          <div class="cp-av">AD</div>
+          <div class="cp-bubble">Hi there! 👋 How can I help you today?</div>
+        </div>
+      </div>
+      <div class="cp-quick" id="cpQuick">
+        <button class="cp-chip" onclick="cpSendChip(this)">
+          Browse vehicles
+        </button>
+        <button class="cp-chip" onclick="cpSendChip(this)">My bookings</button>
+        <button class="cp-chip" onclick="cpSendChip(this)">KYC status</button>
+      </div>
+      <div class="cp-input-row">
+        <input class="cp-input" id="cpInput" placeholder="Type a message…" />
+        <button class="cp-send" id="cpSendBtn">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            width="14"
+            height="14"
+          >
+            <line x1="22" y1="2" x2="11" y2="13" />
+            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <script src="chatbot.js"></script>
 
     <script>
       let vehicle = null;
