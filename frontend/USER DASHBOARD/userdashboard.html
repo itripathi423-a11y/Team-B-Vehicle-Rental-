@@ -569,6 +569,87 @@
       </main>
     </div>
 
+    <!-- ChatBot -->
+    <button id="chat-bubble" title="Chat with us">
+      <div class="chat-notif-dot"></div>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        width="22"
+        height="22"
+      >
+        <path
+          d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+        />
+      </svg>
+    </button>
+
+    <div id="chat-panel">
+      <div class="cp-header">
+        <div class="cp-avatar">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#FF5C1A"
+            stroke-width="1.8"
+            width="16"
+            height="16"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </div>
+        <div>
+          <div class="cp-title">Auto Dealer Support</div>
+          <div class="cp-sub">● Online now</div>
+        </div>
+        <button class="cp-close" id="chat-close">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            width="16"
+            height="16"
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="cp-messages" id="cpMessages">
+        <div class="cp-msg bot">
+          <div class="cp-av">AD</div>
+          <div class="cp-bubble">Hi there! 👋 How can I help you today?</div>
+        </div>
+      </div>
+      <div class="cp-quick" id="cpQuick">
+        <button class="cp-chip" onclick="cpSendChip(this)">
+          Browse vehicles
+        </button>
+        <button class="cp-chip" onclick="cpSendChip(this)">My bookings</button>
+        <button class="cp-chip" onclick="cpSendChip(this)">KYC status</button>
+      </div>
+      <div class="cp-input-row">
+        <input class="cp-input" id="cpInput" placeholder="Type a message…" />
+        <button class="cp-send" id="cpSendBtn">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            width="14"
+            height="14"
+          >
+            <line x1="22" y1="2" x2="11" y2="13" />
+            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <script src="chatbot.js"></script>
     <script>
       /* Mobile sidebar */
       const sidebar = document.getElementById("sidebar");
