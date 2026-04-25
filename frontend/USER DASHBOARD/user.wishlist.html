@@ -3,113 +3,62 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AUTO DEALER — Vehicles</title>
+    <title>AUTO DEALER — My Wishlist</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <!-- Your main stylesheet (contains all sidebar/topbar/layout CSS) -->
     <link href="userdashboard.css" rel="stylesheet" />
     <style>
-      /* ── SEARCH BAR ── */
-      .search-section {
-        background: var(--white);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 20px 24px;
+      /* ══════════════════════════════════
+         PAGE-SPECIFIC STYLES ONLY
+         Everything sidebar/topbar/layout
+         comes from userdashboard.css
+      ══════════════════════════════════ */
+
+      /* Page header row */
+      .page-header {
         margin-bottom: 24px;
-        box-shadow: var(--shadow);
-        animation: fadeUp 0.35s ease both;
-      }
-      .search-title {
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--dark);
-        margin-bottom: 14px;
         display: flex;
         align-items: center;
-        gap: 8px;
+        justify-content: space-between;
+        animation: fadeUp 0.35s ease both;
       }
-      .search-title svg {
-        width: 16px;
-        height: 16px;
-        stroke: var(--orange);
+      .page-header-left h1 {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--dark);
       }
-      .search-row {
-        display: grid;
-        grid-template-columns: 1fr 180px 180px 180px auto;
-        gap: 10px;
-        align-items: end;
-      }
-      .search-field {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-      }
-      .search-field label {
-        font-size: 11px;
-        font-weight: 600;
+      .page-header-left p {
+        font-size: 13px;
         color: var(--muted);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        margin-top: 3px;
       }
-      .search-input {
-        height: 40px;
+
+      .wishlist-clear-btn {
+        height: 38px;
+        padding: 0 16px;
+        background: none;
         border: 1px solid var(--border);
         border-radius: var(--radius-sm);
-        padding: 0 12px;
         font-family: "DM Sans", sans-serif;
-        font-size: 13.5px;
-        color: var(--text);
-        background: var(--bg);
-        outline: none;
-        transition:
-          border-color 0.2s,
-          box-shadow 0.2s;
-      }
-      .search-input:focus {
-        border-color: var(--orange);
-        box-shadow: 0 0 0 3px rgba(255, 92, 26, 0.1);
-      }
-      .search-btn {
-        background: var(--orange);
-        height: 40px;
-        padding: 0 20px;
-        color: #fff;
-        border: none;
-        border-radius: var(--radius-sm);
-        font-family: "DM Sans", sans-serif;
-        font-size: 13.5px;
-        font-weight: 500;
+        font-size: 13px;
+        color: var(--muted);
         cursor: pointer;
-        transition: background 0.2s;
-        white-space: nowrap;
+        transition: all 0.2s;
         display: flex;
         align-items: center;
         gap: 7px;
       }
-      .search-btn svg {
-        width: 15px;
-        height: 15px;
+      .wishlist-clear-btn:hover {
+        border-color: #dc2626;
+        color: #dc2626;
       }
-      .clear-btn {
-        height: 40px;
-        padding: 0 14px;
-        background: none;
-        color: var(--muted);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-sm);
-        font-family: "DM Sans", sans-serif;
-        font-size: 13px;
-        cursor: pointer;
-        transition: all 0.2s;
-        white-space: nowrap;
-      }
-      .clear-btn:hover {
-        border-color: var(--orange);
-        color: var(--orange);
-      }
+
+      /* Results meta bar */
       .results-meta {
         display: flex;
         align-items: center;
@@ -136,24 +85,50 @@
         outline: none;
         cursor: pointer;
       }
-      .active-filters {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-bottom: 16px;
+
+      /* Empty state */
+      .wishlist-empty {
+        text-align: center;
+        padding: 80px 24px;
+        animation: fadeUp 0.4s ease both;
       }
-      .filter-chip {
+      .wishlist-empty-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+        line-height: 1;
+      }
+      .wishlist-empty h2 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 8px;
+      }
+      .wishlist-empty p {
+        font-size: 13.5px;
+        color: var(--muted);
+        margin-bottom: 20px;
+      }
+      .browse-btn {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 5px 11px;
-        background: var(--orange-dim);
-        border: 1px solid rgba(255, 92, 26, 0.25);
-        border-radius: 99px;
-        font-size: 12px;
-        color: var(--orange);
+        gap: 8px;
+        padding: 11px 22px;
+        background: var(--orange);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
         font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.2s;
       }
+      .browse-btn:hover {
+        background: var(--orange-light, #ff7a3d);
+      }
+
+      /* Vehicle grid */
       .vehicles-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -177,6 +152,8 @@
         box-shadow: var(--shadow-md);
         border-color: rgba(255, 92, 26, 0.3);
       }
+
+      /* Card image */
       .vehicle-img-wrap {
         position: relative;
         height: 170px;
@@ -221,7 +198,7 @@
         border: 1px solid #fecaca;
       }
 
-      /* ══ WISHLIST STAR BUTTON ══ */
+      /* Star / wish button */
       .wish-btn {
         position: absolute;
         top: 10px;
@@ -241,9 +218,8 @@
         padding: 0;
       }
       .wish-btn:hover {
-        transform: scale(1.15);
+        transform: scale(1.12);
         border-color: var(--orange);
-        box-shadow: 0 2px 8px rgba(255, 92, 26, 0.2);
       }
       .wish-btn svg {
         width: 15px;
@@ -251,37 +227,18 @@
         transition: all 0.2s;
         pointer-events: none;
       }
-      /* empty star */
-      .wish-btn:not(.wishlisted) svg {
-        fill: none;
-        stroke: #9ca3af;
-        stroke-width: 1.8;
-      }
-      /* filled orange star */
       .wish-btn.wishlisted svg {
         fill: var(--orange);
         stroke: var(--orange);
         stroke-width: 1.8;
       }
-      /* pop animation when added */
-      @keyframes starPop {
-        0% {
-          transform: scale(1);
-        }
-        40% {
-          transform: scale(1.35);
-        }
-        70% {
-          transform: scale(0.9);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
-      .wish-btn.popping {
-        animation: starPop 0.3s ease;
+      .wish-btn:not(.wishlisted) svg {
+        fill: none;
+        stroke: #9ca3af;
+        stroke-width: 1.8;
       }
 
+      /* Card body */
       .vehicle-card-body {
         padding: 16px;
       }
@@ -342,6 +299,33 @@
         letter-spacing: 0.5px;
         line-height: 1;
       }
+
+      .remove-wish-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 100%;
+        padding: 8px;
+        background: none;
+        border: 1px solid #fecaca;
+        border-radius: var(--radius-sm);
+        color: #dc2626;
+        font-family: "DM Sans", sans-serif;
+        font-size: 12.5px;
+        font-weight: 500;
+        cursor: pointer;
+        margin-bottom: 8px;
+        transition: all 0.2s;
+      }
+      .remove-wish-btn:hover {
+        background: #fff1f2;
+      }
+      .remove-wish-btn svg {
+        width: 13px;
+        height: 13px;
+      }
+
       .view-btn {
         display: block;
         width: 100%;
@@ -362,58 +346,10 @@
       }
       .view-btn:hover {
         transform: translateY(-1px);
-      }
-      .empty-state {
-        grid-column: 1/-1;
-        text-align: center;
-        padding: 64px 24px;
-        color: var(--muted);
-      }
-      .empty-state h3 {
-        font-size: 16px;
-        font-weight: 600;
-        color: var(--dark);
-        margin-bottom: 6px;
-      }
-      .empty-state p {
-        font-size: 13px;
-      }
-      .pagination {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        margin-bottom: 28px;
-      }
-      .page-btn {
-        width: 36px;
-        height: 36px;
-        border-radius: 8px;
-        border: 1px solid var(--border);
-        background: var(--white);
-        font-size: 13px;
-        color: var(--text);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s;
-      }
-      .page-btn:hover {
-        border-color: var(--orange);
-        color: var(--orange);
-      }
-      .page-btn.active {
-        background: var(--orange);
-        color: #fff;
-        border-color: var(--orange);
-      }
-      .page-btn:disabled {
-        opacity: 0.4;
-        cursor: not-allowed;
+        background: var(--orange-light, #ff7a3d);
       }
 
-      /* ── WISHLIST SHORTCUT BUTTON IN NAV ── */
+      /* Wishlist badge on nav item */
       .wish-nav-count {
         display: inline-flex;
         align-items: center;
@@ -429,7 +365,7 @@
         margin-left: auto;
       }
 
-      /* ── TOAST ── */
+      /* Toast */
       .toast {
         position: fixed;
         bottom: 24px;
@@ -458,24 +394,13 @@
         background: var(--orange);
       }
 
-      @media (max-width: 1100px) {
-        .vehicles-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-      @media (max-width: 768px) {
-        .vehicles-grid {
-          grid-template-columns: 1fr;
-        }
-        .search-row {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      /* ══ USER DROPDOWN ══ */
+      /* Dropdown */
       .user-dropdown-wrap {
         position: relative;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
       .topbar-chevron {
         transition: transform 0.2s;
@@ -559,10 +484,21 @@
       .dd-danger:hover {
         background: #fef2f2;
       }
+
+      @media (max-width: 1100px) {
+        .vehicles-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 768px) {
+        .vehicles-grid {
+          grid-template-columns: 1fr;
+        }
+      }
     </style>
   </head>
   <body>
-    <!-- SIDEBAR -->
+    <!-- ══ SIDEBAR (dark — userdashboard.css handles all styling) ══ -->
     <aside class="sidebar" id="sidebar">
       <a href="userdashboard.html" class="sidebar-logo">
         <div class="logo-mark">AD</div>
@@ -571,6 +507,7 @@
           <span class="logo-sub">Fleet Management</span>
         </div>
       </a>
+
       <nav class="sidebar-nav">
         <a href="userdashboard.html" class="nav-item">
           <svg
@@ -587,7 +524,7 @@
           </svg>
           Dashboard
         </a>
-        <a href="user.vehicle.listing.html" class="nav-item active">
+        <a href="user.vehicle.listing.html" class="nav-item">
           <svg
             class="nav-icon"
             viewBox="0 0 24 24"
@@ -631,21 +568,8 @@
           </svg>
           KYC
         </a>
-        <a href="payment.html" class="nav-item">
-          <svg
-            class="nav-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <rect x="2" y="5" width="20" height="14" rx="2" />
-            <line x1="2" y1="10" x2="22" y2="10" />
-          </svg>
-          Payments
-        </a>
-        <!-- WISHLIST NAV ITEM -->
-        <a href="user.wishlist.html" class="nav-item">
+
+        <a href="wishlist.html" class="nav-item active">
           <svg
             class="nav-icon"
             viewBox="0 0 24 24"
@@ -665,6 +589,7 @@
           ></span>
         </a>
       </nav>
+
       <div class="sidebar-footer">
         <div class="sidebar-user">
           <div class="user-avatar" id="sidebarAvatar">
@@ -677,9 +602,12 @@
         </div>
       </div>
     </aside>
+
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
+    <!-- ══ MAIN WRAP ══ -->
     <div class="main-wrap">
+      <!-- TOPBAR -->
       <header class="topbar">
         <button class="icon-btn" id="sidebarToggle" style="display: none">
           <svg
@@ -693,51 +621,9 @@
             <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
         </button>
-        <span class="topbar-page-title">Vehicles</span>
+        <span class="topbar-page-title">My Wishlist</span>
         <div class="topbar-right">
-          <!-- Wishlist shortcut in topbar -->
-          <a
-            href="wishlist.html"
-            class="icon-btn"
-            title="My Wishlist"
-            style="
-              position: relative;
-              text-decoration: none;
-              color: var(--text);
-            "
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              width="17"
-              height="17"
-            >
-              <polygon
-                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
-              />
-            </svg>
-            <span
-              id="wishTopbarBadge"
-              style="
-                display: none;
-                position: absolute;
-                top: -4px;
-                right: -4px;
-                width: 16px;
-                height: 16px;
-                background: var(--orange);
-                color: #fff;
-                border-radius: 50%;
-                font-size: 9px;
-                font-weight: 700;
-                align-items: center;
-                justify-content: center;
-              "
-            ></span>
-          </a>
-          <button class="icon-btn" id="notifBtn" title="Notifications">
+          <button class="icon-btn" title="Notifications">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -748,6 +634,7 @@
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
           </button>
+
           <!-- USER DROPDOWN -->
           <div class="topbar-user user-dropdown-wrap" id="userDropdownWrap">
             <div class="topbar-avatar" id="topbarAvatar">
@@ -784,8 +671,9 @@
                   height="15"
                 >
                   <circle cx="12" cy="8" r="4" />
-                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" /></svg
-                >My profile
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                </svg>
+                My profile
               </button>
               <button
                 class="dd-item"
@@ -802,8 +690,9 @@
                   <rect x="3" y="4" width="18" height="18" rx="2" />
                   <line x1="16" y1="2" x2="16" y2="6" />
                   <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" /></svg
-                >My bookings
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                My bookings
               </button>
               <button class="dd-item" onclick="location.href = 'kyc.html'">
                 <svg
@@ -814,10 +703,10 @@
                   width="15"
                   height="15"
                 >
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
-                >KYC verification<span class="dd-kyc-badge" id="ddKycBadge"
-                  >Pending</span
-                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                KYC verification
+                <span class="dd-kyc-badge" id="ddKycBadge">Pending</span>
               </button>
               <button class="dd-item" onclick="location.href = '#'">
                 <svg
@@ -831,8 +720,9 @@
                   <circle cx="12" cy="12" r="3" />
                   <path
                     d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
-                  /></svg
-                >Settings
+                  />
+                </svg>
+                Settings
               </button>
               <div class="dd-divider"></div>
               <button class="dd-item dd-danger" id="logoutBtn">
@@ -846,96 +736,55 @@
                 >
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                   <polyline points="16 17 21 12 16 7" />
-                  <line x1="21" y1="12" x2="9" y2="12" /></svg
-                >Log out
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Log out
               </button>
             </div>
           </div>
         </div>
       </header>
 
+      <!-- CONTENT -->
       <main class="content">
-        <!-- Search Section -->
-        <div class="search-section">
-          <div class="search-title">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>⭐ My Wishlist</h1>
+            <p id="wishSubtitle">Vehicles you've saved for later</p>
+          </div>
+          <button
+            class="wishlist-clear-btn"
+            id="clearAllBtn"
+            onclick="clearAllWishlist()"
+            style="display: none"
+          >
             <svg
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
+              stroke-width="1.8"
+              width="14"
+              height="14"
             >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6l-1 14H6L5 6" />
+              <path d="M10 11v6M14 11v6" />
             </svg>
-            Search &amp; Filter Vehicles
-          </div>
-          <div class="search-row">
-            <div class="search-field">
-              <label>Search by name or keyword</label>
-              <input
-                class="search-input"
-                type="text"
-                id="searchText"
-                placeholder="e.g. Fortuner, SUV, Toyota…"
-                oninput="applyFilters()"
-              />
-            </div>
-            <div class="search-field">
-              <label>Body Type</label>
-              <select
-                class="search-input"
-                id="filterBody"
-                onchange="applyFilters()"
-              >
-                <option value="">All Body Types</option>
-                <option>SUV</option>
-                <option>Sedan</option>
-                <option>Hatchback</option>
-                <option>MPV</option>
-                <option>Off-Road</option>
-                <option>Pickup</option>
-              </select>
-            </div>
-            <div class="search-field">
-              <label>Fuel Type</label>
-              <select
-                class="search-input"
-                id="filterFuel"
-                onchange="applyFilters()"
-              >
-                <option value="">All Fuel Types</option>
-                <option>Petrol</option>
-                <option>Diesel</option>
-                <option>Electric</option>
-                <option>Hybrid</option>
-                <option>CNG</option>
-              </select>
-            </div>
-            <div style="display: flex; gap: 8px">
-              <button class="search-btn" onclick="applyFilters()">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-                Search
-              </button>
-              <button class="clear-btn" onclick="clearFilters()">Clear</button>
-            </div>
-          </div>
+            Clear All
+          </button>
         </div>
 
-        <div class="active-filters" id="activeFilters"></div>
-
-        <div class="results-meta">
+        <!-- Results meta -->
+        <div class="results-meta" id="resultsMeta" style="display: none">
           <p class="results-count">
-            Showing <strong id="resultCount">0</strong> vehicles
+            Showing <strong id="resultCount">0</strong> saved vehicles
           </p>
-          <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+          <select
+            class="sort-select"
+            id="sortSelect"
+            onchange="renderWishlist()"
+          >
             <option value="default">Sort: Default</option>
             <option value="price-asc">Price: Low to High</option>
             <option value="price-desc">Price: High to Low</option>
@@ -943,8 +792,8 @@
           </select>
         </div>
 
-        <div class="vehicles-grid" id="vehicleGrid"></div>
-        <div class="pagination" id="pagination"></div>
+        <!-- Grid -->
+        <div class="vehicles-grid" id="wishlistGrid"></div>
 
         <div class="footer-strip">
           <p>© 2026 Auto Dealer Fleet Management. All rights reserved.</p>
@@ -955,58 +804,31 @@
       </main>
     </div>
 
-    <!-- Toast notification -->
+    <!-- Toast -->
     <div class="toast" id="toast"></div>
 
     <script>
-      /* ── STATE ── */
-      let VEHICLES = [];
-      let filtered = [];
+      /* ── WISHLIST STORAGE ── */
       const WISHLIST_KEY = "ad_wishlist";
-
-      /* ── WISHLIST HELPERS ── */
-      function getWishlist() {
+      const getWishlist = () => {
         try {
           return JSON.parse(localStorage.getItem(WISHLIST_KEY) || "[]");
         } catch {
           return [];
         }
-      }
-      function saveWishlist(arr) {
+      };
+      const saveWishlist = (arr) =>
         localStorage.setItem(WISHLIST_KEY, JSON.stringify(arr));
-      }
-      function isWishlisted(id) {
-        return getWishlist().some((v) => String(v.id) === String(id));
-      }
+      const removeFromWishlist = (id) =>
+        saveWishlist(getWishlist().filter((v) => String(v.id) !== String(id)));
 
-      function toggleWishlist(vehicle) {
-        const list = getWishlist();
-        const idx = list.findIndex((v) => String(v.id) === String(vehicle.id));
-        if (idx >= 0) {
-          list.splice(idx, 1);
-          saveWishlist(list);
-          showToast("Removed from wishlist");
-          return false;
-        } else {
-          list.push(vehicle);
-          saveWishlist(list);
-          showToast("⭐ Added to wishlist!", "orange");
-          return true;
-        }
-      }
-
-      /* ── UPDATE WISHLIST BADGE ── */
+      /* ── NAV BADGE ── */
       function updateWishBadge() {
         const count = getWishlist().length;
-        const navCount = document.getElementById("wishNavCount");
-        const topBadge = document.getElementById("wishTopbarBadge");
-        if (navCount) {
-          navCount.textContent = count;
-          navCount.style.display = count > 0 ? "inline-flex" : "none";
-        }
-        if (topBadge) {
-          topBadge.textContent = count;
-          topBadge.style.display = count > 0 ? "flex" : "none";
+        const el = document.getElementById("wishNavCount");
+        if (el) {
+          el.textContent = count;
+          el.style.display = count > 0 ? "inline-flex" : "none";
         }
       }
 
@@ -1020,7 +842,110 @@
         }, 2200);
       }
 
-      /* ── USER DROPDOWN ── */
+      /* ── RENDER ── */
+      function renderWishlist() {
+        const grid = document.getElementById("wishlistGrid");
+        const metaEl = document.getElementById("resultsMeta");
+        const clearBtn = document.getElementById("clearAllBtn");
+        const subtitle = document.getElementById("wishSubtitle");
+        const countEl = document.getElementById("resultCount");
+
+        const sort = document.getElementById("sortSelect")?.value || "default";
+        let data = [...getWishlist()];
+        if (sort === "price-asc")
+          data.sort((a, b) => (a.price_4h || 0) - (b.price_4h || 0));
+        if (sort === "price-desc")
+          data.sort((a, b) => (b.price_4h || 0) - (a.price_4h || 0));
+        if (sort === "name-asc")
+          data.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+
+        updateWishBadge();
+
+        if (!data.length) {
+          metaEl.style.display = "none";
+          clearBtn.style.display = "none";
+          subtitle.textContent = "Vehicles you've saved for later";
+          grid.innerHTML = `
+            <div style="grid-column:1/-1">
+              <div class="wishlist-empty">
+                <div class="wishlist-empty-icon">⭐</div>
+                <h2>Your wishlist is empty</h2>
+                <p>Browse our vehicles and click the star icon to save your favourites here.</p>
+                <a href="user.vehicle.listing.html" class="browse-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+                    <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"/>
+                    <circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>
+                    <path d="M5 17h8M3 9h18"/>
+                  </svg>
+                  Browse Vehicles
+                </a>
+              </div>
+            </div>`;
+          return;
+        }
+
+        metaEl.style.display = "flex";
+        clearBtn.style.display = "flex";
+        countEl.textContent = data.length;
+        subtitle.textContent = `${data.length} vehicle${data.length !== 1 ? "s" : ""} saved`;
+
+        grid.innerHTML = data
+          .map((v, i) => {
+            const img = v.thumbnail ? `/uploads/vehicles/${v.thumbnail}` : "";
+            const isAvail = v.status === "Available";
+            return `
+            <div class="vehicle-card" style="animation-delay:${i * 0.05}s">
+              <div class="vehicle-img-wrap">
+                ${img ? `<img src="${img}" alt="${v.name || "vehicle"}">` : `<div class="vehicle-img-placeholder">🚗</div>`}
+                <span class="avail-badge ${isAvail ? "available" : "booked"}">${isAvail ? "Available" : "Booked"}</span>
+                <button class="wish-btn wishlisted" title="Remove from wishlist" onclick="handleRemove(event,'${v.id}')">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="vehicle-card-body">
+                <div class="vc-name">${v.name || "Unknown"}</div>
+                <div class="vc-meta">
+                  <span class="vc-meta-pill">⛽ ${v.fuel_type || "-"}</span>
+                  <span class="vc-meta-pill">🚘 ${v.body_type || "-"}</span>
+                  <span class="vc-meta-pill">⚙ ${v.transmission || "-"}</span>
+                </div>
+                <div class="vc-prices">
+                  <div class="price-box"><span class="price-box-dur">4h</span><span class="price-box-val">${(v.price_4h || 0).toLocaleString()}</span></div>
+                  <div class="price-box"><span class="price-box-dur">8h</span><span class="price-box-val">${(v.price_8h || 0).toLocaleString()}</span></div>
+                  <div class="price-box"><span class="price-box-dur">1d</span><span class="price-box-val">${(v.price_1d || 0).toLocaleString()}</span></div>
+                </div>
+                <button class="remove-wish-btn" onclick="handleRemove(event,'${v.id}')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
+                    <path d="M10 11v6M14 11v6"/>
+                  </svg>
+                  Remove from Wishlist
+                </button>
+                <a href="vehicle-details.html?id=${v.id}" class="view-btn">View Details →</a>
+              </div>
+            </div>`;
+          })
+          .join("");
+      }
+
+      function handleRemove(e, id) {
+        e.preventDefault();
+        e.stopPropagation();
+        removeFromWishlist(id);
+        showToast("Removed from wishlist");
+        renderWishlist();
+      }
+
+      function clearAllWishlist() {
+        if (!confirm("Remove all vehicles from your wishlist?")) return;
+        saveWishlist([]);
+        showToast("Wishlist cleared");
+        renderWishlist();
+      }
+
+      /* ── DROPDOWN ── */
       const userDropdownWrap = document.getElementById("userDropdownWrap");
       const userDropdownMenu = document.getElementById("userDropdownMenu");
       const topbarChevron = document.getElementById("topbarChevron");
@@ -1056,205 +981,70 @@
       if (toggle)
         toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
 
-      /* ── API FETCH ── */
-      async function apiFetch(url, options = {}) {
-        try {
-          const res = await fetch(url, {
-            ...options,
-            headers: {
-              "Content-Type": "application/json",
-              ...(options.headers || {}),
-            },
-          });
-          if (!res.ok) throw new Error("API error: " + res.status);
-          return await res.json();
-        } catch (err) {
-          console.error("Fetch error:", err);
-          return null;
-        }
-      }
-
-      /* ── LOAD VEHICLES ── */
-      async function loadVehicles() {
-        const json = await apiFetch("/api/user/vehicles");
-        VEHICLES = Array.isArray(json) ? json : json?.data || [];
-        filtered = [...VEHICLES];
-        renderGrid();
-      }
-
-      /* ── LOAD USER PROFILE ── */
+      /* ── LOAD PROFILE ── */
       async function loadUserProfile() {
-        const user = await apiFetch("/api/user/profile");
-        if (!user) return;
-        const fullName =
-          `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User";
-        const initials = fullName
-          .split(" ")
-          .map((n) => n[0])
-          .join("")
-          .toUpperCase();
-        const kycStatus = (user.kyc_status || "not_submitted").toLowerCase();
-        const isVerified = kycStatus === "verified";
-        const setTxt = (id, v) => {
-          const el = document.getElementById(id);
-          if (el) el.textContent = v;
-        };
-        setTxt("topbarName", fullName);
-        setTxt("topbarInitials", initials);
-        setTxt("topbarRole", isVerified ? "✔ Verified Member" : "Member");
-        setTxt("ddName", fullName);
-        setTxt("ddEmail", user.email || "");
-        setTxt("sidebarName", fullName);
-        setTxt("sidebarInitials", initials);
-        const kycBadge = document.getElementById("ddKycBadge");
-        if (kycBadge) {
-          if (isVerified) {
-            kycBadge.textContent = "Verified";
-            kycBadge.style.background = "#ecfdf5";
-            kycBadge.style.color = "#16a34a";
-          } else if (kycStatus === "rejected") {
-            kycBadge.textContent = "Rejected";
-            kycBadge.style.background = "#fff1f2";
-            kycBadge.style.color = "#dc2626";
+        try {
+          const res = await fetch("/api/user/profile", {
+            headers: { "Content-Type": "application/json" },
+          });
+          if (!res.ok) return;
+          const user = await res.json();
+          const fullName =
+            `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User";
+          const initials = fullName
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase();
+          const kycStatus = (user.kyc_status || "not_submitted").toLowerCase();
+          const isVerified = kycStatus === "verified";
+          const setText = (id, v) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = v;
+          };
+          setText("topbarName", fullName);
+          setText("topbarInitials", initials);
+          setText("topbarRole", isVerified ? "✔ Verified Member" : "Member");
+          setText("ddName", fullName);
+          setText("ddEmail", user.email || "");
+          setText("sidebarName", fullName);
+          setText("sidebarInitials", initials);
+          const kycBadge = document.getElementById("ddKycBadge");
+          if (kycBadge) {
+            if (isVerified) {
+              kycBadge.textContent = "Verified";
+              kycBadge.style.background = "#ecfdf5";
+              kycBadge.style.color = "#16a34a";
+            } else if (kycStatus === "rejected") {
+              kycBadge.textContent = "Rejected";
+              kycBadge.style.background = "#fff1f2";
+              kycBadge.style.color = "#dc2626";
+            }
           }
-        }
-        const sidebarKyc = document.getElementById("sidebarKyc");
-        if (sidebarKyc) {
-          if (isVerified) {
-            sidebarKyc.textContent = "✔ KYC Verified";
-            sidebarKyc.className = "user-kyc-status verified";
-          } else if (kycStatus === "rejected") {
-            sidebarKyc.textContent = "✖ KYC Rejected";
-            sidebarKyc.className = "user-kyc-status unverified";
-          } else if (kycStatus === "pending") {
-            sidebarKyc.textContent = "⏳ KYC Pending";
-            sidebarKyc.className = "user-kyc-status unverified";
-          } else {
-            sidebarKyc.textContent = "⚠ KYC Not Submitted";
-            sidebarKyc.className = "user-kyc-status unverified";
+          const sidebarKyc = document.getElementById("sidebarKyc");
+          if (sidebarKyc) {
+            if (isVerified) {
+              sidebarKyc.textContent = "✔ KYC Verified";
+              sidebarKyc.className = "user-kyc-status verified";
+            } else if (kycStatus === "rejected") {
+              sidebarKyc.textContent = "✖ KYC Rejected";
+              sidebarKyc.className = "user-kyc-status unverified";
+            } else if (kycStatus === "pending") {
+              sidebarKyc.textContent = "⏳ KYC Pending";
+              sidebarKyc.className = "user-kyc-status unverified";
+            } else {
+              sidebarKyc.textContent = "⚠ KYC Not Submitted";
+              sidebarKyc.className = "user-kyc-status unverified";
+            }
           }
-        }
-        const roleEl = document.getElementById("topbarRole");
-        if (roleEl && isVerified) roleEl.style.color = "#16a34a";
-      }
-
-      /* ── RENDER GRID ── */
-      function renderGrid() {
-        const sort = document.getElementById("sortSelect").value;
-        let data = [...filtered];
-        if (sort === "price-asc")
-          data.sort((a, b) => (a.price_4h || 0) - (b.price_4h || 0));
-        if (sort === "price-desc")
-          data.sort((a, b) => (b.price_4h || 0) - (a.price_4h || 0));
-        if (sort === "name-asc")
-          data.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
-
-        const grid = document.getElementById("vehicleGrid");
-        const countEl = document.getElementById("resultCount");
-        if (countEl) countEl.textContent = data.length;
-
-        if (!data.length) {
-          grid.innerHTML = `<div class="empty-state"><h3>No vehicles found</h3><p>Try adjusting filters</p></div>`;
-          return;
-        }
-
-        grid.innerHTML = data
-          .map((v, i) => {
-            const img = v.thumbnail ? `/uploads/vehicles/${v.thumbnail}` : "";
-            const isAvail = v.status === "Available";
-            const wished = isWishlisted(v.id);
-            return `
-            <div class="vehicle-card" style="animation-delay:${i * 0.05}s">
-              <div class="vehicle-img-wrap">
-                ${img ? `<img src="${img}" alt="${v.name || "vehicle"}">` : `<div class="vehicle-img-placeholder">🚗</div>`}
-                <span class="avail-badge ${isAvail ? "available" : "booked"}">${isAvail ? "Available" : "Booked"}</span>
-
-                <!-- ★ WISHLIST STAR BUTTON ★ -->
-                <button
-                  class="wish-btn ${wished ? "wishlisted" : ""}"
-                  title="${wished ? "Remove from wishlist" : "Add to wishlist"}"
-                  data-id="${v.id}"
-                  onclick="handleWishClick(event, this, ${i})"
-                >
-                  <svg viewBox="0 0 24 24" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                  </svg>
-                </button>
-              </div>
-              <div class="vehicle-card-body">
-                <div class="vc-name">${v.name || "Unknown"}</div>
-                <div class="vc-meta">
-                  <span class="vc-meta-pill">⛽ ${v.fuel_type || "-"}</span>
-                  <span class="vc-meta-pill">🚘 ${v.body_type || "-"}</span>
-                  <span class="vc-meta-pill">⚙ ${v.transmission || "-"}</span>
-                </div>
-                <div class="vc-prices">
-                  <div class="price-box"><span class="price-box-dur">4h</span><span class="price-box-val">${(v.price_4h || 0).toLocaleString()}</span></div>
-                  <div class="price-box"><span class="price-box-dur">8h</span><span class="price-box-val">${(v.price_8h || 0).toLocaleString()}</span></div>
-                  <div class="price-box"><span class="price-box-dur">1d</span><span class="price-box-val">${(v.price_1d || 0).toLocaleString()}</span></div>
-                </div>
-                <a href="vehicle-details.html?id=${v.id}" class="view-btn">View Details →</a>
-              </div>
-            </div>`;
-          })
-          .join("");
-
-        updateWishBadge();
-      }
-
-      /* ── WISH CLICK HANDLER ── */
-      function handleWishClick(e, btn, idx) {
-        e.preventDefault();
-        e.stopPropagation();
-        const id = btn.dataset.id;
-        const vehicle = VEHICLES.find((v) => String(v.id) === String(id));
-        if (!vehicle) return;
-
-        const added = toggleWishlist(vehicle);
-        btn.classList.toggle("wishlisted", added);
-        btn.title = added ? "Remove from wishlist" : "Add to wishlist";
-
-        // Pop animation
-        btn.classList.remove("popping");
-        void btn.offsetWidth; // reflow
-        btn.classList.add("popping");
-        btn.addEventListener(
-          "animationend",
-          () => btn.classList.remove("popping"),
-          { once: true },
-        );
-
-        updateWishBadge();
-      }
-
-      /* ── FILTERS ── */
-      function applyFilters() {
-        const text = document.getElementById("searchText").value.toLowerCase();
-        const body = document.getElementById("filterBody").value;
-        const fuel = document.getElementById("filterFuel").value;
-        filtered = VEHICLES.filter((v) => {
-          const matchText =
-            !text ||
-            (v.name || "").toLowerCase().includes(text) ||
-            (v.brand || "").toLowerCase().includes(text) ||
-            (v.model || "").toLowerCase().includes(text);
-          const matchBody = !body || v.body_type === body;
-          const matchFuel = !fuel || v.fuel_type === fuel;
-          return matchText && matchBody && matchFuel;
-        });
-        renderGrid();
-      }
-      function clearFilters() {
-        document.getElementById("searchText").value = "";
-        document.getElementById("filterBody").value = "";
-        document.getElementById("filterFuel").value = "";
-        filtered = [...VEHICLES];
-        renderGrid();
+          const roleEl = document.getElementById("topbarRole");
+          if (roleEl && isVerified) roleEl.style.color = "#16a34a";
+        } catch {}
       }
 
       /* ── INIT ── */
-      updateWishBadge();
-      Promise.all([loadVehicles(), loadUserProfile()]);
+      renderWishlist();
+      loadUserProfile();
     </script>
   </body>
 </html>
