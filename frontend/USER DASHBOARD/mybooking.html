@@ -2074,6 +2074,7 @@
       </div>
     </div>
 
+    <script src="auth-init.js"></script>
     <script src="chatbot.js"></script>
 
     <script>
@@ -2192,6 +2193,7 @@
           });
           if (!res.ok) throw new Error("Profile failed");
           const user = await res.json();
+          window._userId = user.id;
           if (!user) return;
           const fullName =
             `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User";

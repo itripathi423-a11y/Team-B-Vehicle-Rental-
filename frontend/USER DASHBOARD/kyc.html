@@ -2215,6 +2215,7 @@
       </div>
     </div>
 
+    <script src="auth-init.js"></script>
     <script src="chatbot.js"></script>
 
     <script>
@@ -2274,6 +2275,7 @@
           if (!json.success) return;
 
           const user = json.data;
+          window._userId = user.id;
           const initials = user.name
             .split(" ")
             .map((w) => w[0])
