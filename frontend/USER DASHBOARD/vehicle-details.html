@@ -1669,6 +1669,7 @@
       </div>
     </div>
 
+    <script src="auth-init.js"></script>
     <script src="chatbot.js"></script>
 
     <script>
@@ -1702,7 +1703,7 @@
           if (!res.ok) throw new Error("Profile fetch failed");
           const user = await res.json();
           if (!user) return;
-
+          window._userId = user.id;
           const fullName =
             `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User";
           const initials = fullName

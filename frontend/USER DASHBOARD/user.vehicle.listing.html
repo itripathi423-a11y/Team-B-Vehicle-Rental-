@@ -1275,6 +1275,7 @@
       </div>
     </div>
 
+    <script src="auth-init.js"></script>
     <script src="chatbot.js"></script>
 
     <script>
@@ -1405,6 +1406,7 @@
       async function loadUserProfile() {
         const user = await apiFetch("/api/user/profile");
         if (!user) return;
+        window._userId = user.id;
         const fullName =
           `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User";
         const initials = fullName

@@ -1811,11 +1811,7 @@
           <div class="price-box">
             <div class="info-box-title" style="margin-bottom:10px">Price Breakdown</div>
             <table class="price-table">
-              <tr>
-                <td>Daily Rate × ${b.total_days} day${b.total_days !== 1 ? "s" : ""}</td>
-                <td style="text-align:right;color:var(--muted)">${fmtMoney(b.per_day)} each</td>
-                <td style="text-align:right;font-weight:500">${fmtMoney(b.per_day * b.total_days)}</td>
-              </tr>
+              
               ${b.extra_charges ? `<tr><td>Extra Charges</td><td></td><td style="text-align:right;font-weight:500">+${fmtMoney(b.extra_charges)}</td></tr>` : ""}
               ${b.discount ? `<tr><td>Discount</td><td></td><td style="text-align:right;font-weight:500;color:#16a34a">−${fmtMoney(b.discount)}</td></tr>` : ""}
               <tr class="price-total"><td>Total</td><td></td><td style="text-align:right">${fmtMoney(net)}</td></tr>

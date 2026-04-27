@@ -2064,7 +2064,7 @@
                   class="d-price"
                   style="font-size: 15px; padding-top: 3px; color: var(--muted)"
                 >
-                  2–3 Days
+                  2–5 Days
                 </div>
                 <div class="d-unit">multi-day</div>
               </div>
@@ -2076,7 +2076,7 @@
                   type="number"
                   id="customDays"
                   min="2"
-                  max="3"
+                  max="5"
                   value="2"
                   oninput="
                     clampDays();
@@ -2085,7 +2085,7 @@
                   "
                 />
                 <span class="hint"
-                  >Custom rental available for 2 or 3 days only</span
+                  >Custom rental available for 2 to 5 days</span
                 >
               </div>
             </div>
@@ -2678,7 +2678,7 @@
       function clampDays() {
         const inp = document.getElementById("customDays");
         const v = parseInt(inp.value);
-        if (!isNaN(v)) inp.value = Math.min(3, Math.max(2, v));
+        if (!isNaN(v)) inp.value = Math.min(5, Math.max(2, v));
       }
 
       function syncDropoff() {
