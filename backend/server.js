@@ -18,6 +18,7 @@ const mybookingRoutes = require("./routes/mybooking.routes");
 const adminKycRoutes = require("./routes/admin.kyc.routes");
 const adminBookingRoutes = require("./routes/admin.bookings.routes");
 const chatRoutes = require("./routes/chat.routes");
+const serviceRoutes = require("./routes/admin.servicing.routes");
 
 const app = express();
 
@@ -78,6 +79,7 @@ app.use("/api/bookings", bookingRoutes);
 app.use("/api/bookings", mybookingRoutes);
 app.use("/api/kyc", kycRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/admin/servicing", serviceRoutes);
 /* ── START ── */
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");
