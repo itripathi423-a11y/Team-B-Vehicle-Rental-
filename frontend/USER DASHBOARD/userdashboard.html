@@ -11,98 +11,6 @@
       rel="stylesheet"
     />
     <link href="userdashboard.css" rel="stylesheet" />
-    <style>
-      .user-dropdown-wrap {
-        position: relative;
-        cursor: pointer;
-      }
-      .topbar-chevron {
-        transition: transform 0.2s;
-        color: #9ca3af;
-        flex-shrink: 0;
-      }
-      .topbar-chevron.open {
-        transform: rotate(180deg);
-      }
-
-      .user-dropdown-menu {
-        display: none;
-        position: absolute;
-        top: calc(100% + 8px);
-        right: 0;
-        min-width: 210px;
-        background: #fff;
-        border: 0.5px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 6px;
-        z-index: 999;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-      }
-      .user-dropdown-menu.open {
-        display: block;
-      }
-
-      .dd-header {
-        padding: 10px 10px 8px;
-        border-bottom: 0.5px solid #f0f0f0;
-        margin-bottom: 4px;
-      }
-      .dd-header-name {
-        font-size: 13px;
-        font-weight: 600;
-        color: #111;
-      }
-      .dd-header-email {
-        font-size: 11px;
-        color: #9ca3af;
-      }
-
-      .dd-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        width: 100%;
-        padding: 8px 10px;
-        border: none;
-        background: none;
-        border-radius: 8px;
-        font-size: 13px;
-        color: #111;
-        cursor: pointer;
-        text-align: left;
-      }
-      .dd-item:hover {
-        background: #f9fafb;
-      }
-      .dd-item svg {
-        color: #6b7280;
-        flex-shrink: 0;
-      }
-
-      .dd-kyc-badge {
-        margin-left: auto;
-        font-size: 10px;
-        padding: 2px 7px;
-        border-radius: 99px;
-        background: #fff8e1;
-        color: #b45309;
-        font-weight: 500;
-      }
-      .dd-divider {
-        height: 0.5px;
-        background: #f0f0f0;
-        margin: 4px 0;
-      }
-      .dd-danger {
-        color: #dc2626;
-      }
-      .dd-danger svg {
-        color: #dc2626;
-      }
-      .dd-danger:hover {
-        background: #fef2f2;
-      }
-    </style>
   </head>
   <body>
     <!-- ── SIDEBAR ── -->
@@ -238,7 +146,7 @@
             >
           </button>
 
-          <!-- ── USER DROPDOWN ── -->
+          <!-- USER DROPDOWN -->
           <div class="topbar-user user-dropdown-wrap" id="userDropdownWrap">
             <div class="topbar-avatar" id="topbarAvatar">
               <span id="topbarInitials"></span>
@@ -279,7 +187,10 @@
                 </svg>
                 My profile
               </button>
-              <button class="dd-item" onclick="location.href = '#'">
+              <button
+                class="dd-item"
+                onclick="location.href = 'mybooking.html'"
+              >
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -343,14 +254,19 @@
               </button>
             </div>
           </div>
-          <!-- ── END USER DROPDOWN ── -->
+          <!-- END USER DROPDOWN -->
         </div>
       </header>
 
       <main class="content">
         <!-- KYC Alert -->
         <div class="kyc-alert" id="kycAlert">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#d97706"
+            stroke-width="1.8"
+          >
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           </svg>
           <div class="kyc-alert-text">
@@ -360,15 +276,12 @@
               It only takes 2 minutes.</span
             >
           </div>
-          <button
-            class="kyc-alert-btn"
-            onclick="this.closest('.kyc-alert').style.display = 'none'"
-          >
+          <button class="kyc-alert-btn" onclick="location.href = 'kyc.html'">
             Verify Now →
           </button>
         </div>
 
-        <!-- Welcome -->
+        <!-- Welcome Banner -->
         <div class="welcome-banner">
           <div class="welcome-text">
             <h1>Good afternoon, <span id="greetName">there</span> 👋</h1>
@@ -480,7 +393,12 @@
         <div class="quick-actions">
           <a href="user.vehicle.listing.html" class="qa-btn">
             <div class="qa-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
                 <path
                   d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
                 />
@@ -493,7 +411,12 @@
           </a>
           <a href="mybooking.html" class="qa-btn">
             <div class="qa-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
                 <rect x="3" y="4" width="18" height="18" rx="2" />
                 <line x1="16" y1="2" x2="16" y2="6" />
                 <line x1="8" y1="2" x2="8" y2="6" />
@@ -504,7 +427,12 @@
           </a>
           <a href="kyc.html" class="qa-btn">
             <div class="qa-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               </svg>
             </div>
@@ -513,7 +441,6 @@
           <a href="user.wishlist.html" class="qa-btn">
             <div class="qa-icon">
               <svg
-                class="nav-icon"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -542,7 +469,7 @@
                   <th>Duration</th>
                   <th>Date</th>
                   <th>Amount</th>
-                  <th>Status</th>
+                  <th>Status / Action</th>
                 </tr>
               </thead>
               <tbody id="recentBookingsTbody">
@@ -576,7 +503,7 @@
       </main>
     </div>
 
-    <!-- ChatBot -->
+    <!-- ── CHATBOT ── -->
     <button id="chat-bubble" title="Chat with us">
       <div class="chat-notif-dot"></div>
       <svg
@@ -656,9 +583,204 @@
       </div>
     </div>
 
+    <!-- ══════════════════════════════════════════════
+         REVIEW MODAL — integrated
+         ══════════════════════════════════════════════ -->
+    <div class="review-backdrop hidden" id="reviewBackdrop">
+      <div class="review-modal" id="reviewModal">
+        <!-- FORM VIEW -->
+        <div id="reviewFormView">
+          <!-- Header -->
+          <div class="review-modal-header">
+            <span class="review-modal-title">Rate Your Experience</span>
+            <button
+              class="review-close-btn"
+              onclick="closeReviewModal()"
+              aria-label="Close"
+            >
+              <svg viewBox="0 0 24 24">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Vehicle row -->
+          <div class="review-vehicle-row">
+            <div class="review-veh-thumb" id="reviewVehThumb">🚗</div>
+            <div class="review-veh-info">
+              <div class="review-veh-name" id="reviewVehName">Vehicle</div>
+              <div class="review-veh-meta" id="reviewVehMeta"></div>
+            </div>
+            <span class="review-completed-badge">&#10003; Completed</span>
+          </div>
+
+          <!-- Form body -->
+          <div class="review-form-body">
+            <!-- Stars -->
+            <div>
+              <label class="review-field-label">
+                Your Rating <span class="req">*</span>
+              </label>
+              <div
+                class="review-stars"
+                id="reviewStars"
+                role="group"
+                aria-label="Star rating"
+              >
+                <button
+                  class="review-star"
+                  data-v="1"
+                  aria-label="1 star"
+                  onmouseenter="previewStars(1)"
+                  onmouseleave="clearPreview()"
+                  onclick="setRating(1)"
+                >
+                  <svg viewBox="0 0 24 24" stroke-width="1">
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                    />
+                  </svg>
+                </button>
+                <button
+                  class="review-star"
+                  data-v="2"
+                  aria-label="2 stars"
+                  onmouseenter="previewStars(2)"
+                  onmouseleave="clearPreview()"
+                  onclick="setRating(2)"
+                >
+                  <svg viewBox="0 0 24 24" stroke-width="1">
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                    />
+                  </svg>
+                </button>
+                <button
+                  class="review-star"
+                  data-v="3"
+                  aria-label="3 stars"
+                  onmouseenter="previewStars(3)"
+                  onmouseleave="clearPreview()"
+                  onclick="setRating(3)"
+                >
+                  <svg viewBox="0 0 24 24" stroke-width="1">
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                    />
+                  </svg>
+                </button>
+                <button
+                  class="review-star"
+                  data-v="4"
+                  aria-label="4 stars"
+                  onmouseenter="previewStars(4)"
+                  onmouseleave="clearPreview()"
+                  onclick="setRating(4)"
+                >
+                  <svg viewBox="0 0 24 24" stroke-width="1">
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                    />
+                  </svg>
+                </button>
+                <button
+                  class="review-star"
+                  data-v="5"
+                  aria-label="5 stars"
+                  onmouseenter="previewStars(5)"
+                  onmouseleave="clearPreview()"
+                  onclick="setRating(5)"
+                >
+                  <svg viewBox="0 0 24 24" stroke-width="1">
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div class="review-star-sentiment" id="reviewSentiment">
+                Tap a star to rate
+              </div>
+              <div class="review-error" id="reviewStarError">
+                Please select a rating before submitting.
+              </div>
+            </div>
+
+            <!-- Comment -->
+            <div>
+              <label class="review-field-label" for="reviewComment">
+                Your Review <span class="opt">(optional)</span>
+              </label>
+              <textarea
+                class="review-textarea"
+                id="reviewComment"
+                placeholder="Tell us about your experience — vehicle condition, comfort, pickup process…"
+                maxlength="500"
+                oninput="updateCharCount()"
+              ></textarea>
+              <div class="review-char-row">
+                <span class="review-char-count" id="reviewCharCount"
+                  >0 / 500</span
+                >
+              </div>
+            </div>
+
+            <!-- Submit -->
+            <button
+              class="review-submit-btn"
+              id="reviewSubmitBtn"
+              onclick="submitReview()"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                width="15"
+                height="15"
+              >
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+              Submit Review
+            </button>
+          </div>
+        </div>
+        <!-- /reviewFormView -->
+
+        <!-- SUCCESS VIEW -->
+        <div class="review-success" id="reviewSuccessView">
+          <div class="review-success-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#16a34a"
+              stroke-width="2.2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9 12l2 2 4-4" />
+            </svg>
+          </div>
+          <div class="review-success-title">Review Submitted!</div>
+          <div class="review-success-sub">
+            Thanks for your feedback. Your review helps other customers choose
+            the right vehicle.
+          </div>
+          <div class="review-success-stars" id="reviewSuccessStars"></div>
+          <button class="review-done-btn" onclick="closeReviewModal()">
+            Done
+          </button>
+        </div>
+        <!-- /reviewSuccessView -->
+      </div>
+    </div>
+    <!-- ── END REVIEW MODAL ── -->
+
     <script src="chatbot.js"></script>
+
     <script>
-      /* Mobile sidebar */
+      /* ── Mobile sidebar ── */
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("sidebarOverlay");
       const toggle = document.getElementById("sidebarToggle");
@@ -677,23 +799,7 @@
       if (toggle)
         toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
 
-      /* Copy promo */
-      function copyPromo() {
-        const code = document.getElementById("promoVal")?.textContent;
-        if (!code) return;
-        navigator.clipboard.writeText(code).then(() => {
-          const el = document.getElementById("promoVal");
-          const orig = el.textContent;
-          el.textContent = "COPIED!";
-          el.style.color = "#22c55e";
-          setTimeout(() => {
-            el.textContent = orig;
-            el.style.color = "";
-          }, 1500);
-        });
-      }
-
-      /* Greeting */
+      /* ── Greeting ── */
       const h = new Date().getHours();
       const g =
         h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
@@ -704,11 +810,10 @@
           bannerH1.innerHTML = `${g}, <span id="greetName">there</span> 👋`;
       }
 
-      /* User dropdown */
+      /* ── User dropdown ── */
       const userDropdownWrap = document.getElementById("userDropdownWrap");
       const userDropdownMenu = document.getElementById("userDropdownMenu");
       const topbarChevron = document.getElementById("topbarChevron");
-
       userDropdownWrap?.addEventListener("click", (e) => {
         e.stopPropagation();
         const open = userDropdownMenu.classList.toggle("open");
@@ -719,12 +824,12 @@
         topbarChevron?.classList.remove("open");
       });
 
-      /* Logout */
+      /* ── Logout ── */
       document.getElementById("logoutBtn")?.addEventListener("click", () => {
-        // localStorage.removeItem("token"); // clear session if needed
         window.location.href = "/index.html";
       });
     </script>
+
     <script src="userdashboard.js"></script>
   </body>
 </html>

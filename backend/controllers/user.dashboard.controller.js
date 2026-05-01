@@ -1,92 +1,95 @@
-// Import database connection
+console.log("✅ user.dashboard.controller loaded");
 const db = require("../config/db");
 
-/* USER PROFILE */
-
-// Get user profile details
+/* ── USER PROFILE ────────────────────────────────────
+   GET /api/user/profile
+─────────────────────────────────────────────────────── */
 exports.getUserProfile = (req, res) => {
-  // Get logged-in user ID from auth middleware
   const userId = req.user.id;
 
-  // SQL query to fetch user details
   const sql = `
-    SELECT id, name, email, phone
-    FROM users
-    WHERE id = ?
+    SELECT 
+      u.id, 
+      u.name, 
+      u.email, 
+      u.phone,
+      u.role,
+      COALESCE(k.status, 'not_submitted') AS kyc_status,
+      u.profile_photo
+    FROM users u
+    LEFT JOIN kyc k ON k.user_id = u.id
+    WHERE u.id = ?
   `;
 
-  // Execute query
   db.query(sql, [userId], (err, result) => {
-    // Handle database error
-    if (err) return res.status(500).json(err);
-
-    // If user not found
+    if (err) return res.status(500).json({ message: "DB error", error: err });
     if (!result.length)
       return res.status(404).json({ message: "User not found" });
 
-    // Get first user record
     const u = result[0];
-
-    // Split full name into first and last name
     const [first_name, ...last] = u.name.split(" ");
 
-    // Return formatted user profile
     res.json({
       id: u.id,
       first_name,
       last_name: last.join(" "),
       email: u.email,
       phone: u.phone,
+      role: u.role,
+      kyc_status: u.kyc_status, // "verified" | "pending" | "rejected" | "not_submitted"
+      profile_photo: u.profile_photo || null,
     });
   });
 };
 
-/* DASHBOARD STATS */
-
-// Get booking statistics for dashboard
+/* ── DASHBOARD STATS ─────────────────────────────────
+   GET /api/user/bookings/stats
+─────────────────────────────────────────────────────── */
 exports.getDashboardStats = (req, res) => {
-  // Get logged-in user ID
   const userId = req.user.id;
 
-  // SQL query for booking stats
   const sql = `
     SELECT 
-      COUNT(*) AS total,
-      SUM(CASE WHEN status = 'Completed' THEN 1 ELSE 0 END) AS completed,
-      SUM(CASE WHEN status IN ('Active','Confirmed') THEN 1 ELSE 0 END) AS active,
+      COUNT(*)                                                              AS total,
+      SUM(CASE WHEN status = 'Completed'               THEN 1 ELSE 0 END) AS completed,
+      SUM(CASE WHEN status IN ('Active', 'Confirmed')  THEN 1 ELSE 0 END) AS active,
       COALESCE(SUM(CASE WHEN status = 'Completed' THEN total_price ELSE 0 END), 0) AS total_spent
     FROM bookings
     WHERE user_id = ?
   `;
 
-  // Execute query
   db.query(sql, [userId], (err, result) => {
-    // Handle error
-    if (err) return res.status(500).json(err);
-
-    // Send stats result
+    if (err) return res.status(500).json({ message: "DB error", error: err });
     res.json(result[0]);
   });
 };
 
-/* RECENT BOOKINGS */
-
-// Get last 5 recent bookings
+/* ── RECENT BOOKINGS ─────────────────────────────────
+   GET /api/user/bookings?limit=5&sort=desc
+   Returns last 5 bookings for the logged-in user.
+─────────────────────────────────────────────────────── */
 exports.getRecentBookings = (req, res) => {
-  // Get user ID
   const userId = req.user.id;
 
-  // SQL query to fetch recent bookings with vehicle details
   const sql = `
     SELECT 
       b.id,
-      b.rental_type,
+      b.id            AS booking_id,
+      b.booking_ref,
+      b.rental_type   AS duration_type,
       b.pickup_datetime,
-      b.total_price,
+      b.drop_datetime,
+      b.total_price   AS total_amount,
       b.status,
-      v.name AS vehicle_name,
+      b.payment_status,
+      v.id            AS vehicle_id,
+      v.name          AS vehicle_name,
+      v.brand,
+      v.model,
       v.license_plate,
-      v.thumbnail
+      v.thumbnail,
+      v.body_type,
+      v.fuel_type
     FROM bookings b
     JOIN vehicles v ON b.vehicle_id = v.id
     WHERE b.user_id = ?
@@ -94,78 +97,76 @@ exports.getRecentBookings = (req, res) => {
     LIMIT 5
   `;
 
-  // Execute query
   db.query(sql, [userId], (err, result) => {
-    // Handle error
-    if (err) return res.status(500).json(err);
-
-    // Return booking list
+    if (err) return res.status(500).json({ message: "DB error", error: err });
     res.json(result);
   });
 };
 
-/* UPCOMING BOOKING */
-
-// Get next upcoming booking
+/* ── UPCOMING BOOKING ────────────────────────────────
+   GET /api/user/upcoming-booking
+   Returns the nearest future booking.
+─────────────────────────────────────────────────────── */
 exports.getUpcomingBooking = (req, res) => {
-  // Get user ID
   const userId = req.user.id;
 
-  // SQL query for nearest upcoming booking
   const sql = `
-    SELECT b.*, v.name AS vehicle_name
+    SELECT 
+      b.id,
+      b.id          AS booking_id,
+      b.booking_ref,
+      b.pickup_datetime,
+      b.drop_datetime,
+      b.pickup_location,
+      b.status,
+      b.total_price AS total_amount,
+      v.name        AS vehicle_name,
+      v.thumbnail,
+      v.brand,
+      v.model,
+      v.license_plate
     FROM bookings b
     JOIN vehicles v ON b.vehicle_id = v.id
     WHERE b.user_id = ?
+      AND b.status IN ('Pending', 'Confirmed', 'Active')
       AND b.pickup_datetime >= NOW()
     ORDER BY b.pickup_datetime ASC
     LIMIT 1
   `;
 
-  // Execute query
   db.query(sql, [userId], (err, result) => {
-    // Handle error
-    if (err) return res.status(500).json(err);
-
-    // Return first upcoming booking or null
+    if (err) return res.status(500).json({ message: "DB error", error: err });
     res.json(result[0] || null);
   });
 };
 
-/* VEHICLES */
-
-// Get all available vehicles
+/* ── VEHICLES ────────────────────────────────────────
+   GET /api/vehicles
+─────────────────────────────────────────────────────── */
 exports.getVehicles = (req, res) => {
-  // Query vehicles that are not deleted
-  db.query("SELECT * FROM vehicles WHERE is_deleted = 0", (err, result) => {
-    // Handle error
-    if (err) return res.status(500).json(err);
-
-    // Return vehicle list
-    res.json(result);
-  });
+  db.query(
+    "SELECT * FROM vehicles WHERE is_deleted = 0 ORDER BY created_at DESC",
+    (err, result) => {
+      if (err) return res.status(500).json({ message: "DB error", error: err });
+      res.json(result);
+    },
+  );
 };
 
-/* NOTIFICATIONS */
-
-// Get unread notification count
+/* ── NOTIFICATIONS COUNT ─────────────────────────────
+   GET /api/user/notifications/unread-count
+─────────────────────────────────────────────────────── */
 exports.getUnreadNotifications = (req, res) => {
-  // Get user ID
   const userId = req.user.id;
 
-  // SQL query to count unread notifications
   const sql = `
     SELECT COUNT(*) AS count
     FROM notifications
     WHERE user_id = ? AND is_read = 0
   `;
 
-  // Execute query
   db.query(sql, [userId], (err, result) => {
-    // Handle error
-    if (err) return res.status(500).json(err);
-
-    // Return unread count
-    res.json(result[0]);
+    if (err) return res.status(500).json({ message: "DB error", error: err });
+    res.json(result[0]); // { count: 3 }
   });
 };

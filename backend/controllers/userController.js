@@ -178,32 +178,38 @@ exports.getBookingStats = (req, res) => {
    BOOKINGS
 ========================= */
 exports.getUserBookings = (req, res) => {
-  if (!req.session.user) return res.status(401).json([]);
+  const userId = req.session?.user?.id || req.user?.id;
 
-  const userId = req.session.user.id;
-
-  db.query(
-    `
+  const sql = `
     SELECT 
-      v.name AS vehicle_name,
+      b.id,
+      b.id            AS booking_id,
+      b.booking_ref,
+      b.rental_type   AS duration_type,
+      b.pickup_datetime,
+      b.drop_datetime,
+      b.total_price   AS total_amount,
+      b.status,
+      b.payment_status,
+      v.id            AS vehicle_id,
+      v.name          AS vehicle_name,
+      v.brand,
+      v.model,
       v.license_plate,
       v.thumbnail,
-      b.rental_type AS duration_type,
-      b.pickup_datetime,
-      b.total_price AS total_amount,
-      b.status
+      v.body_type,
+      v.fuel_type
     FROM bookings b
     JOIN vehicles v ON b.vehicle_id = v.id
-    WHERE b.user_id=?
+    WHERE b.user_id = ?
     ORDER BY b.created_at DESC
     LIMIT 5
-  `,
-    [userId],
-    (err, result) => {
-      if (err) return res.status(500).json([]);
-      res.json(result);
-    },
-  );
+  `;
+
+  db.query(sql, [userId], (err, result) => {
+    if (err) return res.status(500).json({ message: "DB error", error: err });
+    res.json(result);
+  });
 };
 
 /* =========================
