@@ -137,11 +137,19 @@ Auto Dealer System
 };
 
 // GET ALL BOOKINGS FOR A USER
+// GET ALL BOOKINGS FOR A USER
 exports.getUserBookings = (req, res) => {
   const userId = req.params.userId;
 
   const sql = `
-    SELECT b.*, v.name AS vehicle_name, v.thumbnail, v.body_type, v.fuel_type
+    SELECT 
+      b.*,
+      b.id AS booking_id,
+      v.name AS vehicle_name, 
+      v.thumbnail, 
+      v.body_type, 
+      v.fuel_type,
+      v.license_plate
     FROM bookings b
     JOIN vehicles v ON b.vehicle_id = v.id
     WHERE b.user_id = ?
@@ -153,7 +161,7 @@ exports.getUserBookings = (req, res) => {
       console.error(err);
       return res.status(500).json({ success: false, message: "DB error" });
     }
-    res.json({ success: true, data: results });
+    res.json({ success: true, bookings: results }); // ← change "data" to "bookings"
   });
 };
 

@@ -19,6 +19,7 @@ const adminKycRoutes = require("./routes/admin.kyc.routes");
 const adminBookingRoutes = require("./routes/admin.bookings.routes");
 const chatRoutes = require("./routes/chat.routes");
 const serviceRoutes = require("./routes/admin.servicing.routes");
+const reviewRoutes = require("./routes/reviewRoutes");
 
 const app = express();
 
@@ -56,8 +57,6 @@ app.get("/", (req, res) => {
 
 /* ── STATIC ── */
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
-app.use(express.static(path.join(__dirname, "../frontend")));
-
 /* ── ROUTES ── */
 
 app.use("/api", userRoutes);
@@ -80,6 +79,9 @@ app.use("/api/bookings", mybookingRoutes);
 app.use("/api/kyc", kycRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/admin/servicing", serviceRoutes);
+app.use("/api/reviews", reviewRoutes);
+app.use(express.static(path.join(__dirname, "../frontend")));
+
 /* ── START ── */
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");

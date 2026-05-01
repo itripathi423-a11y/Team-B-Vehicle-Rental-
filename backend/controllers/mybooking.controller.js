@@ -1,37 +1,56 @@
 const db = require("../config/db");
+const transporter = require("../utils/mailer");
+
+const ADMIN_EMAIL = "admin@gmail.com";
 
 exports.getMyBookings = (req, res) => {
   const userId = req.session.user.id;
+
   const sql = `
     SELECT
-      b.id, b.booking_ref, b.rental_type,
-      b.pickup_datetime, b.drop_datetime,
-      b.total_days, b.total_price, b.status,
-      b.payment_status, b.payment_method,
-      b.cancel_reason, b.notes, b.created_at,
-      v.name AS vehicle_name, v.brand AS vehicle_brand,
-      v.license_plate, v.body_type, v.thumbnail AS vehicle_thumbnail
+      b.id,
+      b.booking_ref,
+      b.rental_type,
+      b.pickup_datetime,
+      b.drop_datetime,
+      b.pickup_location,
+      b.user_phone,
+      b.total_days,
+      b.total_price,
+      b.status,
+      b.payment_status,
+      b.payment_method,
+      b.cancel_reason,
+      b.notes,
+      b.created_at,
+
+      v.name AS vehicle_name,
+      v.brand AS vehicle_brand,
+      v.license_plate,
+      v.body_type,
+      v.thumbnail AS vehicle_thumbnail,
+      v.fuel_type,
+      v.transmission
+
     FROM bookings b
     JOIN vehicles v ON b.vehicle_id = v.id
     WHERE b.user_id = ?
     ORDER BY b.created_at DESC
   `;
+
   db.query(sql, [userId], (err, rows) => {
     if (err) {
-      console.error("getMyBookings error:", err);
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to fetch bookings." });
+      console.error(err);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to fetch bookings",
+      });
     }
-    const summary = {
-      total: rows.length,
-      confirmed: rows.filter((r) => r.status === "Confirmed").length,
-      pending: rows.filter((r) => r.status === "Pending").length,
-      active: rows.filter((r) => r.status === "Active").length,
-      completed: rows.filter((r) => r.status === "Completed").length,
-      cancelled: rows.filter((r) => r.status === "Cancelled").length,
-    };
-    return res.json({ success: true, summary, bookings: rows });
+
+    res.json({
+      success: true,
+      bookings: rows,
+    });
   });
 };
 
@@ -120,45 +139,118 @@ exports.updateBooking = (req, res) => {
   );
 };
 
+// CANCEL BOOKING + SEND EMAIL
 exports.deleteBooking = (req, res) => {
   const userId = req.session.user.id;
   const bookingId = req.params.id;
   const { cancel_reason } = req.body;
+
   db.query(
-    "SELECT id, status, vehicle_id FROM bookings WHERE id = ? AND user_id = ?",
+    `
+    SELECT 
+      b.id,
+      b.booking_ref,
+      b.status,
+      b.vehicle_id,
+      b.user_name,
+      b.user_email,
+      b.user_phone,
+      b.pickup_location,
+      b.pickup_datetime,
+      b.drop_datetime,
+      b.total_price,
+      v.name AS vehicle_name
+    FROM bookings b
+    JOIN vehicles v ON b.vehicle_id = v.id
+    WHERE b.id = ? AND b.user_id = ?
+    `,
     [bookingId, userId],
-    (err, rows) => {
+    async (err, rows) => {
       if (err) {
         console.error("deleteBooking fetch error:", err);
-        return res
-          .status(500)
-          .json({ success: false, message: "Server error." });
+        return res.status(500).json({
+          success: false,
+          message: "Server error.",
+        });
       }
-      if (!rows.length)
-        return res
-          .status(404)
-          .json({ success: false, message: "Booking not found." });
+
+      if (!rows.length) {
+        return res.status(404).json({
+          success: false,
+          message: "Booking not found.",
+        });
+      }
+
       const booking = rows[0];
-      if (!["Pending", "Confirmed"].includes(booking.status))
+
+      if (!["Pending", "Confirmed"].includes(booking.status)) {
         return res.status(400).json({
           success: false,
-          message: `Cannot cancel a booking with status: ${booking.status}`,
+          message: `Cannot cancel booking with status: ${booking.status}`,
         });
+      }
+
+      // UPDATE BOOKING STATUS
       db.query(
-        "UPDATE bookings SET status = 'Cancelled', cancel_reason = ? WHERE id = ?",
+        `
+        UPDATE bookings 
+        SET status = 'Cancelled', cancel_reason = ?
+        WHERE id = ?
+        `,
         [cancel_reason || null, bookingId],
-        (err2) => {
+        async (err2) => {
           if (err2) {
-            console.error("deleteBooking cancel error:", err2);
-            return res
-              .status(500)
-              .json({ success: false, message: "Failed to cancel booking." });
+            console.error("cancel error:", err2);
+            return res.status(500).json({
+              success: false,
+              message: "Failed to cancel booking.",
+            });
           }
+
+          // MAKE VEHICLE AVAILABLE AGAIN
           db.query(
             "UPDATE vehicles SET status = 'Available' WHERE id = ?",
             [booking.vehicle_id],
-            (err3) => {
+            async (err3) => {
               if (err3) console.error("vehicle reset error:", err3);
+
+              // SEND EMAIL TO ADMIN
+              try {
+                await transporter.sendMail({
+                  from: `"Auto Dealer System" <${process.env.EMAIL_USER}>`,
+                  to: ADMIN_EMAIL,
+                  subject: "Booking Cancelled",
+
+                  text: `
+BOOKING CANCELLED ❌
+
+A user has cancelled a booking.
+
+-----------------------------------
+Booking Ref : ${booking.booking_ref}
+Customer    : ${booking.user_name}
+Email       : ${booking.user_email}
+Phone       : ${booking.user_phone}
+
+Vehicle     : ${booking.vehicle_name}
+Pickup      : ${booking.pickup_location}
+
+From        : ${booking.pickup_datetime}
+To          : ${booking.drop_datetime}
+
+Amount      : Rs ${booking.total_price}
+
+Reason      : ${cancel_reason || "Not provided"}
+-----------------------------------
+
+Please review in admin dashboard.
+Auto Dealer System
+                  `,
+                });
+              } catch (mailErr) {
+                console.error("Cancel email error:", mailErr);
+              }
+
               return res.json({
                 success: true,
                 message: "Booking cancelled successfully.",
