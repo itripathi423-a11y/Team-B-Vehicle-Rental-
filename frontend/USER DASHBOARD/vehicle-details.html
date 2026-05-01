@@ -61,7 +61,7 @@
         }
       }
 
-      /* SIDEBAR */
+      /* ── SIDEBAR ── */
       .sidebar {
         width: var(--sidebar-w);
         min-height: 100vh;
@@ -211,7 +211,7 @@
         animation: pulse-dot 1.6s ease infinite;
       }
 
-      /* MAIN */
+      /* ── MAIN ── */
       .main-wrap {
         margin-left: var(--sidebar-w);
         flex: 1;
@@ -220,7 +220,7 @@
         min-height: 100vh;
       }
 
-      /* TOPBAR */
+      /* ── TOPBAR ── */
       .topbar {
         position: sticky;
         top: 0;
@@ -331,7 +331,7 @@
         cursor: pointer;
       }
 
-      /* USER DROPDOWN */
+      /* ── USER DROPDOWN ── */
       .user-dropdown-wrap {
         position: relative;
         cursor: pointer;
@@ -419,7 +419,7 @@
         background: #fef2f2;
       }
 
-      /* CONTENT */
+      /* ── CONTENT ── */
       .content {
         padding: 28px;
         max-width: 2000px;
@@ -437,7 +437,7 @@
         gap: 20px;
       }
 
-      /* GALLERY */
+      /* ── GALLERY ── */
       .gallery-card {
         background: var(--white);
         border: 1px solid var(--border);
@@ -540,7 +540,7 @@
         color: #fff;
       }
 
-      /* SECTION CARD */
+      /* ── SECTION CARD ── */
       .section-card {
         background: var(--white);
         border: 1px solid var(--border);
@@ -567,7 +567,7 @@
         background: var(--border);
       }
 
-      /* VEHICLE HEADER */
+      /* ── VEHICLE HEADER ── */
       .vh-header {
         display: flex;
         align-items: flex-start;
@@ -620,7 +620,7 @@
         background: #faf5ff;
       }
 
-      /* SPECS */
+      /* ── SPECS ── */
       .specs-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -647,7 +647,7 @@
         color: var(--dark);
       }
 
-      /* DESC */
+      /* ── DESC ── */
       .desc-text {
         font-size: 14px;
         line-height: 1.75;
@@ -671,7 +671,7 @@
         font-family: "DM Sans", sans-serif;
       }
 
-      /* FEATURES */
+      /* ── FEATURES ── */
       .features-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -701,7 +701,7 @@
         flex-shrink: 0;
       }
 
-      /* BOOKING CARD */
+      /* ── BOOKING CARD ── */
       .booking-card {
         background: var(--white);
         border: 1px solid var(--border);
@@ -879,7 +879,172 @@
         flex-shrink: 0;
       }
 
-      /* FOOTER */
+      /* ── REVIEWS ── */
+      .reviews-section {
+        margin-top: 24px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 22px 24px;
+        box-shadow: var(--shadow);
+        animation: fadeUp 0.5s ease both;
+      }
+      .reviews-summary {
+        display: flex;
+        gap: 28px;
+        align-items: center;
+        padding: 16px 0 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 20px;
+      }
+      .reviews-summary-left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        min-width: 80px;
+      }
+      .avg-score {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 52px;
+        color: var(--dark);
+        line-height: 1;
+      }
+      .avg-stars {
+        display: flex;
+        gap: 3px;
+      }
+      .avg-stars .star {
+        font-size: 16px;
+      }
+      .avg-stars .star.full {
+        color: #f59e0b;
+      }
+      .avg-stars .star.half {
+        color: #f59e0b;
+        opacity: 0.55;
+      }
+      .avg-stars .star.empty {
+        color: #d1d5db;
+      }
+      .avg-count {
+        font-size: 12px;
+        color: var(--muted);
+        text-align: center;
+        white-space: nowrap;
+      }
+      .rating-bars {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .rating-bar-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .rating-bar-track {
+        flex: 1;
+        height: 6px;
+        background: var(--border);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .rating-bar-fill {
+        height: 100%;
+        background: #f59e0b;
+        border-radius: 99px;
+        transition: width 0.4s ease;
+      }
+      .rating-bar-label {
+        min-width: 14px;
+        text-align: right;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .reviews-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .review-item {
+        padding: 16px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+      }
+      .review-item-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+      .review-item-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .review-avatar {
+        width: 34px;
+        height: 34px;
+        background: var(--orange);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .review-username {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .review-date {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 1px;
+      }
+      .review-item-stars {
+        display: flex;
+        gap: 2px;
+        font-size: 13px;
+      }
+      .review-item-stars .s-full {
+        color: #f59e0b;
+      }
+      .review-item-stars .s-empty {
+        color: #d1d5db;
+      }
+      .review-comment {
+        font-size: 13px;
+        color: var(--text);
+        line-height: 1.65;
+        margin-top: 6px;
+      }
+      .no-reviews {
+        text-align: center;
+        padding: 32px 16px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .no-reviews-icon {
+        font-size: 36px;
+        margin-bottom: 10px;
+      }
+      .reviews-loading {
+        text-align: center;
+        padding: 24px;
+        color: #9ca3af;
+        font-size: 13px;
+      }
+
+      /* ── FOOTER ── */
       .footer-strip {
         margin-top: 32px;
         padding: 20px 0 8px;
@@ -903,36 +1068,7 @@
         color: var(--orange);
       }
 
-      @media (max-width: 1080px) {
-        .detail-layout {
-          grid-template-columns: 1fr;
-        }
-        .booking-card {
-          position: static;
-        }
-      }
-      @media (max-width: 720px) {
-        :root {
-          --sidebar-w: 0px;
-        }
-        .sidebar {
-          transform: translateX(-100%);
-        }
-        .main-wrap {
-          margin-left: 0;
-        }
-        .content {
-          padding: 16px;
-        }
-        .specs-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-        .features-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-      /* ── CHATBOT WIDGET ── */
-
+      /* ── CHATBOT ── */
       #chat-bubble {
         position: fixed;
         bottom: 24px;
@@ -959,7 +1095,6 @@
       #chat-bubble svg {
         color: #fff;
       }
-
       .chat-notif-dot {
         position: absolute;
         top: 6px;
@@ -970,7 +1105,6 @@
         border-radius: 50%;
         border: 2px solid #fff;
       }
-
       #chat-panel {
         position: fixed;
         bottom: 88px;
@@ -996,7 +1130,6 @@
         opacity: 1;
         pointer-events: all;
       }
-
       .cp-header {
         display: flex;
         align-items: center;
@@ -1039,7 +1172,6 @@
       .cp-close:hover {
         background: #f9fafb;
       }
-
       .cp-messages {
         flex: 1;
         overflow-y: auto;
@@ -1048,7 +1180,6 @@
         flex-direction: column;
         gap: 10px;
       }
-
       .cp-msg {
         display: flex;
         gap: 8px;
@@ -1057,7 +1188,6 @@
       .cp-msg.user {
         flex-direction: row-reverse;
       }
-
       .cp-bubble {
         max-width: 76%;
         padding: 9px 12px;
@@ -1075,7 +1205,6 @@
         color: #fff;
         border-bottom-right-radius: 4px;
       }
-
       .cp-av {
         width: 26px;
         height: 26px;
@@ -1089,7 +1218,6 @@
         color: #ff5c1a;
         flex-shrink: 0;
       }
-
       .cp-typing {
         display: flex;
         gap: 4px;
@@ -1113,7 +1241,6 @@
       .cp-typing span:nth-child(3) {
         animation-delay: 0.4s;
       }
-
       @keyframes cpbounce {
         0%,
         60%,
@@ -1124,7 +1251,6 @@
           transform: translateY(-5px);
         }
       }
-
       .cp-quick {
         padding: 6px 14px 10px;
         display: flex;
@@ -1145,7 +1271,6 @@
         color: #ff5c1a;
         border-color: #ff5c1a;
       }
-
       .cp-input-row {
         display: flex;
         gap: 8px;
@@ -1165,7 +1290,6 @@
       .cp-input:focus {
         border-color: #ff5c1a;
       }
-
       .cp-send {
         width: 34px;
         height: 34px;
@@ -1184,16 +1308,50 @@
       .cp-send svg {
         color: #fff;
       }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 1080px) {
+        .detail-layout {
+          grid-template-columns: 1fr;
+        }
+        .booking-card {
+          position: static;
+        }
+      }
+      @media (max-width: 720px) {
+        :root {
+          --sidebar-w: 0px;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .main-wrap {
+          margin-left: 0;
+        }
+        .content {
+          padding: 16px;
+        }
+        .specs-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+        .reviews-summary {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
     </style>
   </head>
   <body>
-    <!-- SIDEBAR -->
+    <!-- ── SIDEBAR ── -->
     <aside class="sidebar" id="sidebar">
       <a href="userdashboard.html" class="sidebar-logo">
         <div class="logo-mark">AD</div>
         <div class="logo-text-block">
-          <span class="logo-brand">Auto Dealer</span
-          ><span class="logo-sub">Fleet Management</span>
+          <span class="logo-brand">Auto Dealer</span>
+          <span class="logo-sub">Fleet Management</span>
         </div>
       </a>
       <nav class="sidebar-nav">
@@ -1262,9 +1420,8 @@
           >
             <polygon
               points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
-            />
-          </svg>
-          Wishlist
+            /></svg
+          >Wishlist
         </a>
       </nav>
       <div class="sidebar-footer">
@@ -1272,16 +1429,16 @@
           <div class="user-avatar" id="sidebarAvatar"></div>
           <div class="user-info">
             <span class="user-name" id="sidebarName"></span>
-            <span class="user-kyc-status unverified" id="sidebarKyc"
-              ><span class="kyc-pulse"></span
-            ></span>
+            <span class="user-kyc-status unverified" id="sidebarKyc">
+              <span class="kyc-pulse"></span>
+            </span>
           </div>
         </div>
       </div>
     </aside>
 
+    <!-- ── MAIN ── -->
     <div class="main-wrap">
-      <!-- TOPBAR -->
       <header class="topbar">
         <a href="user.vehicle.listing.html" class="topbar-back">
           <svg
@@ -1309,7 +1466,6 @@
             <span class="notif-badge">3</span>
           </button>
 
-          <!-- USER DROPDOWN -->
           <div class="topbar-user user-dropdown-wrap" id="userDropdownWrap">
             <div class="topbar-avatar" id="topbarAvatar"></div>
             <div>
@@ -1328,7 +1484,6 @@
             >
               <polyline points="6 9 12 15 18 9" />
             </svg>
-
             <div class="user-dropdown-menu" id="userDropdownMenu">
               <div class="dd-header">
                 <div class="dd-header-name" id="ddName"></div>
@@ -1410,14 +1565,14 @@
               </button>
             </div>
           </div>
-          <!-- END USER DROPDOWN -->
         </div>
       </header>
 
       <main class="content">
         <div class="detail-layout">
-          <!-- LEFT -->
+          <!-- LEFT COL -->
           <div class="left-col">
+            <!-- Gallery -->
             <div class="gallery-card">
               <div class="gallery-main">
                 <div class="gallery-main-placeholder" id="mainImgWrap">🚗</div>
@@ -1427,6 +1582,8 @@
               </div>
               <div class="gallery-thumbs" id="thumbsRow"></div>
             </div>
+
+            <!-- Vehicle Name & Pills -->
             <div class="section-card" style="animation-delay: 0.05s">
               <div class="vh-header">
                 <div>
@@ -1435,10 +1592,14 @@
                 </div>
               </div>
             </div>
+
+            <!-- Specs -->
             <div class="section-card" style="animation-delay: 0.1s">
               <div class="section-title">Vehicle Specifications</div>
               <div class="specs-grid" id="specsGrid"></div>
             </div>
+
+            <!-- Description -->
             <div class="section-card" style="animation-delay: 0.15s">
               <div class="section-title">About this Vehicle</div>
               <p class="desc-text clamped" id="descText">
@@ -1453,6 +1614,8 @@
                 Read more
               </button>
             </div>
+
+            <!-- Features -->
             <div class="section-card" style="animation-delay: 0.2s">
               <div class="section-title">Features</div>
               <div class="features-grid" id="featuresGrid">
@@ -1482,9 +1645,11 @@
                 </div>
               </div>
             </div>
+
+            <!-- Reviews — full width below the grid cols -->
           </div>
 
-          <!-- RIGHT — BOOKING CARD -->
+          <!-- RIGHT COL — Booking Card -->
           <div class="booking-card">
             <div class="booking-header">
               <div class="booking-header-label">Book this vehicle</div>
@@ -1493,7 +1658,7 @@
             <div class="booking-body">
               <div>
                 <div class="field-label">Select Duration</div>
-                <div class="duration-btns" id="durationBtns">
+                <div class="duration-btns">
                   <button
                     class="dur-btn active"
                     data-dur="4h"
@@ -1537,8 +1702,8 @@
               </div>
               <div class="price-breakdown">
                 <div class="price-row muted">
-                  <span id="baseLabel">Base rate (4 hrs)</span
-                  ><span id="baseVal">—</span>
+                  <span id="baseLabel">Base rate (4 hrs)</span>
+                  <span id="baseVal">—</span>
                 </div>
                 <div class="price-row muted">
                   <span>VAT (13%)</span><span id="vatVal">—</span>
@@ -1580,6 +1745,22 @@
           </div>
         </div>
 
+        <!-- ── REVIEWS (full width below the 2-col layout) ── -->
+        <div class="reviews-section" id="reviewsCard">
+          <div class="section-title">Customer Reviews</div>
+          <div class="reviews-summary" id="reviewsSummary">
+            <div class="reviews-summary-left">
+              <div class="avg-score" id="avgScore">—</div>
+              <div class="avg-stars" id="avgStars"></div>
+              <div class="avg-count" id="avgCount">No reviews yet</div>
+            </div>
+            <div class="rating-bars" id="ratingBars"></div>
+          </div>
+          <div class="reviews-list" id="reviewsList">
+            <div class="reviews-loading">Loading reviews…</div>
+          </div>
+        </div>
+
         <div class="footer-strip">
           <p>© 2026 Auto Dealer Fleet Management. All rights reserved.</p>
           <div class="footer-links">
@@ -1589,7 +1770,7 @@
       </main>
     </div>
 
-    <!-- ChatBot -->
+    <!-- ── CHATBOT ── -->
     <button id="chat-bubble" title="Chat with us">
       <div class="chat-notif-dot"></div>
       <svg
@@ -1605,7 +1786,6 @@
         />
       </svg>
     </button>
-
     <div id="chat-panel">
       <div class="cp-header">
         <div class="cp-avatar">
@@ -1673,14 +1853,37 @@
     <script src="chatbot.js"></script>
 
     <script>
+      /* ═══════════════════════════════════════════
+         STATE
+      ═══════════════════════════════════════════ */
       let vehicle = null;
       let selectedDur = "4h";
       const VAT_RATE = 0.13;
 
-      /* ── USER DROPDOWN ── */
+      /* ═══════════════════════════════════════════
+         HELPERS
+      ═══════════════════════════════════════════ */
+      function escHtml(str) {
+        if (str == null) return "";
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function setTxt(id, val) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+      }
+
+      /* ═══════════════════════════════════════════
+         USER DROPDOWN
+      ═══════════════════════════════════════════ */
       const userDropdownWrap = document.getElementById("userDropdownWrap");
       const userDropdownMenu = document.getElementById("userDropdownMenu");
       const topbarChevron = document.getElementById("topbarChevron");
+
       userDropdownWrap?.addEventListener("click", (e) => {
         e.stopPropagation();
         const open = userDropdownMenu.classList.toggle("open");
@@ -1694,7 +1897,9 @@
         window.location.href = "/index.html";
       });
 
-      /* ── LOAD USER PROFILE ── */
+      /* ═══════════════════════════════════════════
+         LOAD USER PROFILE
+      ═══════════════════════════════════════════ */
       async function loadUserProfile() {
         try {
           const res = await fetch("/api/user/profile", {
@@ -1703,6 +1908,7 @@
           if (!res.ok) throw new Error("Profile fetch failed");
           const user = await res.json();
           if (!user) return;
+
           window._userId = user.id;
           const fullName =
             `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User";
@@ -1714,10 +1920,6 @@
           const kycStatus = (user.kyc_status || "not_submitted").toLowerCase();
           const isVerified = kycStatus === "verified";
 
-          const setTxt = (id, v) => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = v;
-          };
           setTxt("topbarName", fullName);
           setTxt("topbarRole", isVerified ? "✔ Verified Member" : "Member");
           setTxt("ddName", fullName);
@@ -1727,7 +1929,7 @@
           document.getElementById("topbarAvatar").textContent = initials;
           document.getElementById("sidebarAvatar").textContent = initials;
 
-          /* KYC badge */
+          /* KYC badge in dropdown */
           const kycBadge = document.getElementById("ddKycBadge");
           if (kycBadge) {
             if (isVerified) {
@@ -1743,7 +1945,7 @@
             }
           }
 
-          /* sidebar KYC */
+          /* KYC in sidebar */
           const sidebarKyc = document.getElementById("sidebarKyc");
           if (sidebarKyc) {
             if (isVerified) {
@@ -1770,7 +1972,9 @@
         }
       }
 
-      /* ── LOAD VEHICLE ── */
+      /* ═══════════════════════════════════════════
+         LOAD VEHICLE  →  render()  →  loadVehicleReviews()
+      ═══════════════════════════════════════════ */
       async function loadVehicle() {
         const params = new URLSearchParams(location.search);
         const id = params.get("id");
@@ -1778,15 +1982,20 @@
           window.location.href = "user.vehicle.listing.html";
           return;
         }
+
         try {
           const token = localStorage.getItem("token") || "";
           const res = await fetch(`/api/vehicles/${id}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           if (!res.ok) throw new Error("Failed to fetch vehicle");
+
           const json = await res.json();
-          if (!json?.data) throw new Error("No vehicle data");
-          vehicle = json.data;
+
+          /* Support both { data: {...} } and flat response shapes */
+          vehicle = json.data ?? json;
+          if (!vehicle || !vehicle.id) throw new Error("No vehicle data");
+
           const BASE_URL = "http://localhost:5000/uploads/vehicles/";
           vehicle.images = [
             vehicle.thumbnail,
@@ -1798,35 +2007,47 @@
           ]
             .filter(Boolean)
             .map((img) => (img.startsWith("http") ? img : BASE_URL + img));
-          vehicle.seats = vehicle.seating_capacity || "—";
+
+          vehicle.seats = vehicle.seating_capacity || vehicle.seats || "—";
           vehicle.color = vehicle.color || "—";
+
           render();
+          loadVehicleReviews(id); /* ← called AFTER render, id is valid here */
         } catch (err) {
           console.error("Failed to load vehicle:", err);
           document.getElementById("vhName").textContent = "Vehicle not found";
+          document.getElementById("reviewsList").innerHTML =
+            `<div class="no-reviews">Could not load reviews.</div>`;
         }
       }
 
+      /* ═══════════════════════════════════════════
+         RENDER VEHICLE
+      ═══════════════════════════════════════════ */
       function render() {
         if (!vehicle) return;
         const v = vehicle;
+
         document.getElementById("topbarTitle").textContent =
           v.name || "Vehicle";
         document.getElementById("bookingVhName").textContent = v.name || "—";
         document.getElementById("vhName").textContent = v.name || "—";
         document.title = `AUTO DEALER — ${v.name || "Vehicle"}`;
 
+        /* Availability badge */
         const badge = document.getElementById("availBadge");
         badge.textContent = v.status || "Unavailable";
         badge.className =
           "avail-badge " + (v.status === "Available" ? "available" : "booked");
 
+        /* Main image */
         const mainWrap = document.getElementById("mainImgWrap");
-        if (v.images?.length > 0)
-          mainWrap.innerHTML = `<img id="mainImg" src="${v.images[0]}" alt="${v.name}" />`;
-
+        if (v.images?.length > 0) {
+          mainWrap.innerHTML = `<img id="mainImg" src="${escHtml(v.images[0])}" alt="${escHtml(v.name)}" />`;
+        }
         renderThumbs();
 
+        /* Fuel pill class */
         const fuelClass =
           {
             Petrol: "fuel-petrol",
@@ -1835,30 +2056,37 @@
             Hybrid: "fuel-hybrid",
           }[v.fuel_type] || "";
         document.getElementById("vhPills").innerHTML = `
-          <span class="pill ${fuelClass}">${v.fuel_type || "—"}</span>
-          <span class="pill">${v.body_type || "—"}</span>
-          <span class="pill">⚙ ${v.transmission || "—"}</span>
-          <span class="pill">👤 ${v.seats || "—"} Seats</span>`;
+          <span class="pill ${fuelClass}">${escHtml(v.fuel_type) || "—"}</span>
+          <span class="pill">${escHtml(v.body_type) || "—"}</span>
+          <span class="pill">⚙ ${escHtml(v.transmission) || "—"}</span>
+          <span class="pill">👤 ${escHtml(String(v.seats)) || "—"} Seats</span>`;
 
+        /* Specs */
         document.getElementById("specsGrid").innerHTML = [
           { label: "Year", val: v.year },
           { label: "Color", val: v.color },
-          { label: "License Plate", val: v.license_plate || "—" },
+          { label: "License Plate", val: v.license_plate },
           { label: "Fuel", val: v.fuel_type },
           { label: "Transmission", val: v.transmission },
           { label: "Seats", val: v.seats },
         ]
           .map(
             (s) =>
-              `<div class="spec-box"><div class="spec-label">${s.label}</div><div class="spec-val">${s.val || "—"}</div></div>`,
+              `<div class="spec-box">
+            <div class="spec-label">${s.label}</div>
+            <div class="spec-val">${escHtml(String(s.val ?? "—"))}</div>
+          </div>`,
           )
           .join("");
 
+        /* Description */
         const descEl = document.getElementById("descText");
         descEl.textContent = v.description || "No description available.";
-        if (v.description && v.description.length > 220)
+        if (v.description && v.description.length > 220) {
           document.getElementById("readMoreBtn").style.display = "block";
+        }
 
+        /* Features */
         let features = [];
         try {
           features =
@@ -1867,18 +2095,22 @@
               : Array.isArray(v.features)
                 ? v.features
                 : [];
-        } catch (e) {}
+        } catch (e) {
+          features = [];
+        }
+
         document.getElementById("featuresGrid").innerHTML =
           features.length > 0
             ? features
                 .map((f) =>
                   typeof f === "string"
-                    ? `<div class="feature-item"><div class="feature-icon">✔️</div>${f}</div>`
-                    : `<div class="feature-item"><div class="feature-icon">${f.icon || "✔️"}</div>${f.label || ""}</div>`,
+                    ? `<div class="feature-item"><div class="feature-icon">✔️</div>${escHtml(f)}</div>`
+                    : `<div class="feature-item"><div class="feature-icon">${f.icon || "✔️"}</div>${escHtml(f.label || "")}</div>`,
                 )
                 .join("")
             : `<div class="feature-item">No features listed</div>`;
 
+        /* Prices */
         document.getElementById("price4h").textContent =
           `NPR ${Number(v.price_4h || 0).toLocaleString()}`;
         document.getElementById("price8h").textContent =
@@ -1900,13 +2132,14 @@
           (_, i) => {
             const src = images[i];
             const isLast = i === 4 && extra > 0;
-            return `<div class="thumb-wrap ${i === 0 ? "active" : ""}" onclick="switchMain(${i},this)">
-            ${src ? `<img src="${src}"/>` : `<div class="thumb-placeholder">🚗</div>`}
+            return `<div class="thumb-wrap ${i === 0 ? "active" : ""}" onclick="switchMain(${i}, this)">
+            ${src ? `<img src="${escHtml(src)}" />` : `<div class="thumb-placeholder">🚗</div>`}
             ${isLast ? `<div class="thumb-overflow">+${extra}</div>` : ""}
           </div>`;
           },
         ).join("");
       }
+
       function switchMain(idx, el) {
         document
           .querySelectorAll(".thumb-wrap")
@@ -1916,6 +2149,7 @@
         const mainImg = document.getElementById("mainImg");
         if (mainImg && src) mainImg.src = src;
       }
+
       function selectDuration(btn) {
         document
           .querySelectorAll(".dur-btn")
@@ -1924,6 +2158,7 @@
         selectedDur = btn.dataset.dur;
         calcPrice();
       }
+
       function calcPrice() {
         if (!vehicle) return;
         const base =
@@ -1940,6 +2175,7 @@
             : selectedDur === "8h"
               ? "8 hrs"
               : "1 day";
+
         document.getElementById("baseLabel").textContent =
           `Base rate (${label})`;
         document.getElementById("baseVal").textContent =
@@ -1949,10 +2185,12 @@
         document.getElementById("totalVal").textContent =
           `NPR ${total.toLocaleString()}`;
       }
+
       function goToBooking() {
         if (!vehicle?.id) return alert("Vehicle not loaded yet.");
         window.location.href = `user.booking.html?id=${vehicle.id}`;
       }
+
       let descExpanded = false;
       function toggleDesc() {
         descExpanded = !descExpanded;
@@ -1964,6 +2202,126 @@
           : "Read more";
       }
 
+      /* ═══════════════════════════════════════════
+         LOAD VEHICLE REVIEWS
+      ═══════════════════════════════════════════ */
+      async function loadVehicleReviews(vehicleId) {
+        const listEl = document.getElementById("reviewsList");
+        const avgScoreEl = document.getElementById("avgScore");
+        const avgStarsEl = document.getElementById("avgStars");
+        const avgCountEl = document.getElementById("avgCount");
+        const ratingBarsEl = document.getElementById("ratingBars");
+
+        try {
+          const token = localStorage.getItem("token") || "";
+          const res = await fetch(`/api/vehicles/${vehicleId}/reviews`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+
+          /* Average score */
+          if (data.average_rating) {
+            avgScoreEl.textContent = data.average_rating.toFixed(1);
+            avgCountEl.textContent = `${data.total_reviews} review${data.total_reviews !== 1 ? "s" : ""}`;
+            avgStarsEl.innerHTML = renderStarsFull(data.average_rating);
+          } else {
+            avgScoreEl.textContent = "—";
+            avgCountEl.textContent = "No reviews yet";
+            avgStarsEl.innerHTML = "";
+          }
+
+          /* Distribution bars */
+          const counts = [5, 4, 3, 2, 1].map((star) => ({
+            star,
+            count: data.reviews.filter((r) => r.rating === star).length,
+          }));
+          ratingBarsEl.innerHTML = counts
+            .map(({ star, count }) => {
+              const pct =
+                data.total_reviews > 0
+                  ? Math.round((count / data.total_reviews) * 100)
+                  : 0;
+              return `
+              <div class="rating-bar-row">
+                <span class="rating-bar-label">${star}</span>
+                <span style="font-size:11px;color:#f59e0b">★</span>
+                <div class="rating-bar-track">
+                  <div class="rating-bar-fill" style="width:${pct}%"></div>
+                </div>
+                <span style="min-width:28px;font-size:11px;color:var(--muted)">${count > 0 ? count : ""}</span>
+              </div>`;
+            })
+            .join("");
+
+          /* Review items */
+          if (!data.reviews.length) {
+            listEl.innerHTML = `
+              <div class="no-reviews">
+                <div class="no-reviews-icon">💬</div>
+                <div>No reviews yet for this vehicle.</div>
+                <div style="margin-top:4px;font-size:12px">Be the first to review after your booking!</div>
+              </div>`;
+            return;
+          }
+
+          listEl.innerHTML = data.reviews
+            .map((r) => {
+              const initials = r.reviewer_name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .toUpperCase()
+                .slice(0, 2);
+              const date = new Date(r.created_at).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              });
+              return `
+              <div class="review-item">
+                <div class="review-item-header">
+                  <div class="review-item-user">
+                    <div class="review-avatar">${initials}</div>
+                    <div>
+                      <div class="review-username">${escHtml(r.reviewer_name)}</div>
+                      <div class="review-date">${date}</div>
+                    </div>
+                  </div>
+                  <div class="review-item-stars">${renderStarsSmall(r.rating)}</div>
+                </div>
+                ${r.comment ? `<div class="review-comment">${escHtml(r.comment)}</div>` : ""}
+              </div>`;
+            })
+            .join("");
+        } catch (err) {
+          console.error("Reviews load failed:", err);
+          listEl.innerHTML = `<div class="no-reviews">Failed to load reviews.</div>`;
+        }
+      }
+
+      /* ═══════════════════════════════════════════
+         STAR RENDERERS
+      ═══════════════════════════════════════════ */
+      function renderStarsFull(rating) {
+        return Array.from({ length: 5 }, (_, i) => {
+          const full = i + 1 <= Math.floor(rating);
+          const half = !full && i < rating;
+          return `<span class="star ${full ? "full" : half ? "half" : "empty"}">★</span>`;
+        }).join("");
+      }
+
+      function renderStarsSmall(rating) {
+        return Array.from(
+          { length: 5 },
+          (_, i) =>
+            `<span class="${i < rating ? "s-full" : "s-empty"}">★</span>`,
+        ).join("");
+      }
+
+      /* ═══════════════════════════════════════════
+         INIT  — correct order: loadVehicle triggers render + reviews internally
+      ═══════════════════════════════════════════ */
       loadVehicle();
       loadUserProfile();
     </script>

@@ -89,3 +89,37 @@ exports.getVehicleDetails = (req, res) => {
     });
   });
 };
+
+// GET VEHICLE REVIEWS WITH AVERAGE RATING
+exports.getVehicleReviews = (req, res) => {
+  const vehicleId = req.params.id;
+
+  const sql = `
+    SELECT 
+      r.id,
+      r.rating,
+      r.comment,
+      r.created_at,
+      u.name AS reviewer_name
+    FROM reviews r
+    JOIN users u ON u.id = r.user_id
+    WHERE r.vehicle_id = ?
+    ORDER BY r.created_at DESC
+  `;
+
+  db.query(sql, [vehicleId], (err, results) => {
+    if (err) return res.status(500).json({ message: "DB error", error: err });
+
+    const total = results.length;
+    const avg =
+      total > 0
+        ? (results.reduce((sum, r) => sum + r.rating, 0) / total).toFixed(1)
+        : null;
+
+    res.json({
+      average_rating: avg ? parseFloat(avg) : null,
+      total_reviews: total,
+      reviews: results,
+    });
+  });
+};

@@ -8,41 +8,36 @@ const db = require("../config/db");
 // 1. FETCH REVIEW DATA FOR FORM
 // =======================================================
 exports.getReviewForm = (req, res) => {
-  const bookingId = req.params.bookingId; // ← matches :bookingId in route
+  const bookingId = req.params.bookingId;
 
   const sql = `
     SELECT 
-      b.id        AS booking_id,
-      b.user_id,
-      b.vehicle_id,
-      b.status,
-      v.name      AS vehicle_name,
-      v.brand,
-      v.model,
-      v.thumbnail,
-      v.body_type
+      b.id AS booking_id, b.user_id, b.vehicle_id, b.status,
+      v.name AS vehicle_name, v.brand, v.model, v.thumbnail, v.body_type,
+      r.id AS existing_review_id
     FROM bookings b
     JOIN vehicles v ON b.vehicle_id = v.id
+    LEFT JOIN reviews r ON r.booking_id = b.id   /* ← check for existing review */
     WHERE b.id = ?
   `;
 
   db.query(sql, [bookingId], (err, result) => {
     if (err) return res.status(500).json({ message: "DB error", error: err });
-
     if (!result.length)
       return res.status(404).json({ message: "Booking not found" });
+    if (result[0].status !== "Completed")
+      return res
+        .status(403)
+        .json({ message: "Only completed bookings can be reviewed" });
 
-    // Only allow review for completed bookings
-    if (result[0].status !== "Completed") {
-      return res.status(403).json({
-        message: "Only completed bookings can be reviewed",
-      });
+    // ← NEW: block if already reviewed
+    if (result[0].existing_review_id) {
+      return res.status(409).json({ message: "Already reviewed" });
     }
 
     res.json(result[0]);
   });
 };
-
 // =======================================================
 // 2. SUBMIT REVIEW
 // =======================================================
