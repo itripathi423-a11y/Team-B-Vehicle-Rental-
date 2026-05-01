@@ -3,7 +3,8 @@ const router = express.Router();
 
 const vehicleDetailsController = require("../controllers/vehicleDetails.controller");
 
-// ✅ FIXED ROUTE
+// ✅ specific route FIRST
+router.get("/:id/reviews", vehicleDetailsController.getVehicleReviews);
 router.get("/:id", vehicleDetailsController.getVehicleDetails);
 
 module.exports = router;

@@ -309,18 +309,25 @@ function openReviewModal(bookingId) {
 
   const sessionKey = "reviewed_" + bookingId + "_open";
   if (sessionStorage.getItem(sessionKey)) return;
-  sessionStorage.setItem(sessionKey, "true");
 
   fetch(`http://localhost:5000/api/reviews/form/${bookingId}`, {
     credentials: "include",
     headers: authHeaders(),
   })
     .then((res) => {
+      if (res.status === 409) {
+        // Already reviewed — mark session so we don't re-check this session
+        sessionStorage.setItem(sessionKey, "true");
+        return null;
+      }
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return res.json();
     })
     .then((data) => {
-      if (!data) return;
+      if (!data) return; // Already reviewed or no data — skip silently
+
+      // Only set session flag AFTER confirming review hasn't been submitted
+      sessionStorage.setItem(sessionKey, "true");
 
       const vehNameEl = document.getElementById("reviewVehName");
       const vehMetaEl = document.getElementById("reviewVehMeta");
@@ -376,7 +383,6 @@ function openReviewModal(bookingId) {
     })
     .catch((err) => console.error("Review modal error:", err));
 }
-
 /* ── CLOSE REVIEW MODAL ──────────────────────────────── */
 function closeReviewModal() {
   const backdropEl = document.getElementById("reviewBackdrop");
