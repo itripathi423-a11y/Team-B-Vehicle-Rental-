@@ -23,6 +23,7 @@ const reviewRoutes = require("./routes/reviewRoutes");
 const enquiryRoutes = require("./routes/enquiry.routes");
 
 const adminEnquiryRoutes = require("./routes/admin.enquiry.routes");
+const adminreviewRoutes = require("./routes/admin.review.routes");
 
 const app = express();
 
@@ -86,6 +87,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/user", enquiryRoutes);
 
 app.use("/api/admin/enquiries", adminEnquiryRoutes);
+app.use("/api/admin/reviews", adminreviewRoutes);
 
 app.use(express.static(path.join(__dirname, "../frontend")));
 

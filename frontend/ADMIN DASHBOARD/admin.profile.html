@@ -1,0 +1,1619 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AUTO DEALER — My Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --orange: #ff5c1a;
+        --orange-light: #ff7a3d;
+        --orange-dim: rgba(255, 92, 26, 0.12);
+        --bg: #f4f5f7;
+        --white: #ffffff;
+        --sidebar-bg: #0a0a0a;
+        --sidebar-w: 240px;
+        --dark: #111827;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --radius: 14px;
+        --shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+        --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.1);
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        font-size: 15px;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        width: var(--sidebar-w);
+        min-height: 100vh;
+        background: var(--sidebar-bg);
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        z-index: 200;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .sidebar-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 24px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .logo-mark {
+        width: 36px;
+        height: 36px;
+        background: var(--orange);
+        color: white;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        flex-shrink: 0;
+      }
+      .logo-brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 17px;
+        letter-spacing: 2.5px;
+        color: white;
+        line-height: 1;
+      }
+      .logo-sub {
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        color: rgba(255, 255, 255, 0.3);
+        font-family: "Space Mono", monospace;
+      }
+      .sidebar-nav {
+        flex: 1;
+        padding: 16px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 9px;
+        color: rgba(255, 255, 255, 0.45);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 400;
+        transition: all 0.18s;
+      }
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .nav-item.active {
+        background: var(--orange-dim);
+        color: var(--orange);
+        font-weight: 500;
+      }
+      .nav-item.active .nav-icon {
+        stroke: var(--orange);
+      }
+      .nav-icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+      }
+      .sidebar-footer {
+        padding: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .sidebar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .user-name {
+        display: block;
+        font-size: 13px;
+        color: white;
+        font-weight: 500;
+      }
+      .user-role {
+        display: block;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.35);
+      }
+
+      /* ── MAIN ── */
+      .main-wrap {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ── TOPBAR ── */
+      .topbar {
+        height: 64px;
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        padding: 0 28px;
+        gap: 16px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .topbar-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .topbar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 12px;
+        border-radius: 9px;
+        cursor: pointer;
+        transition: background 0.2s;
+        position: relative;
+        user-select: none;
+      }
+      .topbar-user:hover {
+        background: var(--bg);
+      }
+      .topbar-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .topbar-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+      }
+      .topbar-role {
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      /* ── CONTENT ── */
+      .content {
+        flex: 1;
+        padding: 28px;
+      }
+
+      /* ── PAGE HEADER ── */
+      .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 28px;
+      }
+      .page-title {
+        font-size: 26px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .page-sub {
+        font-size: 14px;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+
+      /* ── PROFILE LAYOUT ── */
+      .profile-grid {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+
+      /* ── PROFILE CARD (LEFT) ── */
+      .profile-card {
+        background: var(--white);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .profile-card-banner {
+        height: 90px;
+        background: linear-gradient(
+          135deg,
+          #0a0a0a 0%,
+          #1a1a1a 50%,
+          #ff5c1a22 100%
+        );
+        position: relative;
+      }
+      .profile-card-banner::after {
+        content: "AD";
+        position: absolute;
+        right: 20px;
+        bottom: -8px;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 64px;
+        color: rgba(255, 255, 255, 0.04);
+        line-height: 1;
+        letter-spacing: 4px;
+      }
+      .profile-card-body {
+        padding: 0 24px 24px;
+      }
+      .profile-avatar-wrap {
+        margin-top: -32px;
+        margin-bottom: 14px;
+        position: relative;
+        display: inline-block;
+      }
+      .profile-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: white;
+        font-size: 22px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid white;
+        box-shadow: 0 4px 12px rgba(255, 92, 26, 0.3);
+        font-family: "Space Mono", monospace;
+      }
+      .profile-avatar-edit {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--orange);
+        border: 2px solid white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .profile-avatar-edit:hover {
+        background: var(--orange-light);
+      }
+      .profile-avatar-edit svg {
+        width: 10px;
+        height: 10px;
+        color: white;
+      }
+      .profile-card-name {
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 3px;
+      }
+      .profile-card-role {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: var(--orange-dim);
+        color: var(--orange);
+        font-size: 11px;
+        font-weight: 600;
+        font-family: "Space Mono", monospace;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 99px;
+        margin-bottom: 16px;
+      }
+      .profile-divider {
+        height: 1px;
+        background: var(--border);
+        margin: 16px 0;
+      }
+      .profile-info-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .profile-info-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: var(--bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .profile-info-icon svg {
+        width: 15px;
+        height: 15px;
+        color: var(--muted);
+      }
+      .profile-info-label {
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.2;
+      }
+      .profile-info-value {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        line-height: 1.4;
+        word-break: break-all;
+      }
+
+      /* ── STATS ROW ── */
+      .profile-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 16px;
+      }
+      .profile-stat {
+        background: var(--bg);
+        padding: 12px 10px;
+        text-align: center;
+      }
+      .profile-stat-val {
+        font-family: "Space Mono", monospace;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--dark);
+        line-height: 1;
+        margin-bottom: 3px;
+      }
+      .profile-stat-lbl {
+        font-size: 10px;
+        color: var(--muted);
+        letter-spacing: 0.5px;
+      }
+
+      /* ── RIGHT PANEL ── */
+      .profile-right {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      /* ── SECTION CARD ── */
+      .section-card {
+        background: var(--white);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        padding: 24px;
+      }
+      .section-hdr {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .section-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .section-sub {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .edit-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 14px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: white;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        cursor: pointer;
+        transition: all 0.18s;
+      }
+      .edit-btn:hover {
+        background: var(--bg);
+        border-color: #d1d5db;
+      }
+      .edit-btn svg {
+        width: 13px;
+        height: 13px;
+        color: var(--muted);
+      }
+
+      /* ── FORM GRID ── */
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .form-grid.full {
+        grid-template-columns: 1fr;
+      }
+      .field-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .field-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+      }
+      .field-input {
+        padding: 10px 13px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        color: var(--text);
+        background: var(--bg);
+        outline: none;
+        transition:
+          border 0.2s,
+          background 0.2s;
+      }
+      .field-input:focus {
+        border-color: var(--orange);
+        background: white;
+      }
+      .field-input:disabled {
+        background: var(--bg);
+        color: var(--muted);
+        cursor: not-allowed;
+      }
+      .field-input.readonly {
+        background: #fafafa;
+        color: var(--text);
+        pointer-events: none;
+      }
+
+      /* ── PASSWORD SECTION ── */
+      .pw-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .field-input-wrap {
+        position: relative;
+      }
+      .field-input-wrap .field-input {
+        width: 100%;
+        padding-right: 40px;
+      }
+      .pw-eye {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: var(--muted);
+        transition: color 0.15s;
+        background: none;
+        border: none;
+      }
+      .pw-eye:hover {
+        color: var(--text);
+      }
+      .pw-eye svg {
+        width: 16px;
+        height: 16px;
+      }
+      .pw-hint {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      /* strength bar */
+      .pw-strength {
+        height: 4px;
+        border-radius: 99px;
+        background: var(--border);
+        overflow: hidden;
+        margin-top: 6px;
+      }
+      .pw-strength-fill {
+        height: 100%;
+        border-radius: 99px;
+        transition:
+          width 0.3s,
+          background 0.3s;
+        width: 0%;
+      }
+
+      /* ── ACTIVITY LOG ── */
+      .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+      .activity-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 12px 0;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .activity-item:last-child {
+        border-bottom: none;
+      }
+      .activity-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .activity-icon svg {
+        width: 15px;
+        height: 15px;
+      }
+      .activity-text {
+        font-size: 13px;
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .activity-time {
+        font-size: 11px;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+        margin-top: 2px;
+      }
+
+      /* ── SAVE BTN ── */
+      .save-row {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      .btn-primary {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 20px;
+        background: var(--orange);
+        border: none;
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: white;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .btn-primary:hover {
+        background: var(--orange-light);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(255, 92, 26, 0.35);
+      }
+      .btn-ghost-sm {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 16px;
+        border: 1px solid var(--border);
+        background: white;
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text);
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .btn-ghost-sm:hover {
+        background: var(--bg);
+      }
+
+      /* ── DANGER ZONE ── */
+      .danger-zone {
+        border: 1px solid #fecdd3;
+        border-radius: var(--radius);
+        padding: 20px 24px;
+        background: #fff5f5;
+      }
+      .danger-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #dc2626;
+        margin-bottom: 4px;
+      }
+      .danger-sub {
+        font-size: 13px;
+        color: #991b1b;
+        margin-bottom: 14px;
+        line-height: 1.5;
+        opacity: 0.8;
+      }
+      .btn-danger {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 18px;
+        background: #dc2626;
+        border: none;
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        color: white;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .btn-danger:hover {
+        background: #b91c1c;
+      }
+
+      /* ── TOAST ── */
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: var(--dark);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-size: 13.5px;
+        font-weight: 500;
+        z-index: 999;
+        opacity: 0;
+        transform: translateY(8px);
+        transition: all 0.3s;
+        pointer-events: none;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .toast.success {
+        background: #16a34a;
+      }
+      .toast.error {
+        background: #dc2626;
+      }
+
+      @media (max-width: 1024px) {
+        .profile-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .main-wrap {
+          margin-left: 0;
+        }
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+        .content {
+          padding: 20px 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div style="display: flex; width: 100%">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-logo">
+          <div class="logo-mark">AD</div>
+          <div style="display: flex; flex-direction: column; gap: 1px">
+            <span class="logo-brand">AUTO DEALER</span>
+            <span class="logo-sub">FLEET MANAGEMENT</span>
+          </div>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="7" height="7" rx="1" /></svg
+            >Dashboard
+          </a>
+          <a href="admin.vehicle.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+              />
+              <circle cx="7" cy="17" r="2" />
+              <circle cx="17" cy="17" r="2" />
+              <path d="M5 17h8" />
+              <path d="M3 9h18" /></svg
+            >Vehicles
+          </a>
+          <a href="admin.bookings.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" /></svg
+            >Bookings
+          </a>
+          <a href="admin.kyc.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+            >KYC
+          </a>
+          <a href="admin.payments.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="2" y="5" width="20" height="14" rx="2" />
+              <line x1="2" y1="10" x2="22" y2="10" /></svg
+            >Payments
+          </a>
+          <a href="admin.enquiries.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" /></svg
+            >Enquiries
+          </a>
+          <a href="admin.reviews.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" /></svg
+            >Reviews
+          </a>
+          <a href="admin.servicing.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
+              /></svg
+            >Servicing
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="sidebar-user">
+            <div class="user-avatar" id="sidebarAvatarInitials">—</div>
+            <div>
+              <span class="user-name" id="sidebarAdminName">Loading…</span>
+              <span class="user-role" id="sidebarAdminRole">—</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN -->
+      <div class="main-wrap">
+        <!-- TOPBAR -->
+        <header class="topbar">
+          <div style="font-size: 13px; color: var(--muted)">
+            <a
+              href="dashboard.html"
+              style="color: var(--muted); text-decoration: none"
+              >Dashboard</a
+            >
+            <span style="margin: 0 6px">›</span>
+            <span style="color: var(--dark); font-weight: 500">My Profile</span>
+          </div>
+          <div class="topbar-right">
+            <div class="topbar-user">
+              <div class="topbar-avatar" id="topbarAvatarInitials">—</div>
+              <div>
+                <p class="topbar-name" id="topbarAdminName">Loading…</p>
+                <p class="topbar-role" id="topbarAdminRole">—</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- CONTENT -->
+        <main class="content">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">My Profile</h1>
+              <p class="page-sub">
+                Manage your account information and security settings
+              </p>
+            </div>
+          </div>
+
+          <div class="profile-grid">
+            <!-- ── LEFT: PROFILE CARD ── -->
+            <div style="display: flex; flex-direction: column; gap: 20px">
+              <div class="profile-card">
+                <div class="profile-card-banner"></div>
+                <div class="profile-card-body">
+                  <div class="profile-avatar-wrap">
+                    <div class="profile-avatar" id="profileAvatarBig">—</div>
+                    <div class="profile-avatar-edit" title="Change photo">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                      >
+                        <path
+                          d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                        />
+                        <path
+                          d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <p class="profile-card-name" id="profileCardName">Loading…</p>
+                  <span class="profile-card-role">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      width="10"
+                      height="10"
+                    >
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                    <span id="profileCardRole">Admin</span>
+                  </span>
+
+                  <div class="profile-divider"></div>
+
+                  <div class="profile-info-row">
+                    <div class="profile-info-icon">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                      >
+                        <path
+                          d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                        />
+                        <polyline points="22,6 12,13 2,6" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="profile-info-label">Email</p>
+                      <p class="profile-info-value" id="profileCardEmail">—</p>
+                    </div>
+                  </div>
+                  <div class="profile-info-row">
+                    <div class="profile-info-icon">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                      >
+                        <path
+                          d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.84a16 16 0 0 0 6 6l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="profile-info-label">Phone</p>
+                      <p class="profile-info-value" id="profileCardPhone">—</p>
+                    </div>
+                  </div>
+                  <div class="profile-info-row">
+                    <div class="profile-info-icon">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                      >
+                        <rect x="3" y="4" width="18" height="18" rx="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="profile-info-label">Member Since</p>
+                      <p class="profile-info-value" id="profileCardJoined">—</p>
+                    </div>
+                  </div>
+
+                  <!-- quick stats -->
+                  <div class="profile-stats">
+                    <div class="profile-stat">
+                      <p class="profile-stat-val" id="statTotalBookings">—</p>
+                      <p class="profile-stat-lbl">Bookings</p>
+                    </div>
+                    <div class="profile-stat">
+                      <p class="profile-stat-val" id="statTotalVehicles">—</p>
+                      <p class="profile-stat-lbl">Vehicles</p>
+                    </div>
+                    <div class="profile-stat">
+                      <p class="profile-stat-val" id="statPendingKyc">—</p>
+                      <p class="profile-stat-lbl">KYC</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Activity Log -->
+              <div class="section-card">
+                <div class="section-hdr">
+                  <div>
+                    <p class="section-title">Recent Activity</p>
+                    <p class="section-sub">Last actions on this account</p>
+                  </div>
+                </div>
+                <div class="activity-list" id="activityList">
+                  <!-- populated by JS -->
+                </div>
+              </div>
+            </div>
+
+            <!-- ── RIGHT PANEL ── -->
+            <div class="profile-right">
+              <!-- Personal Information -->
+              <div class="section-card">
+                <div class="section-hdr">
+                  <div>
+                    <p class="section-title">Personal Information</p>
+                    <p class="section-sub">
+                      Update your name and contact details
+                    </p>
+                  </div>
+                  <button
+                    class="edit-btn"
+                    id="editInfoBtn"
+                    onclick="toggleEdit()"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                      />
+                      <path
+                        d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                      />
+                    </svg>
+                    Edit
+                  </button>
+                </div>
+
+                <div class="form-grid">
+                  <div class="field-group">
+                    <label class="field-label">Full Name</label>
+                    <input
+                      class="field-input readonly"
+                      id="fieldName"
+                      type="text"
+                      disabled
+                      placeholder="—"
+                    />
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Role</label>
+                    <input
+                      class="field-input readonly"
+                      id="fieldRole"
+                      type="text"
+                      disabled
+                      placeholder="—"
+                    />
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Email Address</label>
+                    <input
+                      class="field-input readonly"
+                      id="fieldEmail"
+                      type="email"
+                      disabled
+                      placeholder="—"
+                    />
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Phone Number</label>
+                    <input
+                      class="field-input readonly"
+                      id="fieldPhone"
+                      type="text"
+                      disabled
+                      placeholder="—"
+                    />
+                  </div>
+                </div>
+
+                <div class="save-row" id="saveInfoRow" style="display: none">
+                  <button class="btn-ghost-sm" onclick="cancelEdit()">
+                    Cancel
+                  </button>
+                  <button class="btn-primary" onclick="saveInfo()">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      width="14"
+                      height="14"
+                    >
+                      <path
+                        d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v14a2 2 0 0 1-2 2z"
+                      />
+                      <polyline points="17 21 17 13 7 13 7 21" />
+                      <polyline points="7 3 7 8 15 8" />
+                    </svg>
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+
+              <!-- Change Password -->
+              <div class="section-card">
+                <div class="section-hdr">
+                  <div>
+                    <p class="section-title">Change Password</p>
+                    <p class="section-sub">
+                      Use a strong password with 8+ characters
+                    </p>
+                  </div>
+                </div>
+
+                <div class="pw-grid">
+                  <div class="field-group">
+                    <label class="field-label">Current Password</label>
+                    <div class="field-input-wrap">
+                      <input
+                        class="field-input"
+                        id="pwCurrent"
+                        type="password"
+                        placeholder="Enter current password"
+                      />
+                      <button
+                        class="pw-eye"
+                        onclick="togglePw('pwCurrent', this)"
+                        tabindex="-1"
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+                          />
+                          <circle cx="12" cy="12" r="3" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">New Password</label>
+                    <div class="field-input-wrap">
+                      <input
+                        class="field-input"
+                        id="pwNew"
+                        type="password"
+                        placeholder="Enter new password"
+                        oninput="checkStrength(this.value)"
+                      />
+                      <button
+                        class="pw-eye"
+                        onclick="togglePw('pwNew', this)"
+                        tabindex="-1"
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+                          />
+                          <circle cx="12" cy="12" r="3" />
+                        </svg>
+                      </button>
+                    </div>
+                    <div class="pw-strength">
+                      <div class="pw-strength-fill" id="pwStrengthBar"></div>
+                    </div>
+                    <p class="pw-hint" id="pwStrengthLabel">
+                      Enter a new password
+                    </p>
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Confirm New Password</label>
+                    <div class="field-input-wrap">
+                      <input
+                        class="field-input"
+                        id="pwConfirm"
+                        type="password"
+                        placeholder="Confirm new password"
+                      />
+                      <button
+                        class="pw-eye"
+                        onclick="togglePw('pwConfirm', this)"
+                        tabindex="-1"
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+                          />
+                          <circle cx="12" cy="12" r="3" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="save-row">
+                  <button class="btn-primary" onclick="changePassword()">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      width="14"
+                      height="14"
+                    >
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                    Update Password
+                  </button>
+                </div>
+              </div>
+
+              <!-- Danger Zone -->
+              <div class="danger-zone">
+                <p class="danger-title">⚠️ Danger Zone</p>
+                <p class="danger-sub">
+                  Logging out will end your current session. You will need to
+                  log in again to access the admin dashboard.
+                </p>
+                <button class="btn-danger" onclick="logout()">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    width="14"
+                    height="14"
+                  >
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                  </svg>
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+      const API = "http://localhost:5000/api/admin";
+      let adminData = {};
+      let isEditing = false;
+
+      // ── HELPERS ──────────────────────────────────────────────
+      function showToast(msg, type = "") {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast show" + (type ? " " + type : "");
+        setTimeout(() => (t.className = "toast"), 3000);
+      }
+
+      function initials(name) {
+        return (name || "?")
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 2);
+      }
+
+      function fmtDate(d) {
+        if (!d) return "—";
+        return new Date(d).toLocaleDateString("en-NP", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        });
+      }
+
+      // ── LOAD ADMIN PROFILE ───────────────────────────────────
+      async function loadAdmin() {
+        try {
+          const res = await fetch(`${API}/me`, { credentials: "include" });
+          if (!res.ok) throw new Error();
+          const d = await res.json();
+          adminData = d;
+
+          const name = d.name || "Admin";
+          const role = d.role || "admin";
+          const email = d.email || "—";
+          const phone = d.phone || "—";
+          const ini = initials(name);
+
+          // sidebar + topbar
+          document.getElementById("sidebarAdminName").textContent = name;
+          document.getElementById("sidebarAdminRole").textContent = role;
+          document.getElementById("sidebarAvatarInitials").textContent = ini;
+          document.getElementById("topbarAdminName").textContent = name;
+          document.getElementById("topbarAdminRole").textContent = role;
+          document.getElementById("topbarAvatarInitials").textContent = ini;
+
+          // profile card
+          document.getElementById("profileAvatarBig").textContent = ini;
+          document.getElementById("profileCardName").textContent = name;
+          document.getElementById("profileCardRole").textContent =
+            role.charAt(0).toUpperCase() + role.slice(1);
+          document.getElementById("profileCardEmail").textContent = email;
+          document.getElementById("profileCardPhone").textContent = phone;
+          document.getElementById("profileCardJoined").textContent =
+            fmtDate(d.created_at) || "Apr 2026";
+
+          // form fields
+          document.getElementById("fieldName").value = name;
+          document.getElementById("fieldRole").value =
+            role.charAt(0).toUpperCase() + role.slice(1);
+          document.getElementById("fieldEmail").value = email;
+          document.getElementById("fieldPhone").value = phone;
+        } catch (e) {
+          showToast("Failed to load profile", "error");
+        }
+      }
+
+      // ── LOAD STATS (reuse dashboard stats) ──────────────────
+      async function loadStats() {
+        try {
+          const res = await fetch(`${API}/stats`, { credentials: "include" });
+          if (!res.ok) throw new Error();
+          const d = await res.json();
+          document.getElementById("statTotalBookings").textContent =
+            d.active_bookings ?? "—";
+          document.getElementById("statTotalVehicles").textContent =
+            d.total_vehicles ?? "—";
+          document.getElementById("statPendingKyc").textContent =
+            d.pending_kyc ?? "—";
+        } catch (e) {}
+      }
+
+      // ── ACTIVITY LOG (static for now — wire to real API if you add an activity table) ──
+      function renderActivity() {
+        const items = [
+          {
+            icon: "login",
+            color: "#eff6ff",
+            stroke: "#2563eb",
+            text: "Logged in successfully",
+            time: "Just now",
+          },
+          {
+            icon: "booking",
+            color: "#f0fdf4",
+            stroke: "#16a34a",
+            text: "Updated booking status to Confirmed",
+            time: "2 hours ago",
+          },
+          {
+            icon: "kyc",
+            color: "#fffbeb",
+            stroke: "#d97706",
+            text: "Reviewed KYC submission",
+            time: "Yesterday",
+          },
+          {
+            icon: "vehicle",
+            color: "#fff0e8",
+            stroke: "#ff5c1a",
+            text: "Added new vehicle to fleet",
+            time: "2 days ago",
+          },
+        ];
+
+        const icons = {
+          login: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="15" height="15"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>`,
+          booking: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="15" height="15"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
+          kyc: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="15" height="15"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+          vehicle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="15" height="15"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>`,
+        };
+
+        document.getElementById("activityList").innerHTML = items
+          .map(
+            (item) => `
+          <div class="activity-item">
+            <div class="activity-icon" style="background:${item.color};color:${item.stroke};">
+              ${icons[item.icon]}
+            </div>
+            <div>
+              <p class="activity-text">${item.text}</p>
+              <p class="activity-time">${item.time}</p>
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+      }
+
+      // ── EDIT TOGGLE ──────────────────────────────────────────
+      function toggleEdit() {
+        isEditing = true;
+        ["fieldName", "fieldEmail", "fieldPhone"].forEach((id) => {
+          const el = document.getElementById(id);
+          el.disabled = false;
+          el.classList.remove("readonly");
+        });
+        document.getElementById("saveInfoRow").style.display = "flex";
+        document.getElementById("editInfoBtn").style.display = "none";
+      }
+
+      function cancelEdit() {
+        isEditing = false;
+        document.getElementById("fieldName").value = adminData.name || "";
+        document.getElementById("fieldEmail").value = adminData.email || "";
+        document.getElementById("fieldPhone").value = adminData.phone || "";
+        ["fieldName", "fieldEmail", "fieldPhone"].forEach((id) => {
+          const el = document.getElementById(id);
+          el.disabled = true;
+          el.classList.add("readonly");
+        });
+        document.getElementById("saveInfoRow").style.display = "none";
+        document.getElementById("editInfoBtn").style.display = "flex";
+      }
+
+      async function saveInfo() {
+        const name = document.getElementById("fieldName").value.trim();
+        const email = document.getElementById("fieldEmail").value.trim();
+        const phone = document.getElementById("fieldPhone").value.trim();
+
+        if (!name || !email) {
+          showToast("Name and email are required", "error");
+          return;
+        }
+
+        try {
+          const res = await fetch(`${API}/profile`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ name, email, phone }),
+          });
+          if (!res.ok) throw new Error();
+
+          // update local state
+          adminData = { ...adminData, name, email, phone };
+
+          // refresh display
+          const ini = initials(name);
+          document.getElementById("profileAvatarBig").textContent = ini;
+          document.getElementById("profileCardName").textContent = name;
+          document.getElementById("profileCardEmail").textContent = email;
+          document.getElementById("profileCardPhone").textContent = phone;
+          document.getElementById("sidebarAdminName").textContent = name;
+          document.getElementById("topbarAdminName").textContent = name;
+          document.getElementById("sidebarAvatarInitials").textContent = ini;
+          document.getElementById("topbarAvatarInitials").textContent = ini;
+
+          cancelEdit();
+          showToast("Profile updated successfully ✓", "success");
+        } catch (e) {
+          showToast("Failed to update profile", "error");
+        }
+      }
+
+      // ── PASSWORD ─────────────────────────────────────────────
+      function togglePw(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const show = input.type === "password";
+        input.type = show ? "text" : "password";
+        btn.innerHTML = show
+          ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+          : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+      }
+
+      function checkStrength(val) {
+        const bar = document.getElementById("pwStrengthBar");
+        const label = document.getElementById("pwStrengthLabel");
+        let score = 0;
+        if (val.length >= 8) score++;
+        if (/[A-Z]/.test(val)) score++;
+        if (/[0-9]/.test(val)) score++;
+        if (/[^A-Za-z0-9]/.test(val)) score++;
+        const levels = [
+          { w: "0%", bg: "transparent", txt: "Enter a new password" },
+          { w: "25%", bg: "#dc2626", txt: "Weak" },
+          { w: "50%", bg: "#d97706", txt: "Fair" },
+          { w: "75%", bg: "#2563eb", txt: "Good" },
+          { w: "100%", bg: "#16a34a", txt: "Strong" },
+        ];
+        const lvl = val.length === 0 ? levels[0] : levels[Math.min(score, 4)];
+        bar.style.width = lvl.w;
+        bar.style.background = lvl.bg;
+        label.textContent = lvl.txt;
+        label.style.color = lvl.bg || "var(--muted)";
+      }
+
+      async function changePassword() {
+        const current = document.getElementById("pwCurrent").value.trim();
+        const newPw = document.getElementById("pwNew").value.trim();
+        const confirm = document.getElementById("pwConfirm").value.trim();
+
+        if (!current || !newPw || !confirm) {
+          showToast("All password fields are required", "error");
+          return;
+        }
+        if (newPw !== confirm) {
+          showToast("New passwords do not match", "error");
+          return;
+        }
+        if (newPw.length < 8) {
+          showToast("Password must be at least 8 characters", "error");
+          return;
+        }
+
+        try {
+          const res = await fetch(`${API}/profile/password`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+              current_password: current,
+              new_password: newPw,
+            }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.message || "Failed");
+
+          document.getElementById("pwCurrent").value = "";
+          document.getElementById("pwNew").value = "";
+          document.getElementById("pwConfirm").value = "";
+          checkStrength("");
+          showToast("Password changed successfully ✓", "success");
+        } catch (e) {
+          showToast(e.message || "Failed to change password", "error");
+        }
+      }
+
+      // ── LOGOUT ───────────────────────────────────────────────
+      async function logout() {
+        if (!confirm("Sign out of your admin session?")) return;
+        try {
+          await fetch(`${API}/logout`, {
+            method: "POST",
+            credentials: "include",
+          });
+        } finally {
+          window.location.href = "../index.html";
+        }
+      }
+
+      // ── INIT ─────────────────────────────────────────────────
+      loadAdmin();
+      loadStats();
+      renderActivity();
+    </script>
+  </body>
+</html>

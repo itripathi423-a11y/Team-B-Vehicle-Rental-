@@ -206,7 +206,7 @@
                   <p class="dh-name" id="dropdownAdminName">Admin</p>
                   <p class="dh-email" id="dropdownAdminEmail">—</p>
                 </div>
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="admin.profile.html">
                   <svg
                     width="15"
                     height="15"
@@ -580,7 +580,7 @@
             d.revenue_this_month ?? 0,
           );
           document.getElementById("statEnquiries").textContent =
-            d.enquiries_today ?? 0;
+            d.total_enquiries ?? 0;
         } catch (err) {
           console.log("Failed to load stats");
         }
