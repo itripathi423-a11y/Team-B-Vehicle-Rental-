@@ -1,4 +1,3 @@
-console.log("✅ user.dashboard.controller loaded");
 const db = require("../config/db");
 
 /* ── USER PROFILE ────────────────────────────────────

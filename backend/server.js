@@ -20,6 +20,9 @@ const adminBookingRoutes = require("./routes/admin.bookings.routes");
 const chatRoutes = require("./routes/chat.routes");
 const serviceRoutes = require("./routes/admin.servicing.routes");
 const reviewRoutes = require("./routes/reviewRoutes");
+const enquiryRoutes = require("./routes/enquiry.routes");
+
+const adminEnquiryRoutes = require("./routes/admin.enquiry.routes");
 
 const app = express();
 
@@ -80,6 +83,10 @@ app.use("/api/kyc", kycRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/admin/servicing", serviceRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/user", enquiryRoutes);
+
+app.use("/api/admin/enquiries", adminEnquiryRoutes);
+
 app.use(express.static(path.join(__dirname, "../frontend")));
 
 /* ── START ── */
