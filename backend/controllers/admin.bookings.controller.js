@@ -1,37 +1,109 @@
+// admin.booking.controller.js  (updateBookingStatus only — rest unchanged)
 const transporter = require("../utils/mailer");
 const db = require("../config/db");
+
+// ── helpers (copy from booking.controller or move to utils/emailHelpers.js) ──
+const fmtDate = (val) => {
+  if (!val) return "—";
+  const d = val instanceof Date ? val : new Date(val);
+  return d.toLocaleDateString("en-NP", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
+const fmtPrice = (n) => "Rs " + Number(n).toLocaleString("en-NP");
+
+const emailHeader = (tagLabel) => `
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0a;padding:24px 32px;border-radius:12px 12px 0 0;">
+    <tr>
+      <td>
+        <table cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="background:#ff5c1a;border-radius:8px;width:36px;height:36px;text-align:center;vertical-align:middle;">
+              <span style="color:#fff;font-size:12px;font-weight:700;font-family:monospace;">AD</span>
+            </td>
+            <td style="padding-left:12px;">
+              <div style="color:#ffffff;font-size:18px;font-weight:700;letter-spacing:2px;font-family:monospace;">AUTO DEALER</div>
+              <div style="color:rgba(255,255,255,0.4);font-size:9px;letter-spacing:1.5px;font-family:monospace;">FLEET MANAGEMENT</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td align="right">
+        <span style="background:#ff5c1a;color:#fff;font-size:11px;font-weight:600;padding:5px 12px;border-radius:99px;">${tagLabel}</span>
+      </td>
+    </tr>
+  </table>`;
+
+const emailFooter = () => `
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;border-top:1px solid #e5e7eb;padding:20px 32px;border-radius:0 0 12px 12px;">
+    <tr><td style="text-align:center;">
+      <p style="margin:0;font-size:12px;color:#9ca3af;">© ${new Date().getFullYear()} Auto Dealer · Fleet Management System</p>
+    </td></tr>
+  </table>`;
+
+const emailWrapper = (innerHtml) =>
+  `
+<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:'Segoe UI',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:40px 0;">
+    <tr><td align="center">
+      <table width="580" cellpadding="0" cellspacing="0"
+        style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
+        ${innerHtml}
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`.trim();
+
+const row = (label, value) => `
+  <tr>
+    <td style="padding:10px 0;font-size:12px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;
+               color:#9ca3af;font-family:monospace;width:40%;border-bottom:1px solid #f3f4f6;">${label}</td>
+    <td style="padding:10px 0;font-size:14px;color:#111827;border-bottom:1px solid #f3f4f6;">${value}</td>
+  </tr>`;
+
+// per-status styling
+const STATUS_STYLE = {
+  Pending: { bg: "#fffbeb", border: "#fde68a", text: "#92400e", icon: "⏳" },
+  Confirmed: { bg: "#eff6ff", border: "#bfdbfe", text: "#1d4ed8", icon: "✅" },
+  Active: { bg: "#f0fdf4", border: "#bbf7d0", text: "#166534", icon: "🚗" },
+  Completed: { bg: "#ecfdf5", border: "#a7f3d0", text: "#065f46", icon: "🏁" },
+  Cancelled: { bg: "#fff1f2", border: "#fecdd3", text: "#991b1b", icon: "❌" },
+};
+
+const statusBanner = (status, cancel_reason) => {
+  const s = STATUS_STYLE[status] || {
+    bg: "#f3f4f6",
+    border: "#e5e7eb",
+    text: "#374151",
+    icon: "ℹ️",
+  };
+  return `
+    <div style="background:${s.bg};border:1px solid ${s.border};border-radius:8px;padding:16px 20px;margin-bottom:20px;">
+      <p style="margin:0 0 4px;font-size:15px;font-weight:700;color:${s.text};">${s.icon} Status: ${status}</p>
+      ${
+        status === "Cancelled" && cancel_reason
+          ? `<p style="margin:4px 0 0;font-size:13px;color:${s.text};opacity:0.85;">Reason: ${cancel_reason}</p>`
+          : ""
+      }
+    </div>`;
+};
 
 // ───────── GET ALL BOOKINGS ─────────
 exports.getAllBookings = (req, res) => {
   const sql = `
-    SELECT
-      b.id,
-      b.booking_ref,
-      b.user_name,
-      b.user_email,
-      b.user_phone,
-      b.pickup_location,
-      b.rental_type,
-      b.pickup_datetime,
-      b.drop_datetime,
-      b.total_days,
-      b.price_per_unit,
-      b.total_price,
-      b.status,
-      b.payment_status,
-      b.payment_method,
-      b.paid_at,
-      b.cancel_reason,
-      b.notes,
-      b.created_at,
-
-      v.id          AS vehicle_id,
-      v.name        AS vehicle_name,
-      v.license_plate AS vehicle_plate,
-      v.body_type   AS vehicle_type,
-      v.thumbnail   AS vehicle_img,
-
-      k.status      AS kyc_status
+    SELECT b.id, b.booking_ref, b.user_name, b.user_email, b.user_phone,
+           b.pickup_location, b.rental_type, b.pickup_datetime, b.drop_datetime,
+           b.total_days, b.price_per_unit, b.total_price, b.status,
+           b.payment_status, b.payment_method, b.paid_at, b.cancel_reason,
+           b.notes, b.created_at,
+           v.id AS vehicle_id, v.name AS vehicle_name, v.license_plate AS vehicle_plate,
+           v.body_type AS vehicle_type, v.thumbnail AS vehicle_img,
+           k.status AS kyc_status
     FROM bookings b
     LEFT JOIN vehicles v ON b.vehicle_id = v.id
     LEFT JOIN kyc k      ON b.user_id    = k.user_id
@@ -45,64 +117,44 @@ exports.getAllBookings = (req, res) => {
     }
 
     const BASE = "http://localhost:5000";
+    const toDate = (val) => {
+      if (!val) return "—";
+      const d = val instanceof Date ? val : new Date(val);
+      return d.toISOString().split("T")[0];
+    };
 
-    const formatted = results.map((b) => {
-      // ── dates ──
-      const toDate = (val) => {
-        if (!val) return "—";
-        const d = val instanceof Date ? val : new Date(val);
-        return d.toISOString().split("T")[0];
-      };
-
-      // ── vehicle thumbnail ──
-      const BASE = "http://localhost:5000";
-
-      const vehicle_img = b.vehicle_img
+    const formatted = results.map((b) => ({
+      id: b.id,
+      booking_ref: b.booking_ref,
+      user_name: b.user_name,
+      user_email: b.user_email,
+      user_phone: b.user_phone,
+      user_photo: "",
+      vehicle_name: b.vehicle_name || "—",
+      vehicle_plate: b.vehicle_plate || "—",
+      vehicle_type: b.vehicle_type || "—",
+      vehicle_img: b.vehicle_img
         ? `${BASE}/uploads/vehicles/${b.vehicle_img.replace(/^\/+/, "")}`
-        : null;
-
-      // ── kyc status fallback ──
-      const kyc_status = b.kyc_status || "not_submitted";
-
-      return {
-        id: b.id,
-        booking_ref: b.booking_ref,
-
-        user_name: b.user_name,
-        user_email: b.user_email,
-        user_phone: b.user_phone,
-        user_photo: "", // not stored in bookings table
-
-        vehicle_name: b.vehicle_name || "—",
-        vehicle_plate: b.vehicle_plate || "—",
-        vehicle_type: b.vehicle_type || "—",
-        vehicle_img,
-
-        pickup_location: b.pickup_location,
-        dropoff_location: b.pickup_location, // same field in your schema
-
-        rental_type: b.rental_type,
-        start_date: toDate(b.pickup_datetime),
-        end_date: toDate(b.drop_datetime),
-        total_days: parseFloat(b.total_days) || 1,
-
-        per_day: parseFloat(b.price_per_unit) || 0,
-        total_price: parseFloat(b.total_price) || 0,
-        extra_charges: 0,
-        discount: 0,
-
-        status: b.status || "Pending",
-        payment_status: b.payment_status || "Unpaid",
-        payment_method: b.payment_method || "—",
-        paid_at: toDate(b.paid_at),
-
-        kyc_status,
-
-        cancel_reason: b.cancel_reason || "",
-        notes: b.notes || "",
-        booked_on: toDate(b.created_at),
-      };
-    });
+        : null,
+      pickup_location: b.pickup_location,
+      dropoff_location: b.pickup_location,
+      rental_type: b.rental_type,
+      start_date: toDate(b.pickup_datetime),
+      end_date: toDate(b.drop_datetime),
+      total_days: parseFloat(b.total_days) || 1,
+      per_day: parseFloat(b.price_per_unit) || 0,
+      total_price: parseFloat(b.total_price) || 0,
+      extra_charges: 0,
+      discount: 0,
+      status: b.status || "Pending",
+      payment_status: b.payment_status || "Unpaid",
+      payment_method: b.payment_method || "—",
+      paid_at: toDate(b.paid_at),
+      kyc_status: b.kyc_status || "not_submitted",
+      cancel_reason: b.cancel_reason || "",
+      notes: b.notes || "",
+      booked_on: toDate(b.created_at),
+    }));
 
     res.json({ success: true, data: formatted });
   });
@@ -114,87 +166,100 @@ exports.updateBookingStatus = (req, res) => {
   const { status, cancel_reason } = req.body;
 
   const VALID = ["Pending", "Confirmed", "Active", "Completed", "Cancelled"];
-
   if (!VALID.includes(status)) {
-    return res.status(400).json({
-      success: false,
-      message: `Invalid status: ${status}`,
-    });
+    return res
+      .status(400)
+      .json({ success: false, message: `Invalid status: ${status}` });
   }
 
-  // 1. Get booking + user info first
+  // 1. Fetch full booking for email content
   const getSql = `
-    SELECT 
-      user_name,
-      user_email,
-      booking_ref
-    FROM bookings
-    WHERE id = ?
+    SELECT b.*, v.name AS vehicle_name, v.license_plate, v.body_type
+    FROM bookings b
+    LEFT JOIN vehicles v ON b.vehicle_id = v.id
+    WHERE b.id = ?
   `;
 
   db.query(getSql, [id], (err, rows) => {
-    if (err) {
-      console.error("DB error:", err);
+    if (err)
       return res.status(500).json({ success: false, message: err.message });
-    }
+    if (!rows.length)
+      return res
+        .status(404)
+        .json({ success: false, message: `Booking #${id} not found` });
 
-    if (rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: `Booking #${id} not found`,
-      });
-    }
+    const b = rows[0];
 
-    const user = rows[0];
-
-    // DEBUG (very important)
-    console.log("📧 USER EMAIL:", user.user_email);
-
-    // 2. Update booking status
-    const updateSql = `
-      UPDATE bookings
-      SET status = ?, cancel_reason = ?, updated_at = NOW()
-      WHERE id = ?
-    `;
+    // 2. Update status
+    const updateSql = `UPDATE bookings SET status = ?, cancel_reason = ?, updated_at = NOW() WHERE id = ?`;
 
     db.query(updateSql, [status, cancel_reason || null, id], async (err2) => {
-      if (err2) {
-        console.error("Update error:", err2);
+      if (err2)
         return res.status(500).json({ success: false, message: err2.message });
-      }
 
-      // 3. Send email to USER
+      // 3. Send branded email to user
       try {
-        if (user.user_email) {
+        if (b.user_email) {
           await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: user.user_email,
-            subject: `Booking Update - ${user.booking_ref}`,
-            html: `
-              <h2>Booking Status Updated</h2>
-              <p>Hi <b>${user.user_name}</b>,</p>
+            from: `"Auto Dealer" <${process.env.EMAIL_USER}>`,
+            to: b.user_email,
+            subject: `Booking ${status} — ${b.booking_ref}`,
+            html: emailWrapper(`
+              ${emailHeader(`Booking ${status}`)}
+              <tr><td style="padding:32px;">
+                <p style="margin:0 0 6px;font-size:20px;font-weight:600;color:#111827;">Hi ${b.user_name},</p>
+                <p style="margin:0 0 20px;font-size:14px;color:#6b7280;line-height:1.6;">
+                  Your booking status has been updated by our team.
+                </p>
 
-              <p>Your booking <b>${user.booking_ref}</b> has been updated.</p>
+                ${statusBanner(status, cancel_reason)}
 
-              <p><b>Status:</b> ${status}</p>
+                <div style="background:#f4f5f7;border-radius:8px;padding:20px 24px;margin-bottom:24px;">
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    ${row("Booking Ref", `<b style="font-family:monospace;">${b.booking_ref}</b>`)}
+                    ${row("Vehicle", b.vehicle_name || "—")}
+                    ${row("Plate No.", b.license_plate || "—")}
+                    ${row("Pickup", b.pickup_location)}
+                    ${row("From", fmtDate(b.pickup_datetime))}
+                    ${row("To", fmtDate(b.drop_datetime))}
+                    ${row("Total", `<b style="color:#ff5c1a;">${fmtPrice(b.total_price)}</b>`)}
+                  </table>
+                </div>
 
-              ${
-                status === "Cancelled"
-                  ? `<p><b>Reason:</b> ${cancel_reason || "Not provided"}</p>`
-                  : ""
-              }
+                ${
+                  status === "Confirmed"
+                    ? `
+                  <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:14px 18px;margin-bottom:20px;">
+                    <p style="margin:0;font-size:13px;color:#166534;line-height:1.6;">
+                      ✅ Your booking is confirmed! Please be ready at the pickup location on time.
+                    </p>
+                  </div>`
+                    : ""
+                }
 
-              <br/>
-              <p>Thank you for choosing our service.</p>
-            `,
+                ${
+                  status === "Completed"
+                    ? `
+                  <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:14px 18px;margin-bottom:20px;">
+                    <p style="margin:0;font-size:13px;color:#1d4ed8;line-height:1.6;">
+                      🙏 Thank you for choosing Auto Dealer! We hope you had a great experience.
+                      We'd love to hear your feedback.
+                    </p>
+                  </div>`
+                    : ""
+                }
+
+                <p style="margin:0;font-size:13px;color:#9ca3af;">
+                  Questions? Contact us through our website or reply to this email.
+                </p>
+              </td></tr>
+              ${emailFooter()}
+            `),
           });
-
-          console.log("✅ Email sent to user");
-        } else {
-          console.log("⚠️ No user email found");
+          console.log("✅ Booking status email sent to", b.user_email);
         }
       } catch (mailErr) {
-        console.error("❌ Email error:", mailErr);
+        console.error("❌ Booking status email error:", mailErr);
       }
 
       return res.json({
