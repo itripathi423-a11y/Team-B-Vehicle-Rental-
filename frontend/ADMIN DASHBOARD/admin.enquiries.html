@@ -1,0 +1,1616 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AUTO DEALER — Enquiries</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ===== ROOT ===== */
+      :root {
+        --orange: #ff5c1a;
+        --orange-light: #ff7a3d;
+        --orange-dim: rgba(255, 92, 26, 0.12);
+        --bg: #f4f5f7;
+        --white: #ffffff;
+        --sidebar-bg: #0a0a0a;
+        --sidebar-w: 240px;
+        --dark: #111827;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --radius: 14px;
+        --radius-sm: 8px;
+        --shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+        --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.1);
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        font-size: 15px;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ===== SIDEBAR ===== */
+      .sidebar {
+        width: var(--sidebar-w);
+        min-height: 100vh;
+        background: var(--sidebar-bg);
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        z-index: 200;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .sidebar-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 24px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .logo-mark {
+        width: 36px;
+        height: 36px;
+        background: var(--orange);
+        color: white;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        flex-shrink: 0;
+      }
+      .logo-text-block {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+      .logo-brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 17px;
+        letter-spacing: 2.5px;
+        color: white;
+        line-height: 1;
+      }
+      .logo-sub {
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        color: rgba(255, 255, 255, 0.3);
+        font-family: "Space Mono", monospace;
+      }
+      .sidebar-nav {
+        flex: 1;
+        padding: 16px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 9px;
+        color: rgba(255, 255, 255, 0.45);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 400;
+        transition: all 0.18s;
+        cursor: pointer;
+      }
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .nav-item.active {
+        background: var(--orange-dim);
+        color: var(--orange);
+        font-weight: 500;
+      }
+      .nav-item.active .nav-icon {
+        stroke: var(--orange);
+      }
+      .nav-icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        transition: stroke 0.18s;
+      }
+      .sidebar-footer {
+        padding: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .sidebar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .user-name {
+        display: block;
+        font-size: 13px;
+        color: white;
+        font-weight: 500;
+      }
+      .user-role {
+        display: block;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.35);
+      }
+
+      /* ===== MAIN ===== */
+      .main-wrap {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* ===== TOPBAR ===== */
+      .topbar {
+        height: 64px;
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        padding: 0 28px;
+        gap: 16px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .search-wrap {
+        flex: 1;
+        max-width: 380px;
+        position: relative;
+      }
+      .search-wrap svg {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        color: var(--muted);
+      }
+      .search-wrap input {
+        width: 100%;
+        padding: 9px 12px 9px 38px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        color: var(--text);
+        outline: none;
+        transition: border 0.2s;
+      }
+      .search-wrap input:focus {
+        border-color: var(--orange);
+      }
+      .search-wrap input::placeholder {
+        color: var(--muted);
+      }
+      .topbar-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .icon-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 9px;
+        background: none;
+        border: 1px solid var(--border);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        transition: background 0.2s;
+      }
+      .icon-btn:hover {
+        background: var(--bg);
+      }
+      .icon-btn svg {
+        width: 17px;
+        height: 17px;
+        color: var(--muted);
+      }
+      .notif-btn .badge {
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        background: var(--orange);
+        color: white;
+        font-size: 9px;
+        font-weight: 700;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .topbar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 12px;
+        border-radius: 9px;
+        cursor: pointer;
+        transition: background 0.2s;
+        margin-left: 4px;
+        position: relative;
+        user-select: none;
+      }
+      .topbar-user:hover {
+        background: var(--bg);
+      }
+      .topbar-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .topbar-info {
+        display: flex;
+        flex-direction: column;
+      }
+      .topbar-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        line-height: 1.3;
+      }
+      .topbar-role {
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.3;
+      }
+      .topbar-chevron {
+        flex-shrink: 0;
+        color: #9ca3af;
+        transition: transform 0.2s ease;
+      }
+      .topbar-user.open .topbar-chevron {
+        transform: rotate(180deg);
+      }
+      .user-dropdown {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        box-shadow:
+          0 8px 28px rgba(0, 0, 0, 0.12),
+          0 2px 8px rgba(0, 0, 0, 0.06);
+        min-width: 210px;
+        z-index: 999;
+        opacity: 0;
+        transform: translateY(-6px) scale(0.97);
+        pointer-events: none;
+        transition:
+          opacity 0.18s ease,
+          transform 0.18s ease;
+        transform-origin: top right;
+      }
+      .user-dropdown.visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: all;
+      }
+      .dropdown-header {
+        padding: 14px 16px 12px;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .dropdown-header .dh-name {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--dark);
+        line-height: 1.3;
+      }
+      .dropdown-header .dh-email {
+        font-size: 11.5px;
+        color: #9ca3af;
+        margin-top: 2px;
+      }
+      .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px;
+        font-size: 13.5px;
+        font-family: "DM Sans", sans-serif;
+        color: var(--text);
+        cursor: pointer;
+        transition: background 0.12s;
+        text-decoration: none;
+      }
+      .dropdown-item:hover {
+        background: #f9fafb;
+      }
+      .dropdown-item svg {
+        flex-shrink: 0;
+        color: #9ca3af;
+      }
+      .dropdown-divider {
+        height: 1px;
+        background: #f3f4f6;
+        margin: 4px 0;
+      }
+      .dropdown-item.logout {
+        color: #ef4444;
+      }
+      .dropdown-item.logout svg {
+        color: #ef4444;
+      }
+      .dropdown-item.logout:hover {
+        background: #fef2f2;
+      }
+
+      /* ===== CONTENT ===== */
+      .content {
+        flex: 1;
+        padding: 28px;
+        overflow-y: auto;
+      }
+
+      /* ===== PAGE HEADER ===== */
+      .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 28px;
+      }
+      .page-title {
+        font-family: "DM Sans", sans-serif;
+        font-size: 26px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .page-sub {
+        font-size: 14px;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+      .page-actions {
+        display: flex;
+        gap: 10px;
+      }
+      .btn-ghost {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 16px;
+        border: 1px solid var(--border);
+        background: white;
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text);
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          border-color 0.2s;
+        text-decoration: none;
+      }
+      .btn-ghost:hover {
+        background: var(--bg);
+        border-color: #d1d5db;
+      }
+      .btn-primary {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 18px;
+        background: var(--orange);
+        border: none;
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: white;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .btn-primary:hover {
+        background: var(--orange-light);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(255, 92, 26, 0.35);
+      }
+
+      /* ===== FILTER TABS ===== */
+      .filter-tabs {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .filter-tab {
+        padding: 7px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        border: 1px solid var(--border);
+        background: white;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.18s;
+        font-family: "DM Sans", sans-serif;
+      }
+      .filter-tab:hover {
+        border-color: #d1d5db;
+        color: var(--text);
+      }
+      .filter-tab.active {
+        background: var(--orange);
+        border-color: var(--orange);
+        color: white;
+      }
+      /* count pill on tabs */
+      .tab-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.08);
+        color: inherit;
+        font-size: 11px;
+        font-weight: 700;
+        min-width: 18px;
+        height: 18px;
+        border-radius: 99px;
+        padding: 0 5px;
+        margin-left: 6px;
+      }
+      .filter-tab.active .tab-count {
+        background: rgba(255, 255, 255, 0.25);
+      }
+
+      /* ===== TABLE CARD ===== */
+      .table-card {
+        background: var(--white);
+        border-radius: var(--radius);
+        padding: 24px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+      }
+      .table-toolbar {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 3px;
+      }
+      .card-sub {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .table-wrap {
+        overflow-x: auto;
+      }
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .data-table th {
+        text-align: left;
+        padding: 10px 14px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--muted);
+        border-bottom: 1px solid var(--border);
+        font-family: "Space Mono", monospace;
+      }
+      .data-table td {
+        padding: 14px 14px;
+        font-size: 13.5px;
+        color: var(--text);
+        border-bottom: 1px solid #f3f4f6;
+        vertical-align: top;
+      }
+      .data-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .data-table tbody tr {
+        transition: background 0.15s;
+        cursor: pointer;
+      }
+      .data-table tbody tr:hover td {
+        background: #fafafa;
+      }
+
+      /* message cell */
+      .msg-cell {
+        max-width: 280px;
+      }
+      .msg-preview {
+        font-size: 13px;
+        color: var(--text);
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      /* badges — aligned to DB enum: Pending | Replied | Closed */
+      .badge-pending {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 99px;
+        font-size: 11px;
+        font-weight: 600;
+        background: #fffbeb;
+        color: #d97706;
+      }
+      .badge-replied {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 99px;
+        font-size: 11px;
+        font-weight: 600;
+        background: #ecfdf5;
+        color: #16a34a;
+      }
+      .badge-closed {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 99px;
+        font-size: 11px;
+        font-weight: 600;
+        background: #f3f4f6;
+        color: #6b7280;
+      }
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+        flex-shrink: 0;
+      }
+
+      /* action btns */
+      .action-wrap {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .act-btn {
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        border: 1px solid var(--border);
+        background: white;
+        color: var(--text);
+        cursor: pointer;
+        transition: all 0.15s;
+        font-family: "DM Sans", sans-serif;
+        white-space: nowrap;
+      }
+      .act-btn:hover {
+        background: var(--bg);
+      }
+      .act-btn.reply {
+        border-color: var(--orange);
+        color: var(--orange);
+      }
+      .act-btn.reply:hover {
+        background: var(--orange-dim);
+      }
+      .act-btn.close-btn {
+        border-color: #6b7280;
+        color: #6b7280;
+      }
+      .act-btn.close-btn:hover {
+        background: #f3f4f6;
+      }
+      .act-btn.delete-btn {
+        border-color: #dc2626;
+        color: #dc2626;
+      }
+      .act-btn.delete-btn:hover {
+        background: #fff1f2;
+      }
+
+      /* skeleton */
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          #f0f0f0 25%,
+          #e0e0e0 50%,
+          #f0f0f0 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.2s infinite;
+        border-radius: 4px;
+        height: 14px;
+        display: inline-block;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+      .skeleton-row td {
+        padding: 16px 14px;
+      }
+
+      /* empty */
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      /* ===== MODAL ===== */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 500;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .modal-overlay.open {
+        display: flex;
+        animation: fadeIn 0.2s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .modal {
+        background: white;
+        border-radius: var(--radius);
+        padding: 28px;
+        max-width: 520px;
+        width: 100%;
+        box-shadow: var(--shadow-md);
+        animation: slideUp 0.25s ease;
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .modal-hdr {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .modal-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .modal-close {
+        width: 30px;
+        height: 30px;
+        border-radius: 7px;
+        border: 1px solid var(--border);
+        background: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        color: var(--muted);
+        transition: background 0.15s;
+      }
+      .modal-close:hover {
+        background: var(--bg);
+      }
+      .modal-field {
+        margin-bottom: 16px;
+      }
+      .modal-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+        margin-bottom: 6px;
+      }
+      .modal-value {
+        font-size: 14px;
+        color: var(--text);
+        line-height: 1.6;
+      }
+      .modal-msg {
+        background: var(--bg);
+        border-radius: 8px;
+        padding: 14px;
+        font-size: 14px;
+        color: var(--text);
+        line-height: 1.7;
+      }
+      .modal-reply-box {
+        background: #ecfdf5;
+        border: 1px solid #bbf7d0;
+        border-radius: 8px;
+        padding: 14px;
+        font-size: 14px;
+        color: #166534;
+        line-height: 1.7;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 24px;
+      }
+      .reply-area {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        color: var(--text);
+        resize: vertical;
+        min-height: 90px;
+        outline: none;
+        transition: border 0.2s;
+        margin-top: 6px;
+      }
+      .reply-area:focus {
+        border-color: var(--orange);
+      }
+
+      /* status badge in modal header */
+      .modal-status-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* ===== TOAST ===== */
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: var(--dark);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-size: 13.5px;
+        font-weight: 500;
+        z-index: 999;
+        opacity: 0;
+        transform: translateY(8px);
+        transition: all 0.3s;
+        pointer-events: none;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .main-wrap {
+          margin-left: 0;
+        }
+        .content {
+          padding: 20px 16px;
+        }
+        .topbar {
+          padding: 0 16px;
+        }
+        .topbar-info {
+          display: none;
+        }
+        .page-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div style="display: flex; width: 100%">
+      <!-- SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+          <div class="logo-mark">AD</div>
+          <div class="logo-text-block">
+            <span class="logo-brand">AUTO DEALER</span>
+            <span class="logo-sub">FLEET MANAGEMENT</span>
+          </div>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="7" height="7" rx="1" /></svg
+            >Dashboard
+          </a>
+          <a href="admin.vehicle.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+              />
+              <circle cx="7" cy="17" r="2" />
+              <circle cx="17" cy="17" r="2" />
+              <path d="M5 17h8" />
+              <path d="M3 9h18" /></svg
+            >Vehicles
+          </a>
+          <a href="admin.bookings.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" /></svg
+            >Bookings
+          </a>
+          <a href="admin.kyc.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+            >KYC
+          </a>
+          <a href="admin.payments.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="2" y="5" width="20" height="14" rx="2" />
+              <line x1="2" y1="10" x2="22" y2="10" /></svg
+            >Payments
+          </a>
+          <a href="admin.enquiries.html" class="nav-item active">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" /></svg
+            >Enquiries
+          </a>
+          <a href="admin.reviews.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" /></svg
+            >Reviews
+          </a>
+          <a href="admin.servicing.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
+              /></svg
+            >Servicing
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="sidebar-user">
+            <div class="user-avatar" id="sidebarAvatarInitials">—</div>
+            <div class="user-info">
+              <span class="user-name" id="sidebarAdminName">Loading…</span>
+              <span class="user-role" id="sidebarAdminRole">—</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN WRAP -->
+      <div class="main-wrap">
+        <!-- TOPBAR -->
+        <header class="topbar">
+          <div class="search-wrap">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              id="enquirySearch"
+              placeholder="Search enquiries, customers…"
+            />
+          </div>
+          <div class="topbar-right">
+            <button class="icon-btn notif-btn">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              <span class="badge">3</span>
+            </button>
+            <div class="topbar-user" id="topbarUser">
+              <div class="topbar-avatar" id="topbarAvatarInitials">—</div>
+              <div class="topbar-info">
+                <p class="topbar-name" id="topbarAdminName">Loading…</p>
+                <p class="topbar-role" id="topbarAdminRole">—</p>
+              </div>
+              <svg
+                class="topbar-chevron"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+              <div class="user-dropdown" id="userDropdown">
+                <div class="dropdown-header">
+                  <p class="dh-name" id="dropdownAdminName">Admin</p>
+                  <p class="dh-email" id="dropdownAdminEmail">—</p>
+                </div>
+                <a class="dropdown-item" href="#">
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" /></svg
+                  >My Profile
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item logout" href="#" id="logoutBtn">
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  >
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" /></svg
+                  >Logout
+                </a>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- CONTENT -->
+        <main class="content">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Enquiries</h1>
+              <p class="page-sub">Manage customer enquiries and follow-ups</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn-ghost" onclick="exportEnquiries()">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  width="15"
+                  height="15"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" /></svg
+                >Export
+              </button>
+            </div>
+          </div>
+
+          <!-- FILTER TABS — DB enum: Pending | Replied | Closed -->
+          <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">
+              All <span class="tab-count" id="cnt-all">0</span>
+            </button>
+            <button class="filter-tab" data-filter="Pending">
+              Pending <span class="tab-count" id="cnt-pending">0</span>
+            </button>
+            <button class="filter-tab" data-filter="Replied">
+              Replied <span class="tab-count" id="cnt-replied">0</span>
+            </button>
+            <button class="filter-tab" data-filter="Closed">
+              Closed <span class="tab-count" id="cnt-closed">0</span>
+            </button>
+          </div>
+
+          <!-- TABLE -->
+          <div class="table-card">
+            <div class="table-toolbar">
+              <div>
+                <h3 class="card-title">All Enquiries</h3>
+                <p class="card-sub" id="enquirySubtitle">Loading…</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Question</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="enquiryTableBody">
+                  <!-- skeleton rows -->
+                  <tr class="skeleton-row">
+                    <td><span class="skeleton" style="width: 50px"></span></td>
+                    <td><span class="skeleton" style="width: 110px"></span></td>
+                    <td><span class="skeleton" style="width: 200px"></span></td>
+                    <td><span class="skeleton" style="width: 80px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                    <td><span class="skeleton" style="width: 130px"></span></td>
+                  </tr>
+                  <tr class="skeleton-row">
+                    <td><span class="skeleton" style="width: 50px"></span></td>
+                    <td><span class="skeleton" style="width: 90px"></span></td>
+                    <td><span class="skeleton" style="width: 180px"></span></td>
+                    <td><span class="skeleton" style="width: 80px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                    <td><span class="skeleton" style="width: 130px"></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="enquiryModal">
+      <div class="modal">
+        <div class="modal-hdr">
+          <div class="modal-status-wrap">
+            <h3 class="modal-title">Enquiry Detail</h3>
+            <span id="mdlStatusBadge"></span>
+          </div>
+          <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-field">
+          <p class="modal-label">Customer</p>
+          <p class="modal-value" id="mdlCustomer">—</p>
+        </div>
+        <div class="modal-field">
+          <p class="modal-label">Email</p>
+          <p class="modal-value" id="mdlEmail">—</p>
+        </div>
+        <div class="modal-field">
+          <p class="modal-label">Question</p>
+          <div class="modal-msg" id="mdlMessage">—</div>
+        </div>
+        <!-- shows existing admin reply if already replied -->
+        <div
+          class="modal-field"
+          id="mdlExistingReplyWrap"
+          style="display: none"
+        >
+          <p class="modal-label">Previous Reply</p>
+          <div class="modal-reply-box" id="mdlExistingReply">—</div>
+        </div>
+        <div class="modal-field" id="mdlReplyInputWrap">
+          <p class="modal-label">Reply</p>
+          <textarea
+            class="reply-area"
+            id="mdlReply"
+            placeholder="Type your reply to the customer…"
+          ></textarea>
+        </div>
+        <div class="modal-actions" id="mdlActions">
+          <button class="btn-primary" id="mdlSendBtn" onclick="sendReply()">
+            Send Reply
+          </button>
+          <button class="btn-ghost" onclick="closeModal()">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+      const API = "http://localhost:5000/api/admin";
+      let allEnquiries = [];
+      let currentFilter = "all";
+      let currentEnquiryId = null;
+
+      // ===== ADMIN PROFILE =====
+      async function loadAdmin() {
+        try {
+          const res = await fetch(`${API}/me`, { credentials: "include" });
+          if (!res.ok) throw new Error();
+          const d = await res.json();
+          const name = d.name || "Admin";
+          const role = d.role || "Admin";
+          const initials = name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase();
+          document.getElementById("sidebarAdminName").textContent = name;
+          document.getElementById("topbarAdminName").textContent = name;
+          document.getElementById("sidebarAdminRole").textContent = role;
+          document.getElementById("topbarAdminRole").textContent = role;
+          document.getElementById("sidebarAvatarInitials").textContent =
+            initials;
+          document.getElementById("topbarAvatarInitials").textContent =
+            initials;
+          document.getElementById("dropdownAdminName").textContent = name;
+          document.getElementById("dropdownAdminEmail").textContent =
+            d.email || "—";
+        } catch (e) {}
+      }
+
+      // ===== STATUS BADGE — DB enum: Pending | Replied | Closed =====
+      function statusBadge(s) {
+        const map = {
+          Pending: ["badge-pending", "Pending"],
+          Replied: ["badge-replied", "Replied"],
+          Closed: ["badge-closed", "Closed"],
+        };
+        const [cls, label] = map[s] || ["badge-closed", s || "—"];
+        return `<span class="${cls}"><span class="dot"></span>${label}</span>`;
+      }
+
+      function fmtDate(d) {
+        if (!d) return "—";
+        return new Date(d).toLocaleDateString("en-NP", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+
+      // ===== UPDATE TAB COUNTS =====
+      function updateCounts(list) {
+        document.getElementById("cnt-all").textContent = list.length;
+        document.getElementById("cnt-pending").textContent = list.filter(
+          (e) => e.status === "Pending",
+        ).length;
+        document.getElementById("cnt-replied").textContent = list.filter(
+          (e) => e.status === "Replied",
+        ).length;
+        document.getElementById("cnt-closed").textContent = list.filter(
+          (e) => e.status === "Closed",
+        ).length;
+      }
+
+      // ===== LOAD ENQUIRIES =====
+      async function loadEnquiries() {
+        try {
+          const res = await fetch(`${API}/enquiries`, {
+            credentials: "include",
+          });
+          if (!res.ok) throw new Error();
+          const data = await res.json();
+          allEnquiries = data.data || data || [];
+          updateCounts(allEnquiries);
+          renderTable(allEnquiries);
+        } catch (e) {
+          document.getElementById("enquiryTableBody").innerHTML =
+            `<tr><td colspan="6" class="empty-state">❌ Failed to load enquiries</td></tr>`;
+          document.getElementById("enquirySubtitle").textContent =
+            "Error loading data";
+        }
+      }
+
+      function renderTable(list) {
+        const tbody = document.getElementById("enquiryTableBody");
+        if (!list.length) {
+          tbody.innerHTML = `<tr><td colspan="6" class="empty-state">📋 No enquiries found</td></tr>`;
+          document.getElementById("enquirySubtitle").textContent =
+            "No enquiries";
+          return;
+        }
+        tbody.innerHTML = list
+          .map(
+            (e) => `
+          <tr onclick="openModal(${e.id})">
+            <td style="font-family:'Space Mono',monospace;font-size:12px;">#${e.id || "—"}</td>
+            <td>
+              <div style="font-weight:500;">${e.name || e.user_name || "—"}</div>
+              <div style="font-size:12px;color:var(--muted);">${e.email || e.user_email || ""}</div>
+            </td>
+            <td class="msg-cell">
+              <div class="msg-preview">${e.question || e.message || "—"}</div>
+            </td>
+            <td style="font-size:12px;color:var(--muted);white-space:nowrap;">${fmtDate(e.created_at)}</td>
+            <td>${statusBadge(e.status)}</td>
+            <td onclick="event.stopPropagation()">
+              <div class="action-wrap">
+                <button class="act-btn" onclick="openModal(${e.id})">View</button>
+                ${e.status !== "Replied" ? `<button class="act-btn reply" onclick="openModal(${e.id})">Reply</button>` : ""}
+                ${e.status !== "Closed" ? `<button class="act-btn close-btn" onclick="updateStatus(${e.id},'Closed')">Close</button>` : ""}
+                <button class="act-btn delete-btn" onclick="deleteEnquiry(${e.id})">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `,
+          )
+          .join("");
+        document.getElementById("enquirySubtitle").textContent =
+          `Showing ${list.length} enquir${list.length !== 1 ? "ies" : "y"}`;
+      }
+
+      // ===== FILTER =====
+      document.querySelectorAll(".filter-tab").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          document
+            .querySelectorAll(".filter-tab")
+            .forEach((b) => b.classList.remove("active"));
+          this.classList.add("active");
+          currentFilter = this.dataset.filter;
+          const filtered =
+            currentFilter === "all"
+              ? allEnquiries
+              : allEnquiries.filter((e) => e.status === currentFilter);
+          renderTable(filtered);
+        });
+      });
+
+      // ===== SEARCH =====
+      document
+        .getElementById("enquirySearch")
+        ?.addEventListener("input", function () {
+          const q = this.value.toLowerCase();
+          document.querySelectorAll("#enquiryTableBody tr").forEach((row) => {
+            row.style.display = row.textContent.toLowerCase().includes(q)
+              ? ""
+              : "none";
+          });
+        });
+
+      // ===== MODAL =====
+      function openModal(id) {
+        const e = allEnquiries.find((x) => x.id == id);
+        if (!e) return;
+        currentEnquiryId = id;
+
+        document.getElementById("mdlCustomer").textContent =
+          e.name || e.user_name || "—";
+        document.getElementById("mdlEmail").textContent =
+          e.email || e.user_email || "—";
+        document.getElementById("mdlMessage").textContent =
+          e.question || e.message || "—";
+        document.getElementById("mdlStatusBadge").innerHTML = statusBadge(
+          e.status,
+        );
+        document.getElementById("mdlReply").value = "";
+
+        // Show previous reply if it exists
+        const existingWrap = document.getElementById("mdlExistingReplyWrap");
+        if (e.admin_reply) {
+          document.getElementById("mdlExistingReply").textContent =
+            e.admin_reply;
+          existingWrap.style.display = "";
+        } else {
+          existingWrap.style.display = "none";
+        }
+
+        // If Closed, hide reply input and change button
+        const replyInputWrap = document.getElementById("mdlReplyInputWrap");
+        const sendBtn = document.getElementById("mdlSendBtn");
+        if (e.status === "Closed") {
+          replyInputWrap.style.display = "none";
+          sendBtn.style.display = "none";
+        } else {
+          replyInputWrap.style.display = "";
+          sendBtn.style.display = "";
+          sendBtn.textContent =
+            e.status === "Replied" ? "Update Reply" : "Send Reply";
+        }
+
+        document.getElementById("enquiryModal").classList.add("open");
+      }
+
+      function closeModal() {
+        document.getElementById("enquiryModal").classList.remove("open");
+        currentEnquiryId = null;
+      }
+
+      document
+        .getElementById("enquiryModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeModal();
+        });
+
+      async function sendReply() {
+        const reply = document.getElementById("mdlReply").value.trim();
+        if (!reply) {
+          showToast("Please type a reply first");
+          return;
+        }
+        try {
+          const res = await fetch(
+            `${API}/enquiries/${currentEnquiryId}/reply`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              credentials: "include",
+              body: JSON.stringify({ reply }),
+            },
+          );
+          if (!res.ok) throw new Error();
+
+          // update local state
+          const idx = allEnquiries.findIndex((e) => e.id == currentEnquiryId);
+          if (idx !== -1) {
+            allEnquiries[idx].status = "Replied";
+            allEnquiries[idx].admin_reply = reply;
+          }
+          updateCounts(allEnquiries);
+          const filtered =
+            currentFilter === "all"
+              ? allEnquiries
+              : allEnquiries.filter((e) => e.status === currentFilter);
+          renderTable(filtered);
+          showToast("Reply sent successfully ✓");
+          closeModal();
+        } catch (e) {
+          showToast("Failed to send reply");
+        }
+      }
+
+      // ===== UPDATE STATUS (PATCH /:id/status) =====
+      async function updateStatus(id, status) {
+        try {
+          const res = await fetch(`${API}/enquiries/${id}/status`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ status }),
+          });
+          if (!res.ok) throw new Error();
+
+          const idx = allEnquiries.findIndex((e) => e.id == id);
+          if (idx !== -1) allEnquiries[idx].status = status;
+          updateCounts(allEnquiries);
+          const filtered =
+            currentFilter === "all"
+              ? allEnquiries
+              : allEnquiries.filter((e) => e.status === currentFilter);
+          renderTable(filtered);
+          showToast(`Enquiry marked as ${status} ✓`);
+        } catch (e) {
+          showToast("Failed to update status");
+        }
+      }
+
+      // ===== DELETE =====
+      async function deleteEnquiry(id) {
+        if (!confirm("Delete this enquiry? This cannot be undone.")) return;
+        try {
+          const res = await fetch(`${API}/enquiries/${id}`, {
+            method: "DELETE",
+            credentials: "include",
+          });
+          if (!res.ok) throw new Error();
+          allEnquiries = allEnquiries.filter((e) => e.id != id);
+          updateCounts(allEnquiries);
+          const filtered =
+            currentFilter === "all"
+              ? allEnquiries
+              : allEnquiries.filter((e) => e.status === currentFilter);
+          renderTable(filtered);
+          showToast("Enquiry deleted ✓");
+        } catch (e) {
+          showToast("Failed to delete enquiry");
+        }
+      }
+
+      // ===== EXPORT =====
+      function exportEnquiries() {
+        const rows = [
+          [
+            "ID",
+            "Customer",
+            "Email",
+            "Question",
+            "Date",
+            "Status",
+            "Admin Reply",
+          ],
+        ];
+        allEnquiries.forEach((e) => {
+          rows.push([
+            e.id || "",
+            e.name || e.user_name || "",
+            e.email || e.user_email || "",
+            `"${(e.question || e.message || "").replace(/"/g, '""')}"`,
+            e.created_at || "",
+            e.status || "",
+            `"${(e.admin_reply || "").replace(/"/g, '""')}"`,
+          ]);
+        });
+        const csv = rows.map((r) => r.join(",")).join("\n");
+        const a = document.createElement("a");
+        a.href = "data:text/csv," + encodeURIComponent(csv);
+        a.download = "enquiries.csv";
+        a.click();
+      }
+
+      // ===== TOAST =====
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 3000);
+      }
+
+      // ===== DROPDOWN =====
+      document
+        .getElementById("topbarUser")
+        .addEventListener("click", function (e) {
+          e.stopPropagation();
+          const dd = document.getElementById("userDropdown");
+          const open = dd.classList.contains("visible");
+          dd.classList.toggle("visible", !open);
+          this.classList.toggle("open", !open);
+        });
+      document.addEventListener("click", () => {
+        document.getElementById("userDropdown")?.classList.remove("visible");
+        document.getElementById("topbarUser")?.classList.remove("open");
+      });
+
+      // ===== LOGOUT =====
+      document
+        .getElementById("logoutBtn")
+        .addEventListener("click", async function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          try {
+            await fetch(`${API}/logout`, {
+              method: "POST",
+              credentials: "include",
+            });
+          } finally {
+            window.location.href = "../index.html";
+          }
+        });
+
+      // ===== INIT =====
+      loadAdmin();
+      loadEnquiries();
+    </script>
+  </body>
+</html>
