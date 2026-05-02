@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const Groq = require("groq-sdk");
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const db = require("../config/db");
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 /* ════════════════════════════════════
    MYSQL QUERY HELPER
@@ -20,41 +19,85 @@ const query = (sql, params = []) =>
    FETCH THIS USER'S DATA FROM DB
 ════════════════════════════════════ */
 async function buildUserContext(userId) {
-  const [userRows, bookings, kycRows, vehicles] = await Promise.all([
+  const [
+    userRows,
+    bookings,
+    kycRows,
+    vehicles,
+    enquiries,
+    userReviews,
+    topRatedVehicles,
+  ] = await Promise.all([
     query(
       `SELECT id, name, email, phone, role, created_at
-       FROM users WHERE id = ? LIMIT 1`,
+         FROM users WHERE id = ? LIMIT 1`,
       [userId],
     ),
 
     query(
       `SELECT b.booking_ref, b.pickup_location, b.rental_type,
-              b.pickup_datetime, b.drop_datetime, b.total_days,
-              b.price_per_unit, b.total_price, b.status,
-              b.payment_status, b.payment_method, b.paid_at,
-              b.cancel_reason, b.notes, b.created_at,
-              v.name AS vehicle_name, v.brand, v.model,
-              v.body_type, v.fuel_type, v.seating_capacity
-       FROM bookings b
-       JOIN vehicles v ON b.vehicle_id = v.id
-       WHERE b.user_id = ?
-       ORDER BY b.created_at DESC`,
+                b.pickup_datetime, b.drop_datetime, b.total_days,
+                b.price_per_unit, b.total_price, b.status,
+                b.payment_status, b.payment_method, b.paid_at,
+                b.cancel_reason, b.notes, b.created_at,
+                v.name AS vehicle_name, v.brand, v.model,
+                v.body_type, v.fuel_type, v.seating_capacity
+         FROM bookings b
+         JOIN vehicles v ON b.vehicle_id = v.id
+         WHERE b.user_id = ?
+         ORDER BY b.created_at DESC`,
       [userId],
     ),
 
     query(
       `SELECT document_type, document_number, status,
-              rejection_reason, submitted_at, reviewed_at
-       FROM kyc WHERE user_id = ? LIMIT 1`,
+                rejection_reason, submitted_at, reviewed_at
+         FROM kyc WHERE user_id = ? LIMIT 1`,
       [userId],
     ),
 
     query(
       `SELECT id, name, brand, model, year, body_type, fuel_type,
-              transmission, seating_capacity, color, status,
-              price_4h, price_8h, price_1d, description, features
-       FROM vehicles WHERE is_deleted = 0
-       ORDER BY status ASC, name ASC`,
+                transmission, seating_capacity, color, status,
+                price_4h, price_8h, price_1d, description, features
+         FROM vehicles WHERE is_deleted = 0
+         ORDER BY status ASC, name ASC`,
+    ),
+
+    // User's enquiries
+    query(
+      `SELECT id, question, status, admin_reply, created_at
+         FROM enquiries
+         WHERE user_id = ?
+         ORDER BY created_at DESC`,
+      [userId],
+    ),
+
+    // User's own reviews
+    query(
+      `SELECT r.rating, r.comment, r.created_at,
+                v.name AS vehicle_name, b.booking_ref
+         FROM reviews r
+         JOIN vehicles v ON r.vehicle_id = v.id
+         JOIN bookings b ON r.booking_id = b.id
+         WHERE r.user_id = ?
+         ORDER BY r.created_at DESC`,
+      [userId],
+    ),
+
+    // Top rated vehicles by average rating (all users)
+    query(
+      `SELECT v.id, v.name, v.brand, v.model, v.body_type, v.fuel_type,
+                v.seating_capacity, v.price_1d, v.status,
+                ROUND(AVG(r.rating), 1) AS avg_rating,
+                COUNT(r.id) AS review_count
+         FROM vehicles v
+         JOIN reviews r ON r.vehicle_id = v.id
+         WHERE v.is_deleted = 0
+         GROUP BY v.id
+         HAVING review_count > 0
+         ORDER BY avg_rating DESC, review_count DESC
+         LIMIT 5`,
     ),
   ]);
 
@@ -63,6 +106,9 @@ async function buildUserContext(userId) {
     bookings,
     kyc: kycRows[0] || null,
     vehicles,
+    enquiries,
+    userReviews,
+    topRatedVehicles,
   };
 }
 
@@ -70,7 +116,15 @@ async function buildUserContext(userId) {
    BUILD SYSTEM PROMPT
 ════════════════════════════════════ */
 function buildSystemPrompt(data, pageContext) {
-  const { user, bookings, kyc, vehicles } = data;
+  const {
+    user,
+    bookings,
+    kyc,
+    vehicles,
+    enquiries,
+    userReviews,
+    topRatedVehicles,
+  } = data;
 
   // ── User profile ──
   const userSection = user
@@ -126,6 +180,42 @@ ${nextStep}`;
         )
         .join("\n");
 
+  // ── User's Enquiries ──
+  const enquiriesSection = !enquiries.length
+    ? "No enquiries submitted yet."
+    : enquiries
+        .map(
+          (e, i) => `Enquiry ${i + 1}:
+  Question: ${e.question}
+  Status: ${e.status}
+  ${e.admin_reply ? `Admin Reply: ${e.admin_reply}` : "Awaiting admin reply."}
+  Submitted: ${new Date(e.created_at).toLocaleDateString("en-NP")}`,
+        )
+        .join("\n\n");
+
+  // ── User's Own Reviews ──
+  const userReviewsSection = !userReviews.length
+    ? "No reviews submitted yet."
+    : userReviews
+        .map(
+          (r, i) => `Review ${i + 1}:
+  Vehicle: ${r.vehicle_name} | Booking: ${r.booking_ref}
+  Rating: ${"⭐".repeat(r.rating)} (${r.rating}/5)
+  ${r.comment ? `Comment: ${r.comment}` : "No comment."}
+  Date: ${new Date(r.created_at).toLocaleDateString("en-NP")}`,
+        )
+        .join("\n\n");
+
+  // ── Top Rated Vehicles ──
+  const topRatedSection = !topRatedVehicles.length
+    ? "No reviewed vehicles yet."
+    : topRatedVehicles
+        .map(
+          (v, i) =>
+            `${i + 1}. ${v.name} (${v.brand} ${v.model}) | ${v.body_type} | ${v.fuel_type} | ${v.seating_capacity} seats | Rs${v.price_1d}/day | ⭐ ${v.avg_rating}/5 (${v.review_count} review${v.review_count > 1 ? "s" : ""}) | Status: ${v.status}`,
+        )
+        .join("\n");
+
   // ── Page context ──
   let pageSection = "";
   if (pageContext) {
@@ -148,7 +238,7 @@ ${nextStep}`;
     }
   }
 
-  // ── KYC status summary for prompts ──
+  // ── KYC status summary ──
   const kycStatusLine = !kyc
     ? "not submitted"
     : kyc.status === "verified"
@@ -173,6 +263,15 @@ ${bookingsSection}
 
 ════════ AVAILABLE VEHICLES (${available.length} of ${vehicles.length}) ════════
 ${vehiclesSection}
+
+════════ USER'S ENQUIRIES (${enquiries.length} total) ════════
+${enquiriesSection}
+
+════════ USER'S REVIEWS (${userReviews.length} total) ════════
+${userReviewsSection}
+
+════════ TOP RATED VEHICLES (by all users) ════════
+${topRatedSection}
 ${pageSection ? `\n════════ CURRENT PAGE CONTEXT ════════${pageSection}` : ""}
 
 ════════ BOOKING PROCESS ════════
@@ -251,10 +350,35 @@ ${kyc?.status === "pending" ? "Your documents are being reviewed. You'll be noti
 ${kyc?.status === "verified" ? "You're fully verified and can book vehicles right away!" : ""}
 ${!kyc ? "You haven't submitted KYC yet. Start at Step 1 above." : ""}
 
+════════ ENQUIRY PROCESS ════════
+When the user asks "how to submit enquiry", "how to contact", "how to ask a question" or similar:
+
+Here's how to submit an enquiry on AutoDrive Nepal:
+
+1️⃣ **Go to the Contact / Enquiry page** from the menu.
+2️⃣ **Type your question** in the message box.
+3️⃣ **Submit** — admin will reply as soon as possible.
+
+You can check the status of your enquiries (Pending / Replied / Closed) from your dashboard.
+
+════════ REVIEW PROCESS ════════
+When the user asks "how to leave a review", "how to rate a vehicle", "how to give feedback" or similar:
+
+Here's how to review a vehicle on AutoDrive Nepal:
+
+1️⃣ **Go to My Bookings** from your dashboard.
+2️⃣ **Find a Completed booking** — only completed bookings can be reviewed.
+3️⃣ **Click "Leave a Review"** on the booking.
+4️⃣ **Select a star rating** (1–5) and optionally add a comment.
+5️⃣ **Submit** your review.
+
+Your reviews help other users choose the right vehicle!
+
 ════════ INSTRUCTIONS ════════
-- Only discuss THIS user's data. Never mention other users.
-- For "my bookings / my KYC / my info" use the sections above.
-- If the user asks about the booking process or KYC process, respond in ONE complete message using the exact structure defined above. Do NOT split into multiple messages or ask follow-up questions.
+- Only discuss THIS user's data. Never mention other users' personal info.
+- For "my bookings / my KYC / my info / my enquiries / my reviews" use the sections above.
+- For "top rated / best vehicles / highest rated / most reviewed / recommended vehicles" use the TOP RATED VEHICLES section above.
+- If the user asks about the booking, KYC, enquiry, or review process, respond in ONE complete message using the exact structure defined above.
 - If user is on a vehicle page, help them understand that vehicle's details and pricing.
 - If user has a partially filled booking form, help them complete it.
 - Keep responses short. Use bullet points for multi-step or multi-item answers.
@@ -318,26 +442,29 @@ router.post("/", async (req, res) => {
     const cleanHistory = sanitizeHistory(history);
     const msg = message.toLowerCase().trim();
 
-    // ── Call Gemini with conversation history ──
+    // ── Call Groq ──
     try {
-      const model = genAI.getGenerativeModel({
-        model: "gemini-2.0-flash",
-        systemInstruction: systemPrompt,
+      const result = await groq.chat.completions.create({
+        model: "llama-3.3-70b-versatile",
+        max_tokens: 1024,
+        messages: [
+          { role: "system", content: systemPrompt },
+          ...cleanHistory.map((h) => ({
+            role: h.role === "model" ? "assistant" : "user",
+            content: h.parts[0].text,
+          })),
+          { role: "user", content: message },
+        ],
       });
 
-      const chat = model.startChat({
-        history: cleanHistory,
-      });
-
-      const result = await chat.sendMessage(message);
-      const replyText = result.response.text();
+      const replyText = result.choices[0].message.content;
 
       return res.json({
         reply: replyText,
         suggestions: buildSuggestions(msg, data),
       });
     } catch (aiErr) {
-      console.error("[Gemini Error]", aiErr.message);
+      console.error("[Groq Error]", aiErr.message);
       return res.json(buildFallbackReply(msg, data));
     }
   } catch (err) {
@@ -349,9 +476,12 @@ router.post("/", async (req, res) => {
 });
 
 /* ════════════════════════════════════
-   FALLBACK (when Gemini fails)
+   FALLBACK (when Groq fails)
 ════════════════════════════════════ */
-function buildFallbackReply(msg, { user, bookings, kyc, vehicles }) {
+function buildFallbackReply(
+  msg,
+  { user, bookings, kyc, vehicles, enquiries, userReviews, topRatedVehicles },
+) {
   const name = user?.name?.split(" ")[0] || "there";
   const available = vehicles.filter((v) => v.status === "Available");
 
@@ -364,7 +494,7 @@ function buildFallbackReply(msg, { user, bookings, kyc, vehicles }) {
   ) {
     const kycWarning =
       !kyc || kyc.status !== "verified"
-        ? `\n⚠️ Your KYC is not verified yet — complete that first or your booking won't be accepted.\n`
+        ? `\n⚠️ Your KYC is not verified yet — complete that first.\n`
         : `\n✅ Your KYC is verified — you're ready to book!\n`;
 
     return {
@@ -412,7 +542,109 @@ function buildFallbackReply(msg, { user, bookings, kyc, vehicles }) {
     };
   }
 
-  // ── Other fallbacks ──
+  // ── Enquiry process fallback ──
+  if (
+    msg.includes("how to enquir") ||
+    msg.includes("how to contact") ||
+    msg.includes("submit enquiry") ||
+    msg.includes("how to ask")
+  ) {
+    return {
+      reply:
+        `Here's how to submit an enquiry on AutoDrive Nepal:\n\n` +
+        `1️⃣ **Go to the Contact / Enquiry page** from the menu.\n` +
+        `2️⃣ **Type your question** in the message box.\n` +
+        `3️⃣ **Submit** — admin will reply as soon as possible.\n\n` +
+        `You can check your enquiry status (Pending / Replied / Closed) from your dashboard.`,
+      suggestions: ["My enquiries", "How to book", "Available vehicles"],
+    };
+  }
+
+  // ── Review process fallback ──
+  if (
+    msg.includes("how to review") ||
+    msg.includes("how to rate") ||
+    msg.includes("how to give feedback") ||
+    msg.includes("leave a review")
+  ) {
+    return {
+      reply:
+        `Here's how to review a vehicle on AutoDrive Nepal:\n\n` +
+        `1️⃣ **Go to My Bookings** from your dashboard.\n` +
+        `2️⃣ **Find a Completed booking** — only completed bookings can be reviewed.\n` +
+        `3️⃣ **Click "Leave a Review"** on the booking.\n` +
+        `4️⃣ **Select a star rating** (1–5) and optionally add a comment.\n` +
+        `5️⃣ **Submit** your review.\n\n` +
+        `Your reviews help other users choose the right vehicle!`,
+      suggestions: ["My reviews", "My bookings", "Top rated vehicles"],
+    };
+  }
+
+  // ── My enquiries fallback ──
+  if (msg.includes("enquir") || msg.includes("my question")) {
+    if (!enquiries.length) {
+      return {
+        reply: `You haven't submitted any enquiries yet, ${name}. You can ask a question from the Contact/Enquiry page.`,
+        suggestions: ["How to book", "Available vehicles", "My KYC status"],
+      };
+    }
+    const lines = enquiries.map(
+      (e) =>
+        `• "${e.question}" — ${e.status}${e.admin_reply ? `\n  Reply: "${e.admin_reply}"` : " (awaiting reply)"}`,
+    );
+    return {
+      reply: `Your enquiries, ${name}:\n${lines.join("\n")}`,
+      suggestions: ["My bookings", "Available vehicles"],
+    };
+  }
+
+  // ── Top rated vehicles fallback ──
+  if (
+    msg.includes("top rated") ||
+    msg.includes("highest rated") ||
+    msg.includes("best vehicle") ||
+    msg.includes("most reviewed") ||
+    msg.includes("recommended")
+  ) {
+    if (!topRatedVehicles.length) {
+      return {
+        reply: `No reviewed vehicles yet, ${name}. Be the first to review after your booking!`,
+        suggestions: ["Available vehicles", "How to book"],
+      };
+    }
+    const lines = topRatedVehicles.map(
+      (v, i) =>
+        `${i + 1}. ${v.name} — ⭐ ${v.avg_rating}/5 (${v.review_count} review${v.review_count > 1 ? "s" : ""}) | Rs${v.price_1d}/day | ${v.status}`,
+    );
+    return {
+      reply: `Top rated vehicles on AutoDrive Nepal:\n${lines.join("\n")}`,
+      suggestions: ["Available vehicles", "How to book", "My bookings"],
+    };
+  }
+
+  // ── My reviews fallback ──
+  if (
+    msg.includes("my review") ||
+    msg.includes("my rating") ||
+    msg.includes("my feedback")
+  ) {
+    if (!userReviews.length) {
+      return {
+        reply: `You haven't submitted any reviews yet, ${name}. You can review a vehicle after completing a booking.`,
+        suggestions: ["My bookings", "Available vehicles"],
+      };
+    }
+    const lines = userReviews.map(
+      (r) =>
+        `• ${r.vehicle_name} — ${"⭐".repeat(r.rating)} (${r.rating}/5)${r.comment ? `: "${r.comment}"` : ""}`,
+    );
+    return {
+      reply: `Your reviews, ${name}:\n${lines.join("\n")}`,
+      suggestions: ["My bookings", "Top rated vehicles"],
+    };
+  }
+
+  // ── My profile fallback ──
   if (
     msg.includes("my info") ||
     msg.includes("my profile") ||
@@ -424,6 +656,7 @@ function buildFallbackReply(msg, { user, bookings, kyc, vehicles }) {
     };
   }
 
+  // ── My bookings fallback ──
   if (msg.includes("booking")) {
     if (!bookings.length) {
       return {
@@ -441,6 +674,7 @@ function buildFallbackReply(msg, { user, bookings, kyc, vehicles }) {
     };
   }
 
+  // ── KYC status fallback ──
   if (msg.includes("kyc")) {
     if (!kyc) {
       return {
@@ -448,17 +682,18 @@ function buildFallbackReply(msg, { user, bookings, kyc, vehicles }) {
         suggestions: ["How does KYC work", "Available vehicles"],
       };
     }
-    const msgs = {
+    const kycMsgs = {
       verified: `✅ KYC verified, ${name}! You can book vehicles.`,
       pending: `⏳ KYC under review, ${name}. Wait up to 24 hours.`,
       rejected: `❌ KYC rejected: "${kyc.rejection_reason || "see KYC page"}". Please re-upload clear photos.`,
     };
     return {
-      reply: msgs[kyc.status] || `KYC status: ${kyc.status}`,
+      reply: kycMsgs[kyc.status] || `KYC status: ${kyc.status}`,
       suggestions: ["My bookings", "Available vehicles"],
     };
   }
 
+  // ── Pricing fallback ──
   if (msg.includes("price") || msg.includes("rate") || msg.includes("cost")) {
     if (!available.length)
       return { reply: "No vehicles available.", suggestions: [] };
@@ -472,6 +707,7 @@ function buildFallbackReply(msg, { user, bookings, kyc, vehicles }) {
     };
   }
 
+  // ── Available vehicles fallback ──
   if (
     msg.includes("vehicle") ||
     msg.includes("car") ||
@@ -485,17 +721,17 @@ function buildFallbackReply(msg, { user, bookings, kyc, vehicles }) {
     );
     return {
       reply: `Available vehicles:\n${lines.join("\n")}`,
-      suggestions: ["Pricing", "How to book"],
+      suggestions: ["Pricing", "How to book", "Top rated vehicles"],
     };
   }
 
   return {
-    reply: `Hi ${name}! Ask me about your bookings, KYC, available vehicles, or pricing.`,
+    reply: `Hi ${name}! Ask me about your bookings, KYC, enquiries, reviews, top rated vehicles, or pricing.`,
     suggestions: [
       "My bookings",
       "My KYC status",
+      "Top rated vehicles",
       "Available vehicles",
-      "Pricing",
     ],
   };
 }
@@ -520,10 +756,25 @@ function buildSuggestions(msg, { kyc, bookings, vehicles }) {
       ? ["Booking details", "Available vehicles", "My KYC status"]
       : ["Available vehicles", "How to book", "Pricing"];
 
-  if (msg.includes("vehicle") || msg.includes("price"))
-    return [`${avail} vehicles available`, "How to book", "My KYC status"];
+  if (msg.includes("enquir") || msg.includes("contact"))
+    return ["My enquiries", "My bookings", "Available vehicles"];
 
-  return ["My bookings", "My KYC status", "Available vehicles", "How to book"];
+  if (
+    msg.includes("review") ||
+    msg.includes("rating") ||
+    msg.includes("top rated")
+  )
+    return ["Top rated vehicles", "My reviews", "Available vehicles"];
+
+  if (msg.includes("vehicle") || msg.includes("price"))
+    return [`${avail} vehicles available`, "How to book", "Top rated vehicles"];
+
+  return [
+    "My bookings",
+    "My KYC status",
+    "Top rated vehicles",
+    "Available vehicles",
+  ];
 }
 
 module.exports = router;

@@ -1,0 +1,1065 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AUTO DEALER — Payments</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="dashboard.css" />
+    <style>
+      .layout {
+        display: flex;
+        width: 100%;
+        min-height: 100vh;
+      }
+      .sidebar-nav {
+        padding-top: 20px;
+      }
+
+      /* ── STAT CARDS ── */
+      .pay-stat-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      /* ── FILTERS BAR ── */
+      .filters-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      .filter-select {
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        color: var(--text);
+        background: white;
+        outline: none;
+        cursor: pointer;
+        transition: border 0.2s;
+      }
+      .filter-select:focus {
+        border-color: var(--orange);
+      }
+
+      .filter-search {
+        flex: 1;
+        min-width: 200px;
+        position: relative;
+      }
+      .filter-search svg {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 15px;
+        height: 15px;
+        color: var(--muted);
+        pointer-events: none;
+      }
+      .filter-search input {
+        width: 100%;
+        padding: 8px 12px 8px 34px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        color: var(--text);
+        background: white;
+        outline: none;
+        transition: border 0.2s;
+      }
+      .filter-search input:focus {
+        border-color: var(--orange);
+      }
+
+      /* ── PAYMENT STATUS BADGES ── */
+      .pay-paid {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 99px;
+        font-size: 11px;
+        font-weight: 600;
+        background: #ecfdf5;
+        color: #16a34a;
+      }
+      .pay-unpaid {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 99px;
+        font-size: 11px;
+        font-weight: 600;
+        background: #fff1f2;
+        color: #dc2626;
+      }
+      .pay-refund {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 99px;
+        font-size: 11px;
+        font-weight: 600;
+        background: #eff6ff;
+        color: #2563eb;
+      }
+      .pay-paid .dot,
+      .pay-unpaid .dot,
+      .pay-refund .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+        flex-shrink: 0;
+      }
+
+      /* booking status mini */
+      .bk-completed {
+        color: #16a34a;
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .bk-active {
+        color: #2563eb;
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .bk-pending {
+        color: #d97706;
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .bk-cancelled {
+        color: #dc2626;
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      /* ── MARK PAID BTN ── */
+      .btn-mark-paid {
+        padding: 5px 12px;
+        border-radius: 6px;
+        border: 1px solid #16a34a;
+        background: #f0fdf4;
+        color: #16a34a;
+        font-family: "DM Sans", sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.18s;
+        white-space: nowrap;
+      }
+      .btn-mark-paid:hover {
+        background: #16a34a;
+        color: white;
+      }
+      .btn-mark-paid:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      /* ── PAGINATION ── */
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+      }
+      .pag-info {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .pag-btns {
+        display: flex;
+        gap: 6px;
+      }
+      .pag-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 7px;
+        border: 1px solid var(--border);
+        background: white;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text);
+        transition: all 0.18s;
+      }
+      .pag-btn:hover {
+        background: var(--bg);
+      }
+      .pag-btn.active {
+        background: var(--orange);
+        color: white;
+        border-color: var(--orange);
+      }
+      .pag-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+
+      /* ── TOAST ── */
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: var(--dark);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-size: 13.5px;
+        font-weight: 500;
+        z-index: 9999;
+        opacity: 0;
+        transform: translateY(8px);
+        transition: all 0.3s;
+        pointer-events: none;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .toast.success {
+        background: #16a34a;
+      }
+      .toast.error {
+        background: #dc2626;
+      }
+
+      /* ── AMOUNT COL ── */
+      .amount-cell {
+        font-family: "Space Mono", monospace;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--dark);
+      }
+
+      /* responsive */
+      @media (max-width: 1100px) {
+        .pay-stat-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 600px) {
+        .pay-stat-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .filters-bar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+          <div class="logo-mark">AD</div>
+          <div class="logo-text-block">
+            <span class="logo-brand">AUTO DEALER</span>
+            <span class="logo-sub">FLEET MANAGEMENT</span>
+          </div>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="7" height="7" rx="1" /></svg
+            >Dashboard
+          </a>
+          <a href="admin.vehicle.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+              />
+              <circle cx="7" cy="17" r="2" />
+              <circle cx="17" cy="17" r="2" />
+              <path d="M5 17h8" />
+              <path d="M3 9h18" /></svg
+            >Vehicles
+          </a>
+          <a href="admin.bookings.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" /></svg
+            >Bookings
+          </a>
+          <a href="admin.kyc.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+            >KYC
+          </a>
+          <a href="admin.payments.html" class="nav-item active">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <rect x="2" y="5" width="20" height="14" rx="2" />
+              <line x1="2" y1="10" x2="22" y2="10" /></svg
+            >Payments
+          </a>
+          <a href="admin.enquiries.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" /></svg
+            >Enquiries
+          </a>
+          <a href="admin.reviews.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" /></svg
+            >Reviews
+          </a>
+          <a href="admin.servicing.html" class="nav-item">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            >
+              <path
+                d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
+              /></svg
+            >Servicing
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="sidebar-user">
+            <div class="user-avatar" id="sidebarAvatarInitials">—</div>
+            <div class="user-info">
+              <span class="user-name" id="sidebarAdminName">Loading…</span>
+              <span class="user-role" id="sidebarAdminRole">—</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN WRAP -->
+      <div class="main-wrap">
+        <!-- TOPBAR -->
+        <header class="topbar">
+          <div class="search-wrap">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              id="topbarSearch"
+              placeholder="Search payments, customers…"
+            />
+          </div>
+          <div class="topbar-right">
+            <button class="icon-btn notif-btn">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              <span class="badge">3</span>
+            </button>
+
+            <!-- TOPBAR USER + DROPDOWN -->
+            <div class="topbar-user" id="topbarUser">
+              <div class="topbar-avatar" id="topbarAvatarInitials">—</div>
+              <div class="topbar-info">
+                <p class="topbar-name" id="topbarAdminName">Loading…</p>
+                <p class="topbar-role" id="topbarAdminRole">—</p>
+              </div>
+              <svg
+                class="topbar-chevron"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+              <!-- DROPDOWN -->
+              <div class="user-dropdown" id="userDropdown">
+                <div class="dropdown-header">
+                  <p class="dh-name" id="dropdownAdminName">Admin</p>
+                  <p class="dh-email" id="dropdownAdminEmail">—</p>
+                </div>
+                <a class="dropdown-item" href="admin.profile.html">
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" /></svg
+                  >My Profile
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item logout" href="#" id="logoutBtn">
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  >
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" /></svg
+                  >Logout
+                </a>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- CONTENT -->
+        <main class="content">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Payments</h1>
+              <p class="page-sub">
+                Track and manage all booking payment records
+              </p>
+            </div>
+            <div class="page-actions">
+              <button class="btn-ghost" onclick="exportCSV()">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  width="15"
+                  height="15"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" /></svg
+                >Export CSV
+              </button>
+            </div>
+          </div>
+
+          <!-- STAT CARDS -->
+          <div class="pay-stat-grid">
+            <div class="stat-card" style="--delay: 0s">
+              <div class="stat-top">
+                <div class="stat-icon" style="--ic: #ecfdf5">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#16A34A"
+                    stroke-width="1.8"
+                    width="22"
+                    height="22"
+                  >
+                    <rect x="2" y="5" width="20" height="14" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                  </svg>
+                </div>
+              </div>
+              <p class="stat-label">Total Collected</p>
+              <p class="stat-value" id="statTotalPaid" style="font-size: 34px">
+                —
+              </p>
+              <p class="stat-hint">All paid bookings</p>
+            </div>
+            <div class="stat-card" style="--delay: 0.08s">
+              <div class="stat-top">
+                <div class="stat-icon" style="--ic: #fff1f2">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#DC2626"
+                    stroke-width="1.8"
+                    width="22"
+                    height="22"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                </div>
+              </div>
+              <p class="stat-label">Unpaid Amount</p>
+              <p
+                class="stat-value"
+                id="statTotalUnpaid"
+                style="font-size: 34px"
+              >
+                —
+              </p>
+              <p class="stat-hint">Pending collection</p>
+            </div>
+            <div class="stat-card" style="--delay: 0.16s">
+              <div class="stat-top">
+                <div class="stat-icon" style="--ic: #eff6ff">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#2563EB"
+                    stroke-width="1.8"
+                    width="22"
+                    height="22"
+                  >
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                  </svg>
+                </div>
+              </div>
+              <p class="stat-label">Paid Bookings</p>
+              <p class="stat-value" id="statPaidCount">—</p>
+              <p class="stat-hint">Transactions complete</p>
+            </div>
+            <div class="stat-card" style="--delay: 0.24s">
+              <div class="stat-top">
+                <div class="stat-icon" style="--ic: #fffbeb">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#D97706"
+                    stroke-width="1.8"
+                    width="22"
+                    height="22"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                </div>
+              </div>
+              <p class="stat-label">Unpaid Bookings</p>
+              <p class="stat-value" id="statUnpaidCount">—</p>
+              <p class="stat-hint">Awaiting payment</p>
+            </div>
+          </div>
+
+          <!-- TABLE CARD -->
+          <div class="table-card">
+            <div class="table-toolbar">
+              <div>
+                <h3 class="card-title">Payment Records</h3>
+                <p class="card-sub" id="tableSubtitle">Loading…</p>
+              </div>
+            </div>
+
+            <!-- FILTERS -->
+            <div class="filters-bar">
+              <div class="filter-search">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input
+                  type="text"
+                  id="tableSearch"
+                  placeholder="Search by customer, vehicle, ref…"
+                  oninput="applyFilters()"
+                />
+              </div>
+              <select
+                class="filter-select"
+                id="filterPayStatus"
+                onchange="applyFilters()"
+              >
+                <option value="">All Payment Status</option>
+                <option value="Paid">Paid</option>
+                <option value="Unpaid">Unpaid</option>
+                <option value="Refunded">Refunded</option>
+              </select>
+              <select
+                class="filter-select"
+                id="filterBookStatus"
+                onchange="applyFilters()"
+              >
+                <option value="">All Booking Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Active">Active</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Booking Ref</th>
+                    <th>Customer</th>
+                    <th>Vehicle</th>
+                    <th>Amount</th>
+                    <th>Booking Status</th>
+                    <th>Payment Status</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="paymentsTableBody">
+                  <tr class="skeleton-row">
+                    <td><span class="skeleton" style="width: 90px"></span></td>
+                    <td><span class="skeleton" style="width: 110px"></span></td>
+                    <td><span class="skeleton" style="width: 130px"></span></td>
+                    <td><span class="skeleton" style="width: 80px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                    <td><span class="skeleton" style="width: 60px"></span></td>
+                    <td><span class="skeleton" style="width: 80px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                  </tr>
+                  <tr class="skeleton-row">
+                    <td><span class="skeleton" style="width: 90px"></span></td>
+                    <td><span class="skeleton" style="width: 100px"></span></td>
+                    <td><span class="skeleton" style="width: 120px"></span></td>
+                    <td><span class="skeleton" style="width: 80px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                    <td><span class="skeleton" style="width: 60px"></span></td>
+                    <td><span class="skeleton" style="width: 80px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                  </tr>
+                  <tr class="skeleton-row">
+                    <td><span class="skeleton" style="width: 90px"></span></td>
+                    <td><span class="skeleton" style="width: 115px"></span></td>
+                    <td><span class="skeleton" style="width: 140px"></span></td>
+                    <td><span class="skeleton" style="width: 80px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                    <td><span class="skeleton" style="width: 60px"></span></td>
+                    <td><span class="skeleton" style="width: 80px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="pagination">
+              <p class="pag-info" id="pagInfo">—</p>
+              <div class="pag-btns" id="pagBtns"></div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+      const API = "http://localhost:5000/api/admin";
+
+      let allPayments = [];
+      let filtered = [];
+      let currentPage = 1;
+      const PER_PAGE = 10;
+
+      // ── HELPERS ──────────────────────────────────────────────
+      function fmtMoney(n) {
+        return "Rs " + Number(n || 0).toLocaleString("en-NP");
+      }
+
+      function fmtDate(d) {
+        if (!d) return "—";
+        return new Date(d).toLocaleDateString("en-NP", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+
+      function showToast(msg, type = "") {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast show" + (type ? " " + type : "");
+        setTimeout(() => (t.className = "toast"), 3000);
+      }
+
+      function payBadge(s) {
+        const map = {
+          paid: `<span class="pay-paid"><span class="dot"></span>Paid</span>`,
+          unpaid: `<span class="pay-unpaid"><span class="dot"></span>Unpaid</span>`,
+          refunded: `<span class="pay-refund"><span class="dot"></span>Refunded</span>`,
+        };
+        return (
+          map[(s || "").toLowerCase()] ||
+          `<span class="badge-grey">${s || "—"}</span>`
+        );
+      }
+
+      function bookBadge(s) {
+        const map = {
+          completed: `<span class="bk-completed">Completed</span>`,
+          active: `<span class="bk-active">Active</span>`,
+          confirmed: `<span class="bk-active">Confirmed</span>`,
+          pending: `<span class="bk-pending">Pending</span>`,
+          cancelled: `<span class="bk-cancelled">Cancelled</span>`,
+        };
+        return map[(s || "").toLowerCase()] || `<span>${s || "—"}</span>`;
+      }
+
+      // ── LOAD ADMIN ───────────────────────────────────────────
+      async function loadAdmin() {
+        try {
+          const res = await fetch(`${API}/me`, { credentials: "include" });
+          if (!res.ok) throw new Error();
+          const d = await res.json();
+
+          const name = d.name || "Admin";
+          const role = d.role || "Admin";
+          const initials = name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase();
+
+          document.getElementById("sidebarAdminName").textContent = name;
+          document.getElementById("sidebarAdminRole").textContent = role;
+          document.getElementById("sidebarAvatarInitials").textContent =
+            initials;
+          document.getElementById("topbarAdminName").textContent = name;
+          document.getElementById("topbarAdminRole").textContent = role;
+          document.getElementById("topbarAvatarInitials").textContent =
+            initials;
+          document.getElementById("dropdownAdminName").textContent = name;
+          document.getElementById("dropdownAdminEmail").textContent =
+            d.email || "—";
+        } catch (e) {
+          console.log("Failed to load admin");
+        }
+      }
+
+      // ── LOAD PAYMENTS ─────────────────────────────────────────
+      async function loadPayments() {
+        try {
+          const res = await fetch(`${API}/payments`, {
+            credentials: "include",
+          });
+          if (!res.ok) throw new Error();
+          const data = await res.json();
+          allPayments = data.data || [];
+
+          // compute stats
+          const paid = allPayments.filter(
+            (p) => (p.payment_status || "").toLowerCase() === "paid",
+          );
+          const unpaid = allPayments.filter(
+            (p) => (p.payment_status || "").toLowerCase() === "unpaid",
+          );
+
+          const totalPaid = paid.reduce(
+            (s, p) => s + Number(p.total_price || 0),
+            0,
+          );
+          const totalUnpaid = unpaid.reduce(
+            (s, p) => s + Number(p.total_price || 0),
+            0,
+          );
+
+          document.getElementById("statTotalPaid").textContent =
+            fmtMoney(totalPaid);
+          document.getElementById("statTotalUnpaid").textContent =
+            fmtMoney(totalUnpaid);
+          document.getElementById("statPaidCount").textContent = paid.length;
+          document.getElementById("statUnpaidCount").textContent =
+            unpaid.length;
+
+          applyFilters();
+        } catch (e) {
+          document.getElementById("paymentsTableBody").innerHTML =
+            `<tr><td colspan="8" class="empty-state">⚠️ Failed to load payments</td></tr>`;
+          document.getElementById("tableSubtitle").textContent =
+            "Error loading data";
+        }
+      }
+
+      // ── FILTERS ───────────────────────────────────────────────
+      function applyFilters() {
+        const q = document.getElementById("tableSearch").value.toLowerCase();
+        const payF = document
+          .getElementById("filterPayStatus")
+          .value.toLowerCase();
+        const bookF = document
+          .getElementById("filterBookStatus")
+          .value.toLowerCase();
+
+        filtered = allPayments.filter((p) => {
+          const matchQ =
+            !q ||
+            [p.booking_ref, p.user_name, p.user_email, p.vehicle_name].some(
+              (v) => (v || "").toLowerCase().includes(q),
+            );
+          const matchPay =
+            !payF || (p.payment_status || "").toLowerCase() === payF;
+          const matchBook = !bookF || (p.status || "").toLowerCase() === bookF;
+          return matchQ && matchPay && matchBook;
+        });
+
+        currentPage = 1;
+        renderTable();
+      }
+
+      // ── RENDER TABLE ─────────────────────────────────────────
+      function renderTable() {
+        const tbody = document.getElementById("paymentsTableBody");
+        const total = filtered.length;
+        const start = (currentPage - 1) * PER_PAGE;
+        const page = filtered.slice(start, start + PER_PAGE);
+
+        document.getElementById("tableSubtitle").textContent =
+          `Showing ${total} record${total !== 1 ? "s" : ""}`;
+
+        if (!page.length) {
+          tbody.innerHTML = `<tr><td colspan="8" class="empty-state">💳 No payment records found</td></tr>`;
+          document.getElementById("pagInfo").textContent = "No records";
+          document.getElementById("pagBtns").innerHTML = "";
+          return;
+        }
+
+        tbody.innerHTML = page
+          .map((p) => {
+            const isPaid = (p.payment_status || "").toLowerCase() === "paid";
+            return `
+            <tr>
+              <td><span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--muted)">${p.booking_ref || "#" + p.id}</span></td>
+              <td>
+                <div style="font-weight:500;font-size:13.5px">${p.user_name || "—"}</div>
+                <div style="font-size:11px;color:var(--muted)">${p.user_email || ""}</div>
+              </td>
+              <td>${p.vehicle_name || "—"}</td>
+              <td class="amount-cell">${fmtMoney(p.total_price)}</td>
+              <td>${bookBadge(p.status)}</td>
+              <td>${payBadge(p.payment_status)}</td>
+              <td style="font-size:12px;color:var(--muted)">${fmtDate(p.created_at)}</td>
+              <td>
+                <button class="btn-mark-paid"
+                  ${isPaid ? "disabled" : ""}
+                  onclick="markPaid(${p.id}, this)">
+                  ${isPaid ? "✓ Paid" : "Mark Paid"}
+                </button>
+              </td>
+            </tr>
+          `;
+          })
+          .join("");
+
+        // pagination info
+        const totalPages = Math.ceil(total / PER_PAGE);
+        document.getElementById("pagInfo").textContent =
+          `Page ${currentPage} of ${totalPages} — ${total} records`;
+
+        // pagination buttons
+        const pagBtns = document.getElementById("pagBtns");
+        let btns = `<button class="pag-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? "disabled" : ""}>‹</button>`;
+        for (let i = 1; i <= totalPages; i++) {
+          if (
+            totalPages > 7 &&
+            i > 3 &&
+            i < totalPages - 1 &&
+            Math.abs(i - currentPage) > 1
+          ) {
+            if (i === 4 || i === totalPages - 2)
+              btns += `<span style="padding:0 4px;color:var(--muted)">…</span>`;
+            continue;
+          }
+          btns += `<button class="pag-btn ${i === currentPage ? "active" : ""}" onclick="goPage(${i})">${i}</button>`;
+        }
+        btns += `<button class="pag-btn" onclick="goPage(${currentPage + 1})" ${currentPage === totalPages ? "disabled" : ""}>›</button>`;
+        pagBtns.innerHTML = btns;
+      }
+
+      function goPage(n) {
+        const total = Math.ceil(filtered.length / PER_PAGE);
+        if (n < 1 || n > total) return;
+        currentPage = n;
+        renderTable();
+      }
+
+      // ── MARK PAID ─────────────────────────────────────────────
+      async function markPaid(bookingId, btn) {
+        if (!confirm("Mark this booking as Paid?")) return;
+        btn.disabled = true;
+        btn.textContent = "Saving…";
+        try {
+          const res = await fetch(`${API}/payments/${bookingId}/mark-paid`, {
+            method: "PUT",
+            credentials: "include",
+          });
+          if (!res.ok) throw new Error();
+
+          // update local data
+          const rec = allPayments.find((p) => p.id === bookingId);
+          if (rec) rec.payment_status = "Paid";
+
+          showToast("Payment marked as Paid ✓", "success");
+          loadPayments(); // refresh stats + table
+        } catch (e) {
+          showToast("Failed to update payment", "error");
+          btn.disabled = false;
+          btn.textContent = "Mark Paid";
+        }
+      }
+
+      // ── EXPORT CSV ────────────────────────────────────────────
+      function exportCSV() {
+        const rows = [
+          [
+            "Booking Ref",
+            "Customer",
+            "Email",
+            "Vehicle",
+            "Amount",
+            "Booking Status",
+            "Payment Status",
+            "Date",
+          ],
+        ];
+        filtered.forEach((p) => {
+          rows.push([
+            p.booking_ref || p.id,
+            p.user_name || "",
+            p.user_email || "",
+            p.vehicle_name || "",
+            p.total_price || 0,
+            p.status || "",
+            p.payment_status || "",
+            fmtDate(p.created_at),
+          ]);
+        });
+        const csv = rows
+          .map((r) => r.map((v) => `"${v}"`).join(","))
+          .join("\n");
+        const blob = new Blob([csv], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "payments.csv";
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast("CSV exported ✓", "success");
+      }
+
+      // ── TOPBAR SEARCH syncs to table search ──────────────────
+      document
+        .getElementById("topbarSearch")
+        ?.addEventListener("input", function () {
+          document.getElementById("tableSearch").value = this.value;
+          applyFilters();
+        });
+
+      // ── DROPDOWN TOGGLE ───────────────────────────────────────
+      document
+        .getElementById("topbarUser")
+        .addEventListener("click", function (e) {
+          e.stopPropagation();
+          const dd = document.getElementById("userDropdown");
+          const open = dd.classList.contains("visible");
+          dd.classList.toggle("visible", !open);
+          this.classList.toggle("open", !open);
+        });
+      document.addEventListener("click", function () {
+        document.getElementById("userDropdown")?.classList.remove("visible");
+        document.getElementById("topbarUser")?.classList.remove("open");
+      });
+
+      // ── LOGOUT ────────────────────────────────────────────────
+      document
+        .getElementById("logoutBtn")
+        .addEventListener("click", async function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          try {
+            await fetch(`${API}/logout`, {
+              method: "POST",
+              credentials: "include",
+            });
+          } finally {
+            window.location.href = "../index.html";
+          }
+        });
+
+      // ── INIT ──────────────────────────────────────────────────
+      loadAdmin();
+      loadPayments();
+    </script>
+  </body>
+</html>
