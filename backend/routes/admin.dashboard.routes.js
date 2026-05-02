@@ -7,5 +7,7 @@ const { isLoggedIn, isAdmin } = require("../middleware/auth.middleware");
 router.get("/me", isLoggedIn, isAdmin, controller.getMe);
 router.get("/stats", isLoggedIn, isAdmin, controller.getStats);
 router.get("/bookings", isLoggedIn, isAdmin, controller.getBookings);
+router.put("/profile", isLoggedIn, isAdmin, controller.updateProfile);
+router.put("/profile/password", isLoggedIn, isAdmin, controller.changePassword);
 
 module.exports = router;

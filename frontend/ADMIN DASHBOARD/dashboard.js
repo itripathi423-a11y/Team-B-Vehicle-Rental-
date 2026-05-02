@@ -35,26 +35,21 @@ async function loadAdmin() {
 }
 
 // ===== LOAD DASHBOARD STATS =====
+// ===== LOAD DASHBOARD STATS =====
 async function loadStats() {
   try {
-    const res = await fetch(`${API}/dashboard/stats`, {
-      credentials: "include",
-    });
-
+    const res = await fetch(`${API}/stats`, { credentials: "include" });
     if (!res.ok) throw new Error();
-
     const d = await res.json();
 
     document.getElementById("statVehicles").textContent = d.total_vehicles ?? 0;
-
     document.getElementById("statBookings").textContent =
       d.active_bookings ?? 0;
-
-    document.getElementById("statRevenue").textContent =
-      "Rs " + (d.revenue_this_month ?? 0).toLocaleString("en-NP");
-
+    document.getElementById("statRevenue").textContent = fmtMoney(
+      d.revenue_this_month ?? 0,
+    );
     document.getElementById("statEnquiries").textContent =
-      d.enquiries_today ?? 0;
+      d.total_enquiries ?? 0; // ← was d.enquiries_today
   } catch (err) {
     console.log("Failed to load stats");
   }

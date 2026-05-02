@@ -445,68 +445,19 @@
         background: var(--bg);
         border-color: #d1d5db;
       }
-      .btn-primary {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        padding: 9px 18px;
-        background: var(--orange);
-        border: none;
-        border-radius: 8px;
-        font-family: "DM Sans", sans-serif;
-        font-size: 14px;
-        font-weight: 500;
-        color: white;
-        cursor: pointer;
-        transition:
-          background 0.2s,
-          transform 0.2s,
-          box-shadow 0.2s;
-      }
-      .btn-primary:hover {
-        background: var(--orange-light);
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(255, 92, 26, 0.35);
-      }
-
-      /* FILTER TABS */
-      .filter-tabs {
-        display: flex;
-        gap: 6px;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-        align-items: center;
-      }
-      .filter-tab {
-        padding: 7px 16px;
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 500;
-        border: 1px solid var(--border);
-        background: white;
-        color: var(--muted);
-        cursor: pointer;
-        transition: all 0.18s;
-        font-family: "DM Sans", sans-serif;
-      }
-      .filter-tab:hover {
-        border-color: #d1d5db;
-        color: var(--text);
-      }
-      .filter-tab.active {
-        background: var(--orange);
-        border-color: var(--orange);
-        color: white;
+      .page-actions {
+        display: none;
       }
 
       /* STAR FILTER */
       .star-filters {
         display: flex;
         gap: 6px;
-        margin-left: auto;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
       }
       .star-filter {
-        padding: 6px 12px;
+        padding: 6px 14px;
         border-radius: 8px;
         font-size: 12px;
         font-weight: 600;
@@ -591,6 +542,9 @@
       .data-table tbody tr:hover td {
         background: #fafafa;
       }
+      .data-table tbody tr.hidden-row td {
+        opacity: 0.45;
+      }
 
       /* STARS */
       .stars {
@@ -618,7 +572,7 @@
 
       /* REVIEW TEXT */
       .review-cell {
-        max-width: 300px;
+        max-width: 280px;
       }
       .review-preview {
         font-size: 13px;
@@ -628,6 +582,11 @@
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
+      }
+      .review-empty {
+        font-size: 12px;
+        color: var(--muted);
+        font-style: italic;
       }
 
       /* VEHICLE TAG */
@@ -643,57 +602,17 @@
         color: var(--text);
       }
 
-      /* BADGES */
-      .badge-green {
+      /* HIDDEN BADGE */
+      .badge-hidden {
         display: inline-flex;
         align-items: center;
         gap: 5px;
-        padding: 4px 10px;
-        border-radius: 99px;
-        font-size: 11px;
-        font-weight: 600;
-        background: #ecfdf5;
-        color: #16a34a;
-      }
-      .badge-amber {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 4px 10px;
-        border-radius: 99px;
-        font-size: 11px;
-        font-weight: 600;
-        background: #fffbeb;
-        color: #d97706;
-      }
-      .badge-red {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 4px 10px;
-        border-radius: 99px;
-        font-size: 11px;
-        font-weight: 600;
-        background: #fff1f2;
-        color: #dc2626;
-      }
-      .badge-grey {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 4px 10px;
+        padding: 3px 8px;
         border-radius: 99px;
         font-size: 11px;
         font-weight: 600;
         background: #f3f4f6;
         color: #6b7280;
-      }
-      .dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: currentColor;
-        flex-shrink: 0;
       }
 
       /* ACTION BTNS */
@@ -718,26 +637,26 @@
       .act-btn:hover {
         background: var(--bg);
       }
-      .act-btn.approve {
-        border-color: #16a34a;
-        color: #16a34a;
+      .act-btn.view {
+        border-color: #6366f1;
+        color: #6366f1;
       }
-      .act-btn.approve:hover {
-        background: #ecfdf5;
+      .act-btn.view:hover {
+        background: #eef2ff;
       }
-      .act-btn.hide {
+      .act-btn.do-hide {
         border-color: #dc2626;
         color: #dc2626;
       }
-      .act-btn.hide:hover {
+      .act-btn.do-hide:hover {
         background: #fff1f2;
       }
-      .act-btn.flag {
-        border-color: #d97706;
-        color: #d97706;
+      .act-btn.do-show {
+        border-color: #16a34a;
+        color: #16a34a;
       }
-      .act-btn.flag:hover {
-        background: #fffbeb;
+      .act-btn.do-show:hover {
+        background: #ecfdf5;
       }
 
       /* SKELETON */
@@ -772,6 +691,69 @@
         padding: 40px 20px;
         color: var(--muted);
         font-size: 14px;
+      }
+
+      /* RATING SUMMARY */
+      .rating-summary {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        background: var(--bg);
+        border-radius: 10px;
+        padding: 16px 20px;
+        margin-bottom: 20px;
+        border: 1px solid var(--border);
+      }
+      .rs-big {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 52px;
+        color: var(--dark);
+        line-height: 1;
+      }
+      .rs-stars {
+        display: flex;
+        gap: 3px;
+        margin-bottom: 4px;
+      }
+      .rs-label {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .rs-bars {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .rs-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .rs-row-label {
+        font-family: "Space Mono", monospace;
+        font-size: 11px;
+        color: var(--muted);
+        width: 14px;
+        text-align: right;
+      }
+      .rs-bar {
+        flex: 1;
+        height: 6px;
+        background: #e5e7eb;
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .rs-fill {
+        height: 100%;
+        background: var(--star);
+        border-radius: 99px;
+      }
+      .rs-count {
+        font-family: "Space Mono", monospace;
+        font-size: 11px;
+        color: var(--muted);
+        width: 24px;
       }
 
       /* MODAL */
@@ -870,30 +852,33 @@
         line-height: 1.7;
         font-style: italic;
       }
+      .modal-meta {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .modal-meta-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .modal-meta-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+      }
+      .modal-meta-value {
+        font-size: 13px;
+        color: var(--text);
+      }
       .modal-actions {
         display: flex;
         gap: 10px;
         margin-top: 24px;
         flex-wrap: wrap;
-      }
-
-      /* ADMIN NOTE */
-      .note-area {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        font-family: "DM Sans", sans-serif;
-        font-size: 14px;
-        color: var(--text);
-        resize: vertical;
-        min-height: 80px;
-        outline: none;
-        transition: border 0.2s;
-        margin-top: 6px;
-      }
-      .note-area:focus {
-        border-color: var(--orange);
       }
 
       /* TOAST */
@@ -918,69 +903,6 @@
         transform: translateY(0);
       }
 
-      /* RATING SUMMARY */
-      .rating-summary {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        background: var(--bg);
-        border-radius: 10px;
-        padding: 16px 20px;
-        margin-bottom: 20px;
-        border: 1px solid var(--border);
-      }
-      .rs-big {
-        font-family: "Bebas Neue", sans-serif;
-        font-size: 52px;
-        color: var(--dark);
-        line-height: 1;
-      }
-      .rs-stars {
-        display: flex;
-        gap: 3px;
-        margin-bottom: 4px;
-      }
-      .rs-label {
-        font-size: 12px;
-        color: var(--muted);
-      }
-      .rs-bars {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-      .rs-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-      .rs-row-label {
-        font-family: "Space Mono", monospace;
-        font-size: 11px;
-        color: var(--muted);
-        width: 14px;
-        text-align: right;
-      }
-      .rs-bar {
-        flex: 1;
-        height: 6px;
-        background: #e5e7eb;
-        border-radius: 99px;
-        overflow: hidden;
-      }
-      .rs-fill {
-        height: 100%;
-        background: var(--star);
-        border-radius: 99px;
-      }
-      .rs-count {
-        font-family: "Space Mono", monospace;
-        font-size: 11px;
-        color: var(--muted);
-        width: 24px;
-      }
-
       @media (max-width: 768px) {
         .sidebar {
           transform: translateX(-100%);
@@ -1001,12 +923,6 @@
           flex-direction: column;
           align-items: flex-start;
           gap: 12px;
-        }
-        .star-filters {
-          margin-left: 0;
-        }
-        .filter-tabs {
-          gap: 4px;
         }
         .rating-summary {
           flex-direction: column;
@@ -1200,7 +1116,7 @@
                   <p class="dh-name" id="dropdownAdminName">Admin</p>
                   <p class="dh-email" id="dropdownAdminEmail">—</p>
                 </div>
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="admin.profile.html">
                   <svg
                     width="15"
                     height="15"
@@ -1238,23 +1154,7 @@
           <div class="page-header">
             <div>
               <h1 class="page-title">Reviews</h1>
-              <p class="page-sub">Manage customer reviews and ratings</p>
-            </div>
-            <div class="page-actions">
-              <button class="btn-ghost" onclick="exportReviews()">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  width="15"
-                  height="15"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" /></svg
-                >Export
-              </button>
+              <p class="page-sub">View and manage customer reviews</p>
             </div>
           </div>
 
@@ -1268,30 +1168,21 @@
             <div class="rs-bars" id="rsBars"></div>
           </div>
 
-          <!-- FILTER TABS + STAR FILTERS -->
-          <div class="filter-tabs">
-            <button class="filter-tab active" data-filter="all">All</button>
-            <button class="filter-tab" data-filter="published">
-              Published
-            </button>
-            <button class="filter-tab" data-filter="pending">Pending</button>
-            <button class="filter-tab" data-filter="flagged">Flagged</button>
-            <button class="filter-tab" data-filter="hidden">Hidden</button>
-            <div class="star-filters" id="starFilters">
-              <button class="star-filter active" data-stars="0">★ All</button>
-              <button class="star-filter" data-stars="5">★ 5</button>
-              <button class="star-filter" data-stars="4">★ 4</button>
-              <button class="star-filter" data-stars="3">★ 3</button>
-              <button class="star-filter" data-stars="2">★ 2</button>
-              <button class="star-filter" data-stars="1">★ 1</button>
-            </div>
+          <!-- STAR FILTERS -->
+          <div class="star-filters" id="starFilters">
+            <button class="star-filter active" data-stars="0">★ All</button>
+            <button class="star-filter" data-stars="5">★ 5</button>
+            <button class="star-filter" data-stars="4">★ 4</button>
+            <button class="star-filter" data-stars="3">★ 3</button>
+            <button class="star-filter" data-stars="2">★ 2</button>
+            <button class="star-filter" data-stars="1">★ 1</button>
           </div>
 
           <!-- TABLE -->
           <div class="table-card">
             <div class="table-toolbar">
               <div>
-                <h3 class="card-title">All Reviews</h3>
+                <h3 class="card-title">Customer Reviews</h3>
                 <p class="card-sub" id="reviewSubtitle">Loading…</p>
               </div>
             </div>
@@ -1302,43 +1193,44 @@
                     <th>ID</th>
                     <th>Customer</th>
                     <th>Vehicle</th>
+                    <th>Booking</th>
                     <th>Rating</th>
-                    <th>Review</th>
+                    <th>Comment</th>
                     <th>Date</th>
-                    <th>Status</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody id="reviewTableBody">
+                  <!-- skeleton rows -->
                   <tr class="skeleton-row">
                     <td><span class="skeleton" style="width: 40px"></span></td>
                     <td><span class="skeleton" style="width: 100px"></span></td>
                     <td><span class="skeleton" style="width: 120px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
                     <td><span class="skeleton" style="width: 80px"></span></td>
                     <td><span class="skeleton" style="width: 200px"></span></td>
                     <td><span class="skeleton" style="width: 80px"></span></td>
-                    <td><span class="skeleton" style="width: 70px"></span></td>
-                    <td><span class="skeleton" style="width: 110px"></span></td>
+                    <td><span class="skeleton" style="width: 100px"></span></td>
                   </tr>
                   <tr class="skeleton-row">
                     <td><span class="skeleton" style="width: 40px"></span></td>
                     <td><span class="skeleton" style="width: 110px"></span></td>
                     <td><span class="skeleton" style="width: 100px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
                     <td><span class="skeleton" style="width: 80px"></span></td>
                     <td><span class="skeleton" style="width: 180px"></span></td>
                     <td><span class="skeleton" style="width: 80px"></span></td>
-                    <td><span class="skeleton" style="width: 70px"></span></td>
-                    <td><span class="skeleton" style="width: 110px"></span></td>
+                    <td><span class="skeleton" style="width: 100px"></span></td>
                   </tr>
                   <tr class="skeleton-row">
                     <td><span class="skeleton" style="width: 40px"></span></td>
                     <td><span class="skeleton" style="width: 90px"></span></td>
                     <td><span class="skeleton" style="width: 130px"></span></td>
+                    <td><span class="skeleton" style="width: 70px"></span></td>
                     <td><span class="skeleton" style="width: 80px"></span></td>
                     <td><span class="skeleton" style="width: 220px"></span></td>
                     <td><span class="skeleton" style="width: 80px"></span></td>
-                    <td><span class="skeleton" style="width: 70px"></span></td>
-                    <td><span class="skeleton" style="width: 110px"></span></td>
+                    <td><span class="skeleton" style="width: 100px"></span></td>
                   </tr>
                 </tbody>
               </table>
@@ -1355,53 +1247,40 @@
           <h3 class="modal-title">Review Detail</h3>
           <button class="modal-close" onclick="closeModal()">✕</button>
         </div>
-        <div class="modal-field">
-          <p class="modal-label">Customer</p>
-          <p class="modal-value" id="mdlCustomer">—</p>
+        <div class="modal-field modal-meta">
+          <div class="modal-meta-item">
+            <span class="modal-meta-label">Customer</span>
+            <span class="modal-meta-value" id="mdlCustomer">—</span>
+          </div>
+          <div class="modal-meta-item">
+            <span class="modal-meta-label">Vehicle</span>
+            <span class="modal-meta-value" id="mdlVehicle">—</span>
+          </div>
+          <div class="modal-meta-item">
+            <span class="modal-meta-label">Booking Ref</span>
+            <span class="modal-meta-value" id="mdlBookingRef">—</span>
+          </div>
+          <div class="modal-meta-item">
+            <span class="modal-meta-label">Date</span>
+            <span class="modal-meta-value" id="mdlDate">—</span>
+          </div>
         </div>
-        <div class="modal-field">
-          <p class="modal-label">Vehicle</p>
-          <p class="modal-value" id="mdlVehicle">—</p>
-        </div>
-        <div class="modal-field">
+        <div class="modal-field" style="margin-top: 16px">
           <p class="modal-label">Rating</p>
           <div class="stars" id="mdlStars"></div>
         </div>
         <div class="modal-field">
-          <p class="modal-label">Review</p>
+          <p class="modal-label">Comment</p>
           <div class="modal-review" id="mdlReview">—</div>
-        </div>
-        <div class="modal-field">
-          <p class="modal-label">Admin Note (internal)</p>
-          <textarea
-            class="note-area"
-            id="mdlNote"
-            placeholder="Add an internal note about this review…"
-          ></textarea>
         </div>
         <div class="modal-actions">
           <button
-            class="btn-primary"
-            id="mdlApproveBtn"
-            onclick="modalAction('published')"
-          >
-            Publish
-          </button>
-          <button
-            class="btn-ghost"
-            id="mdlFlagBtn"
-            style="color: #d97706; border-color: #d97706"
-            onclick="modalAction('flagged')"
-          >
-            Flag
-          </button>
-          <button
-            class="btn-ghost"
+            class="btn-ghost do-hide"
             id="mdlHideBtn"
             style="color: #dc2626; border-color: #dc2626"
-            onclick="modalAction('hidden')"
+            onclick="modalToggleHide()"
           >
-            Hide
+            Hide Review
           </button>
           <button class="btn-ghost" onclick="closeModal()">Close</button>
         </div>
@@ -1414,9 +1293,12 @@
     <script>
       const API = "http://localhost:5000/api/admin";
       let allReviews = [];
-      let currentFilter = "all";
       let currentStarFilter = 0;
       let currentReviewId = null;
+      // UI-only hidden set (no status column in DB — track locally)
+      let hiddenIds = new Set(
+        JSON.parse(localStorage.getItem("hidden_reviews") || "[]"),
+      );
 
       // ===== ADMIN =====
       async function loadAdmin() {
@@ -1445,28 +1327,12 @@
         } catch (e) {}
       }
 
-      // ===== STARS HTML =====
+      // ===== HELPERS =====
       function starsHtml(rating, size = 14) {
         let s = "";
-        for (let i = 1; i <= 5; i++) {
-          s += `<span class="star ${i <= rating ? "filled" : "empty"}" style="font-size:${size}px;">★</span>`;
-        }
+        for (let i = 1; i <= 5; i++)
+          s += `<span class="star ${i <= rating ? "filled" : "empty"}" style="font-size:${size}px">★</span>`;
         return s;
-      }
-
-      // ===== STATUS BADGE =====
-      function statusBadge(s) {
-        const m = {
-          published: ["badge-green", "Published"],
-          pending: ["badge-amber", "Pending"],
-          flagged: ["badge-red", "Flagged"],
-          hidden: ["badge-grey", "Hidden"],
-        };
-        const [cls, label] = m[(s || "").toLowerCase()] || [
-          "badge-grey",
-          s || "—",
-        ];
-        return `<span class="${cls}"><span class="dot"></span>${label}</span>`;
       }
 
       function fmtDate(d) {
@@ -1481,7 +1347,7 @@
       // ===== RATING SUMMARY =====
       function buildSummary(reviews) {
         if (!reviews.length) return;
-        const counts = [0, 0, 0, 0, 0]; // index 0 = 1 star
+        const counts = [0, 0, 0, 0, 0];
         let total = 0;
         reviews.forEach((r) => {
           const rating = Number(r.rating || 0);
@@ -1493,7 +1359,6 @@
         const avg = total
           ? reviews.reduce((a, r) => a + Number(r.rating || 0), 0) / total
           : 0;
-
         document.getElementById("rsAvg").textContent = avg.toFixed(1);
         document.getElementById("rsStars").innerHTML = starsHtml(
           Math.round(avg),
@@ -1501,7 +1366,6 @@
         );
         document.getElementById("rsTotal").textContent =
           `${total} review${total !== 1 ? "s" : ""}`;
-
         const barsEl = document.getElementById("rsBars");
         barsEl.innerHTML = [5, 4, 3, 2, 1]
           .map((star) => {
@@ -1514,7 +1378,6 @@
           </div>`;
           })
           .join("");
-
         document.getElementById("ratingSummary").style.display = "flex";
       }
 
@@ -1526,7 +1389,7 @@
           const data = await res.json();
           allReviews = data.data || data || [];
           buildSummary(allReviews);
-          renderTable(allReviews);
+          renderTable(applyFilters());
         } catch (e) {
           document.getElementById("reviewTableBody").innerHTML =
             `<tr><td colspan="8" class="empty-state">❌ Failed to load reviews</td></tr>`;
@@ -1537,14 +1400,8 @@
 
       function applyFilters() {
         let list = allReviews;
-        if (currentFilter !== "all") {
-          list = list.filter(
-            (r) => (r.status || "").toLowerCase() === currentFilter,
-          );
-        }
-        if (currentStarFilter > 0) {
+        if (currentStarFilter > 0)
           list = list.filter((r) => Number(r.rating) === currentStarFilter);
-        }
         return list;
       }
 
@@ -1556,51 +1413,46 @@
           return;
         }
         tbody.innerHTML = list
-          .map(
-            (r) => `
-          <tr onclick="openModal(${r.id || r.review_id})">
-            <td style="font-family:'Space Mono',monospace;font-size:12px;">#${r.id || r.review_id || "—"}</td>
+          .map((r) => {
+            const id = r.id || r.review_id;
+            const isHidden = hiddenIds.has(id);
+            return `
+          <tr class="${isHidden ? "hidden-row" : ""}" onclick="openModal(${id})">
+            <td style="font-family:'Space Mono',monospace;font-size:12px;">#${id}</td>
             <td>
               <div style="font-weight:500;">${r.user_name || r.customer_name || "—"}</div>
-              <div style="font-size:12px;color:var(--muted);">${r.email || ""}</div>
+              <div style="font-size:11px;color:var(--muted);">${r.email || ""}</div>
             </td>
             <td><span class="vehicle-tag">🚗 ${r.vehicle_name || "—"}</span></td>
+            <td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);">${r.booking_ref || "#" + (r.booking_id || "—")}</td>
             <td>
               <div class="stars">${starsHtml(r.rating)}</div>
               <span class="rating-num">${Number(r.rating || 0).toFixed(1)}</span>
             </td>
             <td class="review-cell">
-              <div class="review-preview">${r.comment || r.review || "—"}</div>
+              ${
+                r.comment
+                  ? `<div class="review-preview">${r.comment}</div>`
+                  : `<span class="review-empty">No comment</span>`
+              }
             </td>
             <td style="font-size:12px;color:var(--muted);white-space:nowrap;">${fmtDate(r.created_at)}</td>
-            <td>${statusBadge(r.status)}</td>
             <td onclick="event.stopPropagation()">
               <div class="action-wrap">
-                <button class="act-btn" onclick="openModal(${r.id || r.review_id})">View</button>
-                ${r.status !== "published" ? `<button class="act-btn approve" onclick="updateStatus(${r.id || r.review_id},'published')">Publish</button>` : ""}
-                ${r.status !== "hidden" ? `<button class="act-btn hide" onclick="updateStatus(${r.id || r.review_id},'hidden')">Hide</button>` : ""}
-                ${r.status !== "flagged" ? `<button class="act-btn flag" onclick="updateStatus(${r.id || r.review_id},'flagged')">Flag</button>` : ""}
+                <button class="act-btn view" onclick="openModal(${id})">View</button>
+                ${
+                  isHidden
+                    ? `<button class="act-btn do-show" onclick="toggleHide(${id})">Show</button>`
+                    : `<button class="act-btn do-hide" onclick="toggleHide(${id})">Hide</button>`
+                }
               </div>
             </td>
-          </tr>
-        `,
-          )
+          </tr>`;
+          })
           .join("");
         document.getElementById("reviewSubtitle").textContent =
           `Showing ${list.length} review${list.length !== 1 ? "s" : ""}`;
       }
-
-      // ===== FILTER TABS =====
-      document.querySelectorAll(".filter-tab").forEach((btn) => {
-        btn.addEventListener("click", function () {
-          document
-            .querySelectorAll(".filter-tab")
-            .forEach((b) => b.classList.remove("active"));
-          this.classList.add("active");
-          currentFilter = this.dataset.filter;
-          renderTable(applyFilters());
-        });
-      });
 
       // ===== STAR FILTERS =====
       document.querySelectorAll(".star-filter").forEach((btn) => {
@@ -1626,6 +1478,17 @@
           });
         });
 
+      // ===== HIDE TOGGLE =====
+      function toggleHide(id) {
+        if (hiddenIds.has(id)) hiddenIds.delete(id);
+        else hiddenIds.add(id);
+        localStorage.setItem("hidden_reviews", JSON.stringify([...hiddenIds]));
+        renderTable(applyFilters());
+        showToast(hiddenIds.has(id) ? "Review hidden" : "Review visible again");
+        // If your backend supports it, also call the API:
+        // fetch(`${API}/reviews/${id}/status`, { method:"PATCH", headers:{"Content-Type":"application/json"}, credentials:"include", body:JSON.stringify({ status: hiddenIds.has(id) ? "hidden" : "visible" }) });
+      }
+
       // ===== MODAL =====
       function openModal(id) {
         const r = allReviews.find((x) => (x.id || x.review_id) == id);
@@ -1635,12 +1498,19 @@
           r.user_name || r.customer_name || "—";
         document.getElementById("mdlVehicle").textContent =
           r.vehicle_name || "—";
+        document.getElementById("mdlBookingRef").textContent =
+          r.booking_ref || "#" + (r.booking_id || "—");
+        document.getElementById("mdlDate").textContent = fmtDate(r.created_at);
         document.getElementById("mdlStars").innerHTML =
           starsHtml(r.rating, 18) +
           `<span class="rating-num">${Number(r.rating || 0).toFixed(1)}/5</span>`;
         document.getElementById("mdlReview").textContent =
-          r.comment || r.review || "—";
-        document.getElementById("mdlNote").value = r.admin_note || "";
+          r.comment || "No comment left.";
+        const hideBtn = document.getElementById("mdlHideBtn");
+        const isHidden = hiddenIds.has(id);
+        hideBtn.textContent = isHidden ? "Show Review" : "Hide Review";
+        hideBtn.style.color = isHidden ? "#16a34a" : "#dc2626";
+        hideBtn.style.borderColor = isHidden ? "#16a34a" : "#dc2626";
         document.getElementById("reviewModal").classList.add("open");
       }
 
@@ -1655,55 +1525,10 @@
           if (e.target === this) closeModal();
         });
 
-      async function modalAction(status) {
+      function modalToggleHide() {
         if (!currentReviewId) return;
-        const note = document.getElementById("mdlNote").value.trim();
-        await updateStatus(currentReviewId, status, note);
+        toggleHide(currentReviewId);
         closeModal();
-      }
-
-      // ===== UPDATE STATUS =====
-      async function updateStatus(id, status, note = "") {
-        try {
-          await fetch(`${API}/reviews/${id}/status`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ status, admin_note: note }),
-          });
-          const idx = allReviews.findIndex((r) => (r.id || r.review_id) == id);
-          if (idx !== -1) {
-            allReviews[idx].status = status;
-            if (note) allReviews[idx].admin_note = note;
-          }
-          renderTable(applyFilters());
-          showToast(`Review marked as ${status} ✓`);
-        } catch (e) {
-          showToast("Failed to update review");
-        }
-      }
-
-      // ===== EXPORT =====
-      function exportReviews() {
-        const rows = [
-          ["ID", "Customer", "Vehicle", "Rating", "Review", "Date", "Status"],
-        ];
-        allReviews.forEach((r) => {
-          rows.push([
-            r.id || "",
-            r.user_name || "",
-            r.vehicle_name || "",
-            r.rating || "",
-            `"${(r.comment || r.review || "").replace(/"/g, '""')}"`,
-            r.created_at || "",
-            r.status || "",
-          ]);
-        });
-        const csv = rows.map((r) => r.join(",")).join("\n");
-        const a = document.createElement("a");
-        a.href = "data:text/csv," + encodeURIComponent(csv);
-        a.download = "reviews.csv";
-        a.click();
       }
 
       // ===== TOAST =====
