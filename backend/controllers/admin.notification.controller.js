@@ -1,75 +1,72 @@
-// controllers/notification.controller.js
-// USER-SIDE notifications — writes to `notifications` table
+// controllers/admin.notification.controller.js
+// ADMIN-SIDE notifications — writes to `admin_notifications` table
 
 const db = require("../config/db");
 
-// ── Safe socket emit to individual user room ────────────────────────────
-function tryEmitUser(userId, payload) {
+// ── Safe socket emit to admin_room ──────────────────────────────────────
+function tryEmitAdmin(payload) {
   try {
     const { getIO } = require("../socket");
-    getIO().to(`user_${userId}`).emit("notification", payload);
+    getIO().to("admin_room").emit("admin_notification", payload);
   } catch (e) {
-    console.warn("[UserNotif] Socket emit skipped:", e.message);
+    console.warn("[AdminNotif] Socket emit skipped:", e.message);
   }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   createNotification({ user_id, booking_id, title, message, type, target_role, meta })
+   createAdminNotification({ title, message, type, ref_id, ref_type, meta })
 
    Called by:
-    - booking.controller.js  (user creates booking)
-    - admin.bookings.controller.js  (admin changes booking status → notify user)
-    - admin.kyc.controller.js  (admin verifies/rejects KYC → notify user)
-    - reminderCron.js  (24h / 1h reminders)
+    - booking.controller.js  (user creates new booking → notify admin)
+    - admin.bookings.controller.js  (admin changes status → log for other admins)
+    - admin.kyc.controller.js  (admin verifies/rejects → log for other admins)
+    - enquiry.controller.js  (user submits enquiry → notify admin)
+    - reviewController.js  (user submits review → notify admin)
 
-   type: 'booking' | 'kyc' | 'reminder' | 'service' | 'general'
+   type: 'booking' | 'kyc' | 'enquiry' | 'review' | 'general'
 ════════════════════════════════════════════════════════════════════════ */
-exports.createNotification = ({
-  user_id,
-  booking_id = null,
+exports.createAdminNotification = ({
   title,
   message,
   type = "general",
-  target_role = "user",
+  ref_id = null,
+  ref_type = null,
   meta = null,
 }) => {
   return new Promise((resolve, reject) => {
     const sql = `
-      INSERT INTO notifications
-        (user_id, booking_id, title, message, type, target_role, meta, is_read, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, 0, NOW())
+      INSERT INTO admin_notifications
+        (title, message, type, ref_id, ref_type, meta, is_read, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, 0, NOW())
     `;
 
     db.query(
       sql,
       [
-        user_id,
-        booking_id,
         title,
         message,
         type,
-        target_role,
+        ref_id,
+        ref_type,
         meta ? JSON.stringify(meta) : null,
       ],
       (err, result) => {
         if (err) {
-          console.error("[UserNotif] DB insert error:", err);
+          console.error("[AdminNotif] DB insert error:", err);
           return reject(err);
         }
 
         const notifId = result.insertId;
 
-        // Emit to the specific user's room
-        tryEmitUser(user_id, {
+        tryEmitAdmin({
           id: notifId,
-          user_id,
-          booking_id,
           title,
           message,
           type,
-          target_role,
-          is_read: 0,
+          ref_id,
+          ref_type,
           meta,
+          is_read: 0,
           created_at: new Date().toISOString(),
         });
 
@@ -80,38 +77,30 @@ exports.createNotification = ({
 };
 
 /* ═══════════════════════════════════════════════════════════════════════
-   GET /api/user/notifications?limit=15&offset=0
+   GET /api/admin/notifications?limit=20&offset=0
 ════════════════════════════════════════════════════════════════════════ */
-exports.getUserNotifications = (req, res) => {
-  const userId = req.session?.user?.id;
-  if (!userId)
-    return res.status(401).json({ success: false, message: "Not logged in" });
-
-  const limit = Math.min(parseInt(req.query.limit) || 15, 50);
+exports.getAdminNotifications = (req, res) => {
+  const limit = Math.min(parseInt(req.query.limit) || 20, 50);
   const offset = parseInt(req.query.offset) || 0;
 
   const countSql = `
     SELECT COUNT(*) AS total,
            SUM(CASE WHEN is_read = 0 THEN 1 ELSE 0 END) AS unread
-    FROM notifications
-    WHERE user_id = ? AND target_role IN ('user','both')
+    FROM admin_notifications
   `;
 
   const listSql = `
-    SELECT n.id, n.title, n.message, n.type, n.is_read,
-           n.created_at, n.booking_id, n.meta, b.booking_ref
-    FROM notifications n
-    LEFT JOIN bookings b ON b.id = n.booking_id
-    WHERE n.user_id = ? AND n.target_role IN ('user','both')
-    ORDER BY n.created_at DESC
+    SELECT id, title, message, type, ref_id, ref_type, meta, is_read, created_at
+    FROM admin_notifications
+    ORDER BY created_at DESC
     LIMIT ? OFFSET ?
   `;
 
-  db.query(countSql, [userId], (err, countRows) => {
+  db.query(countSql, (err, countRows) => {
     if (err)
       return res.status(500).json({ success: false, message: "DB error" });
 
-    db.query(listSql, [userId, limit, offset], (err2, rows) => {
+    db.query(listSql, [limit, offset], (err2, rows) => {
       if (err2)
         return res.status(500).json({ success: false, message: "DB error" });
 
@@ -129,17 +118,11 @@ exports.getUserNotifications = (req, res) => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════
-   GET /api/user/notifications/unread-count
+   GET /api/admin/notifications/unread-count
 ════════════════════════════════════════════════════════════════════════ */
-exports.getUnreadCount = (req, res) => {
-  const userId = req.session?.user?.id;
-  if (!userId)
-    return res.status(401).json({ success: false, message: "Not logged in" });
-
+exports.getAdminUnreadCount = (req, res) => {
   db.query(
-    `SELECT COUNT(*) AS count FROM notifications
-     WHERE user_id = ? AND is_read = 0 AND target_role IN ('user','both')`,
-    [userId],
+    "SELECT COUNT(*) AS count FROM admin_notifications WHERE is_read = 0",
     (err, result) => {
       if (err)
         return res.status(500).json({ success: false, message: "DB error" });
@@ -149,41 +132,32 @@ exports.getUnreadCount = (req, res) => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════
-   PATCH /api/user/notifications/:id/read
+   PATCH /api/admin/notifications/read-all   ← register BEFORE /:id/read
 ════════════════════════════════════════════════════════════════════════ */
-exports.markOneRead = (req, res) => {
-  const userId = req.session?.user?.id;
-  if (!userId)
-    return res.status(401).json({ success: false, message: "Not logged in" });
-
+exports.markAdminAllRead = (req, res) => {
   db.query(
-    "UPDATE notifications SET is_read = 1 WHERE id = ? AND user_id = ?",
-    [req.params.id, userId],
+    "UPDATE admin_notifications SET is_read = 1 WHERE is_read = 0",
+    (err) => {
+      if (err)
+        return res.status(500).json({ success: false, message: "DB error" });
+      res.json({ success: true, message: "All marked as read" });
+    },
+  );
+};
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PATCH /api/admin/notifications/:id/read
+════════════════════════════════════════════════════════════════════════ */
+exports.markAdminOneRead = (req, res) => {
+  db.query(
+    "UPDATE admin_notifications SET is_read = 1 WHERE id = ?",
+    [req.params.id],
     (err, result) => {
       if (err)
         return res.status(500).json({ success: false, message: "DB error" });
       if (result.affectedRows === 0)
         return res.status(404).json({ success: false, message: "Not found" });
       res.json({ success: true, message: "Marked as read" });
-    },
-  );
-};
-
-/* ═══════════════════════════════════════════════════════════════════════
-   PATCH /api/user/notifications/read-all
-════════════════════════════════════════════════════════════════════════ */
-exports.markAllRead = (req, res) => {
-  const userId = req.session?.user?.id;
-  if (!userId)
-    return res.status(401).json({ success: false, message: "Not logged in" });
-
-  db.query(
-    "UPDATE notifications SET is_read = 1 WHERE user_id = ? AND is_read = 0",
-    [userId],
-    (err) => {
-      if (err)
-        return res.status(500).json({ success: false, message: "DB error" });
-      res.json({ success: true, message: "All notifications marked as read" });
     },
   );
 };

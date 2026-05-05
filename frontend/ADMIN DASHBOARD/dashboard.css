@@ -370,13 +370,17 @@ body {
   background: #fff;
   border: 1px solid var(--border);
   border-radius: 10px;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.06);
   min-width: 210px;
   z-index: 999;
   opacity: 0;
   transform: translateY(-6px) scale(0.97);
   pointer-events: none;
-  transition: opacity 0.18s ease, transform 0.18s ease;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
   transform-origin: top right;
 }
 
@@ -510,7 +514,9 @@ body {
   font-weight: 500;
   color: var(--text);
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
   text-decoration: none;
 }
 
@@ -537,7 +543,10 @@ body {
   font-weight: 500;
   color: white;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  transition:
+    background 0.2s,
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .btn-primary:hover {
@@ -546,6 +555,94 @@ body {
   box-shadow: 0 6px 20px rgba(255, 92, 26, 0.35);
 }
 
+/* ===== NOTIFICATION DROPDOWN FIXED ===== */
+
+.notif-wrapper {
+  position: relative;
+}
+
+.notif-dropdown {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 320px;
+  height: 360px; /* fixed height */
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  display: none;
+  z-index: 999;
+  overflow: hidden; /* important */
+}
+
+.notif-dropdown.active {
+  display: block;
+}
+
+/* header stays fixed */
+.notif-header {
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  border-bottom: 1px solid #f3f4f6;
+  background: #fff;
+}
+
+/* scrollable list */
+#notifList {
+  max-height: 310px;
+  overflow-y: auto;
+}
+
+/* notification item */
+.notif-item {
+  padding: 12px;
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+}
+
+.notif-item:hover {
+  background: #f9fafb;
+}
+
+.notif-title {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.notif-msg {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.notif-time {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
+/* empty state */
+.notif-empty {
+  padding: 12px;
+  text-align: center;
+  color: #9ca3af;
+}
+
+/* scrollbar styling */
+#notifList::-webkit-scrollbar {
+  width: 6px;
+}
+
+#notifList::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+
+#notifList::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
 /* ===== STAT CARDS ===== */
 .stat-grid {
   display: grid;
@@ -561,7 +658,9 @@ body {
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
   animation: slideUp 0.4s ease var(--delay, 0s) both;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .stat-card:hover {
@@ -732,8 +831,12 @@ body {
 }
 
 @keyframes growBar {
-  from { width: 0; }
-  to { width: var(--w); }
+  from {
+    width: 0;
+  }
+  to {
+    width: var(--w);
+  }
 }
 
 .insight {
@@ -872,7 +975,11 @@ body {
   background: #f3f4f6;
   color: #6b7280;
 }
-.badge .dot, .badge-green .dot, .badge-amber .dot, .badge-red .dot, .badge-grey .dot {
+.badge .dot,
+.badge-green .dot,
+.badge-amber .dot,
+.badge-red .dot,
+.badge-grey .dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -898,8 +1005,12 @@ body {
   display: inline-block;
 }
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 .skeleton-row td {
   padding: 16px 14px;

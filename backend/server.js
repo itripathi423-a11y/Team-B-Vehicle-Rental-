@@ -3,6 +3,7 @@ require("dotenv").config({ path: __dirname + "/.env" });
 const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
+const http = require("http");
 const path = require("path");
 
 const userRoutes = require("./routes/userRoutes");
@@ -24,8 +25,13 @@ const enquiryRoutes = require("./routes/enquiry.routes");
 
 const adminEnquiryRoutes = require("./routes/admin.enquiry.routes");
 const adminreviewRoutes = require("./routes/admin.review.routes");
+const adminNotificationRoutes = require("./routes/admin.notification.routes");
 
 const app = express();
+const server = http.createServer(app);
+const { initSocket } = require("./socket"); // ← ADD
+initSocket(server);
+require("./utils/reminderCron");
 
 /* ── BODY PARSING ── */
 app.use(express.json());
@@ -88,10 +94,14 @@ app.use("/api/user", enquiryRoutes);
 
 app.use("/api/admin/enquiries", adminEnquiryRoutes);
 app.use("/api/admin/reviews", adminreviewRoutes);
+app.use("/api/user/notifications", require("./routes/notificationRoutes"));
+app.use("/api/admin/notifications", adminNotificationRoutes);
 
 app.use(express.static(path.join(__dirname, "../frontend")));
 
 /* ── START ── */
-app.listen(5000, () => {
-  console.log("Server running on http://localhost:5000");
+const PORT = process.env.PORT || 5000;
+server.listen(PORT, () => {
+  // ← CHANGE app.listen → server.listen
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });

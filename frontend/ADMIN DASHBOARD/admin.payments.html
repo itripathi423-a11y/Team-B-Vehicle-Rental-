@@ -423,18 +423,28 @@
             />
           </div>
           <div class="topbar-right">
-            <button class="icon-btn notif-btn">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-              >
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-              </svg>
-              <span class="badge">3</span>
-            </button>
+            <!--
+              The .notif-wrapper div below is a placeholder.
+              admin.notification.js will automatically REPLACE this
+              with the full notification panel on page load.
+            -->
+            <div class="notif-wrapper">
+              <button class="icon-btn notif-btn" id="notifBtn">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                </svg>
+                <span class="badge" id="notifBadge" style="display: none"
+                  >0</span
+                >
+              </button>
+              <div class="notif-dropdown" id="notifDropdown"></div>
+            </div>
 
             <!-- TOPBAR USER + DROPDOWN -->
             <div class="topbar-user" id="topbarUser">
@@ -724,7 +734,7 @@
 
     <!-- TOAST -->
     <div class="toast" id="toast"></div>
-
+    <script src="admin.notification.js"></script>
     <script>
       const API = "http://localhost:5000/api/admin";
 
