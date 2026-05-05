@@ -11,6 +11,329 @@
       rel="stylesheet"
     />
     <link href="userdashboard.css" rel="stylesheet" />
+
+    <!-- ── NOTIFICATION CSS ── -->
+    <style>
+      /* Notification wrap */
+      .notif-wrap {
+        position: relative;
+      }
+
+      /* Bell dot — animated pulse when there are unreads */
+      .notif-dot {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 9px;
+        height: 9px;
+        background: #ef4444;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        pointer-events: none;
+        animation: notifPulse 2s ease infinite;
+      }
+      @keyframes notifPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.45);
+        }
+        50% {
+          box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+        }
+      }
+
+      /* Count badge */
+      .notif-count {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        min-width: 17px;
+        height: 17px;
+        padding: 0 4px;
+        background: #ef4444;
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        border-radius: 99px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #fff;
+        pointer-events: none;
+        font-family: "Space Mono", monospace;
+      }
+
+      /* Panel */
+      .notif-panel {
+        display: none;
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        width: 370px;
+        max-height: 500px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.13);
+        z-index: 9999;
+        overflow: hidden;
+        flex-direction: column;
+      }
+      .notif-panel.open {
+        display: flex;
+        animation: npSlide 0.18s ease both;
+      }
+      @keyframes npSlide {
+        from {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Panel header */
+      .np-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 18px 12px;
+        border-bottom: 1px solid #f3f4f6;
+        flex-shrink: 0;
+        background: #fff;
+      }
+      .np-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #111827;
+      }
+      .np-mark-all {
+        font-size: 11.5px;
+        color: #ff5c1a;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        font-weight: 500;
+        padding: 0;
+      }
+      .np-mark-all:hover {
+        opacity: 0.7;
+      }
+
+      /* Scrollable list */
+      .np-list {
+        overflow-y: auto;
+        flex: 1;
+        overscroll-behavior: contain;
+      }
+
+      /* Placeholder / empty */
+      .np-placeholder,
+      .np-empty {
+        padding: 36px 20px;
+        text-align: center;
+        font-size: 13px;
+        color: #9ca3af;
+      }
+      .np-empty-icon {
+        font-size: 34px;
+        margin-bottom: 8px;
+      }
+
+      /* Notification item */
+      .np-item {
+        display: flex;
+        gap: 12px;
+        padding: 13px 18px;
+        border-bottom: 1px solid #f9fafb;
+        cursor: default;
+        transition: background 0.15s;
+        align-items: flex-start;
+        position: relative;
+      }
+      .np-item:last-child {
+        border-bottom: none;
+      }
+      .np-item:hover {
+        background: #fafafa;
+      }
+
+      /* Unread */
+      .np-item.unread {
+        background: #fff8f5;
+      }
+      .np-item.unread:hover {
+        background: #fff2ec;
+      }
+      .np-item.unread::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: #ff5c1a;
+        border-radius: 0 2px 2px 0;
+      }
+
+      /* Flash for new real-time item */
+      @keyframes npHighlight {
+        0% {
+          background: #fff0e8;
+        }
+        100% {
+          background: #fff8f5;
+        }
+      }
+      .np-item.new-flash {
+        animation: npHighlight 0.9s ease forwards;
+      }
+
+      /* Icon bubble */
+      .np-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .np-icon.booking {
+        background: #fff0e8;
+      }
+      .np-icon.kyc {
+        background: #f0fdf4;
+      }
+      .np-icon.reminder {
+        background: #eff6ff;
+      }
+      .np-icon.service {
+        background: #faf5ff;
+      }
+      .np-icon.general {
+        background: #f3f4f6;
+      }
+
+      /* Text */
+      .np-content {
+        flex: 1;
+        min-width: 0;
+      }
+      .np-item-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 3px;
+        line-height: 1.35;
+      }
+      .np-item-msg {
+        font-size: 12px;
+        color: #6b7280;
+        line-height: 1.55;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .np-item-time {
+        font-size: 10.5px;
+        color: #9ca3af;
+        margin-top: 5px;
+        font-family: "Space Mono", monospace;
+      }
+
+      /* Footer */
+      .np-foot {
+        border-top: 1px solid #f3f4f6;
+        padding: 10px 18px;
+        flex-shrink: 0;
+      }
+      .np-load-more {
+        width: 100%;
+        padding: 9px;
+        background: none;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 12.5px;
+        color: #6b7280;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .np-load-more:hover {
+        border-color: #ff5c1a;
+        color: #ff5c1a;
+      }
+
+      /* Toast — shown when a notification arrives and panel is closed */
+      .notif-toast {
+        position: fixed;
+        bottom: 88px;
+        right: 24px;
+        min-width: 280px;
+        max-width: 340px;
+        background: #111827;
+        color: #fff;
+        border-radius: 12px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+        z-index: 10000;
+        opacity: 0;
+        transform: translateY(10px);
+        transition:
+          opacity 0.25s,
+          transform 0.25s;
+        pointer-events: none;
+      }
+      .notif-toast.show {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: all;
+      }
+      .nt-icon {
+        font-size: 20px;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .nt-body {
+        flex: 1;
+        min-width: 0;
+      }
+      .nt-title {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 3px;
+      }
+      .nt-msg {
+        font-size: 11.5px;
+        color: rgba(255, 255, 255, 0.65);
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .nt-close {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.45);
+        cursor: pointer;
+        font-size: 16px;
+        padding: 0;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+    </style>
+    <!-- ── END NOTIFICATION CSS ── -->
   </head>
   <body>
     <!-- ── SIDEBAR ── -->
@@ -130,21 +453,54 @@
           </svg>
         </button>
         <span class="topbar-page-title">Dashboard</span>
+
         <div class="topbar-right">
-          <button class="icon-btn" id="notifBtn" title="Notifications">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
+          <!-- ── NOTIFICATION BELL ── -->
+          <div class="notif-wrap" id="notifWrap">
+            <button
+              class="icon-btn notif-trigger"
+              id="notifBtn"
+              title="Notifications"
             >
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-            </svg>
-            <span class="notif-badge" id="notifBadge" style="display: none"
-              >0</span
-            >
-          </button>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                width="17"
+                height="17"
+              >
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              <span
+                class="notif-dot"
+                id="notifDot"
+                style="display: none"
+              ></span>
+              <span class="notif-count" id="notifCount" style="display: none"
+                >0</span
+              >
+            </button>
+
+            <div class="notif-panel" id="notifPanel">
+              <div class="np-head">
+                <span class="np-title">Notifications</span>
+                <button class="np-mark-all" id="npMarkAll">
+                  Mark all read
+                </button>
+              </div>
+              <div class="np-list" id="npList">
+                <div class="np-placeholder">Loading…</div>
+              </div>
+              <div class="np-foot" id="npFoot" style="display: none">
+                <button class="np-load-more" id="npLoadMore">
+                  Load older notifications
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- ── END NOTIFICATION BELL ── -->
 
           <!-- USER DROPDOWN -->
           <div class="topbar-user user-dropdown-wrap" id="userDropdownWrap">
@@ -583,14 +939,10 @@
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════════════
-         REVIEW MODAL — integrated
-         ══════════════════════════════════════════════ -->
+    <!-- ── REVIEW MODAL ── -->
     <div class="review-backdrop hidden" id="reviewBackdrop">
       <div class="review-modal" id="reviewModal">
-        <!-- FORM VIEW -->
         <div id="reviewFormView">
-          <!-- Header -->
           <div class="review-modal-header">
             <span class="review-modal-title">Rate Your Experience</span>
             <button
@@ -604,8 +956,6 @@
               </svg>
             </button>
           </div>
-
-          <!-- Vehicle row -->
           <div class="review-vehicle-row">
             <div class="review-veh-thumb" id="reviewVehThumb">🚗</div>
             <div class="review-veh-info">
@@ -614,14 +964,11 @@
             </div>
             <span class="review-completed-badge">&#10003; Completed</span>
           </div>
-
-          <!-- Form body -->
           <div class="review-form-body">
-            <!-- Stars -->
             <div>
-              <label class="review-field-label">
-                Your Rating <span class="req">*</span>
-              </label>
+              <label class="review-field-label"
+                >Your Rating <span class="req">*</span></label
+              >
               <div
                 class="review-stars"
                 id="reviewStars"
@@ -706,16 +1053,14 @@
                 Please select a rating before submitting.
               </div>
             </div>
-
-            <!-- Comment -->
             <div>
-              <label class="review-field-label" for="reviewComment">
-                Your Review <span class="opt">(optional)</span>
-              </label>
+              <label class="review-field-label" for="reviewComment"
+                >Your Review <span class="opt">(optional)</span></label
+              >
               <textarea
                 class="review-textarea"
                 id="reviewComment"
-                placeholder="Tell us about your experience — vehicle condition, comfort, pickup process…"
+                placeholder="Tell us about your experience…"
                 maxlength="500"
                 oninput="updateCharCount()"
               ></textarea>
@@ -725,8 +1070,6 @@
                 >
               </div>
             </div>
-
-            <!-- Submit -->
             <button
               class="review-submit-btn"
               id="reviewSubmitBtn"
@@ -747,9 +1090,6 @@
             </button>
           </div>
         </div>
-        <!-- /reviewFormView -->
-
-        <!-- SUCCESS VIEW -->
         <div class="review-success" id="reviewSuccessView">
           <div class="review-success-icon">
             <svg
@@ -772,13 +1112,278 @@
             Done
           </button>
         </div>
-        <!-- /reviewSuccessView -->
       </div>
     </div>
     <!-- ── END REVIEW MODAL ── -->
 
+    <!-- ══════════════════════════════════════════
+         SCRIPTS — correct load order:
+         1. chatbot.js
+         2. socket.io client
+         3. notification IIFE
+         4. page inline scripts
+         5. userdashboard.js
+    ══════════════════════════════════════════ -->
     <script src="chatbot.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
 
+    <!-- ── NOTIFICATION SCRIPT ── -->
+    <script>
+      (function () {
+        "use strict";
+
+        const API = "/api/user/notifications";
+        const PER_PAGE = 15;
+
+        let offset = 0;
+        let totalNotifs = 0;
+        let unreadCount = 0;
+        let panelOpen = false;
+        let socket = null;
+
+        const wrap = document.getElementById("notifWrap");
+        const btn = document.getElementById("notifBtn");
+        const panel = document.getElementById("notifPanel");
+        const list = document.getElementById("npList");
+        const dot = document.getElementById("notifDot");
+        const countBadge = document.getElementById("notifCount");
+        const markAllBtn = document.getElementById("npMarkAll");
+        const loadMoreBtn = document.getElementById("npLoadMore");
+        const foot = document.getElementById("npFoot");
+
+        if (!wrap) return;
+
+        function waitForUserId(cb, attempts = 0) {
+          if (window._userId) return cb(window._userId);
+          if (attempts > 60) {
+            console.warn("[Notif] No _userId found");
+            return;
+          }
+          setTimeout(() => waitForUserId(cb, attempts + 1), 100);
+        }
+
+        const TYPE_ICON = {
+          booking: "🚗",
+          kyc: "🛡️",
+          reminder: "⏰",
+          service: "🔧",
+          general: "🔔",
+        };
+        function typeIcon(t) {
+          return TYPE_ICON[t] || "🔔";
+        }
+
+        function timeAgo(dateStr) {
+          const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
+          if (diff < 60) return "just now";
+          if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+          if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+          if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
+          return new Date(dateStr).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+          });
+        }
+
+        function esc(s) {
+          return String(s || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+        }
+
+        function setBadge(n) {
+          unreadCount = Math.max(0, n);
+          if (unreadCount > 0) {
+            dot.style.display = "block";
+            countBadge.style.display = "flex";
+            countBadge.textContent = unreadCount > 99 ? "99+" : unreadCount;
+          } else {
+            dot.style.display = "none";
+            countBadge.style.display = "none";
+          }
+        }
+        function incBadge() {
+          setBadge(unreadCount + 1);
+        }
+        function decBadge() {
+          setBadge(unreadCount - 1);
+        }
+        function zeroBadge() {
+          setBadge(0);
+        }
+
+        function buildItem(n, flash = false) {
+          const el = document.createElement("div");
+          el.className = `np-item${n.is_read ? "" : " unread"}${flash ? " new-flash" : ""}`;
+          el.dataset.id = n.id;
+          el.innerHTML = `
+            <div class="np-icon ${esc(n.type)}">${typeIcon(n.type)}</div>
+            <div class="np-content">
+              <div class="np-item-title">${esc(n.title)}</div>
+              <div class="np-item-msg">${esc(n.message)}</div>
+              <div class="np-item-time">${timeAgo(n.created_at)}</div>
+            </div>`;
+          el.addEventListener("click", () => {
+            if (el.classList.contains("unread")) markOneRead(n.id, el);
+          });
+          return el;
+        }
+
+        async function loadNotifications(reset = false) {
+          if (reset) {
+            offset = 0;
+            list.innerHTML = '<div class="np-placeholder">Loading…</div>';
+          }
+          try {
+            const res = await fetch(
+              `${API}?limit=${PER_PAGE}&offset=${offset}`,
+              { credentials: "include" },
+            );
+            const data = await res.json();
+            if (!data.success) throw new Error("Failed");
+
+            totalNotifs = data.total;
+            setBadge(data.unread);
+            if (reset) list.innerHTML = "";
+
+            if (!data.notifications.length && reset) {
+              list.innerHTML = `<div class="np-empty"><div class="np-empty-icon">🔔</div><div>No notifications yet</div></div>`;
+              foot.style.display = "none";
+              return;
+            }
+
+            data.notifications.forEach((n) => list.appendChild(buildItem(n)));
+            offset += data.notifications.length;
+            foot.style.display = offset < totalNotifs ? "block" : "none";
+          } catch {
+            if (reset)
+              list.innerHTML =
+                '<div class="np-empty">Could not load notifications.</div>';
+          }
+        }
+
+        async function markOneRead(id, el) {
+          try {
+            await fetch(`${API}/${id}/read`, {
+              method: "PATCH",
+              credentials: "include",
+            });
+            el.classList.remove("unread");
+            decBadge();
+          } catch {}
+        }
+
+        markAllBtn.addEventListener("click", async () => {
+          try {
+            await fetch(`${API}/read-all`, {
+              method: "PATCH",
+              credentials: "include",
+            });
+            list
+              .querySelectorAll(".np-item.unread")
+              .forEach((el) => el.classList.remove("unread"));
+            zeroBadge();
+          } catch {}
+        });
+
+        loadMoreBtn.addEventListener("click", () => loadNotifications(false));
+
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          panelOpen = !panelOpen;
+          panel.classList.toggle("open", panelOpen);
+          if (panelOpen) loadNotifications(true);
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!wrap.contains(e.target)) {
+            panelOpen = false;
+            panel.classList.remove("open");
+          }
+        });
+
+        const toast = document.createElement("div");
+        toast.className = "notif-toast";
+        document.body.appendChild(toast);
+        let toastTimer = null;
+
+        function showToast(n) {
+          toast.innerHTML = `
+            <div class="nt-icon">${typeIcon(n.type)}</div>
+            <div class="nt-body">
+              <div class="nt-title">${esc(n.title)}</div>
+              <div class="nt-msg">${esc(n.message)}</div>
+            </div>
+            <button class="nt-close" title="Dismiss">✕</button>`;
+          toast
+            .querySelector(".nt-close")
+            .addEventListener("click", () => toast.classList.remove("show"));
+          toast.classList.add("show");
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(() => toast.classList.remove("show"), 5000);
+        }
+
+        waitForUserId((userId) => {
+          socket = io({
+            withCredentials: true,
+            transports: ["websocket", "polling"],
+          });
+
+          socket.on("connect", () => {
+            console.log("🔔 Notification socket connected:", socket.id);
+            socket.emit("join", { userId });
+          });
+
+          socket.on("disconnect", () =>
+            console.log("🔌 Notification socket disconnected"),
+          );
+
+          // ── CORRECTED notification handler ──────────────────────────
+          socket.on("notification", (data) => {
+            console.log("Notification received:", data);
+
+            // 1. Increment the bell badge
+            incBadge();
+
+            // 2. Prepend new item to the top of the list
+            const item = buildItem({ ...data, is_read: 0 }, true);
+            if (list) {
+              const empty = list.querySelector(".np-placeholder, .np-empty");
+              if (empty) empty.remove();
+              list.prepend(item);
+            }
+
+            // 3. Show toast only when the panel is closed
+            if (!panelOpen) {
+              showToast(data);
+            }
+
+            // 4. Remove flash highlight class after animation completes
+            setTimeout(() => item.classList.remove("new-flash"), 1000);
+          });
+          // ── END corrected handler ────────────────────────────────────
+
+          socket.on("connect_error", (err) =>
+            console.warn("Socket connect error:", err.message),
+          );
+        });
+
+        (async () => {
+          try {
+            const res = await fetch(`${API}/unread-count`, {
+              credentials: "include",
+            });
+            const data = await res.json();
+            if (data.success) setBadge(data.count);
+          } catch {}
+        })();
+      })();
+    </script>
+    <!-- ── END NOTIFICATION SCRIPT ── -->
+
+    <!-- ── PAGE INLINE SCRIPTS ── -->
     <script>
       /* ── Mobile sidebar ── */
       const sidebar = document.getElementById("sidebar");

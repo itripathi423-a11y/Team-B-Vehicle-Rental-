@@ -871,17 +871,51 @@
         </button>
         <span class="topbar-page-title">My Wishlist</span>
         <div class="topbar-right">
-          <button class="icon-btn" title="Notifications">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
+          <!-- ── NOTIFICATION BELL ── -->
+          <div class="notif-wrap" id="notifWrap">
+            <button
+              class="icon-btn notif-trigger"
+              id="notifBtn"
+              title="Notifications"
             >
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-            </svg>
-          </button>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                width="17"
+                height="17"
+              >
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              <span
+                class="notif-dot"
+                id="notifDot"
+                style="display: none"
+              ></span>
+              <span class="notif-count" id="notifCount" style="display: none"
+                >0</span
+              >
+            </button>
+
+            <div class="notif-panel" id="notifPanel">
+              <div class="np-head">
+                <span class="np-title">Notifications</span>
+                <button class="np-mark-all" id="npMarkAll">
+                  Mark all read
+                </button>
+              </div>
+              <div class="np-list" id="npList">
+                <div class="np-placeholder">Loading…</div>
+              </div>
+              <div class="np-foot" id="npFoot" style="display: none">
+                <button class="np-load-more" id="npLoadMore">
+                  Load older notifications
+                </button>
+              </div>
+            </div>
+          </div>
 
           <!-- USER DROPDOWN -->
           <div class="topbar-user user-dropdown-wrap" id="userDropdownWrap">
@@ -1136,6 +1170,9 @@
     </div>
     <script src="auth-init.js"></script>
     <script src="chatbot.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script src="notification.js"></script>
     <script>
       /* ── WISHLIST STORAGE ── */
       const WISHLIST_KEY = "ad_wishlist";

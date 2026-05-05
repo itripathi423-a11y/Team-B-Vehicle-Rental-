@@ -167,19 +167,30 @@
               placeholder="Search bookings, vehicles, customers…"
             />
           </div>
+
           <div class="topbar-right">
-            <button class="icon-btn notif-btn">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-              >
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-              </svg>
-              <span class="badge">3</span>
-            </button>
+            <!--
+              The .notif-wrapper div below is a placeholder.
+              admin.notification.js will automatically REPLACE this
+              with the full notification panel on page load.
+            -->
+            <div class="notif-wrapper">
+              <button class="icon-btn notif-btn" id="notifBtn">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                </svg>
+                <span class="badge" id="notifBadge" style="display: none"
+                  >0</span
+                >
+              </button>
+              <div class="notif-dropdown" id="notifDropdown"></div>
+            </div>
 
             <!-- TOPBAR USER + DROPDOWN -->
             <div class="topbar-user" id="topbarUser">
@@ -199,8 +210,6 @@
               >
                 <polyline points="6 9 12 15 18 9" />
               </svg>
-
-              <!-- DROPDOWN -->
               <div class="user-dropdown" id="userDropdown">
                 <div class="dropdown-header">
                   <p class="dh-name" id="dropdownAdminName">Admin</p>
@@ -216,11 +225,9 @@
                     stroke-width="1.8"
                   >
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                  </svg>
-                  My Profile
+                    <circle cx="12" cy="7" r="4" /></svg
+                  >My Profile
                 </a>
-
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item logout" href="#" id="logoutBtn">
                   <svg
@@ -233,13 +240,11 @@
                   >
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                     <polyline points="16 17 21 12 16 7" />
-                    <line x1="21" y1="12" x2="9" y2="12" />
-                  </svg>
-                  Logout
+                    <line x1="21" y1="12" x2="9" y2="12" /></svg
+                  >Logout
                 </a>
               </div>
             </div>
-            <!-- END TOPBAR USER -->
           </div>
         </header>
 
@@ -504,12 +509,20 @@
       </div>
     </div>
 
+    <!-- ══════════════════════════════════════════════════════
+         SCRIPTS — correct order:
+         1. Chart.js
+         2. socket.io client  ← MUST be before admin.notification.js
+         3. admin.notification.js  ← replaces the old bell button
+         4. page inline scripts
+    ══════════════════════════════════════════════════════ -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="admin.notification.js"></script>
+
     <script>
-      // ===== API BASE =====
       const API = "http://localhost:5000/api/admin";
 
-      // ===== STATUS BADGE =====
       function statusBadge(s) {
         const m = {
           active: ["badge-green", "Active"],
@@ -532,14 +545,12 @@
         return !d ? "—" : d === 1 ? "1 day" : d + " days";
       }
 
-      // ===== LOAD ADMIN PROFILE =====
+      // ── Load admin profile ──────────────────────────────────────
       async function loadAdmin() {
         try {
           const res = await fetch(`${API}/me`, { credentials: "include" });
           if (!res.ok) throw new Error();
           const d = await res.json();
-          document.getElementById("dropdownAdminEmail").textContent =
-            d.email || "No email";
 
           const name = d.name || "Admin";
           const role = d.role || "Admin";
@@ -557,15 +568,15 @@
             initials;
           document.getElementById("topbarAvatarInitials").textContent =
             initials;
-
-          const dropdownName = document.getElementById("dropdownAdminName");
-          if (dropdownName) dropdownName.textContent = name;
-        } catch (err) {
+          document.getElementById("dropdownAdminName").textContent = name;
+          document.getElementById("dropdownAdminEmail").textContent =
+            d.email || "—";
+        } catch {
           console.log("Failed to load admin profile");
         }
       }
 
-      // ===== LOAD DASHBOARD STATS =====
+      // ── Load stats ──────────────────────────────────────────────
       async function loadStats() {
         try {
           const res = await fetch(`${API}/stats`, { credentials: "include" });
@@ -581,12 +592,12 @@
           );
           document.getElementById("statEnquiries").textContent =
             d.total_enquiries ?? 0;
-        } catch (err) {
+        } catch {
           console.log("Failed to load stats");
         }
       }
 
-      // ===== LOAD BOOKINGS =====
+      // ── Load bookings ───────────────────────────────────────────
       async function loadBookings() {
         try {
           const res = await fetch(`${API}/bookings`, {
@@ -608,11 +619,11 @@
             .map(
               (b) => `
             <tr>
-              <td>#${b.booking_id || b.id}</td>
-              <td>${b.user_name || b.customer_name || "—"}</td>
+              <td>#${b.id}</td>
+              <td>${b.user_name || "—"}</td>
               <td>${b.vehicle_name || "—"}</td>
-              <td>${fmtDur(b.total_days || b.duration_days)}</td>
-              <td>${fmtMoney(b.total_price || b.total_amount)}</td>
+              <td>${fmtDur(b.total_days)}</td>
+              <td>${fmtMoney(b.total_price)}</td>
               <td>${statusBadge(b.status)}</td>
             </tr>
           `,
@@ -621,32 +632,30 @@
 
           document.getElementById("bookingSubtitle").textContent =
             `Showing ${list.length} most recent booking${list.length !== 1 ? "s" : ""}`;
-        } catch (err) {
+        } catch {
           console.log("Failed to load bookings");
         }
       }
 
-      // ===== DROPDOWN TOGGLE =====
+      // ── User dropdown ───────────────────────────────────────────
       document
         .getElementById("topbarUser")
         .addEventListener("click", function (e) {
           e.stopPropagation();
-          const dropdown = document.getElementById("userDropdown");
-          const isOpen = dropdown.classList.contains("visible");
-          dropdown.classList.toggle("visible", !isOpen);
-          this.classList.toggle("open", !isOpen);
+          const dd = document.getElementById("userDropdown");
+          const open = dd.classList.contains("visible");
+          dd.classList.toggle("visible", !open);
+          this.classList.toggle("open", !open);
         });
-
-      // Close on outside click
-      document.addEventListener("click", function () {
+      document.addEventListener("click", () => {
         document.getElementById("userDropdown")?.classList.remove("visible");
         document.getElementById("topbarUser")?.classList.remove("open");
       });
 
-      // ===== LOGOUT =====
+      // ── Logout ──────────────────────────────────────────────────
       document
         .getElementById("logoutBtn")
-        .addEventListener("click", async function (e) {
+        .addEventListener("click", async (e) => {
           e.preventDefault();
           e.stopPropagation();
           try {
@@ -659,7 +668,7 @@
           }
         });
 
-      // ===== SEARCH =====
+      // ── Search ──────────────────────────────────────────────────
       document
         .getElementById("dashboardSearch")
         ?.addEventListener("input", function () {
@@ -671,7 +680,7 @@
           });
         });
 
-      // ===== INIT =====
+      // ── Init ────────────────────────────────────────────────────
       loadAdmin();
       loadStats();
       loadBookings();
