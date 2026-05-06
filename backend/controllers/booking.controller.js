@@ -190,20 +190,6 @@ exports.createBooking = async (req, res) => {
         if (vRows?.[0]?.name) vehicleName = vRows[0].name;
       } catch (_) {}
 
-      // ── 1. Notify USER: booking received ─────────────────────
-      try {
-        await createNotification({
-          user_id: userId,
-          booking_id: bookingId,
-          title: "Booking Received 📋",
-          message: `Your booking ${booking_ref} for ${vehicleName} has been received. We will confirm it shortly.`,
-          type: "booking",
-          target_role: "user",
-        });
-      } catch (e) {
-        console.warn("[createBooking] User notification error:", e.message);
-      }
-
       // ── 2. Notify ADMIN: new booking ─────────────────────────
       try {
         await createAdminNotification({

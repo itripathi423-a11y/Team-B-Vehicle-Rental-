@@ -1,4 +1,7 @@
+// controllers/enquiry.controller.js
+
 const db = require("../config/db");
+const { createAdminNotification } = require("./admin.notification.controller");
 
 /* ── CREATE ENQUIRY ── */
 exports.createEnquiry = (req, res) => {
@@ -22,23 +25,20 @@ exports.createEnquiry = (req, res) => {
   }
 
   // Verify the user exists and resolve name + email from DB
-  // (front-end passes them too, but we trust the DB copy)
   const userSql = "SELECT name, email FROM users WHERE id = ?";
 
   db.query(userSql, [user_id], (err, userResult) => {
     if (err) {
       console.error("DB error fetching user:", err);
-      return res.status(500).json({
-        success: false,
-        message: "Database error",
-      });
+      return res
+        .status(500)
+        .json({ success: false, message: "Database error" });
     }
 
     if (!userResult.length) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     // Prefer DB values; fall back to what the client sent
@@ -53,19 +53,43 @@ exports.createEnquiry = (req, res) => {
     db.query(
       insertSql,
       [user_id, resolvedName, resolvedEmail, question],
-      (err, result) => {
+      async (err, result) => {
         if (err) {
           console.error("DB error inserting enquiry:", err);
-          return res.status(500).json({
-            success: false,
-            message: "Failed to save enquiry",
+          return res
+            .status(500)
+            .json({ success: false, message: "Failed to save enquiry" });
+        }
+
+        const enquiryId = result.insertId;
+        const preview =
+          question.slice(0, 80) + (question.length > 80 ? "…" : "");
+
+        // ── Notify ADMIN via admin_notifications table + socket ──────
+        try {
+          await createAdminNotification({
+            title: "New Enquiry 💬",
+            message: `${resolvedName} submitted an enquiry: "${preview}"`,
+            type: "enquiry",
+            ref_id: enquiryId,
+            ref_type: "enquiry",
+            meta: {
+              enquiry_id: enquiryId,
+              user_id: Number(user_id),
+              user_name: resolvedName,
+              user_email: resolvedEmail,
+              question: question.slice(0, 200),
+            },
           });
+          console.log("✅ Enquiry admin notification sent, id:", enquiryId);
+        } catch (e) {
+          console.warn("[createEnquiry] Admin notification error:", e.message);
         }
 
         res.json({
           success: true,
           message: "Enquiry submitted successfully",
-          enquiry_id: result.insertId,
+          enquiry_id: enquiryId,
         });
       },
     );
@@ -84,7 +108,7 @@ exports.getAllEnquiries = (req, res) => {
       e.status,
       e.admin_reply,
       e.created_at,
-      u.name AS user_name,
+      u.name  AS user_name,
       u.email AS user_email
     FROM enquiries e
     JOIN users u ON u.id = e.user_id
@@ -94,16 +118,11 @@ exports.getAllEnquiries = (req, res) => {
   db.query(sql, (err, results) => {
     if (err) {
       console.error("DB error fetching enquiries:", err);
-      return res.status(500).json({
-        success: false,
-        message: "Database error",
-      });
+      return res
+        .status(500)
+        .json({ success: false, message: "Database error" });
     }
-
-    res.json({
-      success: true,
-      data: results,
-    });
+    res.json({ success: true, data: results });
   });
 };
 
@@ -112,10 +131,9 @@ exports.getUserEnquiries = (req, res) => {
   const userId = req.params.userId || req.query.user_id;
 
   if (!userId) {
-    return res.status(400).json({
-      success: false,
-      message: "user_id is required",
-    });
+    return res
+      .status(400)
+      .json({ success: false, message: "user_id is required" });
   }
 
   const sql = `
@@ -128,16 +146,11 @@ exports.getUserEnquiries = (req, res) => {
   db.query(sql, [userId], (err, results) => {
     if (err) {
       console.error("DB error fetching user enquiries:", err);
-      return res.status(500).json({
-        success: false,
-        message: "Database error",
-      });
+      return res
+        .status(500)
+        .json({ success: false, message: "Database error" });
     }
-
-    res.json({
-      success: true,
-      data: results,
-    });
+    res.json({ success: true, data: results });
   });
 };
 
@@ -147,10 +160,9 @@ exports.replyEnquiry = (req, res) => {
   const { admin_reply, status } = req.body;
 
   if (!admin_reply) {
-    return res.status(400).json({
-      success: false,
-      message: "admin_reply is required",
-    });
+    return res
+      .status(400)
+      .json({ success: false, message: "admin_reply is required" });
   }
 
   const allowedStatuses = ["Pending", "Replied", "Closed"];
@@ -165,23 +177,16 @@ exports.replyEnquiry = (req, res) => {
   db.query(sql, [admin_reply, resolvedStatus, id], (err, result) => {
     if (err) {
       console.error("DB error replying to enquiry:", err);
-      return res.status(500).json({
-        success: false,
-        message: "Database error",
-      });
+      return res
+        .status(500)
+        .json({ success: false, message: "Database error" });
     }
-
     if (result.affectedRows === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Enquiry not found",
-      });
+      return res
+        .status(404)
+        .json({ success: false, message: "Enquiry not found" });
     }
-
-    res.json({
-      success: true,
-      message: "Reply saved",
-    });
+    res.json({ success: true, message: "Reply saved" });
   });
 };
 
@@ -198,27 +203,22 @@ exports.updateEnquiryStatus = (req, res) => {
     });
   }
 
-  const sql = "UPDATE enquiries SET status = ? WHERE id = ?";
-
-  db.query(sql, [status, id], (err, result) => {
-    if (err) {
-      console.error("DB error updating status:", err);
-      return res.status(500).json({
-        success: false,
-        message: "Database error",
-      });
-    }
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Enquiry not found",
-      });
-    }
-
-    res.json({
-      success: true,
-      message: "Status updated",
-    });
-  });
+  db.query(
+    "UPDATE enquiries SET status = ? WHERE id = ?",
+    [status, id],
+    (err, result) => {
+      if (err) {
+        console.error("DB error updating status:", err);
+        return res
+          .status(500)
+          .json({ success: false, message: "Database error" });
+      }
+      if (result.affectedRows === 0) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Enquiry not found" });
+      }
+      res.json({ success: true, message: "Status updated" });
+    },
+  );
 };
