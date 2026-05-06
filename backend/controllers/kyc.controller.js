@@ -122,12 +122,10 @@ exports.submitKyc = (req, res) => {
   const { document_type, document_number } = req.body;
 
   if (!document_type || !document_number)
-    return res
-      .status(400)
-      .json({
-        success: false,
-        message: "document_type and document_number required",
-      });
+    return res.status(400).json({
+      success: false,
+      message: "document_type and document_number required",
+    });
 
   const front = req.files?.document_front?.[0];
   const back = req.files?.document_back?.[0];
@@ -375,18 +373,4 @@ exports.notifyKycStatusChange = async (
 
   const notif = notifMap[status];
   if (!notif) return;
-
-  try {
-    await createNotification({
-      user_id: userId,
-      title: notif.title,
-      message: notif.message,
-      type: "kyc",
-      target_role: "user",
-      meta: { kyc_status: status },
-    });
-    console.log(`✅ KYC status notification sent to user ${userId}: ${status}`);
-  } catch (err) {
-    console.error("KYC status notification error:", err);
-  }
 };

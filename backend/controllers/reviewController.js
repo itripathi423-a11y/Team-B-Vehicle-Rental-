@@ -1,8 +1,7 @@
-// ===============================================
 // controllers/reviewController.js
-// ===============================================
 
 const db = require("../config/db");
+const { createAdminNotification } = require("./admin.notification.controller");
 
 // =======================================================
 // 1. FETCH REVIEW DATA FOR FORM
@@ -17,7 +16,7 @@ exports.getReviewForm = (req, res) => {
       r.id AS existing_review_id
     FROM bookings b
     JOIN vehicles v ON b.vehicle_id = v.id
-    LEFT JOIN reviews r ON r.booking_id = b.id   /* ← check for existing review */
+    LEFT JOIN reviews r ON r.booking_id = b.id
     WHERE b.id = ?
   `;
 
@@ -30,7 +29,7 @@ exports.getReviewForm = (req, res) => {
         .status(403)
         .json({ message: "Only completed bookings can be reviewed" });
 
-    // ← NEW: block if already reviewed
+    // Block if already reviewed
     if (result[0].existing_review_id) {
       return res.status(409).json({ message: "Already reviewed" });
     }
@@ -38,8 +37,10 @@ exports.getReviewForm = (req, res) => {
     res.json(result[0]);
   });
 };
+
 // =======================================================
 // 2. SUBMIT REVIEW
+// ✅ Added: notifies ADMIN via admin_notifications + socket
 // =======================================================
 exports.submitReview = (req, res) => {
   const { booking_id, user_id, vehicle_id, rating, comment } = req.body;
@@ -57,21 +58,64 @@ exports.submitReview = (req, res) => {
   db.query(
     sql,
     [booking_id, user_id, vehicle_id, rating, comment || null],
-    (err) => {
+    async (err, result) => {
       if (err) {
         // Handle duplicate review (unique constraint on booking_id)
         if (err.code === "ER_DUP_ENTRY") {
-          return res.status(409).json({
-            message: "You have already reviewed this booking.",
-          });
+          return res
+            .status(409)
+            .json({ message: "You have already reviewed this booking." });
         }
         return res.status(500).json({ message: "DB error", error: err });
       }
 
-      res.json({
-        success: true,
-        message: "Review submitted successfully",
-      });
+      const reviewId = result.insertId;
+
+      // ── Fetch user + vehicle names for admin notification ──────────
+      db.query(
+        `SELECT u.name AS user_name, v.name AS vehicle_name
+         FROM users u, vehicles v
+         WHERE u.id = ? AND v.id = ?`,
+        [user_id, vehicle_id],
+        async (err2, infoRows) => {
+          const userName = infoRows?.[0]?.user_name || "A user";
+          const vehicleName = infoRows?.[0]?.vehicle_name || "a vehicle";
+          const ratingNum = Number(rating);
+          const stars = "★".repeat(ratingNum) + "☆".repeat(5 - ratingNum);
+          const commentPreview = comment
+            ? ` "${String(comment).trim().slice(0, 80)}${String(comment).trim().length > 80 ? "…" : ""}"`
+            : "";
+
+          // ── Notify ADMIN via admin_notifications table + socket ──────
+          try {
+            await createAdminNotification({
+              title: `New Review ${stars}`,
+              message: `${userName} left a ${ratingNum}-star review for ${vehicleName}.${commentPreview}`,
+              type: "review",
+              ref_id: reviewId,
+              ref_type: "review",
+              meta: {
+                review_id: reviewId,
+                booking_id: Number(booking_id),
+                user_id: Number(user_id),
+                user_name: userName,
+                vehicle_id: Number(vehicle_id),
+                vehicle_name: vehicleName,
+                rating: ratingNum,
+                comment: comment || null,
+              },
+            });
+            console.log(
+              "✅ Review admin notification sent, reviewId:",
+              reviewId,
+            );
+          } catch (e) {
+            console.warn("[submitReview] Admin notification error:", e.message);
+          }
+
+          res.json({ success: true, message: "Review submitted successfully" });
+        },
+      );
     },
   );
 };
