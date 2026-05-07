@@ -10,8 +10,6 @@ const {
 
 // ── Run every 15 minutes ──────────────────────────────────────────────────
 cron.schedule("*/15 * * * *", () => {
-  console.log("⏰ [Reminder Cron] Checking upcoming pickups…");
-
   const sql = `
     SELECT
       b.id,
@@ -95,10 +93,6 @@ async function tryReminder(booking, hoursBefore, label) {
                   hours_before: hoursBefore,
                 },
               });
-
-              console.log(
-                `✅ [Reminder] ${label} reminder sent → user ${booking.user_id} (${booking.booking_ref})`,
-              );
             } catch (e) {
               console.error("[Reminder] createNotification failed:", e);
             }
