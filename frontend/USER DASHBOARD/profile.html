@@ -801,27 +801,9 @@
         <div class="profile-grid">
           <!-- ── LEFT: Identity card ── -->
           <div class="profile-identity-card">
-            <label
-              class="profile-avatar-wrap"
-              for="avatarInput"
-              title="Change photo"
-            >
-              <div class="profile-avatar" id="profileAvatar">
-                <span id="profileAvatarInitials"></span>
-              </div>
-              <div class="profile-avatar-edit">
-                <svg viewBox="0 0 24 24">
-                  <path
-                    d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-                  />
-                  <path
-                    d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
-                  />
-                </svg>
-              </div>
-            </label>
-            <input type="file" id="avatarInput" accept="image/*" />
-
+            <div class="profile-avatar" id="profileAvatar">
+              <span id="profileAvatarInitials"></span>
+            </div>
             <div>
               <div class="profile-full-name" id="profileFullName">Loading…</div>
               <div
@@ -1187,7 +1169,9 @@
 
       function fmtDate(iso) {
         if (!iso) return "—";
-        return new Date(iso).toLocaleDateString("en-US", {
+        const d = iso instanceof Date ? iso : new Date(iso);
+        if (isNaN(d.getTime())) return "—";
+        return d.toLocaleDateString("en-US", {
           month: "long",
           year: "numeric",
         });
@@ -1256,27 +1240,26 @@
         const btn = document.getElementById(btnId);
         if (!btn) return;
         btn.disabled = loading;
-        if (loading) {
-          btn.innerHTML = `<div class="btn-spinner"></div> Saving…`;
-        } else {
-          btn.innerHTML = defaultHTML;
-        }
+        btn.innerHTML = loading
+          ? `<div class="btn-spinner"></div> Saving…`
+          : defaultHTML;
       }
 
       // ── LOAD PROFILE ──
-      let currentUser = null;
-
       async function loadProfile() {
         try {
           const user = await apiFetch("/user/profile");
+          console.log(
+            "user.created_at:",
+            user.created_at,
+            typeof user.created_at,
+          );
           if (!user) return;
-          currentUser = user;
 
-          const firstName = user.first_name || user.name?.split(" ")[0] || "";
-          const lastName =
-            user.last_name || user.name?.split(" ").slice(1).join(" ") || "";
+          const firstName = user.first_name || "";
+          const lastName = user.last_name || "";
           const fullName =
-            `${firstName} ${lastName}`.trim() || user.name || "User";
+            user.name || `${firstName} ${lastName}`.trim() || "User";
           const initials =
             `${firstName[0] ?? ""}${lastName[0] ?? ""}`.toUpperCase() || "U";
           const kycStatus = (user.kyc_status || "not_submitted").toLowerCase();
@@ -1295,7 +1278,7 @@
             roleEl.style.color = kycStatus === "verified" ? "#16a34a" : "";
           }
 
-          // Sidebar KYC
+          // Sidebar KYC badge
           const sideKyc = document.getElementById("sidebarKyc");
           if (sideKyc) {
             const kycMap = {
@@ -1309,23 +1292,15 @@
             sideKyc.className = `user-kyc-status ${cls}`;
           }
 
-          // Avatars
-          function applyAvatar(containerId, initialsId) {
-            const wrap = document.getElementById(containerId);
-            const init = document.getElementById(initialsId);
-            if (!wrap) return;
-            if (user.profile_photo) {
-              if (init) init.style.display = "none";
-              const img = document.createElement("img");
-              img.src = user.profile_photo;
-              img.alt = fullName;
-              wrap.appendChild(img);
-            } else {
-              if (init) init.textContent = initials;
-            }
-          }
-          applyAvatar("sidebarAvatar", "sidebarInitials");
-          applyAvatar("topbarAvatar", "topbarInitials");
+          // Avatars — initials only
+          [
+            "sidebarInitials",
+            "topbarInitials",
+            "profileAvatarInitials",
+          ].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = initials;
+          });
 
           // Profile identity card
           setEl("profileFullName", fullName);
@@ -1336,21 +1311,6 @@
             "profileRole",
             user.role === "admin" ? "Administrator" : "Member",
           );
-
-          // Profile avatar
-          const pAvatar = document.getElementById("profileAvatar");
-          const pInit = document.getElementById("profileAvatarInitials");
-          if (pAvatar) {
-            if (user.profile_photo) {
-              if (pInit) pInit.style.display = "none";
-              const img = document.createElement("img");
-              img.src = user.profile_photo;
-              img.alt = fullName;
-              pAvatar.appendChild(img);
-            } else {
-              if (pInit) pInit.textContent = initials;
-            }
-          }
 
           // KYC pill
           const pill = document.getElementById("profileKycPill");
@@ -1366,7 +1326,7 @@
             pill.className = `profile-kyc-pill ${cls}`;
           }
 
-          // DD KYC badge
+          // Dropdown KYC badge
           const ddKyc = document.getElementById("ddKycBadge");
           if (ddKyc) {
             const badgeMap = {
@@ -1377,7 +1337,7 @@
             ddKyc.textContent = badgeMap[kycStatus] || "Not Submitted";
           }
 
-          // Pre-fill form
+          // Pre-fill form fields
           const inpFirst = document.getElementById("infoFirstName");
           const inpLast = document.getElementById("infoLastName");
           const inpEmail = document.getElementById("infoEmail");
@@ -1387,8 +1347,6 @@
           if (inpLast) inpLast.value = lastName;
           if (inpEmail) inpEmail.value = user.email || "";
           if (inpPhone) inpPhone.value = user.phone || "";
-
-          window._userId = user.id;
         } catch (err) {
           console.error("Profile load error:", err.message);
         }
@@ -1418,11 +1376,8 @@
             "Phone must be exactly 10 digits.",
           );
 
-        setBtnLoading(
-          "infoSaveBtn",
-          true,
-          `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg> Save Changes`,
-        );
+        const defaultHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg> Save Changes`;
+        setBtnLoading("infoSaveBtn", true, defaultHTML);
 
         try {
           await apiFetch("/user/profile", {
@@ -1437,8 +1392,10 @@
 
           showAlert("infoAlert", "success", "Profile updated successfully!");
 
-          // Refresh displayed name
           const fullName = `${firstName} ${lastName}`.trim();
+          const initials =
+            `${firstName[0] ?? ""}${lastName[0] ?? ""}`.toUpperCase();
+
           setEl("profileFullName", fullName);
           setEl("sidebarName", fullName);
           setEl("topbarName", fullName);
@@ -1447,8 +1404,6 @@
           setEl("profileEmailLabel", email);
           setEl("profilePhone", phone);
 
-          const initials =
-            `${firstName[0] ?? ""}${lastName[0] ?? ""}`.toUpperCase();
           [
             "profileAvatarInitials",
             "sidebarInitials",
@@ -1464,11 +1419,7 @@
             err.message || "Failed to update profile.",
           );
         } finally {
-          setBtnLoading(
-            "infoSaveBtn",
-            false,
-            `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg> Save Changes`,
-          );
+          setBtnLoading("infoSaveBtn", false, defaultHTML);
         }
       }
 
@@ -1499,11 +1450,8 @@
             "New password must differ from current.",
           );
 
-        setBtnLoading(
-          "pwdSaveBtn",
-          true,
-          `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Update Password`,
-        );
+        const defaultHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Update Password`;
+        setBtnLoading("pwdSaveBtn", true, defaultHTML);
 
         try {
           await apiFetch("/user/change-password", {
@@ -1526,70 +1474,22 @@
             err.message || "Failed to change password.",
           );
         } finally {
-          setBtnLoading(
-            "pwdSaveBtn",
-            false,
-            `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Update Password`,
-          );
+          setBtnLoading("pwdSaveBtn", false, defaultHTML);
         }
       }
-
-      // ── AVATAR UPLOAD ──
-      document
-        .getElementById("avatarInput")
-        ?.addEventListener("change", async (e) => {
-          const file = e.target.files?.[0];
-          if (!file) return;
-          if (file.size > 5 * 1024 * 1024) {
-            alert("Image must be under 5MB.");
-            return;
-          }
-
-          const formData = new FormData();
-          formData.append("profile_photo", file);
-
-          try {
-            const token = localStorage.getItem("ad_token");
-            const res = await fetch(`${BASE_URL}/user/profile/photo`, {
-              method: "POST",
-              credentials: "include",
-              headers: token ? { Authorization: `Bearer ${token}` } : {},
-              body: formData,
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data?.message || "Upload failed");
-
-            const url = data.profile_photo || URL.createObjectURL(file);
-            ["profileAvatar", "sidebarAvatar", "topbarAvatar"].forEach((id) => {
-              const wrap = document.getElementById(id);
-              if (!wrap) return;
-              let img = wrap.querySelector("img");
-              if (!img) {
-                img = document.createElement("img");
-                wrap.appendChild(img);
-              }
-              img.src = url;
-              const init = wrap.querySelector("span");
-              if (init) init.style.display = "none";
-            });
-          } catch (err) {
-            alert("Photo upload failed: " + err.message);
-          }
-        });
 
       // ── DELETE ACCOUNT ──
       function confirmDeleteAccount() {
         const name =
           document.getElementById("profileFullName")?.textContent ||
           "your account";
-        const confirmed = confirm(
-          `Are you sure you want to permanently delete ${name}?\n\nThis cannot be undone. All bookings and data will be lost.`,
-        );
-        if (!confirmed) return;
-        const double = confirm(
-          "Final confirmation: Delete account permanently?",
-        );
-        if (!double) return;
+        if (
+          !confirm(
+            `Are you sure you want to permanently delete ${name}?\n\nThis cannot be undone.`,
+          )
+        )
+          return;
+        if (!confirm("Final confirmation: Delete account permanently?")) return;
 
         apiFetch("/user/account", { method: "DELETE" })
           .then(() => {

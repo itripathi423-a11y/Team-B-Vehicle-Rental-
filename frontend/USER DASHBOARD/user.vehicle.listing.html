@@ -2438,7 +2438,36 @@
 
       /* ── INIT ── */
       updateWishBadge();
-      Promise.all([loadVehicles(), loadUserProfile()]);
+      /* ── Read URL params from homepage search and pre-fill filters ── */
+      function applyURLParams() {
+        const p = new URLSearchParams(window.location.search);
+        const fuel = p.get("fuel_type");
+        const body = p.get("body_type");
+        const trans = p.get("transmission");
+
+        if (fuel) {
+          const el = document.getElementById("filterFuel");
+          // match case-insensitively against existing options
+          const opt = Array.from(el.options).find(
+            (o) => o.value.toLowerCase() === fuel.toLowerCase(),
+          );
+          if (opt) el.value = opt.value;
+        }
+        if (body) {
+          const el = document.getElementById("filterBody");
+          const opt = Array.from(el.options).find(
+            (o) => o.value.toLowerCase() === body.toLowerCase(),
+          );
+          if (opt) el.value = opt.value;
+        }
+        // No transmission filter in this page's HTML, but handle gracefully if added later
+      }
+
+      // Load vehicles first, then apply URL filters so VEHICLES array is populated
+      Promise.all([loadVehicles(), loadUserProfile()]).then(() => {
+        applyURLParams();
+        applyFilters(); // re-render with any pre-filled filters
+      });
     </script>
   </body>
 </html>
