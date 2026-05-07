@@ -26,6 +26,7 @@ const enquiryRoutes = require("./routes/enquiry.routes");
 const adminEnquiryRoutes = require("./routes/admin.enquiry.routes");
 const adminreviewRoutes = require("./routes/admin.review.routes");
 const adminNotificationRoutes = require("./routes/admin.notification.routes");
+const userProfileRoutes = require("./routes/user.profile.routes");
 
 const app = express();
 const server = http.createServer(app);
@@ -68,7 +69,7 @@ app.get("/", (req, res) => {
 /* ── STATIC ── */
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 /* ── ROUTES ── */
-
+app.use("/api/user", userProfileRoutes);
 app.use("/api", userRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 

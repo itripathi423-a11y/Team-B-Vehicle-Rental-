@@ -243,11 +243,11 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* SEARCH CARD */
+/* ===== SEARCH CARD ===== */
 .search-card {
   position: relative;
   z-index: 2;
-  margin: 0px 60px 40px;
+  margin: 0 60px 40px;
   background: rgba(20, 20, 20, 0.85);
   backdrop-filter: blur(30px);
   border: 1px solid var(--border);
@@ -264,14 +264,12 @@ body {
   margin-bottom: 18px;
 }
 
-/* ===== LAYOUT FIX ===== */
 .search-fields {
   display: flex;
   gap: 12px;
   align-items: flex-end;
 }
 
-/* All fields equal width */
 .field-group,
 .bodyType,
 .fuelType,
@@ -282,8 +280,10 @@ body {
   gap: 6px;
 }
 
-/* Labels */
-.field-group label {
+.field-group label,
+.bodyType label,
+.fuelType label,
+.transmissionType label {
   font-size: 11px;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -291,12 +291,6 @@ body {
   font-family: "Space Mono", monospace;
 }
 
-/* Placeholder */
-.field-group ::placeholder {
-  color: white;
-}
-
-/* ===== UNIFIED INPUT + SELECT STYLE ===== */
 .field-group input,
 .bodyType select,
 .fuelType select,
@@ -313,11 +307,9 @@ body {
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
-  -moz-appearance: none;
   color-scheme: dark;
 }
 
-/* Select options */
 .bodyType select option,
 .fuelType select option,
 .transmissionType select option {
@@ -325,34 +317,26 @@ body {
   color: white;
 }
 
-/* ===== BUTTON ===== */
 .search-btn {
   flex: 0 0 auto;
   align-self: stretch;
-
   display: flex;
   align-items: center;
   gap: 8px;
-
   background: var(--orange);
   color: white;
   border: none;
   border-radius: var(--radius-sm);
-
-  padding: 10px 16px;
-
+  padding: 10px 24px;
   font-family: "DM Sans", sans-serif;
   font-size: 15px;
   font-weight: 500;
-
   cursor: pointer;
   white-space: nowrap;
-
   transition:
     background 0.2s,
     transform 0.2s,
     box-shadow 0.2s;
-  box-shadow: 0 0 0 0 rgba(255, 92, 26, 0);
 }
 
 .search-btn:hover {
@@ -360,7 +344,8 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(255, 92, 26, 0.4);
 }
-/* HERO STATS */
+
+/* ===== HERO STATS ===== */
 .hero-stats {
   position: absolute;
   top: 50%;
@@ -448,11 +433,12 @@ body {
 /* ===== GRID ===== */
 .grid {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
+  align-items: start;
 }
 
-/* ===== CARD ===== */
+/* ===== CARD — unified for ALL three cards ===== */
 .card {
   background: var(--dark-3);
   border-radius: var(--radius);
@@ -460,120 +446,151 @@ body {
   border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
+  /* NO position:relative, NO overflow tricks — clean stack layout */
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s,
+    border-color 0.25s;
 }
 
 .card:hover {
   transform: translateY(-6px);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 92, 26, 0.2);
 }
 
-.card-img img {
+/* ── IMAGE ── */
+.card img {
   width: 100%;
-  height: 220px;
   object-fit: cover;
   display: block;
-}
-.card--large img {
-  height: 360px;
+  transition: transform 0.4s;
+  /* height set per card size below */
 }
 
-.card-content {
-  padding: 18px;
+.card:hover img {
+  transform: scale(1.04);
+}
+
+.card .card-img,
+.card > img {
+  width: 100%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* All cards same image height */
+.card img,
+.card--large img {
+  height: 220px;
+}
+
+/* ── INFO PANEL — always below image, never overlaid ── */
+/* Handle BOTH .card-content (JS-generated) and .card-info (old HTML) */
+.card-content,
+.card-info {
+  /* Reset any old absolute positioning completely */
+  position: static !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  /* Layout */
+  padding: 20px 22px 22px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  flex: 1;
+  /* Remove any old gradient backgrounds */
+  background: none !important;
+  background-image: none !important;
 }
 
-.card-badge {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  z-index: 2;
-  background: var(--orange);
-  color: white;
-  font-family: "Space Mono", monospace;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  padding: 5px 10px;
-  border-radius: 4px;
-}
-
-.card-badge--green {
-  background: #22c55e;
-}
-
-.card-info {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 2;
-  padding: 20px 24px;
+/* ── NAME & TYPE ── */
+.card-top {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 4px;
 }
 
 .card-top h3 {
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 600;
   color: white;
-  margin-bottom: 3px;
+  line-height: 1.2;
 }
 
 .card-type {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
-  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.4px;
 }
 
-.card-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+/* ── PRICE ROWS ── */
 .price-block {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-top: 8px;
+  padding: 12px 0 4px;
+  border-top: 1px solid var(--border);
 }
 
 .price-block div {
   display: flex;
   justify-content: space-between;
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.8);
+  align-items: center;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
 }
 
-.price-block span {
+.price-block div span:last-child,
+.price-block span.price {
   color: white;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 500;
 }
 
+/* Legacy .price and .per classes from old card HTML */
 .price {
   font-family: "Bebas Neue", sans-serif;
-  font-size: 26px;
+  font-size: 24px;
   color: white;
 }
-
 .per {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
 }
 
-.card-btn {
-  margin-top: 10px;
+/* ── BUTTON ── */
+.card-btn,
+.card-bottom .card-btn {
+  display: block;
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background: var(--orange);
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   color: white;
+  font-family: "DM Sans", sans-serif;
   font-size: 14px;
+  font-weight: 500;
+  text-align: center;
   cursor: pointer;
+  transition:
+    background 0.2s,
+    transform 0.15s;
+  margin-top: auto;
+}
+
+.card-btn:hover {
+  background: var(--orange-light);
+  transform: translateY(-1px);
+}
+
+/* Kill the old card-bottom flex layout that misaligned price vs button */
+.card-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 /* ===== WHY SECTION ===== */
@@ -655,6 +672,7 @@ body {
   color: rgba(255, 255, 255, 0.45);
   line-height: 1.5;
 }
+
 .no-results {
   text-align: center;
   font-size: 18px;
@@ -818,6 +836,7 @@ body {
   .nav-links {
     display: none;
   }
+
   .menu-toggle {
     display: flex;
     flex-direction: column;
@@ -841,6 +860,7 @@ body {
   .hero-stats {
     display: none;
   }
+
   .search-card {
     margin: 0 24px 32px;
   }
@@ -851,9 +871,15 @@ body {
   .section {
     padding: 60px 24px;
   }
+
   .grid {
     grid-template-columns: 1fr;
   }
+  .card img,
+  .card--large img {
+    height: 220px;
+  }
+
   .why-inner {
     grid-template-columns: 1fr;
     gap: 40px;
@@ -861,11 +887,16 @@ body {
   .why-right {
     grid-template-columns: 1fr;
   }
+  .why-section {
+    padding: 60px 24px;
+  }
+
   .section-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
   }
+
   .cta {
     padding: 70px 24px;
   }
@@ -875,6 +906,7 @@ body {
   .cta-visual {
     display: none;
   }
+
   .footer-top {
     flex-direction: column;
     gap: 40px;
@@ -888,8 +920,5 @@ body {
     gap: 6px;
     align-items: center;
     text-align: center;
-  }
-  .why-section {
-    padding: 60px 24px;
   }
 }
