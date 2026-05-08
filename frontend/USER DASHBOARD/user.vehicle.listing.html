@@ -97,6 +97,7 @@
         width: 15px;
         height: 15px;
       }
+
       .clear-btn {
         height: 40px;
         padding: 0 14px;
@@ -1378,7 +1379,6 @@
       </header>
 
       <main class="content">
-        <!-- Search Section -->
         <div class="search-section">
           <div class="search-title">
             <svg
@@ -1392,7 +1392,10 @@
             </svg>
             Search &amp; Filter Vehicles
           </div>
-          <div class="search-row">
+          <div
+            class="search-row"
+            style="grid-template-columns: 1fr 180px 180px 180px 180px auto"
+          >
             <div class="search-field">
               <label>Search by name or keyword</label>
               <input
@@ -1402,6 +1405,16 @@
                 placeholder="e.g. Fortuner, SUV, Toyota…"
                 oninput="applyFilters()"
               />
+            </div>
+            <div class="search-field">
+              <label>Location</label>
+              <select
+                class="search-input"
+                id="locationSelect"
+                onchange="applyFilters()"
+              >
+                <option value="">All Locations</option>
+              </select>
             </div>
             <div class="search-field">
               <label>Body Type</label>
@@ -1434,7 +1447,7 @@
                 <option>CNG</option>
               </select>
             </div>
-            <div style="display: flex; gap: 8px">
+            <div style="display: flex; gap: 8px; align-self: flex-end">
               <button class="search-btn" onclick="applyFilters()">
                 <svg
                   viewBox="0 0 24 24"
@@ -2270,6 +2283,84 @@
         filtered = [...VEHICLES];
         renderGrid();
       }
+      /* ── Populate Location Dropdown ── */
+      async function loadLocationDropdown() {
+        try {
+          const res = await fetch("http://localhost:5000/api/destinations");
+          const json = await res.json();
+          const destinations = json.data || [];
+          const select = document.getElementById("locationSelect");
+          destinations.forEach((dest) => {
+            const opt = document.createElement("option");
+            opt.value = dest.id;
+            opt.textContent = dest.name;
+            select.appendChild(opt);
+          });
+        } catch (err) {
+          console.error("Location dropdown error:", err);
+        }
+      }
+
+      /* ── FILTERS ── */
+      function applyFilters() {
+        const text = document.getElementById("searchText").value.toLowerCase();
+        const body = document.getElementById("filterBody").value;
+        const fuel = document.getElementById("filterFuel").value;
+        const locationId = document.getElementById("locationSelect").value;
+
+        filtered = VEHICLES.filter((v) => {
+          const matchText =
+            !text ||
+            (v.name || "").toLowerCase().includes(text) ||
+            (v.brand || "").toLowerCase().includes(text) ||
+            (v.model || "").toLowerCase().includes(text);
+          const matchBody = !body || v.body_type === body;
+          const matchFuel = !fuel || v.fuel_type === fuel;
+          const matchLocation =
+            !locationId || String(v.destination_id) === String(locationId);
+          return matchText && matchBody && matchFuel && matchLocation;
+        });
+        renderGrid();
+      }
+
+      function clearFilters() {
+        document.getElementById("searchText").value = "";
+        document.getElementById("filterBody").value = "";
+        document.getElementById("filterFuel").value = "";
+        document.getElementById("locationSelect").value = "";
+        filtered = [...VEHICLES];
+        renderGrid();
+      }
+
+      /* ── Read URL params ── */
+      function applyURLParams() {
+        const p = new URLSearchParams(window.location.search);
+        const fuel = p.get("fuel_type");
+        const body = p.get("body_type");
+        const destId = p.get("destination_id");
+
+        if (fuel) {
+          const el = document.getElementById("filterFuel");
+          const opt = Array.from(el.options).find(
+            (o) => o.value.toLowerCase() === fuel.toLowerCase(),
+          );
+          if (opt) el.value = opt.value;
+        }
+        if (body) {
+          const el = document.getElementById("filterBody");
+          const opt = Array.from(el.options).find(
+            (o) => o.value.toLowerCase() === body.toLowerCase(),
+          );
+          if (opt) el.value = opt.value;
+        }
+        if (destId) {
+          const el = document.getElementById("locationSelect");
+          const opt = Array.from(el.options).find(
+            (o) => String(o.value) === String(destId),
+          );
+          if (opt) el.value = opt.value;
+        }
+      }
 
       /* ══════════════════════════════
          ENQUIRY MODAL
@@ -2462,11 +2553,15 @@
         }
         // No transmission filter in this page's HTML, but handle gracefully if added later
       }
-
-      // Load vehicles first, then apply URL filters so VEHICLES array is populated
-      Promise.all([loadVehicles(), loadUserProfile()]).then(() => {
+      /* ── INIT ── */
+      updateWishBadge();
+      Promise.all([
+        loadVehicles(),
+        loadUserProfile(),
+        loadLocationDropdown(),
+      ]).then(() => {
         applyURLParams();
-        applyFilters(); // re-render with any pre-filled filters
+        applyFilters();
       });
     </script>
   </body>

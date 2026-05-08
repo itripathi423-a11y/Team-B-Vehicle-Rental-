@@ -11,7 +11,8 @@ router.get("/", (req, res) => {
       seating_capacity,
       price_4h, price_8h, price_1d,
       status, thumbnail, image_1, image_2, image_3,
-      description, features
+      description, features,
+      destination_id
     FROM vehicles
     WHERE is_deleted = 0 AND status = 'Available'
   `;
@@ -22,9 +23,9 @@ router.get("/", (req, res) => {
       return res.status(500).json({ message: "Database error" });
     }
 
-    const formatted = results.map(v => ({
+    const formatted = results.map((v) => ({
       ...v,
-      images: [v.thumbnail, v.image_1, v.image_2, v.image_3].filter(Boolean)
+      images: [v.thumbnail, v.image_1, v.image_2, v.image_3].filter(Boolean),
     }));
 
     res.json(formatted);

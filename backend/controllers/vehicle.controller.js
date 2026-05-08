@@ -1,4 +1,3 @@
-//For Booking user get the vehicles and details of the vehicle
 const db = require("../config/db");
 
 // GET ALL AVAILABLE VEHICLES
@@ -7,9 +6,11 @@ exports.getVehicles = (req, res) => {
     SELECT id, name, brand, model, year, body_type, fuel_type,
            transmission, seating_capacity,
            price_4h, price_8h, price_1d,
-           thumbnail, image_1, status
+           thumbnail, image_1, status,
+           destination_id
     FROM vehicles
     WHERE is_deleted = 0 AND status = 'Available'
+    ORDER BY id DESC
   `;
 
   db.query(sql, (err, results) => {
@@ -30,7 +31,7 @@ exports.getVehicleById = (req, res) => {
            transmission, seating_capacity,
            price_4h, price_8h, price_1d,
            thumbnail, image_1, image_2, image_3, image_4, image_5,
-           description, features, status
+           description, features, status, destination_id
     FROM vehicles
     WHERE id = ? AND is_deleted = 0
     LIMIT 1
@@ -48,7 +49,6 @@ exports.getVehicleById = (req, res) => {
         .json({ success: false, message: "Vehicle not found" });
     }
 
-    // Parse features JSON if present
     const vehicle = result[0];
     if (vehicle.features && typeof vehicle.features === "string") {
       try {

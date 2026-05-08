@@ -235,7 +235,8 @@ async function openEdit(id) {
       f_p8h: v.price_8h,
       f_p1d: v.price_1d,
       f_desc: v.description || "",
-      f_color: v.color || "", // ✅ FIX ADDED
+      f_color: v.color || "",
+      f_destination: v.destination_id || "",
     };
 
     Object.entries(fields).forEach(([id, val]) => {
@@ -408,6 +409,24 @@ document.getElementById("vehicleModal").addEventListener("click", function (e) {
 document.getElementById("confirmModal").addEventListener("click", function (e) {
   if (e.target === this) this.classList.remove("open");
 });
+// ── Load Destinations into dropdown ──────────────────────────
+async function loadDestinations() {
+  try {
+    const res = await fetch("http://localhost:5000/api/destinations");
+    const json = await res.json();
+    const destinations = json.data || [];
+    const select = document.getElementById("f_destination");
+    destinations.forEach((d) => {
+      const opt = document.createElement("option");
+      opt.value = d.id;
+      opt.textContent = d.name;
+      select.appendChild(opt);
+    });
+  } catch (err) {
+    console.error("Destination load error:", err);
+  }
+}
 
 // ── Init ──────────────────────────────────────────────────────
 loadVehicles();
+loadDestinations();

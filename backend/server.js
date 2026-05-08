@@ -7,6 +7,8 @@ const http = require("http");
 const path = require("path");
 
 const userRoutes = require("./routes/userRoutes");
+const destinationRoutes = require("./routes/destinationRoutes");
+
 const vehicleRoutes = require("./routes/admin.vehicle.routes");
 const adminRoutes = require("./routes/admin.dashboard.routes");
 const userDashboardRoutes = require("./routes/user.dashboard.routes");
@@ -72,6 +74,7 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/api/user", userProfileRoutes);
 app.use("/api", userRoutes);
 app.use("/api/vehicles", vehicleRoutes);
+app.use("/api/destinations", destinationRoutes);
 
 // ✅ Specific /api/admin/* routes MUST come BEFORE the generic /api/admin
 app.use("/api/admin/vehicles", vehicleRoutes);

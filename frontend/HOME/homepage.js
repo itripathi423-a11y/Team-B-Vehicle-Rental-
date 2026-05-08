@@ -10,10 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
       cars.sort((a, b) => b.id - a.id);
       cars = cars.slice(0, 3);
 
-      cars.forEach((car, index) => {
+      cars.forEach((car) => {
         const card = document.createElement("div");
         card.classList.add("card");
-
         card.innerHTML = `
           <div class="card-img">
             <img src="http://localhost:5000/uploads/vehicles/${car.thumbnail}"
@@ -36,7 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
         container.appendChild(card);
       });
 
-      // Attach View Details handlers after cards are in the DOM
       document.querySelectorAll(".card-btn[data-id]").forEach((btn) => {
         btn.addEventListener("click", () => {
           const id = btn.getAttribute("data-id");
@@ -45,6 +43,70 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     })
     .catch((err) => console.error("Fetch error:", err));
+
+  // ── Load Popular Destinations ─────────────────────────────────────────────
+  fetch("http://localhost:5000/api/destinations")
+    .then((res) => res.json())
+    .then((response) => {
+      console.log("Destinations response:", response);
+
+      const destinations = response.data || [];
+      const grid = document.getElementById("destinationsGrid");
+      const prevBtn = document.getElementById("destPrev");
+      const nextBtn = document.getElementById("destNext");
+
+      if (!grid) {
+        console.error("destinationsGrid element not found!");
+        return;
+      }
+
+      grid.innerHTML = "";
+
+      destinations.forEach((dest) => {
+        const card = document.createElement("div");
+        card.classList.add("dest-card");
+        card.innerHTML = `
+    <div class="dest-img-wrap">
+      <img src="http://localhost:5000/uploads/vehicles/${dest.image_url}"
+           alt="${dest.name}"
+           onerror="this.style.display='none'" />
+      <div class="dest-overlay">
+        <h3>${dest.name}</h3>
+      </div>
+    </div>
+  `;
+        grid.appendChild(card);
+      });
+
+      const PAGE_SIZE = 3;
+      let page = 0;
+      const totalPages = Math.ceil(destinations.length / PAGE_SIZE);
+
+      function updateGrid() {
+        grid.querySelectorAll(".dest-card").forEach((card, i) => {
+          const inRange = i >= page * PAGE_SIZE && i < (page + 1) * PAGE_SIZE;
+          card.style.display = inRange ? "" : "none";
+        });
+        prevBtn.classList.toggle("hidden", page === 0);
+        nextBtn.classList.toggle("hidden", page >= totalPages - 1);
+      }
+
+      prevBtn.addEventListener("click", () => {
+        if (page > 0) {
+          page--;
+          updateGrid();
+        }
+      });
+      nextBtn.addEventListener("click", () => {
+        if (page < totalPages - 1) {
+          page++;
+          updateGrid();
+        }
+      });
+
+      updateGrid();
+    })
+    .catch((err) => console.error("Destinations fetch error:", err));
 
   // ── Search Button ─────────────────────────────────────────────────────────
   document.querySelector(".search-btn")?.addEventListener("click", () => {
@@ -64,25 +126,26 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   });
 
-  // ── Browse All Cars (CTA button) ──────────────────────────────────────────
+  // ── Browse All Cars ───────────────────────────────────────────────────────
   document.getElementById("browseBtn")?.addEventListener("click", () => {
     redirectIfLoggedIn("../USER DASHBOARD/user.vehicle.listing.html");
   });
 
-  // ── View All link (fleet section) ─────────────────────────────────────────
-  document.querySelector(".view-all")?.addEventListener("click", (e) => {
-    e.preventDefault();
-    redirectIfLoggedIn("../USER DASHBOARD/user.vehicle.listing.html");
-  });
+  // ── View All link (fleet section only) ───────────────────────────────────
+  document
+    .querySelector(".fleet-section .view-all")
+    ?.addEventListener("click", (e) => {
+      e.preventDefault();
+      redirectIfLoggedIn("../USER DASHBOARD/user.vehicle.listing.html");
+    });
 
-  // ── Auth guard: check session before navigating ───────────────────────────
+  // ── Auth guard ────────────────────────────────────────────────────────────
   async function redirectIfLoggedIn(destination) {
     try {
       const res = await fetch("/api/user/profile", { credentials: "include" });
       if (res.ok) {
         window.location.href = destination;
       } else {
-        // Not logged in → send to login page, store intended destination
         window.location.href = `/index.html?redirect=${encodeURIComponent(destination)}`;
       }
     } catch {
