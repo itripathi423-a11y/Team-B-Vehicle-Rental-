@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AUTO DEALER — Vehicles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --orange: #ff5c1a;
+        --dark: #0d0d0d;
+        --text: #1a1a1a;
+        --muted: #6b7280;
+        --bg: #f4f5f7;
+        --white: #ffffff;
+        --border: #e5e7eb;
+        --orange-dim: #fff0e8;
+        --radius: 14px;
+        --radius-sm: 8px;
+        --shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 4px 24px rgba(0, 0, 0, 0.1);
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+      }
+
+      /* ── NAVBAR ── */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 48px;
+        background: rgba(13, 13, 13, 0.85);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+      .logo-mark {
+        width: 34px;
+        height: 34px;
+        background: var(--orange);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 15px;
+        color: #fff;
+        letter-spacing: 0.5px;
+      }
+      .logo-text {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 20px;
+        letter-spacing: 2px;
+        color: #fff;
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 36px;
+      }
+      .nav-links a {
+        color: rgba(255, 255, 255, 0.72);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 400;
+        letter-spacing: 0.2px;
+        transition: color 0.2s;
+      }
+      .nav-links a:hover {
+        color: #fff;
+      }
+      .nav-links a.active {
+        color: #fff;
+        font-weight: 500;
+      }
+      .nav-cta {
+        background: var(--orange);
+        color: #fff !important;
+        padding: 9px 22px;
+        border-radius: 8px;
+        font-weight: 500 !important;
+        transition: background 0.2s !important;
+      }
+      .nav-cta:hover {
+        background: #e04a0e !important;
+      }
+
+      /* ── PAGE HERO ── */
+      .page-hero {
+        position: relative;
+        height: 340px;
+        display: flex;
+        align-items: flex-end;
+        overflow: hidden;
+      }
+      .page-hero-bg {
+        position: absolute;
+        inset: 0;
+      }
+      .page-hero-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 60%;
+        filter: brightness(0.55);
+      }
+      .page-hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(13, 13, 13, 0.2) 0%,
+          rgba(13, 13, 13, 0.78) 100%
+        );
+      }
+      .page-hero-grain {
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+        opacity: 0.35;
+        pointer-events: none;
+      }
+      .page-hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 0 48px 44px;
+        width: 100%;
+      }
+      .hero-label-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 99px;
+        padding: 5px 14px;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 14px;
+        backdrop-filter: blur(6px);
+      }
+      .hero-label-pill .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--orange);
+      }
+      .page-hero-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: clamp(42px, 6vw, 72px);
+        letter-spacing: 2px;
+        color: #fff;
+        line-height: 1;
+        margin-bottom: 10px;
+      }
+      .page-hero-title .outline-text {
+        -webkit-text-stroke: 2px #fff;
+        color: transparent;
+      }
+      .page-hero-sub {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.65);
+        font-weight: 300;
+        letter-spacing: 0.3px;
+      }
+
+      /* ── SEARCH CARD ── */
+      .search-card-wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 48px;
+        position: relative;
+        z-index: 10;
+        margin-top: -42px;
+      }
+      .search-card {
+        background: rgba(13, 13, 13, 0.92);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius);
+        padding: 24px 28px;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+      }
+      .search-label {
+        font-family: "Space Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 2px;
+        color: rgba(255, 255, 255, 0.4);
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+
+      .search-fields {
+        display: grid;
+        grid-template-columns: 160px 1fr 160px 160px 160px auto;
+        gap: 10px;
+        align-items: end;
+      }
+
+      .search-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .search-field label {
+        font-size: 10px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+      .search-field input,
+      .search-field select {
+        height: 42px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: var(--radius-sm);
+        padding: 0 14px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        color: #fff;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+        appearance: none;
+      }
+      .search-field input::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+      }
+      .search-field select option {
+        background: #1a1a1a;
+        color: #fff;
+      }
+      .search-field input:focus,
+      .search-field select:focus {
+        border-color: var(--orange);
+        background: rgba(255, 92, 26, 0.08);
+      }
+      .search-btn {
+        height: 42px;
+        padding: 0 22px;
+        background: var(--orange);
+        border: none;
+        border-radius: var(--radius-sm);
+        color: #fff;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+        white-space: nowrap;
+      }
+      .search-btn:hover {
+        background: #e04a0e;
+        transform: translateY(-1px);
+      }
+      .clear-link {
+        height: 42px;
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.4);
+        cursor: pointer;
+        text-decoration: none;
+        transition: color 0.2s;
+        white-space: nowrap;
+      }
+      .clear-link:hover {
+        color: var(--orange);
+      }
+
+      /* ── MAIN CONTENT ── */
+      .content-wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 36px 48px 64px;
+      }
+      .results-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .results-count {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .results-count strong {
+        color: var(--dark);
+        font-weight: 600;
+      }
+      .sort-select {
+        height: 36px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 0 12px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 12.5px;
+        color: var(--text);
+        background: var(--white);
+        outline: none;
+        cursor: pointer;
+      }
+
+      /* ── VEHICLE GRID ── */
+      .vehicles-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+      }
+
+      @media (max-width: 1100px) {
+        .vehicles-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .vehicles-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .vehicle-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition:
+          transform 0.22s,
+          box-shadow 0.22s,
+          border-color 0.22s;
+        animation: fadeUp 0.4s ease both;
+      }
+      .vehicle-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+        border-color: rgba(255, 92, 26, 0.3);
+      }
+      .vehicle-img-wrap {
+        position: relative;
+        height: 180px;
+        background: var(--bg);
+        overflow: hidden;
+      }
+      .vehicle-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+      }
+      .vehicle-card:hover .vehicle-img-wrap img {
+        transform: scale(1.05);
+      }
+      .vehicle-img-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 60px;
+        background: linear-gradient(135deg, #f4f5f7, #e5e7eb);
+      }
+      .avail-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 4px 10px;
+        border-radius: 99px;
+        font-size: 10px;
+        font-weight: 700;
+      }
+      .avail-badge.available {
+        background: #ecfdf5;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
+      }
+      .avail-badge.booked {
+        background: #fff1f2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+      }
+
+      .vehicle-card-body {
+        padding: 16px;
+      }
+      .vc-name {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--dark);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 8px;
+      }
+      .vc-meta {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+      .vc-meta-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 9px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-size: 11px;
+        color: var(--text);
+        font-weight: 500;
+      }
+      .vc-prices {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        margin-bottom: 14px;
+      }
+      .price-box {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px 6px;
+        text-align: center;
+      }
+      .price-box-dur {
+        display: block;
+        font-size: 9px;
+        font-family: "Space Mono", monospace;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 3px;
+      }
+      .price-box-val {
+        display: block;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 18px;
+        color: var(--dark);
+        letter-spacing: 0.5px;
+        line-height: 1;
+      }
+      .view-btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background: var(--orange);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        font-weight: 500;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+      }
+      .view-btn:hover {
+        background: #e04a0e;
+        transform: translateY(-1px);
+      }
+      .empty-state {
+        grid-column: 1/-1;
+        text-align: center;
+        padding: 72px 24px;
+        color: var(--muted);
+      }
+      .empty-state h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 6px;
+      }
+      .empty-state p {
+        font-size: 13px;
+      }
+
+      /* ── TOAST ── */
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        padding: 12px 18px;
+        background: var(--dark);
+        color: #fff;
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-weight: 500;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: var(--shadow-md);
+        opacity: 0;
+        transform: translateY(8px);
+        transition: all 0.25s;
+        pointer-events: none;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ── FOOTER ── */
+      .footer {
+        background: var(--dark);
+        color: rgba(255, 255, 255, 0.6);
+      }
+      .footer-top {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 56px 48px 48px;
+        display: flex;
+        gap: 64px;
+      }
+      .footer-brand {
+        max-width: 240px;
+      }
+      .footer-logo-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .footer-logo-text {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 20px;
+        letter-spacing: 2px;
+        color: #fff;
+      }
+      .footer-brand p {
+        font-size: 13px;
+        line-height: 1.7;
+        color: rgba(255, 255, 255, 0.45);
+      }
+      .footer-links {
+        display: flex;
+        gap: 64px;
+        flex: 1;
+        justify-content: flex-end;
+      }
+      .footer-col {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .footer-col h4 {
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.35);
+        font-family: "Space Mono", monospace;
+        margin-bottom: 4px;
+      }
+      .footer-col a {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.55);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .footer-col a:hover {
+        color: #fff;
+      }
+      .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        padding: 20px 48px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 1100px) {
+        .vehicles-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .search-fields {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 768px) {
+        .navbar {
+          padding: 16px 20px;
+        }
+        .page-hero-content {
+          padding: 0 20px 36px;
+        }
+        .search-card-wrap {
+          padding: 0 20px;
+        }
+        .content-wrap {
+          padding: 28px 20px 48px;
+        }
+        .vehicles-grid {
+          grid-template-columns: 1fr;
+        }
+        .search-fields {
+          grid-template-columns: 1fr;
+        }
+        .footer-top {
+          flex-direction: column;
+          padding: 40px 20px 32px;
+          gap: 32px;
+        }
+        .footer-links {
+          gap: 32px;
+        }
+        .footer-bottom {
+          padding: 18px 20px;
+          flex-direction: column;
+          gap: 8px;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <header class="navbar">
+      <div class="nav-logo">
+        <span class="logo-mark">AD</span>
+        <span class="logo-text">AUTO DEALER</span>
+      </div>
+      <nav class="nav-links">
+        <a href="/HOME/homepage.html">Home</a>
+        <a href="/HOME/car.html" class="active">Car</a>
+        <a href="#">Packages</a>
+        <a href="../index.html" class="nav-cta">Log In</a>
+      </nav>
+    </header>
+
+    <!-- PAGE HERO -->
+    <section class="page-hero" style="padding-top: 70px">
+      <div class="page-hero-bg">
+        <img src="/ASSETS/Hero.jpg" class="page-hero-img" alt="Nepal roads" />
+        <div class="page-hero-overlay"></div>
+        <div class="page-hero-grain"></div>
+      </div>
+      <div class="page-hero-content">
+        <div class="hero-label-pill">
+          <span class="dot"></span> Available Now in Nepal
+        </div>
+        <h1 class="page-hero-title">
+          OUR<br /><span class="outline-text">FLEET</span>
+        </h1>
+        <p class="page-hero-sub">
+          Find the perfect car for every road in Nepal.
+        </p>
+      </div>
+    </section>
+
+    <!-- SEARCH CARD -->
+    <div class="search-card-wrap">
+      <div class="search-card">
+        <p class="search-label">SEARCH VEHICLES</p>
+        <div class="search-fields">
+          <!-- Text search -->
+          <div class="search-field">
+            <label>Search</label>
+            <input
+              type="text"
+              id="searchText"
+              placeholder="e.g. Fortuner, SUV, Toyota…"
+              oninput="applyFilters()"
+            />
+          </div>
+
+          <!-- Location -->
+          <div class="search-field">
+            <label>Location</label>
+            <select id="filterLocation" onchange="applyFilters()">
+              <option value="">All Locations</option>
+            </select>
+          </div>
+          <!-- Body Type -->
+          <div class="search-field">
+            <label>Body Type</label>
+            <select id="filterBody" onchange="applyFilters()">
+              <option value="">All Body Types</option>
+              <option>SUV</option>
+              <option>Sedan</option>
+              <option>Hatchback</option>
+              <option>MPV</option>
+              <option>Off-Road</option>
+              <option>Pickup</option>
+            </select>
+          </div>
+          <!-- Fuel Type -->
+          <div class="search-field">
+            <label>Fuel Type</label>
+            <select id="filterFuel" onchange="applyFilters()">
+              <option value="">All Fuel Types</option>
+              <option>Petrol</option>
+              <option>Diesel</option>
+              <option>Electric</option>
+              <option>Hybrid</option>
+              <option>CNG</option>
+            </select>
+          </div>
+          <!-- Transmission -->
+          <div class="search-field">
+            <label>Transmission</label>
+            <select id="filterTrans" onchange="applyFilters()">
+              <option value="">All Transmissions</option>
+              <option>Manual</option>
+              <option>Automatic</option>
+            </select>
+          </div>
+          <!-- Buttons -->
+          <div
+            class="search-field"
+            style="flex-direction: row; gap: 8px; align-self: end"
+          >
+            <button class="search-btn" onclick="applyFilters()">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                width="15"
+                height="15"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              Search
+            </button>
+            <a class="clear-link" onclick="clearFilters()">Clear</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content-wrap">
+      <div class="results-meta">
+        <p class="results-count">
+          Showing <strong id="resultCount">0</strong> vehicles
+        </p>
+        <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+          <option value="default">Sort: Default</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name-asc">Name: A–Z</option>
+        </select>
+      </div>
+
+      <div class="vehicles-grid" id="vehicleGrid"></div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo-row">
+            <span class="logo-mark">AD</span>
+            <span class="footer-logo-text">AUTO DEALER</span>
+          </div>
+          <p>
+            Reliable car rental across Nepal. Every journey, perfectly driven.
+          </p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Fleet</h4>
+            <a href="#">SUVs</a><a href="#">Sedans</a> <a href="#">Hatchbacks</a
+            ><a href="#">Luxury</a>
+          </div>
+          <div class="footer-col">
+            <h4>Company</h4>
+            <a href="#">About Us</a><a href="#">Contact</a> <a href="#">Terms</a
+            ><a href="#">Privacy</a>
+          </div>
+          <div class="footer-col">
+            <h4>Connect</h4>
+            <a href="#">Facebook</a><a href="#">Instagram</a>
+            <a href="#">Twitter</a><a href="#">+977-9800000000</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 AUTO DEALER. All rights reserved.</p>
+        <p>Built for Nepal 🇳🇵</p>
+      </div>
+    </footer>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+      let VEHICLES = [];
+      let filtered = [];
+
+      /* ── TOAST ── */
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast show";
+        setTimeout(() => (t.className = "toast"), 2200);
+      }
+
+      /* ── LOAD LOCATION DROPDOWN ── */
+      async function loadLocationDropdown() {
+        try {
+          const res = await fetch("http://localhost:5000/api/destinations");
+          const json = await res.json();
+          const destinations = json.data || [];
+          const select = document.getElementById("filterLocation");
+          destinations.forEach((dest) => {
+            const opt = document.createElement("option");
+            opt.value = dest.id;
+            opt.textContent = dest.name;
+            select.appendChild(opt);
+          });
+        } catch (err) {
+          console.error("Location dropdown error:", err);
+        }
+      }
+
+      /* ── FETCH VEHICLES ── */
+      async function loadVehicles() {
+        try {
+          const res = await fetch("/api/user/vehicles");
+          const json = await res.json();
+          VEHICLES = Array.isArray(json) ? json : json?.data || [];
+        } catch {
+          VEHICLES = [];
+        }
+        filtered = [...VEHICLES];
+        applyURLParams();
+        applyFilters();
+      }
+
+      /* ── RENDER ── */
+      function renderGrid() {
+        const sort = document.getElementById("sortSelect").value;
+        let data = [...filtered];
+        if (sort === "price-asc")
+          data.sort((a, b) => (a.price_4h || 0) - (b.price_4h || 0));
+        if (sort === "price-desc")
+          data.sort((a, b) => (b.price_4h || 0) - (a.price_4h || 0));
+        if (sort === "name-asc")
+          data.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+
+        document.getElementById("resultCount").textContent = data.length;
+        const grid = document.getElementById("vehicleGrid");
+
+        if (!data.length) {
+          grid.innerHTML = `<div class="empty-state"><h3>No vehicles found</h3><p>Try adjusting your filters.</p></div>`;
+          return;
+        }
+
+        grid.innerHTML = data
+          .map((v, i) => {
+            const img = v.thumbnail ? `/uploads/vehicles/${v.thumbnail}` : "";
+            const isAvail = v.status === "Available";
+            return `
+            <div class="vehicle-card" style="animation-delay:${i * 0.05}s">
+              <div class="vehicle-img-wrap">
+                ${
+                  img
+                    ? `<img src="${img}" alt="${v.name || "vehicle"}" loading="lazy">`
+                    : `<div class="vehicle-img-placeholder">🚗</div>`
+                }
+                <span class="avail-badge ${isAvail ? "available" : "booked"}">${isAvail ? "Available" : "Booked"}</span>
+              </div>
+              <div class="vehicle-card-body">
+                <div class="vc-name">${v.name || "Unknown"}</div>
+                <div class="vc-meta">
+                  <span class="vc-meta-pill">⛽ ${v.fuel_type || "-"}</span>
+                  <span class="vc-meta-pill">🚘 ${v.body_type || "-"}</span>
+                  <span class="vc-meta-pill">⚙ ${v.transmission || "-"}</span>
+                </div>
+                <div class="vc-prices">
+                  <div class="price-box"><span class="price-box-dur">4h</span><span class="price-box-val">${(v.price_4h || 0).toLocaleString()}</span></div>
+                  <div class="price-box"><span class="price-box-dur">8h</span><span class="price-box-val">${(v.price_8h || 0).toLocaleString()}</span></div>
+                  <div class="price-box"><span class="price-box-dur">1d</span><span class="price-box-val">${(v.price_1d || 0).toLocaleString()}</span></div>
+                </div>
+                <a href="#" class="view-btn" onclick="handleViewDetails(${v.id}); return false;">
+                  View Details →
+                </a>
+              </div>
+            </div>`;
+          })
+          .join("");
+      }
+
+      /* ── FILTERS ── */
+      function applyFilters() {
+        const text = document.getElementById("searchText").value.toLowerCase();
+        const body = document.getElementById("filterBody").value;
+        const fuel = document.getElementById("filterFuel").value;
+        const trans = document.getElementById("filterTrans").value;
+        const locationId = document.getElementById("filterLocation").value;
+
+        filtered = VEHICLES.filter((v) => {
+          const matchText =
+            !text ||
+            (v.name || "").toLowerCase().includes(text) ||
+            (v.brand || "").toLowerCase().includes(text) ||
+            (v.model || "").toLowerCase().includes(text);
+          const matchBody = !body || v.body_type === body;
+          const matchFuel = !fuel || v.fuel_type === fuel;
+          const matchTrans = !trans || v.transmission === trans;
+          const matchLocation =
+            !locationId || String(v.destination_id) === String(locationId);
+          return (
+            matchText && matchBody && matchFuel && matchTrans && matchLocation
+          );
+        });
+        renderGrid();
+      }
+
+      function clearFilters() {
+        ["searchText"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        ["filterBody", "filterFuel", "filterTrans", "filterLocation"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        filtered = [...VEHICLES];
+        renderGrid();
+      }
+
+      /* ── URL PARAMS (from homepage search) ── */
+      function applyURLParams() {
+        const p = new URLSearchParams(window.location.search);
+        const setVal = (id, key) => {
+          const val = p.get(key);
+          if (!val) return;
+          const el = document.getElementById(id);
+          const opt = Array.from(el.options).find(
+            (o) => o.value.toLowerCase() === val.toLowerCase(),
+          );
+          if (opt) el.value = opt.value;
+        };
+        setVal("filterFuel", "fuel_type");
+        setVal("filterBody", "body_type");
+        setVal("filterTrans", "transmission");
+
+        const destId = p.get("destination_id");
+        if (destId) {
+          const el = document.getElementById("filterLocation");
+          const opt = Array.from(el.options).find(
+            (o) => String(o.value) === String(destId),
+          );
+          if (opt) el.value = opt.value;
+        }
+      }
+
+      /* ── AUTH GUARD ── */
+      async function handleViewDetails(id) {
+        const guestPage = `/HOME/cars-details.html?id=${id}`;
+        const loggedInPage = `/USER%20DASHBOARD/vehicle-details.html?id=${id}`;
+
+        try {
+          const res = await fetch("http://localhost:5000/api/user/profile", {
+            credentials: "include",
+          });
+
+          if (res.ok) {
+            window.location.href = loggedInPage;
+          } else {
+            window.location.href = guestPage;
+          }
+        } catch (err) {
+          window.location.href = guestPage;
+        }
+      }
+
+      /* ── INIT ── */
+      Promise.all([loadLocationDropdown(), loadVehicles()]);
+    </script>
+  </body>
+</html>

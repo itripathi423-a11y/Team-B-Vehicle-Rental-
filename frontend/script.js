@@ -21,8 +21,17 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     // IMPORTANT FIX HERE
     const role = data.user?.role;
 
-
     setTimeout(() => {
+      // CHECK SAVED REDIRECT
+      const redirect = localStorage.getItem("redirectAfterLogin");
+
+      if (redirect) {
+        localStorage.removeItem("redirectAfterLogin");
+        window.location.href = redirect;
+        return;
+      }
+
+      // NORMAL LOGIN REDIRECT
       if (role === "admin") {
         window.location.href = "/ADMIN DASHBOARD/dashboard.html";
       } else {

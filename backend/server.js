@@ -72,6 +72,8 @@ app.get("/", (req, res) => {
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 /* ── ROUTES ── */
 app.use("/api/user", userProfileRoutes);
+app.use("/api/user/vehicle-details", vehicleDetailsRoutes);
+
 app.use("/api", userRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/destinations", destinationRoutes);
