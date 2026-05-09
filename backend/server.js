@@ -73,6 +73,8 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 /* ── ROUTES ── */
 app.use("/api/user", userProfileRoutes);
 app.use("/api/user/vehicle-details", vehicleDetailsRoutes);
+app.use("/api/auth", require("./routes/auth.forgot.routes"));
+app.use("/api/auth", require("./routes/auth.otp.routes"));
 
 app.use("/api", userRoutes);
 app.use("/api/vehicles", vehicleRoutes);
