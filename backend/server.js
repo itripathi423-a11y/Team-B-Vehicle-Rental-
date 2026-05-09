@@ -5,6 +5,7 @@ const cors = require("cors");
 const session = require("express-session");
 const http = require("http");
 const path = require("path");
+const passport = require("./config/passport");
 
 const userRoutes = require("./routes/userRoutes");
 const destinationRoutes = require("./routes/destinationRoutes");
@@ -70,6 +71,13 @@ app.get("/", (req, res) => {
 
 /* ── STATIC ── */
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+
+// After session middleware, add:
+app.use(passport.initialize());
+app.use(passport.session());
+
+// After other auth routes, add:
+app.use("/api/auth", require("./routes/auth.google.routes"));
 /* ── ROUTES ── */
 app.use("/api/user", userProfileRoutes);
 app.use("/api/user/vehicle-details", vehicleDetailsRoutes);
