@@ -11,6 +11,32 @@
       rel="stylesheet"
     />
     <link href="userdashboard.css" rel="stylesheet" />
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         AUTH GUARD — runs before page renders, blocks unauthenticated access
+         ══════════════════════════════════════════════════════════════════ -->
+    <script>
+      (async function authGuard() {
+        // Hide body immediately so unauthenticated users never see content flash
+        document.documentElement.style.visibility = "hidden";
+        try {
+          const res = await fetch("http://localhost:5000/api/user/profile", {
+            credentials: "include",
+          });
+          if (!res.ok) throw new Error("Not authenticated");
+          // Authenticated — reveal page
+          document.documentElement.style.visibility = "";
+        } catch (_) {
+          // Not logged in — save intended URL and redirect to login
+          sessionStorage.setItem(
+            "postLoginRedirect",
+            window.location.pathname + window.location.search,
+          );
+          window.location.replace("/index.html");
+        }
+      })();
+    </script>
+
     <style>
       :root {
         --orange: #ff5c1a;
@@ -288,8 +314,6 @@
         font-size: 11px;
         color: var(--muted);
       }
-
-      /* ── USER DROPDOWN ── */
       .user-dropdown-wrap {
         position: relative;
         cursor: pointer;
@@ -641,10 +665,13 @@
       .form-group textarea::placeholder {
         color: #c0c5cd;
       }
-      .form-group input[readonly] {
-        background: #fafafa;
+      .form-group input[readonly],
+      .form-group input:disabled,
+      .form-group select:disabled {
+        background: #f8f9fa;
         color: var(--muted);
         cursor: not-allowed;
+        border-style: dashed;
       }
       .form-group .hint {
         font-size: 11px;
@@ -709,6 +736,139 @@
         font-weight: 700;
         margin-bottom: 16px;
         border: 1px solid #bbf7d0;
+      }
+
+      /* ── PACKAGE BANNER ── */
+      #pkg-banner {
+        background: #0a0a0a;
+        border: 1px solid var(--orange);
+        border-radius: var(--radius);
+        padding: 20px 24px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        position: relative;
+        overflow: hidden;
+        animation: fadeUp 0.35s ease both;
+      }
+      #pkg-banner::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: var(--orange);
+        border-radius: var(--radius) 0 0 var(--radius);
+      }
+      #pkg-banner::after {
+        content: "TOUR PACKAGE";
+        position: absolute;
+        right: -10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 64px;
+        letter-spacing: 6px;
+        color: rgba(255, 255, 255, 0.03);
+        pointer-events: none;
+        user-select: none;
+        white-space: nowrap;
+      }
+      .pkg-banner-img {
+        width: 72px;
+        height: 72px;
+        border-radius: 10px;
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .pkg-banner-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 10px;
+        background: #1a1a1a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        flex-shrink: 0;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .pkg-banner-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .pkg-banner-tag {
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        color: var(--orange);
+        font-weight: 700;
+        margin-bottom: 5px;
+        font-family: "Space Mono", monospace;
+      }
+      .pkg-banner-title {
+        font-size: 17px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .pkg-banner-meta {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.45);
+      }
+      .pkg-banner-pill {
+        background: var(--orange);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 6px 14px;
+        border-radius: 99px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        font-family: "Space Mono", monospace;
+        letter-spacing: 0.5px;
+      }
+
+      /* Location notice for package mode */
+      #pkg-location-notice {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #fff8f0;
+        border: 1px solid #fed7aa;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        font-size: 13px;
+        color: #92400e;
+        animation: fadeUp 0.35s ease 0.1s both;
+      }
+      #pkg-location-notice strong {
+        color: #7c2d12;
+      }
+
+      /* Locked field visual indicator */
+      .locked-field-wrap {
+        position: relative;
+      }
+      .locked-badge {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 9px;
+        background: #f3f4f6;
+        color: #6b7280;
+        padding: 2px 8px;
+        border-radius: 99px;
+        font-family: "Space Mono", monospace;
+        pointer-events: none;
+        border: 1px solid var(--border);
       }
 
       /* ── VEHICLE SUMMARY ── */
@@ -809,6 +969,11 @@
         border-color: var(--orange);
         background: var(--orange-dim);
         box-shadow: 0 0 0 3px var(--orange-dim);
+      }
+      .dur-opt.locked {
+        opacity: 0.6;
+        cursor: not-allowed;
+        pointer-events: none;
       }
       .dur-opt .d-label {
         font-size: 11px;
@@ -1301,8 +1466,11 @@
         .sc-total-amt {
           font-size: 44px;
         }
-        .notes-suggestions {
-          gap: 5px;
+        #pkg-banner {
+          flex-wrap: wrap;
+        }
+        #pkg-banner .pkg-banner-pill {
+          order: -1;
         }
       }
 
@@ -1664,7 +1832,7 @@
         </button>
         <span class="topbar-page-title">Book a Vehicle</span>
         <div class="topbar-right">
-          <!-- ── NOTIFICATION BELL ── -->
+          <!-- NOTIFICATION BELL -->
           <div class="notif-wrap" id="notifWrap">
             <button
               class="icon-btn notif-trigger"
@@ -1709,7 +1877,7 @@
             </div>
           </div>
 
-          <!-- ── USER DROPDOWN ── -->
+          <!-- USER DROPDOWN -->
           <div class="topbar-user user-dropdown-wrap" id="userDropdownWrap">
             <div class="topbar-avatar" id="topbarAvatar">
               <span id="topbarInitials"></span>
@@ -1730,7 +1898,6 @@
             >
               <polyline points="6 9 12 15 18 9" />
             </svg>
-
             <div class="user-dropdown-menu" id="userDropdownMenu">
               <div class="dd-header">
                 <div class="dd-header-name" id="ddName"></div>
@@ -1783,7 +1950,6 @@
                 KYC verification
                 <span class="dd-kyc-badge" id="ddKycBadge">Pending</span>
               </button>
-
               <div class="dd-divider"></div>
               <button class="dd-item dd-danger" id="logoutBtn">
                 <svg
@@ -1817,7 +1983,9 @@
 
         <div class="page-header">
           <h1>Complete Your <span>Booking</span></h1>
-          <p>Fill in the details below to confirm your rental reservation</p>
+          <p id="pageSubtitle">
+            Fill in the details below to confirm your rental reservation
+          </p>
         </div>
 
         <!-- STEP BAR -->
@@ -1859,6 +2027,17 @@
         </div>
 
         <div class="booking-col">
+          <!-- ══ PACKAGE BANNER (injected by JS if source=package) ══ -->
+          <div id="pkg-banner" style="display: none"></div>
+          <div id="pkg-location-notice" style="display: none">
+            <span style="font-size: 20px; flex-shrink: 0">📍</span>
+            <span
+              >All package details are pre-filled and locked.
+              <strong>Please enter your pickup location</strong> below to
+              complete the booking.</span
+            >
+          </div>
+
           <!-- SEC 1: USER DETAILS -->
           <div class="form-section" style="animation-delay: 0.05s">
             <div class="fs-head">
@@ -1941,6 +2120,7 @@
               </div>
               <a
                 href="user.vehicle.listing.html"
+                id="changeVehicleLink"
                 style="
                   font-size: 12px;
                   color: var(--orange);
@@ -1949,8 +2129,9 @@
                   flex-shrink: 0;
                   white-space: nowrap;
                 "
-                >Change →</a
               >
+                Change →
+              </a>
             </div>
           </div>
 
@@ -2044,7 +2225,7 @@
                 </div>
               </div>
             </div>
-            <div class="duration-opts">
+            <div class="duration-opts" id="durationOpts">
               <div
                 class="dur-opt selected"
                 onclick="selectDuration('4h', this)"
@@ -2358,7 +2539,6 @@
         />
       </svg>
     </button>
-
     <div id="chat-panel">
       <div class="cp-header">
         <div class="cp-avatar">
@@ -2428,11 +2608,25 @@
 
     <script>
       /* ════════════════════════════════════════
-         CONFIG
+         CONFIG & STATE
       ════════════════════════════════════════ */
       const BASE_URL = "/api";
       const urlParams = new URLSearchParams(location.search);
-      const vehicleId = parseInt(urlParams.get("id"));
+
+      // ── Package mode detection ──
+      const IS_PACKAGE = urlParams.get("source") === "package";
+      const PKG_ID = urlParams.get("pkg_id") || "";
+      const PKG_VID = urlParams.get("vehicle_id") || "";
+      const PKG_TITLE = urlParams.get("pkg_title") || "Tour Package";
+      const PKG_PRICE = parseFloat(urlParams.get("pkg_price") || "0");
+      const PKG_DAYS = parseInt(urlParams.get("pkg_days") || "1", 10);
+      const PKG_IMAGE = urlParams.get("pkg_image") || "";
+
+      // ── Regular vehicle mode ──
+      const vehicleId = IS_PACKAGE
+        ? parseInt(PKG_VID) || null
+        : parseInt(urlParams.get("id")) || null;
+
       const fuelIcons = {
         Petrol: "⛽",
         Diesel: "🛢️",
@@ -2442,8 +2636,21 @@
       };
 
       let vehicle = null;
-      let selectedDuration = "4h";
-      let currentPrice = 0;
+      let selectedDuration = IS_PACKAGE ? "custom" : "4h";
+      let currentPrice = IS_PACKAGE ? PKG_PRICE : 0;
+
+      /* ════════════════════════════════════════
+         API HELPER  (session-cookie based)
+      ════════════════════════════════════════ */
+      async function apiFetch(path, options = {}) {
+        const res = await fetch(`${BASE_URL}${path}`, {
+          credentials: "include",
+          headers: { "Content-Type": "application/json", ...options.headers },
+          ...options,
+        });
+        if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`);
+        return res.json();
+      }
 
       /* ════════════════════════════════════════
          USER DROPDOWN
@@ -2461,25 +2668,105 @@
         userDropdownMenu?.classList.remove("open");
         topbarChevron?.classList.remove("open");
       });
-      document.getElementById("logoutBtn")?.addEventListener("click", () => {
-        window.location.href = "/index.html";
-      });
+      document
+        .getElementById("logoutBtn")
+        ?.addEventListener("click", async () => {
+          try {
+            await fetch("/api/auth/logout", {
+              method: "POST",
+              credentials: "include",
+            });
+          } catch (_) {}
+          sessionStorage.removeItem("postLoginRedirect");
+          window.location.href = "/index.html";
+        });
 
       /* ════════════════════════════════════════
-         API HELPER
+         PACKAGE BANNER
       ════════════════════════════════════════ */
-      async function apiFetch(path, options = {}) {
-        const token = localStorage.getItem("token") || "";
-        const res = await fetch(`${BASE_URL}${path}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-            ...options.headers,
-          },
-          ...options,
+      function renderPackageBanner() {
+        if (!IS_PACKAGE) return;
+
+        const banner = document.getElementById("pkg-banner");
+        const notice = document.getElementById("pkg-location-notice");
+
+        const imgHTML = PKG_IMAGE
+          ? `<img class="pkg-banner-img" src="http://localhost:5000/uploads/tours/${PKG_IMAGE}"
+               alt="${PKG_TITLE}" onerror="this.outerHTML='<div class=pkg-banner-icon>🗺️</div>'">`
+          : `<div class="pkg-banner-icon">🗺️</div>`;
+
+        banner.innerHTML = `
+          ${imgHTML}
+          <div class="pkg-banner-info">
+            <div class="pkg-banner-tag">TOUR PACKAGE</div>
+            <div class="pkg-banner-title">${PKG_TITLE}</div>
+            <div class="pkg-banner-meta">
+              ${PKG_DAYS} day${PKG_DAYS > 1 ? "s" : ""}&nbsp;·&nbsp;
+              Rs ${PKG_PRICE.toLocaleString()} total
+            </div>
+          </div>
+          <div class="pkg-banner-pill">Booking for Package</div>
+        `;
+        banner.style.display = "flex";
+        notice.style.display = "flex";
+
+        // Update page subtitle
+        document.getElementById("pageSubtitle").textContent =
+          `Booking for "${PKG_TITLE}" — just enter your pickup location to confirm`;
+
+        // Hide "Change →" link when in package mode (vehicle is fixed)
+        const changeLink = document.getElementById("changeVehicleLink");
+        if (changeLink) changeLink.style.display = "none";
+      }
+
+      /* ════════════════════════════════════════
+         PACKAGE FORM LOCK-IN
+      ════════════════════════════════════════ */
+      function applyPackageLocks() {
+        if (!IS_PACKAGE) return;
+
+        // Lock duration to custom + set days
+        document.querySelectorAll(".dur-opt").forEach((el) => {
+          el.classList.remove("selected");
+          el.classList.add("locked");
         });
-        if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`);
-        return res.json();
+        // Show custom days wrap, set value, lock it
+        const customWrap = document.getElementById("customDaysWrap");
+        customWrap.classList.add("show");
+        const customInput = document.getElementById("customDays");
+        customInput.value = PKG_DAYS;
+        customInput.setAttribute("readonly", true);
+        customInput.setAttribute("disabled", true);
+
+        // Set pickup datetime to next rounded hour, dropoff = pickup + days
+        const now = new Date();
+        now.setMinutes(0, 0, 0);
+        now.setHours(now.getHours() + 1);
+        const pad = (n) => String(n).padStart(2, "0");
+        const toLocalDT = (d) =>
+          `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+
+        const pickupDT = document.getElementById("pickupDT");
+        const dropoffDT = document.getElementById("dropoffDT");
+
+        pickupDT.value = toLocalDT(now);
+        const drop = new Date(now.getTime() + PKG_DAYS * 24 * 3600000);
+        dropoffDT.value = toLocalDT(drop);
+
+        // Lock datetime fields
+        pickupDT.setAttribute("readonly", true);
+        pickupDT.setAttribute("disabled", true);
+
+        // Override price display
+        document.getElementById("dp4h").textContent = "—";
+        document.getElementById("dp8h").textContent = "—";
+        document.getElementById("dp1d").textContent = "—";
+
+        // Keep pickup location editable and focused
+        setTimeout(() => document.getElementById("pickupLoc")?.focus(), 400);
+
+        // Override calcPrice for this session
+        currentPrice = PKG_PRICE;
       }
 
       /* ════════════════════════════════════════
@@ -2487,7 +2774,18 @@
       ════════════════════════════════════════ */
       async function loadVehicle() {
         if (!vehicleId) {
-          document.getElementById("vsName").textContent = "No vehicle selected";
+          // Package with no vehicle linked — show generic placeholder
+          if (IS_PACKAGE) {
+            document.getElementById("vsName").textContent = PKG_TITLE;
+            document.getElementById("vsChips").innerHTML =
+              `<span class="vs-chip">📦 Tour Package</span>
+               <span class="vs-chip">📅 ${PKG_DAYS} day${PKG_DAYS > 1 ? "s" : ""}</span>`;
+            markStep(2, "done");
+            updateSummary();
+          } else {
+            document.getElementById("vsName").textContent =
+              "No vehicle selected";
+          }
           return;
         }
         try {
@@ -2506,8 +2804,6 @@
             .filter(Boolean)
             .map((img) => (img.startsWith("http") ? img : BASE_IMG + img));
 
-          currentPrice = parseFloat(vehicle.price_4h) || 0;
-
           document.getElementById("bcVehicle").textContent = vehicle.name;
           document.title = `AUTO DEALER — Book ${vehicle.name}`;
 
@@ -2523,32 +2819,44 @@
             <span class="vs-chip">👥 ${vehicle.seating_capacity} seats</span>
           `;
 
-          document.getElementById("dp4h").textContent =
-            `Rs ${parseFloat(vehicle.price_4h).toLocaleString()}`;
-          document.getElementById("dp8h").textContent =
-            `Rs ${parseFloat(vehicle.price_8h).toLocaleString()}`;
-          document.getElementById("dp1d").textContent =
-            `Rs ${parseFloat(vehicle.price_1d).toLocaleString()}`;
+          // Only populate pricing tiles if not package mode
+          if (!IS_PACKAGE) {
+            document.getElementById("dp4h").textContent =
+              `Rs ${parseFloat(vehicle.price_4h).toLocaleString()}`;
+            document.getElementById("dp8h").textContent =
+              `Rs ${parseFloat(vehicle.price_8h).toLocaleString()}`;
+            document.getElementById("dp1d").textContent =
+              `Rs ${parseFloat(vehicle.price_1d).toLocaleString()}`;
+            currentPrice = parseFloat(vehicle.price_4h) || 0;
 
-          // ── FIX: Set pickup to next whole hour, then call updateDropoff() ──
-          const now = new Date();
-          now.setMinutes(0, 0, 0);
-          now.setHours(now.getHours() + 1);
-          const fmt = (d) => d.toISOString().slice(0, 16);
-
-          document.getElementById("pickupDT").value = fmt(now);
-
-          // Call updateDropoff() so drop-off is always AFTER pickup
-          updateDropoff();
+            // Set default pickup time for non-package
+            const now = new Date();
+            now.setMinutes(0, 0, 0);
+            now.setHours(now.getHours() + 1);
+            document.getElementById("pickupDT").value = now
+              .toISOString()
+              .slice(0, 16);
+            updateDropoff();
+          }
 
           markStep(2, "done");
           updateSummary();
           loadUserProfile();
         } catch (err) {
           console.error("Vehicle load failed:", err.message);
-          document.getElementById("vsName").textContent =
-            "Failed to load vehicle — check the URL";
-          document.getElementById("vsImg").textContent = "🚗";
+          if (IS_PACKAGE) {
+            // Package mode — show package title even if vehicle fetch fails
+            document.getElementById("vsName").textContent = PKG_TITLE;
+            document.getElementById("vsChips").innerHTML =
+              `<span class="vs-chip">📦 Tour Package</span>`;
+            markStep(2, "done");
+            updateSummary();
+            loadUserProfile();
+          } else {
+            document.getElementById("vsName").textContent =
+              "Failed to load vehicle";
+            document.getElementById("vsImg").textContent = "🚗";
+          }
         }
       }
 
@@ -2560,9 +2868,16 @@
           const user = await apiFetch("/user/profile");
           if (!user) return;
 
-          const fullName = `${user.first_name} ${user.last_name}`;
-          const initials =
-            `${user.first_name?.[0] ?? ""}${user.last_name?.[0] ?? ""}`.toUpperCase();
+          const fullName =
+            `${user.first_name || ""} ${user.last_name || ""}`.trim() ||
+            user.name ||
+            "";
+          const initials = fullName
+            .split(" ")
+            .map((w) => w[0] || "")
+            .slice(0, 2)
+            .join("")
+            .toUpperCase();
           const isVerified = user.kyc_status === "verified";
           const hasPhoto = !!user.profile_photo;
 
@@ -2588,18 +2903,14 @@
           if (sidebarNameEl) sidebarNameEl.textContent = fullName;
           const sidebarKycEl = document.getElementById("sidebarKyc");
           if (sidebarKycEl) {
-            if (isVerified) {
-              sidebarKycEl.textContent = "KYC Verified";
-              sidebarKycEl.className = "user-kyc-status verified";
-            } else if (user.kyc_status === "rejected") {
-              sidebarKycEl.textContent = "KYC Rejected";
-              sidebarKycEl.className = "user-kyc-status unverified";
-            } else {
-              sidebarKycEl.textContent = "KYC Pending";
-              sidebarKycEl.className = "user-kyc-status unverified";
-            }
+            sidebarKycEl.textContent = isVerified
+              ? "KYC Verified"
+              : user.kyc_status === "rejected"
+                ? "KYC Rejected"
+                : "KYC Pending";
+            sidebarKycEl.className =
+              "user-kyc-status " + (isVerified ? "verified" : "unverified");
           }
-
           populateAvatar(
             document.getElementById("topbarAvatar"),
             document.getElementById("topbarInitials"),
@@ -2613,15 +2924,14 @@
               : "Member";
             topbarRoleEl.style.color = isVerified ? "#16a34a" : "";
           }
-
           const ddName = document.getElementById("ddName");
           const ddEmail = document.getElementById("ddEmail");
           if (ddName) ddName.textContent = fullName;
           if (ddEmail) ddEmail.textContent = user.email;
-
           const ddKycBadge = document.getElementById("ddKycBadge");
           if (ddKycBadge && isVerified) ddKycBadge.style.display = "none";
 
+          // Fill booking form
           const nameEl = document.getElementById("userName");
           const emailEl = document.getElementById("userEmail");
           const phoneEl = document.getElementById("userPhone");
@@ -2633,20 +2943,20 @@
           window._userEmail = user.email;
           window._userName = fullName;
 
-          const loader = document.getElementById("profileLoadingState");
-          if (loader) loader.remove();
-
+          document.getElementById("profileLoadingState")?.remove();
           const fields = document.getElementById("userFields");
           if (fields) fields.style.display = "";
 
           const fsHead = document
             .querySelector("#userFields")
-            .closest(".form-section")
-            .querySelector(".fs-head");
-          const badge = document.createElement("div");
-          badge.className = "profile-loaded-badge";
-          badge.innerHTML = `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Profile loaded from your account`;
-          fsHead.insertAdjacentElement("afterend", badge);
+            ?.closest(".form-section")
+            ?.querySelector(".fs-head");
+          if (fsHead) {
+            const badge = document.createElement("div");
+            badge.className = "profile-loaded-badge";
+            badge.innerHTML = `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Profile loaded from your account`;
+            fsHead.insertAdjacentElement("afterend", badge);
+          }
 
           markStep(1, "done");
           updateSummary();
@@ -2667,6 +2977,7 @@
          DURATION LOGIC
       ════════════════════════════════════════ */
       function selectDuration(dur, el) {
+        if (IS_PACKAGE) return; // locked in package mode
         selectedDuration = dur;
         document
           .querySelectorAll(".dur-opt")
@@ -2690,41 +3001,29 @@
           document.getElementById("pickupLoc").value;
       }
 
-      // ── FIX: Always adds hours to pickup — never sets a stale static value ──
       function updateDropoff() {
+        if (IS_PACKAGE) return; // dates already locked
         const pVal = document.getElementById("pickupDT").value;
         if (!pVal) return;
-
         const pickup = new Date(pVal);
         if (isNaN(pickup.getTime())) return;
 
         let hours = 4;
         if (selectedDuration === "8h") hours = 8;
         if (selectedDuration === "1day") hours = 24;
-        if (selectedDuration === "custom") {
+        if (selectedDuration === "custom")
           hours =
             (parseInt(document.getElementById("customDays").value) || 2) * 24;
-        }
 
         const drop = new Date(pickup.getTime() + hours * 3600000);
-        // Use local ISO string to avoid timezone offset issues
         const pad = (n) => String(n).padStart(2, "0");
-        const localISO =
-          drop.getFullYear() +
-          "-" +
-          pad(drop.getMonth() + 1) +
-          "-" +
-          pad(drop.getDate()) +
-          "T" +
-          pad(drop.getHours()) +
-          ":" +
-          pad(drop.getMinutes());
-
-        document.getElementById("dropoffDT").value = localISO;
+        document.getElementById("dropoffDT").value =
+          `${drop.getFullYear()}-${pad(drop.getMonth() + 1)}-${pad(drop.getDate())}T${pad(drop.getHours())}:${pad(drop.getMinutes())}`;
         updateSummary();
       }
 
       function calcPrice() {
+        if (IS_PACKAGE) return PKG_PRICE; // fixed package price
         if (!vehicle) return 0;
         if (selectedDuration === "4h") return parseFloat(vehicle.price_4h) || 0;
         if (selectedDuration === "8h") return parseFloat(vehicle.price_8h) || 0;
@@ -2739,6 +3038,8 @@
       }
 
       function durLabel() {
+        if (IS_PACKAGE)
+          return `${PKG_DAYS} Day${PKG_DAYS > 1 ? "s" : ""} (Tour Package)`;
         if (selectedDuration === "4h") return "4 Hours";
         if (selectedDuration === "8h") return "8 Hours";
         if (selectedDuration === "1day") return "1 Day";
@@ -2748,6 +3049,7 @@
       }
 
       function rentalTypeForDB() {
+        if (IS_PACKAGE) return "custom";
         if (selectedDuration === "4h") return "4h";
         if (selectedDuration === "8h") return "8h";
         if (selectedDuration === "1day") return "1d";
@@ -2804,7 +3106,7 @@
         };
 
         set("scName", name);
-        set("scVehicle", vehicle?.name || "—");
+        set("scVehicle", IS_PACKAGE ? PKG_TITLE : vehicle?.name || "—");
         set("scPickup", pickup);
         set("scDropoff", dropoff);
         set("scDuration", durLabel());
@@ -2813,7 +3115,6 @@
         set("scPhone", phone);
         set("scTotal", currentPrice.toLocaleString());
 
-        // Show/hide notes row in summary
         const notesRow = document.getElementById("scNotesRow");
         const notesVal = document.getElementById("scNotes");
         if (notes) {
@@ -2847,27 +3148,39 @@
         const email = document.getElementById("userEmail")?.value.trim();
         const phone = document.getElementById("userPhone")?.value.trim();
         const pickup = document.getElementById("pickupLoc")?.value.trim();
-        const pdt = document.getElementById("pickupDT")?.value;
+        const pdt = IS_PACKAGE
+          ? document.getElementById("pickupDT").defaultValue ||
+            document.getElementById("pickupDT").value
+          : document.getElementById("pickupDT")?.value;
         const ddt = document.getElementById("dropoffDT")?.value;
         const notes =
           document.getElementById("bookingNotes")?.value.trim() || null;
 
-        if (!name || !email || !phone || !pickup || !pdt) {
+        // Read locked datetime for package mode from the actual input value
+        const pickupVal = document.getElementById("pickupDT").value;
+        const dropoffVal = document.getElementById("dropoffDT").value;
+
+        if (!name || !email || !phone || !pickup) {
           alert("Please fill in all required fields before confirming.");
           return;
         }
-        if (!vehicle) {
-          alert("Vehicle data not loaded. Please refresh the page.");
+        if (!pickupVal) {
+          alert("Pickup date is missing. Please refresh and try again.");
           return;
         }
 
-        // ── Frontend guard: drop must be after pickup ──
-        const pickupDate = new Date(pdt);
-        const dropDate = new Date(ddt);
-        if (!ddt || dropDate <= pickupDate) {
+        const pickupDate = new Date(pickupVal);
+        const dropDate = new Date(dropoffVal);
+        if (!dropoffVal || dropDate <= pickupDate) {
           alert(
             "Drop-off time must be after pickup time. Please check your date and duration.",
           );
+          return;
+        }
+
+        // In package mode, validate that a vehicle exists (or allow null for packageOnly)
+        if (!IS_PACKAGE && !vehicle) {
+          alert("Vehicle data not loaded. Please refresh the page.");
           return;
         }
 
@@ -2875,24 +3188,24 @@
         btn.disabled = true;
         btn.innerHTML = `<svg style="animation:spin .8s linear infinite" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" opacity=".25"/><path d="M21 12a9 9 0 0 1-9 9"/></svg> Processing…`;
 
-        // Calculate total_days from actual datetime diff
         const diffMs = dropDate - pickupDate;
         const totalDays = diffMs / (1000 * 60 * 60 * 24);
 
         const payload = {
           user_id: window._userId || null,
-          vehicle_id: vehicle.id,
+          vehicle_id: vehicleId || vehicle?.id || null,
           user_name: name,
           user_email: email,
           user_phone: phone,
           pickup_location: pickup,
           rental_type: rentalTypeForDB(),
-          pickup_datetime: pdt,
-          drop_datetime: ddt,
+          pickup_datetime: pickupVal,
+          drop_datetime: dropoffVal,
           total_days: totalDays,
           price_per_unit: currentPrice,
           total_price: currentPrice,
           notes: notes,
+          ...(IS_PACKAGE && { pkg_id: PKG_ID }), // pass pkg_id if available
         };
 
         try {
@@ -2940,8 +3253,12 @@
       if (toggle)
         toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
 
-      /* ── BOOT ── */
-      loadVehicle();
+      /* ════════════════════════════════════════
+         BOOT — order matters
+      ════════════════════════════════════════ */
+      renderPackageBanner(); // 1. show banner immediately (no async)
+      applyPackageLocks(); // 2. lock fields before vehicle loads
+      loadVehicle(); // 3. fetch vehicle (also calls loadUserProfile)
     </script>
   </body>
 </html>

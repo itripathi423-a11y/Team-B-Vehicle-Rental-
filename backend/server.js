@@ -8,6 +8,7 @@ const path = require("path");
 const passport = require("./config/passport");
 
 const userRoutes = require("./routes/userRoutes");
+const tourPackagesRouter = require("./routes/tourPackages.routes");
 const destinationRoutes = require("./routes/destinationRoutes");
 
 const vehicleRoutes = require("./routes/admin.vehicle.routes");
@@ -85,6 +86,7 @@ app.use("/api/auth", require("./routes/auth.forgot.routes"));
 app.use("/api/auth", require("./routes/auth.otp.routes"));
 
 app.use("/api", userRoutes);
+app.use("/api/tour-packages", tourPackagesRouter);
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/destinations", destinationRoutes);
 
