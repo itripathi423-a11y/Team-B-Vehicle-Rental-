@@ -12,14 +12,11 @@
     />
     <link href="userdashboard.css" rel="stylesheet" />
 
-    <!-- ── NOTIFICATION CSS ── -->
     <style>
-      /* Notification wrap */
+      /* ── NOTIFICATION CSS ── */
       .notif-wrap {
         position: relative;
       }
-
-      /* Bell dot — animated pulse when there are unreads */
       .notif-dot {
         position: absolute;
         top: 4px;
@@ -41,8 +38,6 @@
           box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
         }
       }
-
-      /* Count badge */
       .notif-count {
         position: absolute;
         top: -5px;
@@ -62,8 +57,6 @@
         pointer-events: none;
         font-family: "Space Mono", monospace;
       }
-
-      /* Panel */
       .notif-panel {
         display: none;
         position: absolute;
@@ -93,8 +86,6 @@
           transform: translateY(0);
         }
       }
-
-      /* Panel header */
       .np-head {
         display: flex;
         align-items: center;
@@ -122,15 +113,11 @@
       .np-mark-all:hover {
         opacity: 0.7;
       }
-
-      /* Scrollable list */
       .np-list {
         overflow-y: auto;
         flex: 1;
         overscroll-behavior: contain;
       }
-
-      /* Placeholder / empty */
       .np-placeholder,
       .np-empty {
         padding: 36px 20px;
@@ -142,8 +129,6 @@
         font-size: 34px;
         margin-bottom: 8px;
       }
-
-      /* Notification item */
       .np-item {
         display: flex;
         gap: 12px;
@@ -160,8 +145,6 @@
       .np-item:hover {
         background: #fafafa;
       }
-
-      /* Unread */
       .np-item.unread {
         background: #fff8f5;
       }
@@ -178,8 +161,6 @@
         background: #ff5c1a;
         border-radius: 0 2px 2px 0;
       }
-
-      /* Flash for new real-time item */
       @keyframes npHighlight {
         0% {
           background: #fff0e8;
@@ -191,8 +172,6 @@
       .np-item.new-flash {
         animation: npHighlight 0.9s ease forwards;
       }
-
-      /* Icon bubble */
       .np-icon {
         width: 38px;
         height: 38px;
@@ -219,8 +198,6 @@
       .np-icon.general {
         background: #f3f4f6;
       }
-
-      /* Text */
       .np-content {
         flex: 1;
         min-width: 0;
@@ -247,8 +224,6 @@
         margin-top: 5px;
         font-family: "Space Mono", monospace;
       }
-
-      /* Footer */
       .np-foot {
         border-top: 1px solid #f3f4f6;
         padding: 10px 18px;
@@ -270,8 +245,6 @@
         border-color: #ff5c1a;
         color: #ff5c1a;
       }
-
-      /* Toast — shown when a notification arrives and panel is closed */
       .notif-toast {
         position: fixed;
         bottom: 88px;
@@ -332,8 +305,364 @@
         line-height: 1;
         flex-shrink: 0;
       }
+
+      /* ── View button on package cards ── */
+      .dp-view-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        background: var(--orange-dim, rgba(255, 92, 26, 0.12));
+        color: var(--orange, #ff5c1a);
+        border: 1px solid rgba(255, 92, 26, 0.3);
+        border-radius: var(--radius-sm, 8px);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          border-color 0.2s,
+          transform 0.15s;
+        white-space: nowrap;
+      }
+      .dp-view-btn:hover {
+        background: rgba(255, 92, 26, 0.2);
+        border-color: var(--orange, #ff5c1a);
+        transform: translateY(-1px);
+      }
+
+      /* ── Package detail modal ── */
+      .pkm-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(10, 10, 10, 0.65);
+        z-index: 700;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .pkm-backdrop.open {
+        display: flex;
+        animation: pkmbFadeIn 0.18s ease;
+      }
+      @keyframes pkmbFadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .pkm-modal {
+        background: var(--white, #fff);
+        border-radius: var(--radius, 14px);
+        border: 1px solid var(--border, #e5e7eb);
+        width: 100%;
+        max-width: 560px;
+        max-height: 88vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+        animation: pkmSlideUp 0.26s cubic-bezier(0.34, 1.3, 0.64, 1);
+      }
+      @keyframes pkmSlideUp {
+        from {
+          opacity: 0;
+          transform: translateY(22px) scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      .pkm-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--border, #e5e7eb);
+        flex-shrink: 0;
+      }
+      .pkm-header-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 19px;
+        letter-spacing: 1.5px;
+        color: var(--dark, #111827);
+      }
+      .pkm-close-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: var(--radius-sm, 8px);
+        border: 1px solid var(--border, #e5e7eb);
+        background: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted, #6b7280);
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .pkm-close-btn:hover {
+        background: var(--bg, #f4f5f7);
+        color: var(--dark, #111827);
+      }
+      .pkm-body {
+        overflow-y: auto;
+        flex: 1;
+        overscroll-behavior: contain;
+      }
+      .pkm-hero {
+        width: 100%;
+        height: 210px;
+        overflow: hidden;
+        flex-shrink: 0;
+        background: #1a1a1a;
+      }
+      .pkm-hero img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .pkm-hero-fallback {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .pkm-hero-fallback svg {
+        opacity: 0.22;
+        width: 64px;
+        height: 64px;
+      }
+      .pkm-info-block {
+        padding: 20px 20px 0;
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+      .pkm-info-main {
+        flex: 1;
+        min-width: 0;
+      }
+      .pkm-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--dark, #111827);
+        line-height: 1.25;
+        margin-bottom: 8px;
+      }
+      .pkm-desc {
+        font-size: 13px;
+        color: var(--muted, #6b7280);
+        line-height: 1.65;
+      }
+      .pkm-meta-pills {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+      .pkm-pill {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--bg, #f4f5f7);
+        border: 1px solid var(--border, #e5e7eb);
+        border-radius: 99px;
+        padding: 5px 12px;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text, #1f2937);
+        white-space: nowrap;
+      }
+      .pkm-pill svg {
+        flex-shrink: 0;
+        color: var(--orange, #ff5c1a);
+      }
+      .pkm-price-book-row {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 18px 20px;
+      }
+      .pkm-price-block {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .pkm-price-label {
+        font-family: "Space Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--muted, #6b7280);
+      }
+      .pkm-price-val {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 36px;
+        line-height: 1;
+        color: var(--dark, #111827);
+      }
+      .pkm-price-sub {
+        font-size: 11px;
+        color: #9ca3af;
+      }
+      .pkm-book-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 24px;
+        background: var(--orange, #ff5c1a);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-sm, 8px);
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        white-space: nowrap;
+        flex-shrink: 0;
+        transition:
+          background 0.2s,
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .pkm-book-btn:hover {
+        background: var(--orange-light, #ff7a3d);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(255, 92, 26, 0.35);
+      }
+      .pkm-divider {
+        height: 1px;
+        background: var(--border, #e5e7eb);
+        margin: 0 20px;
+      }
+      .pkm-vehicle-section {
+        padding: 18px 20px 24px;
+      }
+      .pkm-section-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted, #6b7280);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        font-family: "Space Mono", monospace;
+        margin-bottom: 14px;
+      }
+      .pkm-section-title svg {
+        color: var(--orange, #ff5c1a);
+        flex-shrink: 0;
+      }
+      .pkm-vehicle-card {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        background: var(--bg, #f4f5f7);
+        border: 1px solid var(--border, #e5e7eb);
+        border-radius: var(--radius, 14px);
+        padding: 16px;
+      }
+      .pkm-veh-thumb {
+        width: 80px;
+        height: 58px;
+        border-radius: var(--radius-sm, 8px);
+        background: var(--border, #e5e7eb);
+        overflow: hidden;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        border: 1px solid var(--border, #e5e7eb);
+      }
+      .pkm-veh-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .pkm-veh-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .pkm-veh-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--dark, #111827);
+        margin-bottom: 4px;
+      }
+      .pkm-veh-meta {
+        font-size: 11.5px;
+        color: var(--muted, #6b7280);
+        line-height: 1.5;
+        margin-bottom: 8px;
+      }
+      .pkm-veh-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+      .pkm-feature-tag {
+        background: var(--white, #fff);
+        border: 1px solid var(--border, #e5e7eb);
+        border-radius: 99px;
+        padding: 3px 10px;
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text, #1f2937);
+      }
+
+      @media (max-width: 768px) {
+        .pkm-backdrop {
+          padding: 0;
+          align-items: flex-end;
+        }
+        .pkm-modal {
+          max-width: 100%;
+          max-height: 92vh;
+          border-radius: 16px 16px 0 0;
+          animation: pkmSlideUpMobile 0.28s cubic-bezier(0.34, 1.2, 0.64, 1);
+        }
+        @keyframes pkmSlideUpMobile {
+          from {
+            transform: translateY(100%);
+          }
+          to {
+            transform: translateY(0);
+          }
+        }
+        .pkm-hero {
+          height: 160px;
+        }
+        .pkm-info-block {
+          flex-direction: column;
+          gap: 10px;
+        }
+        .pkm-meta-pills {
+          flex-direction: row;
+        }
+        .pkm-price-book-row {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+        }
+        .pkm-book-btn {
+          width: 100%;
+          justify-content: center;
+        }
+      }
     </style>
-    <!-- ── END NOTIFICATION CSS ── -->
   </head>
   <body>
     <!-- ── SIDEBAR ── -->
@@ -455,7 +784,7 @@
         <span class="topbar-page-title">Dashboard</span>
 
         <div class="topbar-right">
-          <!-- ── NOTIFICATION BELL ── -->
+          <!-- NOTIFICATION BELL -->
           <div class="notif-wrap" id="notifWrap">
             <button
               class="icon-btn notif-trigger"
@@ -500,7 +829,6 @@
               </div>
             </div>
           </div>
-          <!-- ── END NOTIFICATION BELL ── -->
 
           <!-- USER DROPDOWN -->
           <div class="topbar-user user-dropdown-wrap" id="userDropdownWrap">
@@ -576,7 +904,6 @@
                 KYC verification
                 <span class="dd-kyc-badge">Pending</span>
               </button>
-
               <div class="dd-divider"></div>
               <button class="dd-item dd-danger" id="logoutBtn">
                 <svg
@@ -595,7 +922,6 @@
               </button>
             </div>
           </div>
-          <!-- END USER DROPDOWN -->
         </div>
       </header>
 
@@ -728,6 +1054,7 @@
             <p class="stat-hint">Status</p>
           </div>
         </div>
+
         <!-- Tour Packages -->
         <div class="section-head" style="margin-bottom: 14px">
           <h2>Tour Packages</h2>
@@ -1090,9 +1417,9 @@
               </div>
             </div>
             <div>
-              <label class="review-field-label" for="reviewComment"
-                >Your Review <span class="opt">(optional)</span></label
-              >
+              <label class="review-field-label" for="reviewComment">
+                Your Review <span class="opt">(optional)</span>
+              </label>
               <textarea
                 class="review-textarea"
                 id="reviewComment"
@@ -1150,20 +1477,136 @@
         </div>
       </div>
     </div>
-    <!-- ── END REVIEW MODAL ── -->
 
     <!-- ══════════════════════════════════════════
-         SCRIPTS — correct load order:
-         1. chatbot.js
-         2. socket.io client
-         3. notification IIFE
-         4. page inline scripts
-         5. userdashboard.js
+         TOUR PACKAGE DETAIL MODAL
+    ══════════════════════════════════════════ -->
+    <div class="pkm-backdrop" id="pkgDetailModal">
+      <div class="pkm-modal">
+        <!-- Header -->
+        <div class="pkm-header">
+          <span class="pkm-header-title">Tour Package Details</span>
+          <button
+            class="pkm-close-btn"
+            onclick="closePkgModal()"
+            aria-label="Close"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              width="15"
+              height="15"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Scrollable body -->
+        <div class="pkm-body">
+          <!-- Hero image -->
+          <div class="pkm-hero"></div>
+
+          <!-- Package info -->
+          <div class="pkm-info-block">
+            <div class="pkm-info-main">
+              <h2 class="pkm-title">—</h2>
+              <p class="pkm-desc">—</p>
+            </div>
+            <div class="pkm-meta-pills">
+              <div class="pkm-pill">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="14"
+                  height="14"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span class="pkm-duration">—</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Price + Book -->
+          <div class="pkm-price-book-row">
+            <div class="pkm-price-block">
+              <span class="pkm-price-label">Package Price</span>
+              <span class="pkm-price-val">—</span>
+              <span class="pkm-price-sub">per package · NPR inclusive</span>
+            </div>
+            <button class="pkm-book-btn">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                width="15"
+                height="15"
+              >
+                <path
+                  d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+                />
+                <circle cx="7" cy="17" r="2" />
+                <circle cx="17" cy="17" r="2" />
+                <path d="M5 17h8M3 9h18" />
+              </svg>
+              Book Now
+            </button>
+          </div>
+
+          <div class="pkm-divider"></div>
+
+          <!-- Vehicle section -->
+          <div class="pkm-vehicle-section" style="display: none">
+            <h3 class="pkm-section-title">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                width="16"
+                height="16"
+              >
+                <path
+                  d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+                />
+                <circle cx="7" cy="17" r="2" />
+                <circle cx="17" cy="17" r="2" />
+                <path d="M5 17h8M3 9h18" />
+              </svg>
+              Assigned Vehicle
+            </h3>
+            <div class="pkm-vehicle-card">
+              <div class="pkm-veh-thumb">🚗</div>
+              <div class="pkm-veh-info">
+                <div class="pkm-veh-name">—</div>
+                <div class="pkm-veh-meta">—</div>
+                <div class="pkm-veh-features" style="display: none"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /pkm-body -->
+      </div>
+    </div>
+    <!-- ── END TOUR PACKAGE DETAIL MODAL ── -->
+
+    <!-- ══════════════════════════════════════════
+         SCRIPTS
     ══════════════════════════════════════════ -->
     <script src="chatbot.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
-    <!-- ── NOTIFICATION SCRIPT ── -->
+    <!-- NOTIFICATION SCRIPT -->
     <script>
       (function () {
         "use strict";
@@ -1171,11 +1614,11 @@
         const API = "/api/user/notifications";
         const PER_PAGE = 15;
 
-        let offset = 0;
-        let totalNotifs = 0;
-        let unreadCount = 0;
-        let panelOpen = false;
-        let socket = null;
+        let offset = 0,
+          totalNotifs = 0,
+          unreadCount = 0,
+          panelOpen = false,
+          socket = null;
 
         const wrap = document.getElementById("notifWrap");
         const btn = document.getElementById("notifBtn");
@@ -1376,30 +1819,18 @@
             console.log("🔌 Notification socket disconnected"),
           );
 
-          // ── CORRECTED notification handler ──────────────────────────
           socket.on("notification", (data) => {
             console.log("Notification received:", data);
-
-            // 1. Increment the bell badge
             incBadge();
-
-            // 2. Prepend new item to the top of the list
             const item = buildItem({ ...data, is_read: 0 }, true);
             if (list) {
               const empty = list.querySelector(".np-placeholder, .np-empty");
               if (empty) empty.remove();
               list.prepend(item);
             }
-
-            // 3. Show toast only when the panel is closed
-            if (!panelOpen) {
-              showToast(data);
-            }
-
-            // 4. Remove flash highlight class after animation completes
+            if (!panelOpen) showToast(data);
             setTimeout(() => item.classList.remove("new-flash"), 1000);
           });
-          // ── END corrected handler ────────────────────────────────────
 
           socket.on("connect_error", (err) =>
             console.warn("Socket connect error:", err.message),
@@ -1417,11 +1848,10 @@
         })();
       })();
     </script>
-    <!-- ── END NOTIFICATION SCRIPT ── -->
 
-    <!-- ── PAGE INLINE SCRIPTS ── -->
+    <!-- PAGE INLINE SCRIPTS -->
     <script>
-      /* ── Mobile sidebar ── */
+      /* Mobile sidebar */
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("sidebarOverlay");
       const toggle = document.getElementById("sidebarToggle");
@@ -1440,7 +1870,7 @@
       if (toggle)
         toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
 
-      /* ── Greeting ── */
+      /* Greeting */
       const h = new Date().getHours();
       const g =
         h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
@@ -1451,7 +1881,7 @@
           bannerH1.innerHTML = `${g}, <span id="greetName">there</span> 👋`;
       }
 
-      /* ── User dropdown ── */
+      /* User dropdown */
       const userDropdownWrap = document.getElementById("userDropdownWrap");
       const userDropdownMenu = document.getElementById("userDropdownMenu");
       const topbarChevron = document.getElementById("topbarChevron");
@@ -1465,7 +1895,7 @@
         topbarChevron?.classList.remove("open");
       });
 
-      /* ── Logout ── */
+      /* Logout */
       document.getElementById("logoutBtn")?.addEventListener("click", () => {
         window.location.href = "/index.html";
       });

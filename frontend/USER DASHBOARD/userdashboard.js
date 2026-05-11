@@ -316,7 +316,6 @@ function openReviewModal(bookingId) {
   })
     .then((res) => {
       if (res.status === 409) {
-        // Already reviewed — mark session so we don't re-check this session
         sessionStorage.setItem(sessionKey, "true");
         return null;
       }
@@ -324,9 +323,8 @@ function openReviewModal(bookingId) {
       return res.json();
     })
     .then((data) => {
-      if (!data) return; // Already reviewed or no data — skip silently
+      if (!data) return;
 
-      // Only set session flag AFTER confirming review hasn't been submitted
       sessionStorage.setItem(sessionKey, "true");
 
       const vehNameEl = document.getElementById("reviewVehName");
@@ -346,7 +344,6 @@ function openReviewModal(bookingId) {
       if (vehMetaEl)
         vehMetaEl.innerText = `${data.brand || ""} ${data.model || ""}`.trim();
 
-      /* Thumbnail */
       if (vehThumbEl) {
         if (data.thumbnail) {
           vehThumbEl.innerHTML = `<img
@@ -360,7 +357,6 @@ function openReviewModal(bookingId) {
 
       window.reviewData = data;
 
-      /* Reset all state */
       selectedRating = 0;
       document.querySelectorAll(".review-star").forEach((btn) => {
         btn.classList.remove("selected", "hovered");
@@ -375,7 +371,6 @@ function openReviewModal(bookingId) {
         submitBtn.textContent = "Submit Review";
       }
 
-      /* Show form, hide success */
       if (formView) formView.style.display = "block";
       if (successView) successView.style.display = "none";
 
@@ -383,6 +378,7 @@ function openReviewModal(bookingId) {
     })
     .catch((err) => console.error("Review modal error:", err));
 }
+
 /* ── CLOSE REVIEW MODAL ──────────────────────────────── */
 function closeReviewModal() {
   const backdropEl = document.getElementById("reviewBackdrop");
@@ -432,6 +428,7 @@ function setRating(rating) {
   const starErrEl = document.getElementById("reviewStarError");
   if (starErrEl) starErrEl.style.display = "none";
 }
+
 /* ── SUBMIT REVIEW ───────────────────────────────────── */
 function submitReview() {
   if (!window.reviewData) {
@@ -520,6 +517,148 @@ async function loadNotifCount() {
     /* Silently fail — non-critical */
   }
 }
+
+/* ══════════════════════════════════════════════════════
+   TOUR PACKAGE DETAIL MODAL
+   ══════════════════════════════════════════════════════ */
+
+/**
+ * Opens the tour package detail modal with full package + vehicle info.
+ * The "Book Now" button inside the modal fires the same booking redirect
+ * that the old "Book Now" card button used.
+ */
+function openPkgModal(pkg) {
+  const modal = document.getElementById("pkgDetailModal");
+  if (!modal) return;
+
+  const IMAGE_BASE_TOUR = "http://localhost:5000/uploads/tours/";
+  const IMAGE_BASE_VEH = "http://localhost:5000/uploads/vehicles/";
+
+  const GRADIENTS = [
+    "dp-gradient--green",
+    "dp-gradient--navy",
+    "dp-gradient--brown",
+    "dp-gradient--purple",
+    "dp-gradient--teal",
+    "dp-gradient--red",
+  ];
+  const MOUNTAIN_SVG = `<svg viewBox="0 0 80 50" fill="none" stroke="white" stroke-width="1.5"><polyline points="5,45 30,12 50,30 65,18 75,45"/><circle cx="60" cy="14" r="5" fill="white" opacity="0.4"/></svg>`;
+
+  const gradientClass = GRADIENTS[pkg._index % GRADIENTS.length];
+
+  /* Hero image */
+  const heroEl = modal.querySelector(".pkm-hero");
+  if (heroEl) {
+    if (pkg.image_url) {
+      heroEl.innerHTML = `<img src="${IMAGE_BASE_TOUR}${escHtml(pkg.image_url)}"
+        alt="${escHtml(pkg.title)}"
+        onerror="this.parentElement.innerHTML='<div class=\\'pkm-hero-fallback ${gradientClass}\\'>${MOUNTAIN_SVG}</div>'" />`;
+    } else {
+      heroEl.innerHTML = `<div class="pkm-hero-fallback ${gradientClass}">${MOUNTAIN_SVG}</div>`;
+    }
+  }
+
+  /* Package info */
+  modal.querySelector(".pkm-title").textContent = pkg.title || "—";
+  modal.querySelector(".pkm-desc").textContent =
+    pkg.description || "An unforgettable journey through Nepal.";
+  modal.querySelector(".pkm-duration").textContent =
+    `${pkg.duration_days || 1} ${pkg.duration_days === 1 ? "Day" : "Days"}`;
+  modal.querySelector(".pkm-price-val").textContent =
+    `Rs ${Number(pkg.price).toLocaleString("en-IN")}`;
+
+  /* Vehicle section */
+  const vehSection = modal.querySelector(".pkm-vehicle-section");
+  const vehThumb = modal.querySelector(".pkm-veh-thumb");
+  const vehName = modal.querySelector(".pkm-veh-name");
+  const vehMeta = modal.querySelector(".pkm-veh-meta");
+  const vehFeatures = modal.querySelector(".pkm-veh-features");
+
+  if (pkg.vehicle) {
+    const v = pkg.vehicle;
+    if (vehSection) vehSection.style.display = "block";
+
+    /* Thumbnail */
+    if (vehThumb) {
+      if (v.thumbnail) {
+        vehThumb.innerHTML = `<img src="${IMAGE_BASE_VEH}${escHtml(v.thumbnail)}"
+          alt="${escHtml(v.name)}"
+          onerror="this.parentElement.textContent='${vehicleEmoji(v.body_type)}'" />`;
+      } else {
+        vehThumb.textContent = vehicleEmoji(v.body_type);
+      }
+    }
+
+    if (vehName) vehName.textContent = v.name || "—";
+    if (vehMeta) {
+      vehMeta.textContent =
+        `${v.brand || ""} ${v.model || ""} · ${v.year || ""} · ${v.body_type || ""} · ${v.fuel_type || ""} · ${v.transmission || ""} · ${v.seating_capacity || "—"} seats`
+          .replace(/^\s·\s/, "")
+          .trim();
+    }
+
+    /* Features */
+    if (vehFeatures) {
+      let features = [];
+      try {
+        features = JSON.parse(v.features || "[]");
+      } catch {}
+      if (features.length) {
+        vehFeatures.innerHTML = features
+          .map((f) => `<span class="pkm-feature-tag">${escHtml(f)}</span>`)
+          .join("");
+        vehFeatures.style.display = "flex";
+      } else {
+        vehFeatures.style.display = "none";
+      }
+    }
+  } else {
+    if (vehSection) vehSection.style.display = "none";
+  }
+
+  /* Wire the Book Now button */
+  const bookBtn = modal.querySelector(".pkm-book-btn");
+  if (bookBtn) {
+    bookBtn.onclick = () => {
+      const params = new URLSearchParams({
+        source: "package",
+        pkg_id: pkg.id || "",
+        vehicle_id: pkg.vehicle_id || "",
+        pkg_title: pkg.title || "",
+        pkg_price: pkg.price || "",
+        pkg_days: pkg.duration_days || "1",
+        pkg_image: pkg.image_url || "",
+      });
+      window.location.href = `user.booking.html?${params.toString()}`;
+    };
+  }
+
+  /* Show modal */
+  modal.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closePkgModal() {
+  const modal = document.getElementById("pkgDetailModal");
+  if (modal) modal.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+/* Close on backdrop click */
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("pkgDetailModal");
+  if (modal) {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) closePkgModal();
+    });
+  }
+
+  /* ESC key */
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closePkgModal();
+  });
+});
+
 /* ── 4. TOUR PACKAGES ────────────────────────────────── */
 async function loadTourPackages() {
   const grid = document.getElementById("dashPkgGrid");
@@ -595,6 +734,23 @@ async function loadTourPackages() {
     grid.innerHTML = "";
 
     packages.forEach((pkg, i) => {
+      pkg._index = i;
+      // Remap flat vehicle columns → nested pkg.vehicle object
+      if (pkg.vehicle_id) {
+        pkg.vehicle = {
+          id: pkg.vehicle_id,
+          name: pkg.vehicle_name,
+          brand: pkg.brand,
+          model: pkg.model,
+          year: pkg.year,
+          body_type: pkg.body_type,
+          fuel_type: pkg.fuel_type,
+          transmission: pkg.transmission,
+          seating_capacity: pkg.seating_capacity,
+          features: pkg.features,
+          thumbnail: pkg.thumbnail,
+        };
+      }
       const badge = BADGE_LABELS[i % BADGE_LABELS.length];
       const gradient = GRADIENTS[i % GRADIENTS.length];
       const price = Number(pkg.price).toLocaleString();
@@ -622,19 +778,18 @@ async function loadTourPackages() {
               <p class="dp-price-label">NPR</p>
               <p class="dp-price">${price}<span>per package</span></p>
             </div>
-            <button class="dp-book-btn"
-              data-id="${pkg.id}"
-              data-vehicle-id="${pkg.vehicle_id || ""}"
-              data-title="${encodeURIComponent(pkg.title)}"
-              data-price="${pkg.price}"
-              data-days="${days}"
-              data-image="${pkg.image_url || ""}">
-              Book Now
+            <button class="dp-view-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              View
             </button>
           </div>
         </div>
       `;
 
+      /* Fix broken tour image */
       const imgEl = card.querySelector("img");
       if (imgEl) {
         imgEl.addEventListener("error", () => {
@@ -642,22 +797,14 @@ async function loadTourPackages() {
         });
       }
 
-      card
-        .querySelector(".dp-book-btn")
-        .addEventListener("click", async (e) => {
-          e.stopPropagation();
-          const btn = e.currentTarget;
-          const params = new URLSearchParams({
-            source: "package",
-            pkg_id: btn.dataset.id || "",
-            vehicle_id: btn.dataset.vehicleId || "",
-            pkg_title: decodeURIComponent(btn.dataset.title || ""),
-            pkg_price: btn.dataset.price || "",
-            pkg_days: btn.dataset.days || "1",
-            pkg_image: btn.dataset.image || "",
-          });
-          window.location.href = `user.booking.html?${params.toString()}`;
-        });
+      /* View button → open detail modal */
+      card.querySelector(".dp-view-btn").addEventListener("click", (e) => {
+        e.stopPropagation();
+        openPkgModal(pkg);
+      });
+
+      /* Clicking the card itself also opens modal */
+      card.addEventListener("click", () => openPkgModal(pkg));
 
       grid.appendChild(card);
       allCards.push(card);

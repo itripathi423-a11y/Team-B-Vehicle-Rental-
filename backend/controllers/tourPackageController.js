@@ -3,30 +3,34 @@ const db = require("../config/db");
 // GET /api/tour-packages
 exports.getAllPackages = (req, res) => {
   const sql = `
-    SELECT
-      tp.id,
-      tp.title,
-      tp.description,
-      tp.duration_days,
-      tp.price,
-      tp.image_url,
-      tp.is_active,
-      tp.created_at,
+  SELECT
+    tp.id,
+    tp.title,
+    tp.description,
+    tp.duration_days,
+    tp.price,
+    tp.image_url,
+    tp.is_active,
+    tp.created_at,
+    tp.vehicle_id,
 
-      v.id AS vehicle_id,
-      v.name AS vehicle_name,
-      v.brand,
-      v.model,
-      v.thumbnail
+    v.id        AS vehicle_id,
+    v.name      AS vehicle_name,
+    v.brand,
+    v.model,
+    v.year,
+    v.body_type,
+    v.fuel_type,
+    v.transmission,
+    v.seating_capacity,
+    v.features,
+    v.thumbnail
 
-    FROM tour_packages tp
-
-    LEFT JOIN vehicles v
-      ON tp.vehicle_id = v.id
-
-    WHERE tp.is_active = 1
-    ORDER BY tp.id ASC
-  `;
+  FROM tour_packages tp
+  LEFT JOIN vehicles v ON tp.vehicle_id = v.id
+  WHERE tp.is_active = 1
+  ORDER BY tp.id ASC
+`;
 
   db.query(sql, (err, rows) => {
     if (err) {
