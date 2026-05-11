@@ -26,6 +26,7 @@ const chatRoutes = require("./routes/chat.routes");
 const serviceRoutes = require("./routes/admin.servicing.routes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const enquiryRoutes = require("./routes/enquiry.routes");
+const adminTourRoutes = require("./routes/admin.tour.routes");
 
 const adminEnquiryRoutes = require("./routes/admin.enquiry.routes");
 const adminreviewRoutes = require("./routes/admin.review.routes");
@@ -90,12 +91,11 @@ app.use("/api/tour-packages", tourPackagesRouter);
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/destinations", destinationRoutes);
 
-// ✅ Specific /api/admin/* routes MUST come BEFORE the generic /api/admin
 app.use("/api/admin/vehicles", vehicleRoutes);
 app.use("/api/admin/kyc", adminKycRoutes);
 app.use("/api/admin/bookings", adminBookingRoutes); // NEW
 
-// Generic admin dashboard (catch-all — always last among /api/admin routes)
+app.use("/api/admin/tour-packages", adminTourRoutes);
 app.use("/api/admin", adminRoutes);
 
 app.use("/api", userDashboardRoutes);

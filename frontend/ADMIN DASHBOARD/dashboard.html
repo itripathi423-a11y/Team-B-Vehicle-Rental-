@@ -40,8 +40,9 @@
               <rect x="3" y="3" width="7" height="7" rx="1" />
               <rect x="14" y="3" width="7" height="7" rx="1" />
               <rect x="3" y="14" width="7" height="7" rx="1" />
-              <rect x="14" y="14" width="7" height="7" rx="1" /></svg
-            >Dashboard
+              <rect x="14" y="14" width="7" height="7" rx="1" />
+            </svg>
+            Dashboard
           </a>
           <a href="admin.vehicle.html" class="nav-item">
             <svg
@@ -57,8 +58,9 @@
               <circle cx="7" cy="17" r="2" />
               <circle cx="17" cy="17" r="2" />
               <path d="M5 17h8" />
-              <path d="M3 9h18" /></svg
-            >Vehicles
+              <path d="M3 9h18" />
+            </svg>
+            Vehicles
           </a>
           <a href="admin.bookings.html" class="nav-item">
             <svg
@@ -71,8 +73,9 @@
               <rect x="3" y="4" width="18" height="18" rx="2" />
               <line x1="16" y1="2" x2="16" y2="6" />
               <line x1="8" y1="2" x2="8" y2="6" />
-              <line x1="3" y1="10" x2="21" y2="10" /></svg
-            >Bookings
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            Bookings
           </a>
           <a href="admin.kyc.html" class="nav-item">
             <svg
@@ -82,8 +85,9 @@
               stroke="currentColor"
               stroke-width="1.8"
             >
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
-            >KYC
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+            KYC
           </a>
           <a href="admin.payments.html" class="nav-item">
             <svg
@@ -94,8 +98,9 @@
               stroke-width="1.8"
             >
               <rect x="2" y="5" width="20" height="14" rx="2" />
-              <line x1="2" y1="10" x2="22" y2="10" /></svg
-            >Payments
+              <line x1="2" y1="10" x2="22" y2="10" />
+            </svg>
+            Payments
           </a>
           <a href="admin.enquiries.html" class="nav-item">
             <svg
@@ -107,8 +112,9 @@
             >
               <circle cx="12" cy="12" r="10" />
               <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-              <line x1="12" y1="17" x2="12.01" y2="17" /></svg
-            >Enquiries
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            Enquiries
           </a>
           <a href="admin.reviews.html" class="nav-item">
             <svg
@@ -119,8 +125,9 @@
               stroke-width="1.8"
             >
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" /></svg
-            >Reviews
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            Reviews
           </a>
           <a href="admin.servicing.html" class="nav-item">
             <svg
@@ -132,8 +139,9 @@
             >
               <path
                 d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
-              /></svg
-            >Servicing
+              />
+            </svg>
+            Servicing
           </a>
         </nav>
         <div class="sidebar-footer">
@@ -169,11 +177,6 @@
           </div>
 
           <div class="topbar-right">
-            <!--
-              The .notif-wrapper div below is a placeholder.
-              admin.notification.js will automatically REPLACE this
-              with the full notification panel on page load.
-            -->
             <div class="notif-wrapper">
               <button class="icon-btn notif-btn" id="notifBtn">
                 <svg
@@ -225,8 +228,9 @@
                     stroke-width="1.8"
                   >
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" /></svg
-                  >My Profile
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                  My Profile
                 </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item logout" href="#" id="logoutBtn">
@@ -240,8 +244,9 @@
                   >
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                     <polyline points="16 17 21 12 16 7" />
-                    <line x1="21" y1="12" x2="9" y2="12" /></svg
-                  >Logout
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                  </svg>
+                  Logout
                 </a>
               </div>
             </div>
@@ -258,7 +263,7 @@
               </p>
             </div>
             <div class="page-actions">
-              <button class="btn-ghost">
+              <button class="btn-primary" id="addPackageBtn">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -267,25 +272,10 @@
                   width="15"
                   height="15"
                 >
-                  <rect x="3" y="4" width="18" height="18" rx="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" /></svg
-                >Last 30 Days
-              </button>
-              <button class="btn-primary">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  width="15"
-                  height="15"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" /></svg
-                >Export Report
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Add Package
               </button>
             </div>
           </div>
@@ -453,6 +443,108 @@
             </div>
           </div>
 
+          <!-- TOUR PACKAGES SECTION -->
+          <div class="tp-section">
+            <div class="tp-section-head">
+              <div>
+                <h3 class="card-title">Tour Packages</h3>
+                <p class="card-sub" id="pkgSubtitle">Loading…</p>
+              </div>
+              <div class="tp-head-actions">
+                <button
+                  class="tp-arrow-btn"
+                  id="tpPrev"
+                  disabled
+                  aria-label="Previous"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    width="15"
+                    height="15"
+                  >
+                    <polyline points="15 18 9 12 15 6" />
+                  </svg>
+                </button>
+                <button
+                  class="tp-arrow-btn"
+                  id="tpNext"
+                  disabled
+                  aria-label="Next"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    width="15"
+                    height="15"
+                  >
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="tp-grid" id="tpGrid">
+              <div class="tp-skeleton-card">
+                <div
+                  class="skeleton"
+                  style="height: 140px; border-radius: 10px 10px 0 0"
+                ></div>
+                <div
+                  style="
+                    padding: 16px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                  "
+                >
+                  <div class="skeleton" style="height: 14px; width: 70%"></div>
+                  <div class="skeleton" style="height: 11px; width: 50%"></div>
+                  <div class="skeleton" style="height: 11px; width: 40%"></div>
+                </div>
+              </div>
+              <div class="tp-skeleton-card">
+                <div
+                  class="skeleton"
+                  style="height: 140px; border-radius: 10px 10px 0 0"
+                ></div>
+                <div
+                  style="
+                    padding: 16px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                  "
+                >
+                  <div class="skeleton" style="height: 14px; width: 65%"></div>
+                  <div class="skeleton" style="height: 11px; width: 55%"></div>
+                  <div class="skeleton" style="height: 11px; width: 35%"></div>
+                </div>
+              </div>
+              <div class="tp-skeleton-card">
+                <div
+                  class="skeleton"
+                  style="height: 140px; border-radius: 10px 10px 0 0"
+                ></div>
+                <div
+                  style="
+                    padding: 16px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                  "
+                >
+                  <div class="skeleton" style="height: 14px; width: 75%"></div>
+                  <div class="skeleton" style="height: 11px; width: 45%"></div>
+                  <div class="skeleton" style="height: 11px; width: 50%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- RECENT BOOKINGS TABLE -->
           <div class="table-card">
             <div class="table-toolbar">
@@ -509,181 +601,750 @@
       </div>
     </div>
 
+    <!-- ══════════════════════════════════════
+         ADD / EDIT PACKAGE MODAL
+    ══════════════════════════════════════ -->
+    <div class="pkg-backdrop hidden" id="pkgBackdrop">
+      <div class="pkg-modal" id="pkgModal">
+        <div class="pkg-modal-header">
+          <h2 class="pkg-modal-title" id="pkgModalTitle">Add Tour Package</h2>
+          <button class="pkg-modal-close" id="pkgModalClose" aria-label="Close">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              width="16"
+              height="16"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="pkg-modal-body">
+          <input type="hidden" id="pkgId" />
+          <div class="pkg-field-row">
+            <div class="pkg-field">
+              <label class="pkg-label"
+                >Package Title <span class="req">*</span></label
+              >
+              <input
+                type="text"
+                class="pkg-input"
+                id="pkgTitle"
+                placeholder="e.g. Pokhara Scenic Escape"
+              />
+            </div>
+            <div class="pkg-field">
+              <label class="pkg-label"
+                >Duration (Days) <span class="req">*</span></label
+              >
+              <input
+                type="number"
+                class="pkg-input"
+                id="pkgDays"
+                placeholder="e.g. 3"
+                min="1"
+              />
+            </div>
+          </div>
+          <div class="pkg-field-row">
+            <div class="pkg-field">
+              <label class="pkg-label"
+                >Price (NPR) <span class="req">*</span></label
+              >
+              <input
+                type="number"
+                class="pkg-input"
+                id="pkgPrice"
+                placeholder="e.g. 54000"
+                min="0"
+              />
+            </div>
+            <div class="pkg-field">
+              <label class="pkg-label">Assign Vehicle</label>
+              <select class="pkg-input pkg-select" id="pkgVehicle">
+                <option value="">— No vehicle assigned —</option>
+              </select>
+            </div>
+          </div>
+          <div class="pkg-field">
+            <label class="pkg-label">Description</label>
+            <textarea
+              class="pkg-input pkg-textarea"
+              id="pkgDesc"
+              placeholder="Describe the package itinerary, highlights, inclusions…"
+              rows="3"
+            ></textarea>
+          </div>
+          <div class="pkg-field">
+            <label class="pkg-label">Package Image</label>
+            <div class="pkg-upload-wrap" id="pkgUploadWrap">
+              <input
+                type="file"
+                id="pkgImage"
+                accept="image/*"
+                style="display: none"
+              />
+              <div class="pkg-upload-placeholder" id="pkgUploadPlaceholder">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  width="28"
+                  height="28"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <polyline points="21 15 16 10 5 21" />
+                </svg>
+                <span>Click to upload image</span>
+                <span class="pkg-upload-hint">JPG, PNG, WEBP — max 5 MB</span>
+              </div>
+              <img
+                class="pkg-upload-preview"
+                id="pkgUploadPreview"
+                src=""
+                alt="Preview"
+                style="display: none"
+              />
+            </div>
+            <p
+              class="pkg-current-img"
+              id="pkgCurrentImg"
+              style="display: none"
+            ></p>
+          </div>
+          <div class="pkg-field pkg-active-row">
+            <label class="pkg-label">Status</label>
+            <label class="pkg-toggle-label">
+              <input type="checkbox" id="pkgActive" checked />
+              <span class="pkg-toggle-track"
+                ><span class="pkg-toggle-thumb"></span
+              ></span>
+              <span class="pkg-toggle-text" id="pkgActiveText">Active</span>
+            </label>
+          </div>
+          <div class="pkg-error" id="pkgError" style="display: none"></div>
+        </div>
+        <div class="pkg-modal-footer">
+          <button class="btn-ghost" id="pkgCancelBtn">Cancel</button>
+          <button class="btn-primary" id="pkgSaveBtn">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              width="14"
+              height="14"
+            >
+              <path
+                d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"
+              />
+              <polyline points="17 21 17 13 7 13 7 21" />
+              <polyline points="7 3 7 8 15 8" />
+            </svg>
+            Save Package
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DELETE CONFIRM MODAL -->
+    <div class="del-backdrop hidden" id="delBackdrop">
+      <div class="del-modal">
+        <div class="del-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polyline points="3 6 5 6 21 6" />
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+            <path d="M10 11v6" />
+            <path d="M14 11v6" />
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+          </svg>
+        </div>
+        <p class="del-title">Delete Package?</p>
+        <p class="del-sub">
+          This will permanently delete
+          <strong id="delPkgName">this package</strong> and remove its image.
+          This cannot be undone.
+        </p>
+        <div class="del-actions">
+          <button class="del-cancel" id="delCancel">Cancel</button>
+          <button class="del-confirm" id="delConfirm">Delete</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ══════════════════════════════════════════════════════
-         SCRIPTS — correct order:
-         1. Chart.js
-         2. socket.io client  ← MUST be before admin.notification.js
-         3. admin.notification.js  ← replaces the old bell button
-         4. page inline scripts
+         SCRIPTS
     ══════════════════════════════════════════════════════ -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
     <script src="admin.notification.js"></script>
 
     <script>
-      const API = "http://localhost:5000/api/admin";
+      document.addEventListener("DOMContentLoaded", () => {
+        // ══════════════════════════════════════
+        // CONSTANTS & HELPERS
+        // ══════════════════════════════════════
+        const API = "http://localhost:5000/api/admin";
+        const TOURS_API = "http://localhost:5000/api/admin/tour-packages";
 
-      function statusBadge(s) {
-        const m = {
-          active: ["badge-green", "Active"],
-          confirmed: ["badge-green", "Confirmed"],
-          pending: ["badge-amber", "Pending"],
-          completed: ["badge-grey", "Completed"],
-          cancelled: ["badge-red", "Cancelled"],
-        };
-        const [cls, label] = m[(s || "").toLowerCase()] || [
-          "badge-grey",
-          s || "—",
-        ];
-        return `<span class="${cls}"><span class="dot"></span>${label}</span>`;
-      }
-
-      function fmtMoney(n) {
-        return "Rs " + Number(n).toLocaleString("en-NP");
-      }
-      function fmtDur(d) {
-        return !d ? "—" : d === 1 ? "1 day" : d + " days";
-      }
-
-      // ── Load admin profile ──────────────────────────────────────
-      async function loadAdmin() {
-        try {
-          const res = await fetch(`${API}/me`, { credentials: "include" });
-          if (!res.ok) throw new Error();
-          const d = await res.json();
-
-          const name = d.name || "Admin";
-          const role = d.role || "Admin";
-          const initials = name
-            .split(" ")
-            .map((n) => n[0])
-            .join("")
-            .toUpperCase();
-
-          document.getElementById("sidebarAdminName").textContent = name;
-          document.getElementById("topbarAdminName").textContent = name;
-          document.getElementById("sidebarAdminRole").textContent = role;
-          document.getElementById("topbarAdminRole").textContent = role;
-          document.getElementById("sidebarAvatarInitials").textContent =
-            initials;
-          document.getElementById("topbarAvatarInitials").textContent =
-            initials;
-          document.getElementById("dropdownAdminName").textContent = name;
-          document.getElementById("dropdownAdminEmail").textContent =
-            d.email || "—";
-        } catch {
-          console.log("Failed to load admin profile");
+        function statusBadge(s) {
+          const m = {
+            active: ["badge-green", "Active"],
+            confirmed: ["badge-green", "Confirmed"],
+            pending: ["badge-amber", "Pending"],
+            completed: ["badge-grey", "Completed"],
+            cancelled: ["badge-red", "Cancelled"],
+          };
+          const [cls, label] = m[(s || "").toLowerCase()] || [
+            "badge-grey",
+            s || "—",
+          ];
+          return `<span class="${cls}"><span class="dot"></span>${label}</span>`;
         }
-      }
 
-      // ── Load stats ──────────────────────────────────────────────
-      async function loadStats() {
-        try {
-          const res = await fetch(`${API}/stats`, { credentials: "include" });
-          if (!res.ok) throw new Error();
-          const d = await res.json();
-
-          document.getElementById("statVehicles").textContent =
-            d.total_vehicles ?? 0;
-          document.getElementById("statBookings").textContent =
-            d.active_bookings ?? 0;
-          document.getElementById("statRevenue").textContent = fmtMoney(
-            d.revenue_this_month ?? 0,
-          );
-          document.getElementById("statEnquiries").textContent =
-            d.total_enquiries ?? 0;
-        } catch {
-          console.log("Failed to load stats");
+        function fmtMoney(n) {
+          return "Rs " + Number(n).toLocaleString("en-NP");
         }
-      }
+        function fmtDur(d) {
+          return !d ? "—" : d === 1 ? "1 day" : d + " days";
+        }
 
-      // ── Load bookings ───────────────────────────────────────────
-      async function loadBookings() {
-        try {
-          const res = await fetch(`${API}/bookings`, {
-            credentials: "include",
+        // ══════════════════════════════════════
+        // ADD / EDIT PACKAGE MODAL
+        // ══════════════════════════════════════
+        const pkgBackdrop = document.getElementById("pkgBackdrop");
+        const pkgModalTitle = document.getElementById("pkgModalTitle");
+        const pkgId = document.getElementById("pkgId");
+        const pkgTitle = document.getElementById("pkgTitle");
+        const pkgDays = document.getElementById("pkgDays");
+        const pkgPrice = document.getElementById("pkgPrice");
+        const pkgVehicle = document.getElementById("pkgVehicle");
+        const pkgDesc = document.getElementById("pkgDesc");
+        const pkgImageInput = document.getElementById("pkgImage");
+        const pkgUploadWrap = document.getElementById("pkgUploadWrap");
+        const pkgPlaceholder = document.getElementById("pkgUploadPlaceholder");
+        const pkgPreview = document.getElementById("pkgUploadPreview");
+        const pkgCurrentImg = document.getElementById("pkgCurrentImg");
+        const pkgActive = document.getElementById("pkgActive");
+        const pkgActiveText = document.getElementById("pkgActiveText");
+        const pkgError = document.getElementById("pkgError");
+        const pkgSaveBtn = document.getElementById("pkgSaveBtn");
+
+        async function loadVehiclesForSelect() {
+          try {
+            const res = await fetch("http://localhost:5000/api/vehicles", {
+              credentials: "include",
+            });
+            const data = await res.json();
+            pkgVehicle.innerHTML =
+              '<option value="">— No vehicle assigned —</option>';
+            (data.data || []).forEach((v) => {
+              const opt = document.createElement("option");
+              opt.value = v.id;
+              opt.textContent = `${v.name} (${v.body_type} · ${v.license_plate})`;
+              pkgVehicle.appendChild(opt);
+            });
+          } catch {
+            /* non-critical */
+          }
+        }
+
+        function openPkgModal(pkg = null) {
+          pkgError.style.display = "none";
+          pkgId.value = pkg?.id || "";
+          pkgTitle.value = pkg?.title || "";
+          pkgDays.value = pkg?.duration_days || "";
+          pkgPrice.value = pkg?.price || "";
+          pkgDesc.value = pkg?.description || "";
+          pkgActive.checked = pkg ? !!pkg.is_active : true;
+          pkgActiveText.textContent = pkgActive.checked ? "Active" : "Inactive";
+
+          pkgPreview.style.display = "none";
+          pkgPlaceholder.style.display = "flex";
+          pkgImageInput.value = "";
+
+          if (pkg?.image_url) {
+            pkgCurrentImg.style.display = "block";
+            pkgCurrentImg.innerHTML = `Current: <a href="http://localhost:5000/uploads/tours/${pkg.image_url}" target="_blank">${pkg.image_url}</a>`;
+          } else {
+            pkgCurrentImg.style.display = "none";
+          }
+
+          pkgModalTitle.textContent = pkg
+            ? "Edit Tour Package"
+            : "Add Tour Package";
+          pkgSaveBtn.textContent = pkg ? "Update Package" : "Save Package";
+
+          loadVehiclesForSelect().then(() => {
+            if (pkg?.vehicle_id) pkgVehicle.value = pkg.vehicle_id;
           });
-          if (!res.ok) throw new Error();
-          const data = await res.json();
-          const list = (data.data || []).slice(0, 3);
-          const tbody = document.getElementById("bookingsTableBody");
 
-          if (!list.length) {
-            tbody.innerHTML = `<tr><td colspan="6" class="empty-state">📋 No bookings found</td></tr>`;
-            document.getElementById("bookingSubtitle").textContent =
-              "No recent bookings";
+          pkgBackdrop.classList.remove("hidden");
+        }
+
+        function closePkgModal(shouldRefresh = false) {
+          pkgBackdrop.classList.add("hidden");
+          if (shouldRefresh) loadTourPackages();
+        }
+
+        document
+          .getElementById("addPackageBtn")
+          .addEventListener("click", () => openPkgModal());
+        document
+          .getElementById("pkgModalClose")
+          .addEventListener("click", () => closePkgModal(false));
+        document
+          .getElementById("pkgCancelBtn")
+          .addEventListener("click", () => closePkgModal(false));
+        pkgBackdrop.addEventListener("click", (e) => {
+          if (e.target === pkgBackdrop) closePkgModal(false);
+        });
+
+        pkgUploadWrap.addEventListener("click", () => pkgImageInput.click());
+        pkgImageInput.addEventListener("change", () => {
+          const file = pkgImageInput.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            pkgPreview.src = e.target.result;
+            pkgPreview.style.display = "block";
+            pkgPlaceholder.style.display = "none";
+          };
+          reader.readAsDataURL(file);
+        });
+
+        pkgActive.addEventListener("change", () => {
+          pkgActiveText.textContent = pkgActive.checked ? "Active" : "Inactive";
+        });
+
+        pkgSaveBtn.addEventListener("click", async () => {
+          pkgError.style.display = "none";
+
+          const title = pkgTitle.value.trim();
+          const days = parseInt(pkgDays.value);
+          const price = parseFloat(pkgPrice.value);
+
+          if (!title) {
+            showPkgError("Package title is required.");
+            return;
+          }
+          if (!days || days < 1) {
+            showPkgError("Duration must be at least 1 day.");
+            return;
+          }
+          if (!price || price <= 0) {
+            showPkgError("Price must be greater than 0.");
             return;
           }
 
-          tbody.innerHTML = list
-            .map(
-              (b) => `
-            <tr>
-              <td>#${b.id}</td>
-              <td>${b.user_name || "—"}</td>
-              <td>${b.vehicle_name || "—"}</td>
-              <td>${fmtDur(b.total_days)}</td>
-              <td>${fmtMoney(b.total_price)}</td>
-              <td>${statusBadge(b.status)}</td>
-            </tr>
-          `,
-            )
-            .join("");
+          const formData = new FormData();
+          formData.append("title", title);
+          formData.append("duration_days", days);
+          formData.append("price", price);
+          formData.append("description", pkgDesc.value.trim());
+          formData.append("is_active", pkgActive.checked ? 1 : 0);
+          formData.append("vehicle_id", pkgVehicle.value || "");
+          if (pkgImageInput.files[0])
+            formData.append("image", pkgImageInput.files[0]);
 
-          document.getElementById("bookingSubtitle").textContent =
-            `Showing ${list.length} most recent booking${list.length !== 1 ? "s" : ""}`;
-        } catch {
-          console.log("Failed to load bookings");
-        }
-      }
+          const isEdit = !!pkgId.value;
+          const url = isEdit ? `${TOURS_API}/${pkgId.value}` : TOURS_API;
+          const method = isEdit ? "PUT" : "POST";
 
-      // ── User dropdown ───────────────────────────────────────────
-      document
-        .getElementById("topbarUser")
-        .addEventListener("click", function (e) {
-          e.stopPropagation();
-          const dd = document.getElementById("userDropdown");
-          const open = dd.classList.contains("visible");
-          dd.classList.toggle("visible", !open);
-          this.classList.toggle("open", !open);
-        });
-      document.addEventListener("click", () => {
-        document.getElementById("userDropdown")?.classList.remove("visible");
-        document.getElementById("topbarUser")?.classList.remove("open");
-      });
+          pkgSaveBtn.disabled = true;
+          pkgSaveBtn.textContent = "Saving…";
 
-      // ── Logout ──────────────────────────────────────────────────
-      document
-        .getElementById("logoutBtn")
-        .addEventListener("click", async (e) => {
-          e.preventDefault();
-          e.stopPropagation();
           try {
-            await fetch(`${API}/logout`, {
-              method: "POST",
+            const res = await fetch(url, {
+              method,
               credentials: "include",
+              body: formData,
             });
+            const data = await res.json();
+            if (!res.ok || !data.success)
+              throw new Error(data.message || "Failed to save package");
+            closePkgModal(true);
+          } catch (err) {
+            showPkgError(err.message);
           } finally {
-            window.location.href = "../index.html";
+            pkgSaveBtn.disabled = false;
+            pkgSaveBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> ${isEdit ? "Update Package" : "Save Package"}`;
           }
         });
 
-      // ── Search ──────────────────────────────────────────────────
-      document
-        .getElementById("dashboardSearch")
-        ?.addEventListener("input", function () {
-          const q = this.value.toLowerCase();
-          document.querySelectorAll("#bookingsTableBody tr").forEach((row) => {
-            row.style.display = row.textContent.toLowerCase().includes(q)
-              ? ""
-              : "none";
-          });
+        function showPkgError(msg) {
+          pkgError.textContent = msg;
+          pkgError.style.display = "block";
+        }
+
+        // ══════════════════════════════════════
+        // DELETE CONFIRM MODAL
+        // ══════════════════════════════════════
+        let pendingDeleteId = null;
+        const delBackdrop = document.getElementById("delBackdrop");
+        const delConfirmBtn = document.getElementById("delConfirm");
+        const delCancelBtn = document.getElementById("delCancel");
+        const delPkgName = document.getElementById("delPkgName");
+
+        function openDeleteConfirm(id, name) {
+          pendingDeleteId = id;
+          delPkgName.textContent = `"${name}"`;
+          delBackdrop.classList.remove("hidden");
+        }
+
+        function closeDeleteModal() {
+          delBackdrop.classList.add("hidden");
+        }
+
+        delCancelBtn.addEventListener("click", closeDeleteModal);
+        delBackdrop.addEventListener("click", (e) => {
+          if (e.target === delBackdrop) closeDeleteModal();
         });
 
-      // ── Init ────────────────────────────────────────────────────
-      loadAdmin();
-      loadStats();
-      loadBookings();
+        delConfirmBtn.addEventListener("click", async () => {
+          if (!pendingDeleteId) return;
+          delConfirmBtn.textContent = "Deleting…";
+          delConfirmBtn.disabled = true;
+          try {
+            const res = await fetch(`${TOURS_API}/${pendingDeleteId}`, {
+              method: "DELETE",
+              credentials: "include",
+            });
+            const data = await res.json();
+            if (!res.ok || !data.success)
+              throw new Error(data.message || "Delete failed");
+            closeDeleteModal();
+            loadTourPackages();
+          } catch (err) {
+            alert("Error: " + err.message);
+          } finally {
+            delConfirmBtn.textContent = "Delete";
+            delConfirmBtn.disabled = false;
+            pendingDeleteId = null;
+          }
+        });
+
+        // ══════════════════════════════════════
+        // TOUR PACKAGES LIST + CAROUSEL
+        // ══════════════════════════════════════
+        const GRADIENTS_ADMIN = [
+          "tp-grad--green",
+          "tp-grad--navy",
+          "tp-grad--brown",
+          "tp-grad--purple",
+          "tp-grad--teal",
+          "tp-grad--red",
+        ];
+        const MOUNTAIN_SVG = `<svg viewBox="0 0 80 50" fill="none" stroke="white" stroke-width="1.5"><polyline points="5,45 30,12 50,30 65,18 75,45"/><circle cx="60" cy="14" r="5" fill="white" opacity="0.4"/></svg>`;
+
+        // Store all package DATA objects (not DOM nodes) so we can re-render per page
+        let tpAllPkgs = [];
+        let tpPage = 0;
+        const TP_SIZE = 3;
+
+        const tpGrid = document.getElementById("tpGrid");
+        const tpPrev = document.getElementById("tpPrev");
+        const tpNext = document.getElementById("tpNext");
+        const tpSubtitle = document.getElementById("pkgSubtitle");
+
+        function buildCard(pkg, i) {
+          const gradient = GRADIENTS_ADMIN[i % GRADIENTS_ADMIN.length];
+          const days = pkg.duration_days || 1;
+          const price = Number(pkg.price).toLocaleString("en-NP");
+          const isActive = !!pkg.is_active;
+
+          const imgHTML = pkg.image_url
+            ? `<img src="http://localhost:5000/uploads/tours/${pkg.image_url}" alt="${pkg.title}" />`
+            : `<div class="tp-card-gradient ${gradient}">${MOUNTAIN_SVG}</div>`;
+
+          const card = document.createElement("div");
+          card.className = "tp-card";
+          card.innerHTML = `
+            <div class="tp-card-img">
+              ${imgHTML}
+              <span class="tp-status-pill ${isActive ? "active" : "inactive"}">${isActive ? "Active" : "Inactive"}</span>
+              <div class="tp-dur-pill"><span class="tp-dur-dot"></span>${days} ${days === 1 ? "Day" : "Days"}</div>
+            </div>
+            <div class="tp-card-body">
+              <div class="tp-card-title">${pkg.title}</div>
+              <div class="tp-card-desc">${pkg.description || "No description provided."}</div>
+              <div class="tp-card-meta">
+                <div class="tp-card-price">Rs ${price}<span>/ package</span></div>
+                ${
+                  pkg.vehicle_name
+                    ? `<div class="tp-card-vehicle">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="12" height="12">
+                        <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"/>
+                        <circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M5 17h8"/>
+                      </svg>
+                      ${pkg.vehicle_name}
+                    </div>`
+                    : `<div class="tp-card-vehicle" style="color:#9ca3af;">No vehicle</div>`
+                }
+              </div>
+            </div>
+            <div class="tp-card-actions">
+              <button class="tp-action-btn edit">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Edit
+              </button>
+              <button class="tp-action-btn delete">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="13" height="13">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                  <path d="M10 11v6"/><path d="M14 11v6"/>
+                </svg>
+                Delete
+              </button>
+            </div>`;
+
+          card
+            .querySelector(".tp-action-btn.edit")
+            .addEventListener("click", () => openPkgModal(pkg));
+          card
+            .querySelector(".tp-action-btn.delete")
+            .addEventListener("click", () =>
+              openDeleteConfirm(pkg.id, pkg.title),
+            );
+
+          const imgEl = card.querySelector("img");
+          if (imgEl) {
+            imgEl.addEventListener("error", () => {
+              imgEl.parentElement.innerHTML = `<div class="tp-card-gradient ${gradient}">${MOUNTAIN_SVG}</div>`;
+            });
+          }
+
+          return card;
+        }
+
+        // Renders only the current page's cards into the grid
+        function renderTpPage() {
+          const total = tpAllPkgs.length;
+          const maxPage = Math.max(0, Math.ceil(total / TP_SIZE) - 1);
+
+          // Clamp tpPage just in case
+          tpPage = Math.min(tpPage, maxPage);
+
+          tpGrid.innerHTML = "";
+          const slice = tpAllPkgs.slice(
+            tpPage * TP_SIZE,
+            (tpPage + 1) * TP_SIZE,
+          );
+          slice.forEach((pkg, i) => {
+            tpGrid.appendChild(buildCard(pkg, tpPage * TP_SIZE + i));
+          });
+
+          tpPrev.disabled = tpPage === 0;
+          tpNext.disabled = tpPage >= maxPage;
+        }
+
+        tpPrev.addEventListener("click", () => {
+          if (tpPage > 0) {
+            tpPage--;
+            renderTpPage();
+          }
+        });
+        tpNext.addEventListener("click", () => {
+          const maxPage = Math.max(
+            0,
+            Math.ceil(tpAllPkgs.length / TP_SIZE) - 1,
+          );
+          if (tpPage < maxPage) {
+            tpPage++;
+            renderTpPage();
+          }
+        });
+
+        async function loadTourPackages() {
+          tpAllPkgs = [];
+          tpPage = 0;
+          try {
+            const res = await fetch(TOURS_API, { credentials: "include" });
+            const data = await res.json();
+            tpAllPkgs = data.data || [];
+
+            if (!tpAllPkgs.length) {
+              tpGrid.innerHTML = `<div class="tp-empty">📦 No tour packages yet. Click <strong>Add Package</strong> to create one.</div>`;
+              tpSubtitle.textContent = "No packages";
+              tpPrev.disabled = tpNext.disabled = true;
+              return;
+            }
+
+            tpSubtitle.textContent = `${tpAllPkgs.length} package${tpAllPkgs.length !== 1 ? "s" : ""} total`;
+            renderTpPage();
+          } catch (err) {
+            tpGrid.innerHTML = `<div class="tp-empty" style="color:#dc2626;">⚠ Could not load packages: ${err.message}</div>`;
+            tpPrev.disabled = tpNext.disabled = true;
+            console.error("[tour] loadTourPackages:", err);
+          }
+        }
+
+        // ══════════════════════════════════════
+        // ADMIN PROFILE
+        // ══════════════════════════════════════
+        async function loadAdmin() {
+          try {
+            const res = await fetch(`${API}/me`, { credentials: "include" });
+            if (!res.ok) throw new Error();
+            const d = await res.json();
+            const name = d.name || "Admin";
+            const role = d.role || "Admin";
+            const initials = name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase();
+            document.getElementById("sidebarAdminName").textContent = name;
+            document.getElementById("topbarAdminName").textContent = name;
+            document.getElementById("sidebarAdminRole").textContent = role;
+            document.getElementById("topbarAdminRole").textContent = role;
+            document.getElementById("sidebarAvatarInitials").textContent =
+              initials;
+            document.getElementById("topbarAvatarInitials").textContent =
+              initials;
+            document.getElementById("dropdownAdminName").textContent = name;
+            document.getElementById("dropdownAdminEmail").textContent =
+              d.email || "—";
+          } catch {
+            console.log("Failed to load admin profile");
+          }
+        }
+
+        // ══════════════════════════════════════
+        // STATS
+        // ══════════════════════════════════════
+        async function loadStats() {
+          try {
+            const res = await fetch(`${API}/stats`, { credentials: "include" });
+            if (!res.ok) throw new Error();
+            const d = await res.json();
+            document.getElementById("statVehicles").textContent =
+              d.total_vehicles ?? 0;
+            document.getElementById("statBookings").textContent =
+              d.active_bookings ?? 0;
+            document.getElementById("statRevenue").textContent = fmtMoney(
+              d.revenue_this_month ?? 0,
+            );
+            document.getElementById("statEnquiries").textContent =
+              d.total_enquiries ?? 0;
+          } catch {
+            console.log("Failed to load stats");
+          }
+        }
+
+        // ══════════════════════════════════════
+        // RECENT BOOKINGS
+        // ══════════════════════════════════════
+        async function loadBookings() {
+          try {
+            const res = await fetch(`${API}/bookings`, {
+              credentials: "include",
+            });
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+            const list = (data.data || []).slice(0, 3);
+            const tbody = document.getElementById("bookingsTableBody");
+
+            if (!list.length) {
+              tbody.innerHTML = `<tr><td colspan="6" class="empty-state">📋 No bookings found</td></tr>`;
+              document.getElementById("bookingSubtitle").textContent =
+                "No recent bookings";
+              return;
+            }
+
+            tbody.innerHTML = list
+              .map(
+                (b) => `
+              <tr>
+                <td>#${b.id}</td>
+                <td>${b.user_name || "—"}</td>
+                <td>${b.vehicle_name || "—"}</td>
+                <td>${fmtDur(b.total_days)}</td>
+                <td>${fmtMoney(b.total_price)}</td>
+                <td>${statusBadge(b.status)}</td>
+              </tr>`,
+              )
+              .join("");
+
+            document.getElementById("bookingSubtitle").textContent =
+              `Showing ${list.length} most recent booking${list.length !== 1 ? "s" : ""}`;
+          } catch {
+            console.log("Failed to load bookings");
+          }
+        }
+
+        // ══════════════════════════════════════
+        // USER DROPDOWN
+        // ══════════════════════════════════════
+        document
+          .getElementById("topbarUser")
+          .addEventListener("click", function (e) {
+            e.stopPropagation();
+            const dd = document.getElementById("userDropdown");
+            const open = dd.classList.contains("visible");
+            dd.classList.toggle("visible", !open);
+            this.classList.toggle("open", !open);
+          });
+        document.addEventListener("click", () => {
+          document.getElementById("userDropdown")?.classList.remove("visible");
+          document.getElementById("topbarUser")?.classList.remove("open");
+        });
+
+        // ══════════════════════════════════════
+        // LOGOUT
+        // ══════════════════════════════════════
+        document
+          .getElementById("logoutBtn")
+          .addEventListener("click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            try {
+              await fetch(`${API}/logout`, {
+                method: "POST",
+                credentials: "include",
+              });
+            } finally {
+              window.location.href = "../index.html";
+            }
+          });
+
+        // ══════════════════════════════════════
+        // SEARCH
+        // ══════════════════════════════════════
+        document
+          .getElementById("dashboardSearch")
+          ?.addEventListener("input", function () {
+            const q = this.value.toLowerCase();
+            document
+              .querySelectorAll("#bookingsTableBody tr")
+              .forEach((row) => {
+                row.style.display = row.textContent.toLowerCase().includes(q)
+                  ? ""
+                  : "none";
+              });
+          });
+
+        // ══════════════════════════════════════
+        // INIT
+        // ══════════════════════════════════════
+        loadAdmin();
+        loadStats();
+        loadBookings();
+        loadTourPackages();
+      }); // end DOMContentLoaded
     </script>
   </body>
 </html>

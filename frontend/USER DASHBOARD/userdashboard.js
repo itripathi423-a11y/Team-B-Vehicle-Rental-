@@ -520,6 +520,157 @@ async function loadNotifCount() {
     /* Silently fail — non-critical */
   }
 }
+/* ── 4. TOUR PACKAGES ────────────────────────────────── */
+async function loadTourPackages() {
+  const grid = document.getElementById("dashPkgGrid");
+  const prevBtn = document.getElementById("dashPkgPrev");
+  const nextBtn = document.getElementById("dashPkgNext");
+  if (!grid) return;
+
+  const PAGE_SIZE = 3;
+  let allCards = [];
+  let page = 0;
+
+  const BADGE_LABELS = [
+    "MOST POPULAR",
+    "BEST VALUE",
+    "ADVENTURE",
+    "EXCLUSIVE",
+    "TOP RATED",
+    "NEW",
+  ];
+  const GRADIENTS = [
+    "dp-gradient--green",
+    "dp-gradient--navy",
+    "dp-gradient--brown",
+    "dp-gradient--purple",
+    "dp-gradient--teal",
+    "dp-gradient--red",
+  ];
+  const MOUNTAIN_SVG = `<svg viewBox="0 0 80 50" fill="none" stroke="white" stroke-width="1.5"><polyline points="5,45 30,12 50,30 65,18 75,45"/><circle cx="60" cy="14" r="5" fill="white" opacity="0.4"/></svg>`;
+
+  function updateCarousel() {
+    const total = allCards.length;
+    const maxPage = Math.ceil(total / PAGE_SIZE) - 1;
+
+    allCards.forEach((card, i) => {
+      card.style.display =
+        i >= page * PAGE_SIZE && i < (page + 1) * PAGE_SIZE ? "" : "none";
+    });
+
+    if (prevBtn) prevBtn.disabled = page === 0;
+    if (nextBtn) nextBtn.disabled = page >= maxPage;
+  }
+
+  if (prevBtn)
+    prevBtn.addEventListener("click", () => {
+      if (page > 0) {
+        page--;
+        updateCarousel();
+      }
+    });
+  if (nextBtn)
+    nextBtn.addEventListener("click", () => {
+      const maxPage = Math.ceil(allCards.length / PAGE_SIZE) - 1;
+      if (page < maxPage) {
+        page++;
+        updateCarousel();
+      }
+    });
+
+  try {
+    const res = await fetch("http://localhost:5000/api/tour-packages", {
+      credentials: "include",
+    });
+    const data = await res.json();
+    const packages = data.data || [];
+
+    if (!packages.length) {
+      grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;padding:32px;color:#9ca3af;font-size:13px;">No packages available right now.</p>`;
+      if (prevBtn) prevBtn.disabled = true;
+      if (nextBtn) nextBtn.disabled = true;
+      return;
+    }
+
+    grid.innerHTML = "";
+
+    packages.forEach((pkg, i) => {
+      const badge = BADGE_LABELS[i % BADGE_LABELS.length];
+      const gradient = GRADIENTS[i % GRADIENTS.length];
+      const price = Number(pkg.price).toLocaleString();
+      const days = pkg.duration_days || 1;
+      const imgHTML = pkg.image_url
+        ? `<img src="http://localhost:5000/uploads/tours/${escHtml(pkg.image_url)}" alt="${escHtml(pkg.title)}" />`
+        : `<div class="dp-gradient ${gradient}">${MOUNTAIN_SVG}</div>`;
+
+      const card = document.createElement("div");
+      card.className = "dp-card";
+      card.innerHTML = `
+        <div class="dp-img-wrap">
+          ${imgHTML}
+          <span class="dp-badge">${badge}</span>
+          <div class="dp-duration">
+            <span class="dp-dur-dot"></span>
+            ${days} ${days === 1 ? "Day" : "Days"}
+          </div>
+        </div>
+        <div class="dp-body">
+          <h3 class="dp-title">${escHtml(pkg.title)}</h3>
+          <p class="dp-desc">${escHtml(pkg.description || pkg.destination_name || "An unforgettable journey through Nepal.")}</p>
+          <div class="dp-footer">
+            <div>
+              <p class="dp-price-label">NPR</p>
+              <p class="dp-price">${price}<span>per package</span></p>
+            </div>
+            <button class="dp-book-btn"
+              data-id="${pkg.id}"
+              data-vehicle-id="${pkg.vehicle_id || ""}"
+              data-title="${encodeURIComponent(pkg.title)}"
+              data-price="${pkg.price}"
+              data-days="${days}"
+              data-image="${pkg.image_url || ""}">
+              Book Now
+            </button>
+          </div>
+        </div>
+      `;
+
+      const imgEl = card.querySelector("img");
+      if (imgEl) {
+        imgEl.addEventListener("error", () => {
+          imgEl.parentElement.innerHTML = `<div class="dp-gradient ${gradient}">${MOUNTAIN_SVG}</div>`;
+        });
+      }
+
+      card
+        .querySelector(".dp-book-btn")
+        .addEventListener("click", async (e) => {
+          e.stopPropagation();
+          const btn = e.currentTarget;
+          const params = new URLSearchParams({
+            source: "package",
+            pkg_id: btn.dataset.id || "",
+            vehicle_id: btn.dataset.vehicleId || "",
+            pkg_title: decodeURIComponent(btn.dataset.title || ""),
+            pkg_price: btn.dataset.price || "",
+            pkg_days: btn.dataset.days || "1",
+            pkg_image: btn.dataset.image || "",
+          });
+          window.location.href = `user.booking.html?${params.toString()}`;
+        });
+
+      grid.appendChild(card);
+      allCards.push(card);
+    });
+
+    updateCarousel();
+  } catch (err) {
+    grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;padding:32px;color:#dc2626;font-size:13px;">⚠ Could not load packages.</p>`;
+    if (prevBtn) prevBtn.disabled = true;
+    if (nextBtn) nextBtn.disabled = true;
+    console.error("Packages load error:", err);
+  }
+}
 
 /* ── INIT ────────────────────────────────────────────── */
 document.addEventListener("DOMContentLoaded", async () => {
@@ -527,6 +678,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await Promise.allSettled([
     loadStats(),
     loadRecentBookings(),
+    loadTourPackages(),
     loadNotifCount(),
   ]);
 });
