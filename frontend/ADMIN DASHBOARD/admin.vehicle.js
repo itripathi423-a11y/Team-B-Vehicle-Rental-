@@ -335,70 +335,73 @@ function getPageRange(current, total) {
 }
 
 function renderPagination(total) {
-  const existing = document.getElementById("paginationBar");
-  if (existing) existing.remove();
-
+  const bar = document.getElementById("paginationBar");
+  if (!bar) return;
+  bar.innerHTML = "";
   const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
-  if (totalPages <= 1) return;
+  if (totalPages <= 1) {
+    bar.style.display = "none";
+    return;
+  }
+  bar.style.display = "flex";
 
-  const bar = document.createElement("div");
-  bar.id = "paginationBar";
-  bar.className = "pagination-bar";
+  // Info on the LEFT
+  const info = document.createElement("div");
+  info.className = "page-info";
+  const start = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+  const end = Math.min(currentPage * ITEMS_PER_PAGE, total);
+  info.textContent = `Showing ${start}–${end} of ${total}`;
+  bar.appendChild(info);
 
-  // Prev
-  const prevBtn = document.createElement("button");
-  prevBtn.className = `page-btn${currentPage === 1 ? " disabled" : ""}`;
-  prevBtn.disabled = currentPage === 1;
-  prevBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="14" height="14"><path d="M15 18l-6-6 6-6"/></svg>`;
-  prevBtn.addEventListener("click", () => {
+  // Buttons on the RIGHT
+  const btnGroup = document.createElement("div");
+  btnGroup.style.display = "flex";
+  btnGroup.style.gap = "6px";
+  btnGroup.style.alignItems = "center";
+
+  const prev = document.createElement("button");
+  prev.className = `pag-btn ${currentPage === 1 ? "disabled" : ""}`;
+  prev.disabled = currentPage === 1;
+  prev.textContent = "‹";
+  prev.onclick = () => {
     if (currentPage > 1) {
       currentPage--;
       renderTable(filteredVehicles);
     }
-  });
-  bar.appendChild(prevBtn);
+  };
+  btnGroup.appendChild(prev);
 
-  // Page buttons
   getPageRange(currentPage, totalPages).forEach((p) => {
     if (p === "…") {
-      const sp = document.createElement("span");
-      sp.className = "page-ellipsis";
-      sp.textContent = "…";
-      bar.appendChild(sp);
+      const el = document.createElement("span");
+      el.style.cssText = "padding:0 4px;color:var(--muted)";
+      el.textContent = "…";
+      btnGroup.appendChild(el);
       return;
     }
     const btn = document.createElement("button");
-    btn.className = `page-btn${p === currentPage ? " active" : ""}`;
+    btn.className = `pag-btn ${p === currentPage ? "active" : ""}`;
     btn.textContent = p;
-    btn.addEventListener("click", () => {
+    btn.onclick = () => {
       currentPage = p;
       renderTable(filteredVehicles);
-    });
-    bar.appendChild(btn);
+    };
+    btnGroup.appendChild(btn);
   });
 
-  // Next
-  const nextBtn = document.createElement("button");
-  nextBtn.className = `page-btn${currentPage === totalPages ? " disabled" : ""}`;
-  nextBtn.disabled = currentPage === totalPages;
-  nextBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="14" height="14"><path d="M9 18l6-6-6-6"/></svg>`;
-  nextBtn.addEventListener("click", () => {
+  const next = document.createElement("button");
+  next.className = `pag-btn ${currentPage === totalPages ? "disabled" : ""}`;
+  next.disabled = currentPage === totalPages;
+  next.textContent = "›";
+  next.onclick = () => {
     if (currentPage < totalPages) {
       currentPage++;
       renderTable(filteredVehicles);
     }
-  });
-  bar.appendChild(nextBtn);
+  };
+  btnGroup.appendChild(next);
 
-  // Info
-  const info = document.createElement("span");
-  info.className = "page-info";
-  const s = (currentPage - 1) * ITEMS_PER_PAGE + 1;
-  const e = Math.min(currentPage * ITEMS_PER_PAGE, total);
-  info.textContent = `${s}–${e} of ${total}`;
-  bar.appendChild(info);
-
-  document.querySelector(".table-card").appendChild(bar);
+  bar.appendChild(btnGroup);
 }
 
 // ── Filters ────────────────────────────────────────────────────

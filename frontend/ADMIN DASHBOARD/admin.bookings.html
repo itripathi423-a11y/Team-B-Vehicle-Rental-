@@ -245,21 +245,6 @@
         height: 17px;
         color: var(--muted);
       }
-      .notif-badge {
-        position: absolute;
-        top: -3px;
-        right: -3px;
-        background: var(--orange);
-        color: #fff;
-        font-size: 9px;
-        font-weight: 700;
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
       .tb-user {
         display: flex;
         align-items: center;
@@ -651,6 +636,27 @@
         color: var(--orange);
       }
 
+      /* AUTO-SCHEDULE BADGE */
+      .auto-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #15803d;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 99px;
+        font-family: "Space Mono", monospace;
+        letter-spacing: 0.3px;
+        margin-top: 4px;
+      }
+      .auto-pill svg {
+        width: 10px;
+        height: 10px;
+      }
+
       /* VIEW BTN */
       .view-btn {
         display: inline-flex;
@@ -979,41 +985,240 @@
         opacity: 0.45;
         pointer-events: none;
       }
+
+      /* LOCKED STATE — for Completed / Cancelled */
+      .st-btn.is-locked {
+        opacity: 0.3;
+        pointer-events: none;
+        cursor: not-allowed;
+      }
+      .status-locked-notice {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #f9fafb;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-top: 12px;
+        font-size: 12.5px;
+        color: var(--muted);
+      }
+      .status-locked-notice svg {
+        flex-shrink: 0;
+        color: var(--muted);
+      }
+
+      /* AUTO-SCHEDULE INFO BOX */
+      .auto-schedule-box {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 12px;
+        padding: 14px 18px;
+        margin-bottom: 20px;
+      }
+      .auto-schedule-box-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #15803d;
+        font-family: "Space Mono", monospace;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .auto-schedule-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: #166534;
+        padding: 4px 0;
+      }
+      .auto-schedule-row span:first-child {
+        color: #15803d;
+        font-size: 12px;
+      }
+
       .st-btn.btn-pending {
         border-color: #d97706;
         color: #d97706;
       }
-      .st-btn.btn-pending:not(.is-current):hover {
+      .st-btn.btn-pending:not(.is-current):not(.is-locked):hover {
         background: #fffbeb;
       }
       .st-btn.btn-confirmed {
         border-color: #2563eb;
         color: #2563eb;
       }
-      .st-btn.btn-confirmed:not(.is-current):hover {
+      .st-btn.btn-confirmed:not(.is-current):not(.is-locked):hover {
         background: #eff6ff;
       }
       .st-btn.btn-active {
         border-color: #16a34a;
         color: #16a34a;
       }
-      .st-btn.btn-active:not(.is-current):hover {
+      .st-btn.btn-active:not(.is-current):not(.is-locked):hover {
         background: #ecfdf5;
       }
       .st-btn.btn-completed {
         border-color: var(--muted);
         color: var(--muted);
       }
-      .st-btn.btn-completed:not(.is-current):hover {
+      .st-btn.btn-completed:not(.is-current):not(.is-locked):hover {
         background: #f3f4f6;
       }
       .st-btn.btn-cancelled {
         border-color: #dc2626;
         color: #dc2626;
       }
-      .st-btn.btn-cancelled:not(.is-current):hover {
+      .st-btn.btn-cancelled:not(.is-current):not(.is-locked):hover {
         background: #fff5f5;
       }
+
+      /* CONFIRMATION POPUP */
+      .confirm-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(4px);
+        z-index: 9500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+      }
+      .confirm-overlay.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .confirm-box {
+        background: #fff;
+        border-radius: 18px;
+        width: 100%;
+        max-width: 420px;
+        padding: 28px 28px 24px;
+        transform: scale(0.94) translateY(16px);
+        transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+      }
+      .confirm-overlay.open .confirm-box {
+        transform: scale(1) translateY(0);
+      }
+      .confirm-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        margin-bottom: 16px;
+      }
+      .confirm-icon.blue {
+        background: #eff6ff;
+      }
+      .confirm-icon.amber {
+        background: #fffbeb;
+      }
+      .confirm-icon.green {
+        background: #f0fdf4;
+      }
+      .confirm-icon.grey {
+        background: #f3f4f6;
+      }
+      .confirm-title {
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 6px;
+      }
+      .confirm-desc {
+        font-size: 13.5px;
+        color: var(--muted);
+        line-height: 1.6;
+        margin-bottom: 22px;
+      }
+      .confirm-detail {
+        background: var(--bg);
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 22px;
+        font-size: 13px;
+      }
+      .confirm-detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 3px 0;
+      }
+      .confirm-detail-row span:first-child {
+        color: var(--muted);
+      }
+      .confirm-detail-row span:last-child {
+        font-weight: 500;
+        color: var(--dark);
+      }
+      .confirm-actions {
+        display: flex;
+        gap: 10px;
+      }
+      .confirm-ok {
+        flex: 1;
+        padding: 11px;
+        border-radius: 10px;
+        border: none;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.18s;
+        color: #fff;
+      }
+      .confirm-ok.blue {
+        background: #2563eb;
+      }
+      .confirm-ok.blue:hover {
+        background: #1d4ed8;
+      }
+      .confirm-ok.amber {
+        background: #d97706;
+      }
+      .confirm-ok.amber:hover {
+        background: #b45309;
+      }
+      .confirm-ok.green {
+        background: #16a34a;
+      }
+      .confirm-ok.green:hover {
+        background: #15803d;
+      }
+      .confirm-ok.grey {
+        background: #6b7280;
+      }
+      .confirm-ok.grey:hover {
+        background: #4b5563;
+      }
+      .confirm-cancel-btn {
+        padding: 11px 18px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: none;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.18s;
+      }
+      .confirm-cancel-btn:hover {
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      /* CANCEL FORM */
       .cancel-form {
         margin-top: 14px;
         padding: 16px;
@@ -1327,11 +1532,6 @@
             />
           </div>
           <div class="topbar-right">
-            <!--
-              The .notif-wrapper div below is a placeholder.
-              admin.notification.js will automatically REPLACE this
-              with the full notification panel on page load.
-            -->
             <div class="notif-wrapper">
               <button class="icon-btn notif-btn" id="notifBtn">
                 <svg
@@ -1349,7 +1549,6 @@
               </button>
               <div class="notif-dropdown" id="notifDropdown"></div>
             </div>
-
             <div class="tb-user" id="tbUser">
               <div class="tb-av" id="tbAv">AD</div>
               <div>
@@ -1526,6 +1725,30 @@
       </div>
     </div>
 
+    <!-- CONFIRMATION POPUP -->
+    <div class="confirm-overlay" id="confirmOverlay">
+      <div class="confirm-box">
+        <div class="confirm-icon" id="confirmIcon">✅</div>
+        <div class="confirm-title" id="confirmTitle">Confirm Status Change</div>
+        <div class="confirm-desc" id="confirmDesc">
+          Are you sure you want to change the booking status?
+        </div>
+        <div class="confirm-detail" id="confirmDetail"></div>
+        <div class="confirm-actions">
+          <button class="confirm-cancel-btn" onclick="dismissConfirm()">
+            Cancel
+          </button>
+          <button
+            class="confirm-ok"
+            id="confirmOkBtn"
+            onclick="executeConfirmedStatus()"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="toast" id="toast"></div>
     <script src="admin.notification.js"></script>
     <script>
@@ -1537,7 +1760,14 @@
         filtered = [],
         openId = null,
         page = 1;
-      const PER = 10;
+      const PER = 6;
+
+      /* ─ pending confirmation state ─ */
+      let pendingStatusId = null;
+      let pendingStatusValue = null;
+      let pendingCancelReason = "";
+
+      const TERMINAL_STATUSES = ["Completed", "Cancelled"];
 
       const BKS = {
         Pending: { bdg: "bdg bdg-amber", label: "Pending" },
@@ -1551,6 +1781,34 @@
         pending: { bdg: "bdg bdg-amber", label: "⏳ Pending" },
         rejected: { bdg: "bdg bdg-red", label: "✕ Rejected" },
         not_submitted: { bdg: "bdg bdg-grey", label: "Not Submitted" },
+      };
+
+      /* ─ STATUS CONFIG for confirm popup ─ */
+      const STATUS_CFG = {
+        Confirmed: {
+          color: "blue",
+          icon: "✅",
+          title: "Confirm Booking?",
+          desc: "This will mark the booking as Confirmed and notify the customer. The vehicle will automatically switch to Active on the start date and Completed on the end date.",
+        },
+        Active: {
+          color: "green",
+          icon: "🚗",
+          title: "Mark as Active?",
+          desc: "This will mark the booking as Active, indicating the customer has picked up the vehicle.",
+        },
+        Pending: {
+          color: "amber",
+          icon: "⏳",
+          title: "Revert to Pending?",
+          desc: "This will move the booking back to Pending status.",
+        },
+        Completed: {
+          color: "grey",
+          icon: "🏁",
+          title: "Mark as Completed?",
+          desc: "This will mark the booking as Completed. This action cannot be undone.",
+        },
       };
 
       const bkBadge = (s) => {
@@ -1577,8 +1835,18 @@
               year: "numeric",
             })
           : "—";
+      const fmtDatetime = (d) =>
+        d
+          ? new Date(d).toLocaleString("en-NP", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          : "—";
 
-      // ── POPULATE ADMIN ──
+      /* ── POPULATE ADMIN ── */
       function populateAdmin(a) {
         if (!a || !a.name) return;
         const initials = a.name
@@ -1600,9 +1868,8 @@
         document.getElementById("ddEmail").textContent = a.email || "—";
       }
 
-      // ── BOOT ──
+      /* ── BOOT ── */
       async function boot() {
-        // Dropdown toggle
         document
           .getElementById("tbUser")
           .addEventListener("click", function (e) {
@@ -1614,8 +1881,6 @@
           document.getElementById("dd").classList.remove("visible");
           document.getElementById("tbUser").classList.remove("open");
         });
-
-        // Logout
         document
           .getElementById("logoutBtn")
           .addEventListener("click", async (e) => {
@@ -1630,8 +1895,6 @@
               window.location.href = "../index.html";
             }
           });
-
-        // Search & modal close
         document
           .getElementById("bSearch")
           .addEventListener("input", applyFilters);
@@ -1641,7 +1904,10 @@
             if (e.target === this) closeModal();
           });
         document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape") closeModal();
+          if (e.key === "Escape") {
+            closeModal();
+            dismissConfirm();
+          }
         });
 
         try {
@@ -1649,22 +1915,17 @@
             fetch(ADMIN_API, { credentials: "include" }),
             fetch(API, { credentials: "include" }),
           ]);
-
           if (adminRes.status === 401) {
             window.location.href = "../index.html";
             return;
           }
-
           const adminJson = await adminRes.json();
-          populateAdmin(adminJson); // /me returns object directly — no .data wrapper
-
+          populateAdmin(adminJson);
           const bookJson = await bookRes.json();
           if (bookJson.success) {
             data = bookJson.data;
             filtered = [...data];
-          } else {
-            showToast("Failed to load bookings", "err");
-          }
+          } else showToast("Failed to load bookings", "err");
           render();
         } catch (e) {
           console.error(e);
@@ -1672,10 +1933,9 @@
           render();
         }
       }
-
       boot();
 
-      // ── RENDER ──
+      /* ── RENDER TABLE ── */
       function render() {
         const tb = document.getElementById("tbody");
         const total = filtered.length;
@@ -1696,39 +1956,48 @@
         }
 
         tb.innerHTML = slice
-          .map(
-            (b) => `
-          <tr>
-            <td><span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">#</span><strong>${b.id}</strong></td>
-            <td>
-              <div class="user-cell">
-                <div class="uc-av">${b.user_photo ? `<img src="${b.user_photo}" alt="" onerror="this.parentElement.innerHTML='${ini(b.user_name)}'">` : ini(b.user_name)}</div>
-                <div><div class="uc-name">${b.user_name}</div><div class="uc-email">${b.user_email}</div></div>
-              </div>
-            </td>
-            <td>
-              <div class="v-cell">
-                <img class="v-thumb" src="${b.vehicle_img}" alt="" onerror="this.style.display='none'" />
-                <div><div class="v-name">${b.vehicle_name}</div><div class="v-plate">${b.vehicle_plate}</div></div>
-              </div>
-            </td>
-            <td>
-              <div style="font-size:12.5px">${fmtDate(b.start_date)} → ${fmtDate(b.end_date)}</div>
-              <div style="font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:2px">${b.total_days} day${b.total_days !== 1 ? "s" : ""}</div>
-            </td>
-            <td style="font-size:12.5px;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.pickup_location}</td>
-            <td style="font-family:'Space Mono',monospace;font-size:12.5px;font-weight:600">${fmtMoney(b.total_price)}</td>
-            <td>${kycBadge(b.kyc_status)}</td>
-            <td>${bkBadge(b.status)}</td>
-            <td>
-              <button class="view-btn" onclick="openModal(${b.id})">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                View
-              </button>
-            </td>
-          </tr>
-        `,
-          )
+          .map((b) => {
+            const isConfirmed = b.status === "Confirmed";
+            const autoPill = isConfirmed
+              ? `<div class="auto-pill">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Auto-scheduled
+               </div>`
+              : "";
+            return `
+            <tr>
+              <td><span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">#</span><strong>${b.id}</strong></td>
+              <td>
+                <div class="user-cell">
+                  <div class="uc-av">${b.user_photo ? `<img src="${b.user_photo}" alt="" onerror="this.parentElement.innerHTML='${ini(b.user_name)}'">` : ini(b.user_name)}</div>
+                  <div><div class="uc-name">${b.user_name}</div><div class="uc-email">${b.user_email}</div></div>
+                </div>
+              </td>
+              <td>
+                <div class="v-cell">
+                  <img class="v-thumb" src="${b.vehicle_img}" alt="" onerror="this.style.display='none'" />
+                  <div><div class="v-name">${b.vehicle_name}</div><div class="v-plate">${b.vehicle_plate}</div></div>
+                </div>
+              </td>
+              <td>
+                <div style="font-size:12.5px">${fmtDate(b.start_date)} → ${fmtDate(b.end_date)}</div>
+                <div style="font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:2px">${b.total_days} day${b.total_days !== 1 ? "s" : ""}</div>
+              </td>
+              <td style="font-size:12.5px;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.pickup_location}</td>
+              <td style="font-family:'Space Mono',monospace;font-size:12.5px;font-weight:600">${fmtMoney(b.total_price)}</td>
+              <td>${kycBadge(b.kyc_status)}</td>
+              <td>
+                ${bkBadge(b.status)}
+                ${autoPill}
+              </td>
+              <td>
+                <button class="view-btn" onclick="openModal(${b.id})">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  View
+                </button>
+              </td>
+            </tr>`;
+          })
           .join("");
 
         renderPag(total);
@@ -1759,7 +2028,7 @@
         render();
       }
 
-      // ── MODAL ──
+      /* ── MODAL ── */
       function openModal(id) {
         const b = data.find((x) => x.id === id);
         if (!b) return;
@@ -1790,12 +2059,38 @@
 
       function buildBody(b) {
         const net = b.total_price - (b.discount || 0) + (b.extra_charges || 0);
+
+        /* auto-schedule box shown only when status is Confirmed */
+        const autoBox =
+          b.status === "Confirmed"
+            ? `<div class="auto-schedule-box">
+              <div class="auto-schedule-box-title">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Auto-schedule enabled
+              </div>
+              <div class="auto-schedule-row">
+                <span>🚗 Active on</span>
+                <span>${fmtDate(b.start_date)} at 00:00</span>
+              </div>
+              <div class="auto-schedule-row">
+                <span>🏁 Completed on</span>
+                <span>${fmtDate(b.end_date)} at 23:59</span>
+              </div>
+              <div style="font-size:11px;color:#15803d;margin-top:8px;opacity:0.8">
+                Status will change automatically — no manual action needed.
+              </div>
+             </div>`
+            : "";
+
         return `
           <div class="cust-strip">
             <div class="cust-av">${b.user_photo ? `<img src="${b.user_photo}" alt="" onerror="this.parentElement.innerHTML='${ini(b.user_name)}'">` : ini(b.user_name)}</div>
             <div style="flex:1"><div class="cust-name">${b.user_name}</div><div class="cust-sub">${b.user_email}  ·  ${b.user_phone}</div></div>
             <div>${kycBadge(b.kyc_status)}</div>
           </div>
+
+          ${autoBox}
+
           <div class="info-cols">
             <div class="info-box">
               <div class="info-box-title">Booking Info</div>
@@ -1820,15 +2115,16 @@
               </span></div>
             </div>
           </div>
+
           <div class="price-box">
             <div class="info-box-title" style="margin-bottom:10px">Price Breakdown</div>
             <table class="price-table">
-              
               ${b.extra_charges ? `<tr><td>Extra Charges</td><td></td><td style="text-align:right;font-weight:500">+${fmtMoney(b.extra_charges)}</td></tr>` : ""}
               ${b.discount ? `<tr><td>Discount</td><td></td><td style="text-align:right;font-weight:500;color:#16a34a">−${fmtMoney(b.discount)}</td></tr>` : ""}
               <tr class="price-total"><td>Total</td><td></td><td style="text-align:right">${fmtMoney(net)}</td></tr>
             </table>
           </div>
+
           ${b.cancel_reason ? `<div class="notes-box" style="background:#fff5f5;border-color:#fecaca;color:#b91c1c"><strong>⚠️ Cancellation Reason:</strong> ${b.cancel_reason}</div>` : ""}
           ${b.notes ? `<div class="notes-box">📝 ${b.notes}</div>` : ""}
         `;
@@ -1836,13 +2132,38 @@
 
       function buildFooter(b) {
         const s = b.status;
+        const locked = TERMINAL_STATUSES.includes(s);
+        const lockCls = locked ? "is-locked" : "";
+
+        if (locked) {
+          const icon = s === "Completed" ? "🏁" : "❌";
+          const color = s === "Completed" ? "#16a34a" : "#dc2626";
+          return `
+            <div class="footer-ttl">Booking Status</div>
+            <div class="status-btns">
+              ${["Pending", "Confirmed", "Active", "Completed", "Cancelled"]
+                .map(
+                  (st) => `
+                <button class="st-btn btn-${st.toLowerCase()} ${st === s ? "is-current" : "is-locked"}">${st}</button>
+              `,
+                )
+                .join("")}
+            </div>
+            <div class="status-locked-notice" style="margin-top:12px">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              This booking is <strong style="margin:0 3px;color:${color}">${icon} ${s}</strong> and can no longer be edited.
+            </div>
+            <div id="cancelSlot"></div>
+          `;
+        }
+
         return `
           <div class="footer-ttl">Update Booking Status</div>
           <div class="status-btns">
-            <button class="st-btn btn-pending   ${s === "Pending" ? "is-current" : ""}" onclick="doStatus(${b.id},'Pending')">Pending</button>
-            <button class="st-btn btn-confirmed ${s === "Confirmed" ? "is-current" : ""}" onclick="doStatus(${b.id},'Confirmed')">Confirmed</button>
-            <button class="st-btn btn-active    ${s === "Active" ? "is-current" : ""}" onclick="doStatus(${b.id},'Active')">Active</button>
-            <button class="st-btn btn-completed ${s === "Completed" ? "is-current" : ""}" onclick="doStatus(${b.id},'Completed')">Completed</button>
+            <button class="st-btn btn-pending   ${s === "Pending" ? "is-current" : ""}" onclick="requestStatusChange(${b.id},'Pending')">Pending</button>
+            <button class="st-btn btn-confirmed ${s === "Confirmed" ? "is-current" : ""}" onclick="requestStatusChange(${b.id},'Confirmed')">Confirmed</button>
+            <button class="st-btn btn-active    ${s === "Active" ? "is-current" : ""}" onclick="requestStatusChange(${b.id},'Active')">Active</button>
+            <button class="st-btn btn-completed ${s === "Completed" ? "is-current" : ""}" onclick="requestStatusChange(${b.id},'Completed')">Completed</button>
             <button class="st-btn btn-cancelled ${s === "Cancelled" ? "is-current" : ""}" onclick="triggerCancel(${b.id})">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
               Cancelled
@@ -1852,7 +2173,53 @@
         `;
       }
 
-      // ── CANCEL FLOW ──
+      /* ── CONFIRMATION POPUP ── */
+      function requestStatusChange(id, status) {
+        const b = data.find((x) => x.id === id);
+        if (!b) return;
+        const cfg = STATUS_CFG[status] || {
+          color: "grey",
+          icon: "🔔",
+          title: `Mark as ${status}?`,
+          desc: `Change booking status to ${status}.`,
+        };
+
+        pendingStatusId = id;
+        pendingStatusValue = status;
+
+        document.getElementById("confirmIcon").textContent = cfg.icon;
+        document.getElementById("confirmIcon").className =
+          `confirm-icon ${cfg.color}`;
+        document.getElementById("confirmTitle").textContent = cfg.title;
+        document.getElementById("confirmDesc").textContent = cfg.desc;
+        document.getElementById("confirmDetail").innerHTML = `
+          <div class="confirm-detail-row"><span>Booking #</span><span>${b.id}</span></div>
+          <div class="confirm-detail-row"><span>Customer</span><span>${b.user_name}</span></div>
+          <div class="confirm-detail-row"><span>Vehicle</span><span>${b.vehicle_name}</span></div>
+          <div class="confirm-detail-row"><span>Current status</span><span>${b.status}</span></div>
+          <div class="confirm-detail-row"><span>New status</span><span>${status}</span></div>
+        `;
+        const okBtn = document.getElementById("confirmOkBtn");
+        okBtn.textContent = `Yes, ${status}`;
+        okBtn.className = `confirm-ok ${cfg.color}`;
+
+        document.getElementById("confirmOverlay").classList.add("open");
+      }
+
+      function dismissConfirm() {
+        document.getElementById("confirmOverlay").classList.remove("open");
+        pendingStatusId = null;
+        pendingStatusValue = null;
+        pendingCancelReason = "";
+      }
+
+      async function executeConfirmedStatus() {
+        if (!pendingStatusId || !pendingStatusValue) return;
+        dismissConfirm();
+        await doStatus(pendingStatusId, pendingStatusValue);
+      }
+
+      /* ── CANCEL FLOW ── */
       function triggerCancel(id) {
         const slot = document.getElementById("cancelSlot");
         if (!slot) return;
@@ -1876,8 +2243,7 @@
               </button>
               <button class="btn-keep" onclick="document.getElementById('cancelSlot').innerHTML=''">Keep Booking</button>
             </div>
-          </div>
-        `;
+          </div>`;
         slot.scrollIntoView({ behavior: "smooth", block: "nearest" });
         document.getElementById("cancelReasonTA")?.focus();
       }
@@ -1899,7 +2265,7 @@
         await doStatus(id, "Cancelled", reason);
       }
 
-      // ── STATUS UPDATE ──
+      /* ── STATUS UPDATE ── */
       async function doStatus(id, status, cancelReason = "") {
         document
           .querySelectorAll(".st-btn")
@@ -1918,16 +2284,14 @@
           const json = await res.json();
           if (!json.success) throw new Error(json.message || "Server error");
 
-          const item = data.find((x) => x.id === id);
-          if (item) {
-            item.status = status;
-            if (cancelReason) item.cancel_reason = cancelReason;
-          }
-          const fi = filtered.find((x) => x.id === id);
-          if (fi) {
-            fi.status = status;
-            if (cancelReason) fi.cancel_reason = cancelReason;
-          }
+          /* update local copies */
+          [data, filtered].forEach((arr) => {
+            const item = arr.find((x) => x.id === id);
+            if (item) {
+              item.status = status;
+              if (cancelReason) item.cancel_reason = cancelReason;
+            }
+          });
 
           refreshModal();
           showToast(`Booking #${id} → ${status}`, "ok");
@@ -1946,7 +2310,7 @@
         }
       }
 
-      // ── FILTERS ──
+      /* ── FILTERS ── */
       function applyFilters() {
         const s = document.getElementById("fStatus").value;
         const fr = document.getElementById("fFrom").value;
@@ -1989,7 +2353,7 @@
           `All ${data.length} bookings`;
       }
 
-      // ── EXPORT ──
+      /* ── EXPORT ── */
       function exportCSV() {
         const hdr = [
           "ID",
@@ -2032,7 +2396,7 @@
         a.click();
       }
 
-      // ── TOAST ──
+      /* ── TOAST ── */
       function showToast(msg, type = "ok") {
         const t = document.getElementById("toast");
         t.textContent = msg;

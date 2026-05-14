@@ -635,23 +635,59 @@
         color: #6b7280;
       }
 
-      /* Verified locked pill in table row */
+      /* STATUS BADGES */
+      .bdg,
       .verified-lock-row {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 5px 12px;
-        border-radius: 99px;
-        background: #ecfdf5;
-        color: #16a34a;
-        font-size: 11px;
-        font-weight: 700;
+        justify-content: center;
+        min-width: 110px;
+        height: 32px;
+        padding: 0 14px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
         font-family: "DM Sans", sans-serif;
-        border: 1px solid #a7f3d0;
+        line-height: 1;
         white-space: nowrap;
-        cursor: default;
+        text-align: center;
+        vertical-align: middle;
       }
 
+      /* COLORS */
+      .bdg-green,
+      .verified-lock-row {
+        background: #ecfdf5;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
+      }
+
+      .bdg-amber {
+        background: #fffbeb;
+        color: #d97706;
+        border: 1px solid #fde68a;
+      }
+
+      .bdg-red {
+        background: #fff1f2;
+        color: #dc2626;
+        border: 1px solid #fecdd3;
+      }
+
+      .bdg-grey {
+        background: #f3f4f6;
+        color: #6b7280;
+        border: 1px solid #d1d5db;
+      }
+
+      /* OPTIONAL DOT */
+      .bdg .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+        flex-shrink: 0;
+      }
       .bdg {
         display: inline-flex;
         align-items: center;
@@ -974,7 +1010,33 @@
         color: var(--muted);
         line-height: 1.6;
       }
-
+      .pag-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 7px;
+        border: 1px solid var(--border);
+        background: white;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text);
+        transition: all 0.18s;
+      }
+      .pag-btn:hover {
+        background: var(--bg);
+      }
+      .pag-btn.active {
+        background: var(--orange);
+        color: white;
+        border-color: var(--orange);
+      }
+      .pag-btn.disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
       /* action bar */
       .modal-action-bar {
         flex-shrink: 0;
@@ -1594,6 +1656,22 @@
                 <tbody id="kycTableBody"></tbody>
               </table>
             </div>
+
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 16px 24px;
+                border-top: 1px solid var(--border);
+              "
+            >
+              <p class="pag-info" id="kycPagInfo">—</p>
+              <div
+                style="display: flex; gap: 6px; align-items: center"
+                id="kycPagBtns"
+              ></div>
+            </div>
           </div>
         </main>
       </div>
@@ -1789,8 +1867,10 @@
       let data = [],
         filtered = [],
         openId = null;
-      // Holds context while the confirm-verify dialog is open
       let _pendingVerify = null; // { id, source: 'inline' | 'modal' }
+
+      let currentPage = 1;
+      const PER_PAGE = 6;
 
       // ── POPULATE ADMIN ──────────────────────────────────────────────
       function populateAdmin(a) {
@@ -1955,57 +2035,95 @@
       // ── RENDER TABLE ─────────────────────────────────────────────────
       function renderTable() {
         const tbody = document.getElementById("kycTableBody");
-        document.getElementById("tableCount").textContent =
-          `${filtered.length} submission${filtered.length !== 1 ? "s" : ""}`;
+        const total = filtered.length;
+        const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+        if (currentPage > totalPages) currentPage = 1;
 
-        if (!filtered.length) {
+        const start = (currentPage - 1) * PER_PAGE;
+        const pageData = filtered.slice(start, start + PER_PAGE);
+
+        document.getElementById("tableCount").textContent =
+          `${total} submission${total !== 1 ? "s" : ""}`;
+
+        if (!total) {
           tbody.innerHTML = `<tr><td colspan="8" class="empty-cell">🔍 No KYC submissions match your filters</td></tr>`;
+          document.getElementById("kycPagInfo").textContent = "";
+          document.getElementById("kycPagBtns").innerHTML = "";
           return;
         }
 
-        tbody.innerHTML = filtered
+        tbody.innerHTML = pageData
           .map((k, i) => {
             const avContent = k.photo
               ? `<img src="${k.photo}" alt="${initials(k.user_name)}" onerror="this.style.display='none';this.parentElement.textContent='${initials(k.user_name)}'">`
               : initials(k.user_name);
 
-            // ── Verified = permanent locked pill; others = editable dropdown ──
             const statusCell =
               k.status === "verified"
-                ? `<span class="verified-lock-row">🔒 Verified</span>`
+                ? `<span class="verified-lock-row">Verified</span>`
                 : `<select class="status-sel ${STATUS_META[k.status]?.cls || "s-not_submitted"}"
-                       onchange="inlineStatusChange(${k.id}, this)">
-                 <option value="pending"       ${k.status === "pending" ? "selected" : ""}>⏳ Pending</option>
-                 <option value="verified"      ${k.status === "verified" ? "selected" : ""}>✅ Verified</option>
-                 <option value="rejected"      ${k.status === "rejected" ? "selected" : ""}>❌ Rejected</option>
-                 <option value="not_submitted" ${k.status === "not_submitted" ? "selected" : ""}>— Not Submitted</option>
-               </select>`;
+                 onchange="inlineStatusChange(${k.id}, this)">
+               <option value="pending"       ${k.status === "pending" ? "selected" : ""}>Pending</option>
+               <option value="verified"      ${k.status === "verified" ? "selected" : ""}>Verified</option>
+               <option value="rejected"      ${k.status === "rejected" ? "selected" : ""}>Rejected</option>
+               <option value="not_submitted" ${k.status === "not_submitted" ? "selected" : ""}>— Not Submitted</option>
+             </select>`;
 
             return `
-          <tr>
-            <td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:12px">${String(i + 1).padStart(2, "0")}</td>
-            <td>
-              <div class="user-cell">
-                <div class="uc-av">${avContent}</div>
-                <div><div class="uc-name">${k.user_name}</div><div class="uc-email">${k.user_email}</div></div>
-              </div>
-            </td>
-            <td style="font-family:'Space Mono',monospace;font-size:12px">${k.phone || "—"}</td>
-            <td>${k.doc_type || "—"}</td>
-            <td style="font-family:'Space Mono',monospace;font-size:12px;color:var(--muted)">${k.doc_number || "—"}</td>
-            <td style="font-size:12.5px;color:var(--muted)">${k.submitted || "—"}</td>
-            <td>${statusCell}</td>
-            <td>
-              <button class="act-btn primary" onclick="openKycModal(${k.id})">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                View
-              </button>
-            </td>
-          </tr>`;
+        <tr>
+          <td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:12px">${String(start + i + 1).padStart(2, "0")}</td>
+          <td>
+            <div class="user-cell">
+              <div class="uc-av">${avContent}</div>
+              <div><div class="uc-name">${k.user_name}</div><div class="uc-email">${k.user_email}</div></div>
+            </div>
+          </td>
+          <td style="font-family:'Space Mono',monospace;font-size:12px">${k.phone || "—"}</td>
+          <td>${k.doc_type || "—"}</td>
+          <td style="font-family:'Space Mono',monospace;font-size:12px;color:var(--muted)">${k.doc_number || "—"}</td>
+          <td style="font-size:12.5px;color:var(--muted)">${k.submitted || "—"}</td>
+          <td>${statusCell}</td>
+          <td>
+            <button class="act-btn primary" onclick="openKycModal(${k.id})">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              View
+            </button>
+          </td>
+        </tr>`;
           })
           .join("");
+
+        // pagination info
+        const end = Math.min(start + PER_PAGE, total);
+        document.getElementById("kycPagInfo").textContent =
+          `Showing ${start + 1}–${end} of ${total}`;
+
+        // pagination buttons
+        const pagBtns = document.getElementById("kycPagBtns");
+        let btns = `<button class="pag-btn" onclick="goKycPage(${currentPage - 1})" ${currentPage === 1 ? "disabled" : ""}>‹</button>`;
+        for (let i = 1; i <= totalPages; i++) {
+          if (
+            totalPages > 7 &&
+            i > 3 &&
+            i < totalPages - 1 &&
+            Math.abs(i - currentPage) > 1
+          ) {
+            if (i === 4 || i === totalPages - 2)
+              btns += `<span style="padding:0 4px;color:var(--muted)">…</span>`;
+            continue;
+          }
+          btns += `<button class="pag-btn ${i === currentPage ? "active" : ""}" onclick="goKycPage(${i})">${i}</button>`;
+        }
+        btns += `<button class="pag-btn" onclick="goKycPage(${currentPage + 1})" ${currentPage === totalPages ? "disabled" : ""}>›</button>`;
+        pagBtns.innerHTML = btns;
       }
 
+      function goKycPage(n) {
+        const total = Math.ceil(filtered.length / PER_PAGE);
+        if (n < 1 || n > total) return;
+        currentPage = n;
+        renderTable();
+      }
       // ── INLINE STATUS CHANGE ─────────────────────────────────────────
       function inlineStatusChange(id, sel) {
         const newStatus = sel.value;
@@ -2249,7 +2367,7 @@
         if (k.status === "verified") {
           return `
             <div class="verified-lock-notice">
-              <span class="vln-icon">🔒</span>
+              <span class="vln-icon"></span>
               <div>
                 <div class="vln-title">Status Locked — Verified</div>
                 <div class="vln-sub">This KYC has been verified and the status cannot be changed.</div>
@@ -2261,9 +2379,9 @@
         return `
           <span class="mab-label">Change Status:</span>
           <select class="big-status-sel" id="modalStatusSel" onchange="onModalStatusChange(${k.id})">
-            <option value="pending"       ${k.status === "pending" ? "selected" : ""}>⏳ Pending</option>
-            <option value="verified"      ${k.status === "verified" ? "selected" : ""}>✅ Verified</option>
-            <option value="rejected"      ${k.status === "rejected" ? "selected" : ""}>❌ Rejected</option>
+            <option value="pending"       ${k.status === "pending" ? "selected" : ""}>Pending</option>
+            <option value="verified"      ${k.status === "verified" ? "selected" : ""}>Verified</option>
+            <option value="rejected"      ${k.status === "rejected" ? "selected" : ""}>Rejected</option>
             <option value="not_submitted" ${k.status === "not_submitted" ? "selected" : ""}>— Not Submitted</option>
           </select>
           <button class="save-status-btn" id="saveStatusBtn" onclick="saveModalStatus(${k.id})">Save Status</button>
