@@ -163,7 +163,7 @@ exports.createBooking = async (req, res) => {
       rental_type,
       pickup_datetime,
       drop_datetime,
-      calculatedDays, // use server-calculated value, not client-sent
+      calculatedDays,
       price_per_unit || 0,
       total_price,
       payment_method || null,
@@ -190,7 +190,7 @@ exports.createBooking = async (req, res) => {
         if (vRows?.[0]?.name) vehicleName = vRows[0].name;
       } catch (_) {}
 
-      // ── 2. Notify ADMIN: new booking ─────────────────────────
+      // ── Notify ADMIN: new booking ─────────────────────────────
       try {
         await createAdminNotification({
           title: "New Booking 📋",
@@ -214,7 +214,7 @@ exports.createBooking = async (req, res) => {
         console.warn("[createBooking] Admin notification error:", e.message);
       }
 
-      // ── 3. Email USER: booking confirmation ───────────────────
+      // ── Email USER: booking confirmation ──────────────────────
       try {
         await transporter.sendMail({
           from: `"Auto Dealer" <${process.env.EMAIL_USER}>`,
@@ -252,7 +252,7 @@ exports.createBooking = async (req, res) => {
         console.error("Booking email to user error:", e);
       }
 
-      // ── 4. Email ADMIN: new booking alert ─────────────────────
+      // ── Email ADMIN: new booking alert ────────────────────────
       try {
         const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
         await transporter.sendMail({
@@ -361,7 +361,6 @@ exports.deleteBooking = (req, res) => {
               .status(500)
               .json({ success: false, message: err2.message });
 
-          // Notify admin about user cancellation
           try {
             await createAdminNotification({
               title: "Booking Cancelled ❌",
@@ -406,4 +405,158 @@ exports.getAllBookings = (req, res) => {
       res.json({ success: true, data: results });
     },
   );
+};
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PATCH /api/bookings/:id/pay   (mark booking as Paid after Khalti OTP)
+════════════════════════════════════════════════════════════════════════ */
+exports.markBookingPaid = async (req, res) => {
+  const { id } = req.params;
+  const { payment_method, transaction_id, khalti_phone, pidx } = req.body;
+
+  // ── 1. Check booking exists ───────────────────────────────────────────
+  db.query("SELECT * FROM bookings WHERE id = ?", [id], async (err, rows) => {
+    if (err)
+      return res.status(500).json({ success: false, message: err.message });
+    if (!rows.length)
+      return res
+        .status(404)
+        .json({ success: false, message: "Booking not found" });
+
+    const booking = rows[0];
+
+    // ── 2. Update payment_status + payment details ────────────────────
+    const updateSql = `
+        UPDATE bookings
+        SET payment_status = 'Paid',
+            payment_method = ?,
+            transaction_id = ?,
+            khalti_phone   = ?,
+            pidx           = ?,
+            paid_at        = NOW(),
+            updated_at     = NOW()
+        WHERE id = ?
+      `;
+
+    db.query(
+      updateSql,
+      [
+        payment_method || "Khalti",
+        transaction_id || null,
+        khalti_phone || null,
+        pidx || null,
+        id,
+      ],
+      async (err2) => {
+        if (err2)
+          return res
+            .status(500)
+            .json({ success: false, message: err2.message });
+
+        // ── 3. Notify admin: payment received ─────────────────────────
+        try {
+          await createAdminNotification({
+            title: "Payment Received 💰",
+            message: `${booking.user_name} paid ${fmtPrice(booking.total_price)} for booking ${booking.booking_ref}.`,
+            type: "payment",
+            ref_id: booking.id,
+            ref_type: "booking",
+            meta: {
+              booking_ref: booking.booking_ref,
+              user_name: booking.user_name,
+              user_email: booking.user_email,
+              total_price: booking.total_price,
+              payment_method: payment_method || "Khalti",
+              transaction_id: transaction_id || null,
+            },
+          });
+        } catch (e) {
+          console.warn(
+            "[markBookingPaid] Admin notification error:",
+            e.message,
+          );
+        }
+
+        // ── 4. Email USER: payment confirmation ───────────────────────
+        try {
+          await transporter.sendMail({
+            from: `"Auto Dealer" <${process.env.EMAIL_USER}>`,
+            to: booking.user_email,
+            subject: `Payment Confirmed — ${booking.booking_ref}`,
+            html: emailWrapper(`
+                ${emailHeader("Payment Confirmed")}
+                <tr><td style="padding:32px;">
+                  <p style="margin:0 0 6px;font-size:20px;font-weight:600;color:#111827;">
+                    Hi ${booking.user_name},
+                  </p>
+                  <p style="margin:0 0 24px;font-size:14px;color:#6b7280;line-height:1.6;">
+                    Your payment has been received and your booking is now confirmed!
+                  </p>
+                  <div style="background:#f4f5f7;border-radius:8px;padding:20px 24px;margin-bottom:24px;">
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      ${infoRow("Booking Ref", `<b style="font-family:monospace;">${booking.booking_ref}</b>`)}
+                      ${infoRow("Amount Paid", `<b style="color:#16a34a;">${fmtPrice(booking.total_price)}</b>`)}
+                      ${infoRow("Payment Method", "Khalti")}
+                      ${transaction_id ? infoRow("Transaction ID", `<span style="font-family:monospace;font-size:12px;">${transaction_id}</span>`) : ""}
+                      ${infoRow("Pickup", booking.pickup_location)}
+                      ${infoRow("From", fmtDate(booking.pickup_datetime))}
+                      ${infoRow("To", fmtDate(booking.drop_datetime))}
+                      ${infoRow("Status", '<span style="color:#16a34a;font-weight:600;">✓ Confirmed &amp; Paid</span>')}
+                    </table>
+                  </div>
+                  <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:14px 18px;margin-bottom:20px;">
+                    <p style="margin:0;font-size:13px;color:#166534;line-height:1.6;">
+                      ✅ Your booking is confirmed. Our team will contact you before your pickup date.
+                    </p>
+                  </div>
+                  <p style="margin:0;font-size:13px;color:#9ca3af;">Questions? Contact us through our website.</p>
+                </td></tr>
+                ${emailFooter()}
+              `),
+          });
+        } catch (e) {
+          console.error("Payment confirmation email error:", e);
+        }
+
+        // ── 5. Email ADMIN: payment received alert ────────────────────
+        try {
+          const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
+          await transporter.sendMail({
+            from: `"Auto Dealer" <${process.env.EMAIL_USER}>`,
+            to: adminEmail,
+            subject: `Payment Received — ${booking.booking_ref}`,
+            html: emailWrapper(`
+                ${emailHeader("Payment Received")}
+                <tr><td style="padding:32px;">
+                  <p style="margin:0 0 6px;font-size:20px;font-weight:600;color:#111827;">Payment Confirmed</p>
+                  <p style="margin:0 0 24px;font-size:14px;color:#6b7280;line-height:1.6;">
+                    A payment has been successfully received via Khalti.
+                  </p>
+                  <div style="background:#f4f5f7;border-radius:8px;padding:20px 24px;margin-bottom:24px;">
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      ${infoRow("Booking Ref", `<b style="font-family:monospace;">${booking.booking_ref}</b>`)}
+                      ${infoRow("Customer", `${booking.user_name} (${booking.user_email})`)}
+                      ${infoRow("Amount", `<b style="color:#16a34a;">${fmtPrice(booking.total_price)}</b>`)}
+                      ${infoRow("Payment Method", "Khalti")}
+                      ${transaction_id ? infoRow("Transaction ID", `<span style="font-family:monospace;font-size:12px;">${transaction_id}</span>`) : ""}
+                      ${khalti_phone ? infoRow("Khalti Phone", khalti_phone) : ""}
+                    </table>
+                  </div>
+                  <p style="margin:0;font-size:13px;color:#9ca3af;">Log in to the admin panel to view this booking.</p>
+                </td></tr>
+                ${emailFooter()}
+              `),
+          });
+        } catch (e) {
+          console.error("Payment alert email to admin error:", e);
+        }
+
+        return res.status(200).json({
+          success: true,
+          message: "Payment recorded successfully",
+          booking_ref: booking.booking_ref,
+        });
+      },
+    );
+  });
 };

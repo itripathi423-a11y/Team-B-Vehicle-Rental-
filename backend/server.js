@@ -32,6 +32,7 @@ const adminEnquiryRoutes = require("./routes/admin.enquiry.routes");
 const adminreviewRoutes = require("./routes/admin.review.routes");
 const adminNotificationRoutes = require("./routes/admin.notification.routes");
 const userProfileRoutes = require("./routes/user.profile.routes");
+const paymentRoutes = require("./routes/payment");
 
 const app = express();
 const server = http.createServer(app);
@@ -114,8 +115,11 @@ app.use("/api/admin/enquiries", adminEnquiryRoutes);
 app.use("/api/admin/reviews", adminreviewRoutes);
 app.use("/api/user/notifications", require("./routes/notificationRoutes"));
 app.use("/api/admin/notifications", adminNotificationRoutes);
+app.use("/api/payments", paymentRoutes);
 
 app.use(express.static(path.join(__dirname, "../frontend")));
+
+app.use(express.static(path.join(__dirname, "../frontend/USER DASHBOARD")));
 
 /* ── START ── */
 const PORT = process.env.PORT || 5000;

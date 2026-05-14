@@ -68,6 +68,23 @@ const row = (label, value) => `
                border-bottom:1px solid #f3f4f6;">${value}</td>
   </tr>`;
 
+/* ── Helper: extract optional additional fields from req.body ─────────── */
+const extractAdditionalFields = (body) => ({
+  date_of_birth: body.date_of_birth || null,
+  gender: body.gender || null,
+  nationality: body.nationality || null,
+  occupation: body.occupation || null,
+  permanent_address: body.permanent_address || null,
+  temporary_address: body.temporary_address || null,
+  father_name: body.father_name || null,
+  mother_name: body.mother_name || null,
+  grandfather_name: body.grandfather_name || null,
+  marital_status: body.marital_status || null,
+  spouse_name: body.spouse_name || null,
+  issue_date: body.issue_date || null,
+  expiry_date: body.expiry_date || null,
+});
+
 /* ═══════════════════════════════════════════════════════════════════════
    GET /api/kyc/user-info
 ════════════════════════════════════════════════════════════════════════ */
@@ -92,6 +109,7 @@ exports.getUserInfo = (req, res) => {
 
 /* ═══════════════════════════════════════════════════════════════════════
    GET /api/kyc/status
+   Returns the full KYC record (including all additional fields)
 ════════════════════════════════════════════════════════════════════════ */
 exports.getKycStatus = (req, res) => {
   const userId = req.session?.user?.id;
@@ -109,7 +127,152 @@ exports.getKycStatus = (req, res) => {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════
+   GET /api/kyc/additional-info
+   Returns only the additional / demographic fields for the current user.
+   Useful for pre-filling the "Additional Information" section separately.
+════════════════════════════════════════════════════════════════════════ */
+exports.getAdditionalInfo = (req, res) => {
+  const userId = req.session?.user?.id;
+  if (!userId)
+    return res.status(401).json({ success: false, message: "Not logged in" });
+
+  db.query(
+    `SELECT
+       date_of_birth, gender, nationality, occupation,
+       permanent_address, temporary_address,
+       father_name, mother_name, grandfather_name,
+       marital_status, spouse_name,
+       issue_date, expiry_date
+     FROM kyc WHERE user_id = ? LIMIT 1`,
+    [userId],
+    (err, result) => {
+      if (err) return res.status(500).json({ success: false });
+      if (!result.length)
+        return res
+          .status(404)
+          .json({ success: false, message: "No KYC record found" });
+      res.json({ success: true, data: result[0] });
+    },
+  );
+};
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PATCH /api/kyc/additional-info
+   Update ONLY the additional / demographic fields without touching
+   documents, status, or required KYC fields.
+   Works whether status is pending, verified, or rejected.
+════════════════════════════════════════════════════════════════════════ */
+exports.updateAdditionalInfo = (req, res) => {
+  const userId = req.session?.user?.id;
+  if (!userId)
+    return res.status(401).json({ success: false, message: "Not logged in" });
+
+  // Verify a KYC record exists for this user first
+  db.query(
+    "SELECT id, status FROM kyc WHERE user_id = ? LIMIT 1",
+    [userId],
+    (err, rows) => {
+      if (err) return res.status(500).json({ success: false });
+      if (!rows.length)
+        return res
+          .status(404)
+          .json({
+            success: false,
+            message: "No KYC record found. Submit KYC first.",
+          });
+
+      const add = extractAdditionalFields(req.body);
+
+      db.query(
+        `UPDATE kyc SET
+           date_of_birth     = ?,
+           gender            = ?,
+           nationality       = ?,
+           occupation        = ?,
+           permanent_address = ?,
+           temporary_address = ?,
+           father_name       = ?,
+           mother_name       = ?,
+           grandfather_name  = ?,
+           marital_status    = ?,
+           spouse_name       = ?,
+           issue_date        = ?,
+           expiry_date       = ?,
+           updated_at        = NOW()
+         WHERE user_id = ?`,
+        [
+          add.date_of_birth,
+          add.gender,
+          add.nationality,
+          add.occupation,
+          add.permanent_address,
+          add.temporary_address,
+          add.father_name,
+          add.mother_name,
+          add.grandfather_name,
+          add.marital_status,
+          add.spouse_name,
+          add.issue_date,
+          add.expiry_date,
+          userId,
+        ],
+        (err2) => {
+          if (err2)
+            return res
+              .status(500)
+              .json({ success: false, message: "Update failed" });
+          res.json({
+            success: true,
+            message: "Additional information updated successfully.",
+          });
+        },
+      );
+    },
+  );
+};
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DELETE /api/kyc/additional-info
+   Clears (NULLs) only the optional demographic fields.
+   Does NOT delete the KYC record itself or touch documents/status.
+════════════════════════════════════════════════════════════════════════ */
+exports.clearAdditionalInfo = (req, res) => {
+  const userId = req.session?.user?.id;
+  if (!userId)
+    return res.status(401).json({ success: false, message: "Not logged in" });
+
+  db.query(
+    `UPDATE kyc SET
+       date_of_birth     = NULL,
+       gender            = NULL,
+       nationality       = NULL,
+       occupation        = NULL,
+       permanent_address = NULL,
+       temporary_address = NULL,
+       father_name       = NULL,
+       mother_name       = NULL,
+       grandfather_name  = NULL,
+       marital_status    = NULL,
+       spouse_name       = NULL,
+       issue_date        = NULL,
+       expiry_date       = NULL,
+       updated_at        = NOW()
+     WHERE user_id = ?`,
+    [userId],
+    (err, result) => {
+      if (err) return res.status(500).json({ success: false });
+      if (result.affectedRows === 0)
+        return res
+          .status(404)
+          .json({ success: false, message: "No KYC record found." });
+      res.json({ success: true, message: "Additional information cleared." });
+    },
+  );
+};
+
+/* ═══════════════════════════════════════════════════════════════════════
    POST /api/kyc/submit
+   ✅ Persists all required + optional additional fields
    ✅ Notifies USER via `notifications` table + socket
    ✅ Notifies ADMIN via `admin_notifications` table + socket
    ✅ Emails admin
@@ -139,6 +302,8 @@ exports.submitKyc = (req, res) => {
   const frontPath = `/uploads/kyc/${front.filename}`;
   const backPath = `/uploads/kyc/${back.filename}`;
   const selfiePath = `/uploads/kyc/${selfie.filename}`;
+
+  const add = extractAdditionalFields(req.body);
 
   // Fetch user info
   db.query(
@@ -188,6 +353,8 @@ exports.submitKyc = (req, res) => {
                         ${row("Phone", user.phone || "—")}
                         ${row("Document Type", document_type)}
                         ${row("Doc Number", document_number)}
+                        ${row("Nationality", add.nationality || "—")}
+                        ${row("DOB", add.date_of_birth || "—")}
                         ${row("Submitted At", new Date().toLocaleString("en-NP"))}
                       </table>
                     </div>
@@ -209,7 +376,6 @@ exports.submitKyc = (req, res) => {
 
           /* ── Shared: notify admin in DB + socket ─────────────────── */
           const notifyAdmin = async (kycId, kycRef) => {
-            const icon = isResubmit ? "🔄" : "📄";
             const title = isResubmit
               ? `KYC Re-submitted 🔄`
               : `New KYC Submitted 📄`;
@@ -243,17 +409,48 @@ exports.submitKyc = (req, res) => {
           if (isResubmit) {
             /* ── UPDATE existing KYC ──────────────────────────────── */
             db.query(
-              `UPDATE kyc
-               SET document_type=?, document_number=?,
-                   document_front=?, document_back=?, selfie=?,
-                   status='pending', rejection_reason=NULL, submitted_at=NOW()
-               WHERE user_id=?`,
+              `UPDATE kyc SET
+                 document_type     = ?,
+                 document_number   = ?,
+                 document_front    = ?,
+                 document_back     = ?,
+                 selfie            = ?,
+                 status            = 'pending',
+                 rejection_reason  = NULL,
+                 submitted_at      = NOW(),
+                 date_of_birth     = ?,
+                 gender            = ?,
+                 nationality       = ?,
+                 occupation        = ?,
+                 permanent_address = ?,
+                 temporary_address = ?,
+                 father_name       = ?,
+                 mother_name       = ?,
+                 grandfather_name  = ?,
+                 marital_status    = ?,
+                 spouse_name       = ?,
+                 issue_date        = ?,
+                 expiry_date       = ?
+               WHERE user_id = ?`,
               [
                 document_type,
                 document_number,
                 frontPath,
                 backPath,
                 selfiePath,
+                add.date_of_birth,
+                add.gender,
+                add.nationality,
+                add.occupation,
+                add.permanent_address,
+                add.temporary_address,
+                add.father_name,
+                add.mother_name,
+                add.grandfather_name,
+                add.marital_status,
+                add.spouse_name,
+                add.issue_date,
+                add.expiry_date,
                 userId,
               ],
               async (err3) => {
@@ -277,10 +474,7 @@ exports.submitKyc = (req, res) => {
                   console.error("KYC user notification error:", e);
                 }
 
-                // ── Notify ADMIN ────────────────────────────────────
                 await notifyAdmin(kycId, kycRef);
-
-                // ── Email ADMIN ─────────────────────────────────────
                 await sendAdminEmail(kycRef);
 
                 res.json({
@@ -294,10 +488,18 @@ exports.submitKyc = (req, res) => {
             /* ── INSERT new KYC ───────────────────────────────────── */
             db.query(
               `INSERT INTO kyc (
-                user_id, document_type, document_number,
-                document_front, document_back, selfie,
-                status, submitted_at
-              ) VALUES (?, ?, ?, ?, ?, ?, 'pending', NOW())`,
+                 user_id, document_type, document_number,
+                 document_front, document_back, selfie,
+                 status, submitted_at,
+                 date_of_birth, gender, nationality, occupation,
+                 permanent_address, temporary_address,
+                 father_name, mother_name, grandfather_name,
+                 marital_status, spouse_name,
+                 issue_date, expiry_date
+               ) VALUES (
+                 ?, ?, ?, ?, ?, ?, 'pending', NOW(),
+                 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+               )`,
               [
                 userId,
                 document_type,
@@ -305,6 +507,19 @@ exports.submitKyc = (req, res) => {
                 frontPath,
                 backPath,
                 selfiePath,
+                add.date_of_birth,
+                add.gender,
+                add.nationality,
+                add.occupation,
+                add.permanent_address,
+                add.temporary_address,
+                add.father_name,
+                add.mother_name,
+                add.grandfather_name,
+                add.marital_status,
+                add.spouse_name,
+                add.issue_date,
+                add.expiry_date,
               ],
               async (err3, result) => {
                 if (err3) return res.status(500).json({ success: false });
@@ -327,10 +542,7 @@ exports.submitKyc = (req, res) => {
                   console.error("KYC user notification error:", e);
                 }
 
-                // ── Notify ADMIN ────────────────────────────────────
                 await notifyAdmin(kycId, kycRef);
-
-                // ── Email ADMIN ─────────────────────────────────────
                 await sendAdminEmail(kycRef);
 
                 res.json({
@@ -373,4 +585,17 @@ exports.notifyKycStatusChange = async (
 
   const notif = notifMap[status];
   if (!notif) return;
+
+  try {
+    await createNotification({
+      user_id: userId,
+      title: notif.title,
+      message: notif.message,
+      type: "kyc",
+      target_role: "user",
+      meta: { kyc_status: status },
+    });
+  } catch (e) {
+    console.error("[notifyKycStatusChange] Error:", e.message);
+  }
 };

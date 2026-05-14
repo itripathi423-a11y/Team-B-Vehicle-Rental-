@@ -1725,9 +1725,7 @@
                   <span id="baseLabel">Base rate (4 hrs)</span>
                   <span id="baseVal">—</span>
                 </div>
-                <div class="price-row muted">
-                  <span>VAT (13%)</span><span id="vatVal">—</span>
-                </div>
+
                 <div class="price-row total">
                   <span>Total</span><span class="val" id="totalVal">—</span>
                 </div>
@@ -2190,8 +2188,6 @@
             : selectedDur === "8h"
               ? Number(vehicle.price_8h || 0)
               : Number(vehicle.price_1d || 0);
-        const vat = Math.round(base * VAT_RATE);
-        const total = base + vat;
         const label =
           selectedDur === "4h"
             ? "4 hrs"
@@ -2203,10 +2199,8 @@
           `Base rate (${label})`;
         document.getElementById("baseVal").textContent =
           `NPR ${base.toLocaleString()}`;
-        document.getElementById("vatVal").textContent =
-          `NPR ${vat.toLocaleString()}`;
         document.getElementById("totalVal").textContent =
-          `NPR ${total.toLocaleString()}`;
+          `NPR ${base.toLocaleString()}`;
       }
 
       function goToBooking() {

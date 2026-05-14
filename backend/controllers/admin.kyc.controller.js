@@ -89,13 +89,50 @@ const KYC_META = {
 
 /* ═══════════════════════════════════════════════════════════════════════
    GET /api/admin/kyc
+   Returns all KYC submissions including personal, address,
+   family, and document details stored in the kyc table.
 ════════════════════════════════════════════════════════════════════════ */
 exports.getAllKyc = (req, res) => {
   const sql = `
-    SELECT k.id, k.user_id, k.document_type, k.document_number,
-           k.document_front, k.document_back, k.selfie,
-           k.status, k.rejection_reason, k.submitted_at,
-           u.name AS user_name, u.email AS user_email, u.phone
+    SELECT
+      k.id,
+      k.user_id,
+      k.document_type,
+      k.document_number,
+      k.document_front,
+      k.document_back,
+      k.selfie,
+      k.status,
+      k.rejection_reason,
+      k.submitted_at,
+      k.reviewed_at,
+
+      -- Personal Details
+      k.date_of_birth,
+      k.gender,
+      k.nationality,
+      k.occupation,
+
+      -- Address Details
+      k.permanent_address,
+      k.temporary_address,
+
+      -- Family Details
+      k.father_name,
+      k.mother_name,
+      k.grandfather_name,
+      k.marital_status,
+      k.spouse_name,
+
+      -- Document Validity
+      k.issue_date,
+      k.expiry_date,
+
+      -- User account info
+      u.name  AS user_name,
+      u.email AS user_email,
+      u.phone
+
     FROM kyc k
     LEFT JOIN users u ON k.user_id = u.id
     ORDER BY k.submitted_at DESC
@@ -106,39 +143,66 @@ exports.getAllKyc = (req, res) => {
       return res.status(500).json({ success: false, message: err.message });
 
     const BASE = "http://localhost:5000";
+
+    // Map DB enum values to display labels
     const DOC_TYPE_MAP = {
       Citizenship: "Citizenship",
       Passport: "Passport",
       License: "Driving License",
     };
-    const toUrl = (p) => (p ? `${BASE}${p}` : "");
 
-    const formatted = results.map((k) => {
-      let submitted = "";
-      if (k.submitted_at) {
-        const d =
-          k.submitted_at instanceof Date
-            ? k.submitted_at
-            : new Date(k.submitted_at);
-        submitted = d.toISOString().split("T")[0];
-      }
-      return {
-        id: k.id,
-        user_id: k.user_id,
-        user_name: k.user_name || "Unknown",
-        user_email: k.user_email || "",
-        phone: k.phone || "",
-        photo: toUrl(k.selfie),
-        status: k.status || "not_submitted",
-        doc_type: DOC_TYPE_MAP[k.document_type] || k.document_type,
-        doc_number: k.document_number || "",
-        front_img: toUrl(k.document_front),
-        back_img: toUrl(k.document_back),
-        submitted,
-        reason: k.rejection_reason || "",
-        address: "—",
-      };
-    });
+    const toUrl = (p) => (p ? `${BASE}${p}` : "");
+    const fmtDate = (d) => {
+      if (!d) return "";
+      const dt = d instanceof Date ? d : new Date(d);
+      return isNaN(dt.getTime()) ? "" : dt.toISOString().split("T")[0];
+    };
+
+    const formatted = results.map((k) => ({
+      id: k.id,
+      user_id: k.user_id,
+
+      // User account
+      user_name: k.user_name || "Unknown",
+      user_email: k.user_email || "",
+      phone: k.phone || "",
+
+      // Photo / selfie
+      photo: toUrl(k.selfie),
+
+      // Status
+      status: k.status || "not_submitted",
+      reason: k.rejection_reason || "",
+
+      // Document
+      doc_type: DOC_TYPE_MAP[k.document_type] || k.document_type || "—",
+      doc_number: k.document_number || "",
+      front_img: toUrl(k.document_front),
+      back_img: toUrl(k.document_back),
+      issue_date: fmtDate(k.issue_date),
+      expiry_date: fmtDate(k.expiry_date),
+
+      // Timestamps
+      submitted: fmtDate(k.submitted_at),
+      reviewed: fmtDate(k.reviewed_at),
+
+      // Personal details
+      date_of_birth: fmtDate(k.date_of_birth),
+      gender: k.gender || "",
+      nationality: k.nationality || "",
+      occupation: k.occupation || "",
+
+      // Address details
+      permanent_address: k.permanent_address || "",
+      temporary_address: k.temporary_address || "",
+
+      // Family details
+      father_name: k.father_name || "",
+      mother_name: k.mother_name || "",
+      grandfather_name: k.grandfather_name || "",
+      marital_status: k.marital_status || "",
+      spouse_name: k.spouse_name || "",
+    }));
 
     res.json({ success: true, data: formatted });
   });

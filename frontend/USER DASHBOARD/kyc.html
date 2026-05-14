@@ -188,7 +188,6 @@
       .user-kyc-status.verified {
         color: #22c55e;
       }
-
       .sidebar-overlay {
         display: none;
         position: fixed;
@@ -278,8 +277,6 @@
         font-size: 11px;
         color: var(--muted);
       }
-
-      /* ── USER DROPDOWN ── */
       .user-dropdown-wrap {
         position: relative;
         cursor: pointer;
@@ -462,7 +459,7 @@
         background: #22c55e;
       }
 
-      /* ── KYC FORM SECTIONS ── */
+      /* ── FORM SECTIONS ── */
       .form-section {
         background: var(--white);
         border: 1px solid var(--border);
@@ -480,6 +477,12 @@
       }
       .form-section:nth-child(4) {
         animation-delay: 0.15s;
+      }
+      .form-section:nth-child(5) {
+        animation-delay: 0.2s;
+      }
+      .form-section:nth-child(6) {
+        animation-delay: 0.25s;
       }
       @keyframes fadeUp {
         from {
@@ -532,13 +535,19 @@
       .form-grid.three {
         grid-template-columns: repeat(3, 1fr);
       }
+      .form-grid.four {
+        grid-template-columns: repeat(4, 1fr);
+      }
       .form-group {
         display: flex;
         flex-direction: column;
         gap: 6px;
       }
       .form-group.full {
-        grid-column: 1 / -1;
+        grid-column: 1/-1;
+      }
+      .form-group.span2 {
+        grid-column: span 2;
       }
       label {
         font-size: 12.5px;
@@ -554,6 +563,7 @@
       input[type="text"],
       input[type="email"],
       input[type="tel"],
+      input[type="date"],
       select {
         height: 44px;
         padding: 0 14px;
@@ -584,6 +594,29 @@
         background-repeat: no-repeat;
         background-position: right 14px center;
         padding-right: 38px;
+      }
+
+      /* ── OPTIONAL BADGE ── */
+      .optional-badge {
+        display: inline-block;
+        font-size: 9px;
+        font-family: "Space Mono", monospace;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: #9ca3af;
+        background: #f3f4f6;
+        border-radius: 4px;
+        padding: 2px 6px;
+        margin-left: 6px;
+        vertical-align: middle;
+      }
+
+      /* ── SPOUSE TOGGLE ── */
+      #spouseGroup {
+        display: none;
+      }
+      #spouseGroup.visible {
+        display: flex;
       }
 
       /* ── DOCUMENT TYPE ── */
@@ -730,7 +763,7 @@
         display: none;
       }
 
-      /* Selfie zone */
+      /* ── SELFIE ZONE ── */
       .selfie-zone {
         border: 2px dashed var(--border);
         border-radius: 10px;
@@ -1111,11 +1144,13 @@
         #sidebarToggle {
           display: flex !important;
         }
-        .form-grid {
+        .form-grid,
+        .form-grid.three,
+        .form-grid.four {
           grid-template-columns: 1fr;
         }
-        .form-grid.three {
-          grid-template-columns: 1fr;
+        .form-group.span2 {
+          grid-column: auto;
         }
         .upload-grid {
           grid-template-columns: 1fr;
@@ -1147,7 +1182,6 @@
       }
 
       /* ── CHATBOT WIDGET ── */
-
       #chat-bubble {
         position: fixed;
         bottom: 24px;
@@ -1174,7 +1208,6 @@
       #chat-bubble svg {
         color: #fff;
       }
-
       .chat-notif-dot {
         position: absolute;
         top: 6px;
@@ -1185,7 +1218,6 @@
         border-radius: 50%;
         border: 2px solid #fff;
       }
-
       #chat-panel {
         position: fixed;
         bottom: 88px;
@@ -1211,7 +1243,6 @@
         opacity: 1;
         pointer-events: all;
       }
-
       .cp-header {
         display: flex;
         align-items: center;
@@ -1254,7 +1285,6 @@
       .cp-close:hover {
         background: #f9fafb;
       }
-
       .cp-messages {
         flex: 1;
         overflow-y: auto;
@@ -1263,7 +1293,6 @@
         flex-direction: column;
         gap: 10px;
       }
-
       .cp-msg {
         display: flex;
         gap: 8px;
@@ -1272,7 +1301,6 @@
       .cp-msg.user {
         flex-direction: row-reverse;
       }
-
       .cp-bubble {
         max-width: 76%;
         padding: 9px 12px;
@@ -1290,7 +1318,6 @@
         color: #fff;
         border-bottom-right-radius: 4px;
       }
-
       .cp-av {
         width: 26px;
         height: 26px;
@@ -1304,7 +1331,6 @@
         color: #ff5c1a;
         flex-shrink: 0;
       }
-
       .cp-typing {
         display: flex;
         gap: 4px;
@@ -1328,7 +1354,6 @@
       .cp-typing span:nth-child(3) {
         animation-delay: 0.4s;
       }
-
       @keyframes cpbounce {
         0%,
         60%,
@@ -1339,7 +1364,6 @@
           transform: translateY(-5px);
         }
       }
-
       .cp-quick {
         padding: 6px 14px 10px;
         display: flex;
@@ -1360,7 +1384,6 @@
         color: #ff5c1a;
         border-color: #ff5c1a;
       }
-
       .cp-input-row {
         display: flex;
         gap: 8px;
@@ -1380,7 +1403,6 @@
       .cp-input:focus {
         border-color: #ff5c1a;
       }
-
       .cp-send {
         width: 34px;
         height: 34px;
@@ -1547,7 +1569,6 @@
                 >0</span
               >
             </button>
-
             <div class="notif-panel" id="notifPanel">
               <div class="np-head">
                 <span class="np-title">Notifications</span>
@@ -1587,7 +1608,6 @@
             >
               <polyline points="6 9 12 15 18 9" />
             </svg>
-
             <div class="user-dropdown-menu" id="userDropdownMenu">
               <div class="dd-header">
                 <div class="dd-header-name" id="ddName"></div>
@@ -1640,7 +1660,6 @@
                 KYC verification
                 <span class="dd-kyc-badge" id="ddKycBadge">Pending</span>
               </button>
-
               <div class="dd-divider"></div>
               <button class="dd-item dd-danger" id="logoutBtn">
                 <svg
@@ -1659,7 +1678,6 @@
               </button>
             </div>
           </div>
-          <!-- ── END USER DROPDOWN ── -->
         </div>
       </header>
 
@@ -1678,7 +1696,7 @@
             <div class="step-num">2</div>
             <div class="step-info">
               <div class="step-label">Step 02</div>
-              <div class="step-title">Document Upload</div>
+              <div class="step-title">Additional Info</div>
             </div>
           </div>
           <div class="step-connector" id="conn2"></div>
@@ -1686,7 +1704,7 @@
             <div class="step-num">3</div>
             <div class="step-info">
               <div class="step-label">Step 03</div>
-              <div class="step-title">Selfie Verification</div>
+              <div class="step-title">Document Upload</div>
             </div>
           </div>
           <div class="step-connector" id="conn3"></div>
@@ -1694,7 +1712,7 @@
             <div class="step-num">4</div>
             <div class="step-info">
               <div class="step-label">Step 04</div>
-              <div class="step-title">Review & Submit</div>
+              <div class="step-title">Selfie & Submit</div>
             </div>
           </div>
         </div>
@@ -1747,7 +1765,7 @@
 
         <!-- FORM -->
         <div id="kycForm">
-          <!-- Section 1: Personal Info -->
+          <!-- ══ SECTION 1: Personal Info ══ -->
           <div class="form-section">
             <div class="section-title">
               <div class="section-icon" style="background: #fff0e8">
@@ -1816,7 +1834,144 @@
             </div>
           </div>
 
-          <!-- Section 2: Document Upload -->
+          <!-- ══ SECTION 2: Additional Information (NEW) ══ -->
+          <div class="form-section">
+            <div class="section-title">
+              <div class="section-icon" style="background: #eef2ff">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#4f46e5"
+                  stroke-width="1.8"
+                >
+                  <path d="M9 11l3 3L22 4" />
+                  <path
+                    d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+                  />
+                </svg>
+              </div>
+              <div class="section-title-text">
+                <h3>Additional Information</h3>
+                <p>
+                  Demographic and family details for complete identity
+                  verification
+                </p>
+              </div>
+            </div>
+
+            <!-- Row 1: DOB, Gender, Nationality, Occupation -->
+            <div class="form-grid four" style="margin-bottom: 18px">
+              <div class="form-group">
+                <label for="dateOfBirth">Date of Birth </label>
+                <input type="date" id="dateOfBirth" />
+              </div>
+              <div class="form-group">
+                <label for="gender">Gender </label>
+                <select id="gender">
+                  <option value="">Select gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="nationality">Nationality </label>
+                <input type="text" id="nationality" placeholder="e.g. Nepali" />
+              </div>
+              <div class="form-group">
+                <label for="occupation">Occupation </label>
+                <input
+                  type="text"
+                  id="occupation"
+                  placeholder="e.g. Software Engineer"
+                />
+              </div>
+            </div>
+
+            <!-- Row 2: Permanent & Temporary Address -->
+            <div class="form-grid" style="margin-bottom: 18px">
+              <div class="form-group">
+                <label for="permanentAddress">Permanent Address </label>
+                <input
+                  type="text"
+                  id="permanentAddress"
+                  placeholder="e.g. Tokha, Kathmandu"
+                />
+              </div>
+              <div class="form-group">
+                <label for="temporaryAddress">Temporary Address </label>
+                <input
+                  type="text"
+                  id="temporaryAddress"
+                  placeholder="e.g. Thamel, Kathmandu"
+                />
+              </div>
+            </div>
+
+            <!-- Row 3: Father, Mother, Grandfather -->
+            <div class="form-grid three" style="margin-bottom: 18px">
+              <div class="form-group">
+                <label for="fatherName">Father's Name </label>
+                <input
+                  type="text"
+                  id="fatherName"
+                  placeholder="e.g. Ram Bahadur"
+                />
+              </div>
+              <div class="form-group">
+                <label for="motherName">Mother's Name </label>
+                <input
+                  type="text"
+                  id="motherName"
+                  placeholder="e.g. Sita Devi"
+                />
+              </div>
+              <div class="form-group">
+                <label for="grandfatherName">Grandfather's Name </label>
+                <input
+                  type="text"
+                  id="grandfatherName"
+                  placeholder="e.g. Hari Prasad"
+                />
+              </div>
+            </div>
+
+            <!-- Row 4: Marital Status + Spouse Name (conditional) -->
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="maritalStatus">Marital Status </label>
+                <select id="maritalStatus" onchange="toggleSpouse(this.value)">
+                  <option value="">Select status</option>
+                  <option value="Single">Single</option>
+                  <option value="Married">Married</option>
+                  <option value="Divorced">Divorced</option>
+                  <option value="Widowed">Widowed</option>
+                </select>
+              </div>
+              <div class="form-group" id="spouseGroup">
+                <label for="spouseName">Spouse's Name </label>
+                <input
+                  type="text"
+                  id="spouseName"
+                  placeholder="e.g. Anita Sharma"
+                />
+              </div>
+            </div>
+
+            <!-- Row 5: Issue Date & Expiry Date -->
+            <div class="form-grid" style="margin-top: 18px">
+              <div class="form-group">
+                <label for="issueDate">Document Issue Date </label>
+                <input type="date" id="issueDate" />
+              </div>
+              <div class="form-group">
+                <label for="expiryDate">Document Expiry Date </label>
+                <input type="date" id="expiryDate" />
+              </div>
+            </div>
+          </div>
+
+          <!-- ══ SECTION 3: Document Upload ══ -->
           <div class="form-section">
             <div class="section-title">
               <div class="section-icon" style="background: #eff6ff">
@@ -1985,7 +2140,7 @@
             </div>
           </div>
 
-          <!-- Section 3: Selfie -->
+          <!-- ══ SECTION 4: Selfie ══ -->
           <div class="form-section">
             <div class="section-title">
               <div class="section-icon" style="background: #f3e8ff">
@@ -2086,7 +2241,7 @@
             </div>
           </div>
 
-          <!-- Section 4: Consent & Submit -->
+          <!-- ══ SECTION 5: Consent & Submit ══ -->
           <div class="form-section">
             <div class="section-title">
               <div class="section-icon" style="background: #e8fff0">
@@ -2171,7 +2326,6 @@
         />
       </svg>
     </button>
-
     <div id="chat-panel">
       <div class="cp-header">
         <div class="cp-avatar">
@@ -2238,7 +2392,6 @@
     <script src="auth-init.js"></script>
     <script src="chatbot.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-
     <script src="notification.js"></script>
 
     <script>
@@ -2265,7 +2418,6 @@
       const userDropdownWrap = document.getElementById("userDropdownWrap");
       const userDropdownMenu = document.getElementById("userDropdownMenu");
       const topbarChevron = document.getElementById("topbarChevron");
-
       userDropdownWrap?.addEventListener("click", (e) => {
         e.stopPropagation();
         const open = userDropdownMenu.classList.toggle("open");
@@ -2281,9 +2433,24 @@
 
       const API = "http://localhost:5000/api/kyc";
 
-      /* ════════════════════════════════════════
-         1. ON LOAD — fetch user info + KYC status
-      ════════════════════════════════════════ */
+      /* ══════════════════════════════════════════
+         Spouse field toggle
+      ══════════════════════════════════════════ */
+      function toggleSpouse(val) {
+        const grp = document.getElementById("spouseGroup");
+        if (val === "Married") {
+          grp.classList.add("visible");
+          grp.style.display = "flex";
+        } else {
+          grp.classList.remove("visible");
+          grp.style.display = "none";
+          document.getElementById("spouseName").value = "";
+        }
+      }
+
+      /* ══════════════════════════════════════════
+         1. ON LOAD
+      ══════════════════════════════════════════ */
       async function init() {
         await loadUserInfo();
         await loadKycStatus();
@@ -2296,7 +2463,6 @@
           });
           const json = await res.json();
           if (!json.success) return;
-
           const user = json.data;
           window._userId = user.id;
           const initials = user.name
@@ -2306,31 +2472,25 @@
             .toUpperCase()
             .slice(0, 2);
 
-          /* ── Prefill form fields ── */
           document.getElementById("fullName").value = user.name || "";
           document.getElementById("email").value = user.email || "";
           document.getElementById("phone").value = user.phone || "";
 
-          /* ── Sidebar ── */
           const sidebarNameEl = document.getElementById("sidebarName");
-          const sidebarAvatarEl = document.getElementById("sidebarAvatar");
           const sidebarInitialsEl = document.getElementById("sidebarInitials");
           if (sidebarNameEl) sidebarNameEl.textContent = user.name;
           if (sidebarInitialsEl) sidebarInitialsEl.textContent = initials;
 
-          /* ── Topbar ── */
           const topbarNameEl = document.getElementById("topbarName");
           const topbarInitialsEl = document.getElementById("topbarInitials");
           if (topbarNameEl) topbarNameEl.textContent = user.name;
           if (topbarInitialsEl) topbarInitialsEl.textContent = initials;
 
-          /* ── Dropdown header ── */
           const ddName = document.getElementById("ddName");
           const ddEmail = document.getElementById("ddEmail");
           if (ddName) ddName.textContent = user.name;
           if (ddEmail) ddEmail.textContent = user.email;
 
-          /* ── Hide KYC badge if already verified ── */
           const ddKycBadge = document.getElementById("ddKycBadge");
           if (ddKycBadge && user.kyc_status === "verified")
             ddKycBadge.style.display = "none";
@@ -2346,7 +2506,6 @@
           const res = await fetch(`${API}/status`, { credentials: "include" });
           const json = await res.json();
           if (!json.success || !json.data) return;
-
           const kyc = json.data;
           showStatusPanel(
             kyc.status,
@@ -2442,9 +2601,9 @@
         );
       }
 
-      /* ════════════════════════════════════════
+      /* ══════════════════════════════════════════
          2. FILE UPLOAD HANDLERS
-      ════════════════════════════════════════ */
+      ══════════════════════════════════════════ */
       function handleFile(input, zoneId, previewId) {
         const file = input.files[0];
         if (!file) return;
@@ -2467,7 +2626,6 @@
             (file.name.length > 22 ? "…" : "");
         updateSteps();
       }
-
       function handleDrag(e, zoneId) {
         e.preventDefault();
         document.getElementById(zoneId).classList.add("drag");
@@ -2488,9 +2646,9 @@
         handleFile(input, zoneId, previewId);
       }
 
-      /* ════════════════════════════════════════
-         3. STEP PROGRESS TRACKER
-      ════════════════════════════════════════ */
+      /* ══════════════════════════════════════════
+         3. STEP PROGRESS TRACKER (updated for 4 steps)
+      ══════════════════════════════════════════ */
       function updateSteps() {
         const hasName = document.getElementById("fullName")?.value.trim();
         const hasEmail = document.getElementById("email")?.value.trim();
@@ -2519,29 +2677,25 @@
           if (conn) conn.classList.toggle("done", done);
         };
 
-        mark(s1, c1, !!(hasName && hasEmail && hasPhone), true);
-        mark(
-          s2,
-          c2,
-          !!(hasFront && hasBack && s1.classList.contains("done")),
-          s1.classList.contains("done"),
-        );
-        mark(
-          s3,
-          c3,
-          !!(hasSelfie && s2.classList.contains("done")),
-          s2.classList.contains("done"),
-        );
-        mark(s4, null, false, s3.classList.contains("done"));
+        const step1Done = !!(hasName && hasEmail && hasPhone);
+        // Step 2 (Additional Info) is always "passable" since all fields are optional
+        const step2Done = step1Done; // auto-passes once step 1 is done
+        const step3Done = !!(hasFront && hasBack && step2Done);
+        const step4Active = step3Done;
+
+        mark(s1, c1, step1Done, true);
+        mark(s2, c2, step2Done, step1Done);
+        mark(s3, c3, step3Done, step2Done);
+        mark(s4, null, false, step4Active);
       }
 
       ["fullName", "email", "phone", "dob"].forEach((id) => {
         document.getElementById(id)?.addEventListener("input", updateSteps);
       });
 
-      /* ════════════════════════════════════════
-         4. SUBMIT KYC
-      ════════════════════════════════════════ */
+      /* ══════════════════════════════════════════
+         4. SUBMIT KYC (includes new fields)
+      ══════════════════════════════════════════ */
       async function submitKYC() {
         const fullName = document.getElementById("fullName").value.trim();
         const email = document.getElementById("email").value.trim();
@@ -2587,6 +2741,32 @@
           document.getElementById("selfieInput").files[0],
         );
 
+        /* ── Append new optional fields (only if non-empty) ── */
+        const optionals = {
+          date_of_birth: document.getElementById("dateOfBirth").value,
+          gender: document.getElementById("gender").value,
+          nationality: document.getElementById("nationality").value.trim(),
+          occupation: document.getElementById("occupation").value.trim(),
+          permanent_address: document
+            .getElementById("permanentAddress")
+            .value.trim(),
+          temporary_address: document
+            .getElementById("temporaryAddress")
+            .value.trim(),
+          father_name: document.getElementById("fatherName").value.trim(),
+          mother_name: document.getElementById("motherName").value.trim(),
+          grandfather_name: document
+            .getElementById("grandfatherName")
+            .value.trim(),
+          marital_status: document.getElementById("maritalStatus").value,
+          spouse_name: document.getElementById("spouseName").value.trim(),
+          issue_date: document.getElementById("issueDate").value,
+          expiry_date: document.getElementById("expiryDate").value,
+        };
+        Object.entries(optionals).forEach(([key, val]) => {
+          if (val) formData.append(key, val);
+        });
+
         const btn = document.querySelector(".btn-primary");
         btn.disabled = true;
         btn.textContent = "Submitting…";
@@ -2626,17 +2806,39 @@
         }
       }
 
-      /* ════════════════════════════════════════
+      /* ══════════════════════════════════════════
          5. RESET FORM
-      ════════════════════════════════════════ */
+      ══════════════════════════════════════════ */
       function resetForm() {
         document.getElementById("kycForm").style.display = "";
         document.getElementById("statusPanel").classList.remove("visible");
 
-        ["fullName", "email", "phone", "dob"].forEach((id) => {
+        [
+          "fullName",
+          "email",
+          "phone",
+          "dob",
+          "dateOfBirth",
+          "nationality",
+          "occupation",
+          "permanentAddress",
+          "temporaryAddress",
+          "fatherName",
+          "motherName",
+          "grandfatherName",
+          "spouseName",
+          "issueDate",
+          "expiryDate",
+        ].forEach((id) => {
           const el = document.getElementById(id);
           if (el) el.value = "";
         });
+        ["gender", "maritalStatus"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.value = "";
+        });
+        toggleSpouse("");
+
         ["frontZone", "backZone", "selfieZone"].forEach((id) => {
           document.getElementById(id)?.classList.remove("has-file", "drag");
         });
@@ -2658,7 +2860,6 @@
         loadUserInfo();
       }
 
-      /* ── Boot ── */
       init();
     </script>
   </body>

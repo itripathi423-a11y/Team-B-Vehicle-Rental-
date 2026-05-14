@@ -148,12 +148,12 @@ exports.getAllBookings = (req, res) => {
   });
 };
 
-/* ═══════════════════════════════════════════════════════════════════════
+/* 
    PUT /api/admin/bookings/:id
-   ✅ Notifies the USER via `notifications` table + socket
-   ✅ Logs for other ADMINs via `admin_notifications` table + socket
-   ✅ Sends email to user
-════════════════════════════════════════════════════════════════════════ */
+  Notifies the USER via `notifications` table + socket
+  Logs for other ADMINs via `admin_notifications` table + socket
+  Sends email to user
+  Syncs vehicle status (Booked / Available)*/
 exports.updateBookingStatus = (req, res) => {
   const { id } = req.params;
   const { status, cancel_reason } = req.body;
@@ -164,7 +164,7 @@ exports.updateBookingStatus = (req, res) => {
       .status(400)
       .json({ success: false, message: `Invalid status: ${status}` });
 
-  // 1. Fetch full booking for emails + notifications
+  // Fetch full booking for emails + notifications
   db.query(
     `SELECT b.*, v.name AS vehicle_name, v.license_plate
      FROM bookings b LEFT JOIN vehicles v ON b.vehicle_id = v.id
@@ -180,7 +180,7 @@ exports.updateBookingStatus = (req, res) => {
 
       const b = rows[0];
 
-      // 2. Update DB
+      // Update booking status
       db.query(
         "UPDATE bookings SET status = ?, cancel_reason = ?, updated_at = NOW() WHERE id = ?",
         [status, cancel_reason || null, id],
@@ -189,6 +189,24 @@ exports.updateBookingStatus = (req, res) => {
             return res
               .status(500)
               .json({ success: false, message: err2.message });
+
+          if (b.vehicle_id) {
+            let vehicleStatus = null;
+            if (status === "Confirmed" || status === "Active") {
+              vehicleStatus = "Booked";
+            } else if (status === "Completed" || status === "Cancelled") {
+              vehicleStatus = "Available";
+            }
+            if (vehicleStatus) {
+              db.query(
+                "UPDATE vehicles SET status = ? WHERE id = ?",
+                [vehicleStatus, b.vehicle_id],
+                (vErr) => {
+                  if (vErr) console.warn("[vehicleSync] Failed:", vErr.message);
+                },
+              );
+            }
+          }
 
           const icon = STATUS_ICON[status] || "🔔";
           const s = STATUS_STYLE[status] || STATUS_STYLE.Pending;

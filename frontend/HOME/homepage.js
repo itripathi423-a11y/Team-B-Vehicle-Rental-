@@ -1,7 +1,5 @@
 "use strict";
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
 function escHtml(s) {
   return String(s || "")
     .replace(/&/g, "&amp;")
@@ -29,8 +27,6 @@ function buildPackageBookingURL(pkg) {
   });
   return `../USER%20DASHBOARD/user.booking.html?${params.toString()}`;
 }
-
-// ── Auth helpers ──────────────────────────────────────────────────────────────
 
 async function isLoggedIn() {
   try {
@@ -171,10 +167,9 @@ function openPkgModal(pkg, idx) {
     vehSection.style.display = "none";
   }
 
-  /* Book Now inside modal — auth-aware */
+  /* Book Now inside modal */
   const bookBtn = modal.querySelector(".pkm-book-btn");
   if (bookBtn) {
-    // Clone to remove any previous listener
     const freshBtn = bookBtn.cloneNode(true);
     bookBtn.replaceWith(freshBtn);
 

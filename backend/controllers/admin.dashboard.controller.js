@@ -94,6 +94,69 @@ exports.getBookings = (req, res) => {
   });
 };
 
+// ================= MONTHLY CHART DATA =================
+// Returns bookings count + revenue for each month of the current year
+exports.getChartData = (req, res) => {
+  const year = new Date().getFullYear();
+
+  const sql = `
+    SELECT
+      MONTH(created_at)                        AS month,
+      COUNT(*)                                 AS bookings,
+      COALESCE(SUM(total_price), 0)            AS revenue
+    FROM bookings
+    WHERE YEAR(created_at) = ?
+    GROUP BY MONTH(created_at)
+    ORDER BY month ASC
+  `;
+
+  db.query(sql, [year], (err, rows) => {
+    if (err)
+      return res.status(500).json({ success: false, message: err.message });
+
+    // Build full 12-month arrays (fill 0 for months with no data)
+    const bookings = Array(12).fill(0);
+    const revenue = Array(12).fill(0);
+
+    rows.forEach((r) => {
+      const idx = r.month - 1; // MONTH() is 1-based
+      bookings[idx] = Number(r.bookings);
+      revenue[idx] = Number(r.revenue);
+    });
+
+    res.json({ success: true, data: { bookings, revenue } });
+  });
+};
+
+// ================= FLEET UTILIZATION =================
+// Returns per-body-type booking counts vs total vehicles
+exports.getFleetUtilization = (req, res) => {
+  const sql = `
+    SELECT
+      v.body_type,
+      COUNT(DISTINCT v.id)                                      AS total,
+      COUNT(DISTINCT CASE WHEN v.status = 'Booked' THEN v.id END) AS booked
+    FROM vehicles v
+    WHERE v.is_deleted = 0
+    GROUP BY v.body_type
+    ORDER BY booked DESC
+  `;
+
+  db.query(sql, (err, rows) => {
+    if (err)
+      return res.status(500).json({ success: false, message: err.message });
+
+    const data = rows.map((r) => ({
+      label: r.body_type,
+      total: Number(r.total),
+      booked: Number(r.booked),
+      pct: r.total > 0 ? Math.round((r.booked / r.total) * 100) : 0,
+    }));
+
+    res.json({ success: true, data });
+  });
+};
+
 // ================= UPDATE PROFILE =================
 exports.updateProfile = (req, res) => {
   if (!req.session?.user) {
@@ -155,12 +218,10 @@ exports.changePassword = (req, res) => {
       .json({ success: false, message: "Both password fields are required" });
   }
   if (new_password.length < 8) {
-    return res
-      .status(400)
-      .json({
-        success: false,
-        message: "Password must be at least 8 characters",
-      });
+    return res.status(400).json({
+      success: false,
+      message: "Password must be at least 8 characters",
+    });
   }
 
   const adminId = req.session.user.id;

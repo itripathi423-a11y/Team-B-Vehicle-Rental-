@@ -47,7 +47,7 @@
         overflow-x: hidden;
       }
 
-      /* SIDEBAR */
+      /* ── SIDEBAR ── */
       .sidebar {
         width: var(--sidebar-w);
         min-height: 100vh;
@@ -164,7 +164,7 @@
         color: rgba(255, 255, 255, 0.35);
       }
 
-      /* MAIN */
+      /* ── MAIN ── */
       .main-wrap {
         margin-left: var(--sidebar-w);
         flex: 1;
@@ -173,7 +173,7 @@
         min-height: 100vh;
       }
 
-      /* TOPBAR */
+      /* ── TOPBAR ── */
       .topbar {
         height: 64px;
         background: var(--white);
@@ -381,7 +381,7 @@
         background: #fef2f2;
       }
 
-      /* CONTENT */
+      /* ── CONTENT ── */
       .content {
         flex: 1;
         padding: 28px;
@@ -404,7 +404,7 @@
         margin-top: 3px;
       }
 
-      /* STAT STRIP */
+      /* ── STAT STRIP ── */
       .stat-strip {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -450,7 +450,7 @@
         margin-top: 1px;
       }
 
-      /* FILTERS */
+      /* ── FILTERS ── */
       .filters-bar {
         display: flex;
         gap: 10px;
@@ -513,7 +513,7 @@
         white-space: nowrap;
       }
 
-      /* TABLE */
+      /* ── TABLE ── */
       .table-card {
         background: var(--white);
         border-radius: var(--radius);
@@ -605,7 +605,6 @@
         font-size: 11px;
         color: var(--muted);
       }
-
       .status-sel {
         padding: 5px 10px;
         border-radius: 99px;
@@ -635,7 +634,6 @@
         background: #f3f4f6;
         color: #6b7280;
       }
-
       .bdg {
         display: inline-flex;
         align-items: center;
@@ -668,7 +666,6 @@
         background: currentColor;
         flex-shrink: 0;
       }
-
       .act-btn {
         display: inline-flex;
         align-items: center;
@@ -697,7 +694,7 @@
         background: var(--orange-light);
       }
 
-      /* MODAL */
+      /* ── MODAL ── */
       .overlay {
         position: fixed;
         inset: 0;
@@ -720,7 +717,7 @@
         background: #fff;
         border-radius: 20px;
         width: 100%;
-        max-width: 680px;
+        max-width: 720px;
         max-height: 92vh;
         overflow: hidden;
         display: flex;
@@ -768,6 +765,7 @@
         flex: 1;
       }
 
+      /* KYC modal internals */
       .kyc-profile-top {
         display: flex;
         align-items: center;
@@ -838,6 +836,11 @@
         grid-template-columns: 1fr 1fr;
         gap: 12px;
       }
+      .info-grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 12px;
+      }
       .info-item {
         display: flex;
         flex-direction: column;
@@ -854,6 +857,11 @@
         font-size: 13.5px;
         color: var(--dark);
         font-weight: 500;
+      }
+      .info-val.empty {
+        color: var(--muted);
+        font-weight: 400;
+        font-style: italic;
       }
 
       .doc-images {
@@ -914,6 +922,46 @@
         opacity: 0.4;
       }
 
+      /* selfie strip */
+      .selfie-strip {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 12px;
+      }
+      .selfie-wrap {
+        width: 120px;
+        height: 120px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid var(--border);
+        flex-shrink: 0;
+        background: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .selfie-wrap:hover {
+        transform: scale(1.03);
+        box-shadow: var(--shadow-md);
+      }
+      .selfie-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .selfie-note {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      /* action bar */
       .modal-action-bar {
         flex-shrink: 0;
         padding: 18px 24px;
@@ -1047,7 +1095,7 @@
         background: var(--bg);
       }
 
-      /* LIGHTBOX */
+      /* ── LIGHTBOX ── */
       .lightbox {
         position: fixed;
         inset: 0;
@@ -1091,7 +1139,7 @@
         background: rgba(255, 255, 255, 0.25);
       }
 
-      /* TOAST */
+      /* ── TOAST ── */
       .toast {
         position: fixed;
         bottom: 28px;
@@ -1147,7 +1195,8 @@
         .topbar-info {
           display: none;
         }
-        .info-grid {
+        .info-grid,
+        .info-grid-3 {
           grid-template-columns: 1fr;
         }
       }
@@ -1310,11 +1359,6 @@
             />
           </div>
           <div class="topbar-right">
-            <!--
-              The .notif-wrapper div below is a placeholder.
-              admin.notification.js will automatically REPLACE this
-              with the full notification panel on page load.
-            -->
             <div class="notif-wrapper">
               <button class="icon-btn notif-btn" id="notifBtn">
                 <svg
@@ -1332,7 +1376,6 @@
               </button>
               <div class="notif-dropdown" id="notifDropdown"></div>
             </div>
-
             <div class="topbar-user" id="topbarUser">
               <div class="topbar-avatar" id="topbarAv">AD</div>
               <div class="topbar-info">
@@ -1369,7 +1412,6 @@
                   </svg>
                   My Profile
                 </a>
-
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item logout" href="#" id="logoutBtn">
                   <svg
@@ -1487,7 +1529,7 @@
 
     <!-- KYC MODAL -->
     <div class="overlay" id="kycModal">
-      <div class="modal" style="max-width: 700px">
+      <div class="modal" style="max-width: 720px">
         <div class="modal-hdr">
           <span class="modal-title">KYC Details</span>
           <button class="modal-close" onclick="closeKycModal()">✕</button>
@@ -1504,6 +1546,7 @@
     </div>
 
     <div class="toast" id="toast"></div>
+
     <script src="admin.notification.js"></script>
     <script>
       const API = "http://localhost:5000/api/admin/kyc";
@@ -1514,7 +1557,7 @@
         filtered = [],
         openId = null;
 
-      // ── POPULATE ADMIN ──
+      // ── POPULATE ADMIN ──────────────────────────────────────────────
       function populateAdmin(a) {
         if (!a || !a.name) return;
         const initials = a.name
@@ -1526,7 +1569,6 @@
         const role = a.role
           ? a.role.charAt(0).toUpperCase() + a.role.slice(1)
           : "Admin";
-
         document.getElementById("sidebarAv").textContent = initials;
         document.getElementById("sidebarName").textContent = a.name;
         document.getElementById("sidebarRole").textContent = role;
@@ -1537,9 +1579,9 @@
         document.getElementById("ddEmail").textContent = a.email || "—";
       }
 
-      // ── BOOT ──
+      // ── BOOT ────────────────────────────────────────────────────────
       async function fetchKyc() {
-        // Dropdown
+        // Dropdown toggle
         document
           .getElementById("topbarUser")
           .addEventListener("click", function (e) {
@@ -1568,10 +1610,12 @@
             }
           });
 
-        // Search & modal close
+        // Search
         document
           .getElementById("kycSearch")
           .addEventListener("input", applyFilters);
+
+        // Modal backdrop close
         document
           .getElementById("kycModal")
           .addEventListener("click", function (e) {
@@ -1596,15 +1640,13 @@
           }
 
           const adminJson = await adminRes.json();
-          populateAdmin(adminJson); // /me returns object directly — no .data wrapper
+          populateAdmin(adminJson);
 
           const kycJson = await kycRes.json();
           if (kycJson.success) {
             data = kycJson.data;
             filtered = [...data];
-          } else {
-            showToast("Failed to load KYC data", "error");
-          }
+          } else showToast("Failed to load KYC data", "error");
 
           updateStats();
           renderTable();
@@ -1616,7 +1658,7 @@
 
       fetchKyc();
 
-      // ── STATS ──
+      // ── STATS ────────────────────────────────────────────────────────
       function updateStats() {
         document.getElementById("statTotal").textContent = data.length;
         document.getElementById("statPending").textContent = data.filter(
@@ -1630,7 +1672,7 @@
         ).length;
       }
 
-      // ── STATUS META ──
+      // ── STATUS META ──────────────────────────────────────────────────
       const STATUS_META = {
         pending: {
           cls: "s-pending",
@@ -1668,8 +1710,14 @@
             .slice(0, 2) || "??"
         );
       }
+      // Returns value or a muted dash if empty
+      function val(v) {
+        return v
+          ? `<span class="info-val">${v}</span>`
+          : `<span class="info-val empty">—</span>`;
+      }
 
-      // ── RENDER TABLE ──
+      // ── RENDER TABLE ─────────────────────────────────────────────────
       function renderTable() {
         const tbody = document.getElementById("kycTableBody");
         document.getElementById("tableCount").textContent =
@@ -1714,13 +1762,12 @@
                   View
                 </button>
               </td>
-            </tr>
-          `;
+            </tr>`;
           })
           .join("");
       }
 
-      // ── INLINE STATUS CHANGE ──
+      // ── INLINE STATUS CHANGE ─────────────────────────────────────────
       function inlineStatusChange(id, sel) {
         const newStatus = sel.value;
         sel.className = `status-sel ${STATUS_META[newStatus]?.cls || "s-not_submitted"}`;
@@ -1731,7 +1778,7 @@
         }
       }
 
-      // ── PERSIST TO BACKEND ──
+      // ── PERSIST TO BACKEND ───────────────────────────────────────────
       async function persistStatus(id, status, rejection_reason) {
         try {
           const res = await fetch(`${API}/${id}`, {
@@ -1762,7 +1809,7 @@
         }
       }
 
-      // ── MODAL ──
+      // ── MODAL ────────────────────────────────────────────────────────
       function openKycModal(id, forceReject = false) {
         const k = data.find((x) => x.id === id);
         if (!k) return;
@@ -1779,20 +1826,39 @@
         openId = null;
       }
 
+      // ── BUILD KYC CARD (full details) ────────────────────────────────
       function buildKycCard(k) {
         const avHTML = k.photo
           ? `<img class="kyc-av-img" src="${k.photo}" alt="${k.user_name}" onerror="this.style.display='none';this.parentElement.textContent='${initials(k.user_name)}'">`
           : `<span style="font-size:24px;font-weight:600">${initials(k.user_name)}</span>`;
 
+        // Helper: clickable image slot or placeholder
         const imgSlot = (src, label) =>
           src
             ? `<div class="doc-img-wrap" onclick="openLightbox('${src}')">
-               <img class="doc-img" src="${src}" alt="${label}" onerror="this.parentElement.innerHTML=noDocHTML('${label}')">
-               <div class="doc-img-label">${label}</div>
-             </div>`
+                 <img class="doc-img" src="${src}" alt="${label}" onerror="this.parentElement.innerHTML=noDocHTML('${label}')">
+                 <div class="doc-img-label">${label}</div>
+               </div>`
             : `<div class="doc-img-wrap" style="cursor:default">${noDocHTML(label)}</div>`;
 
+        // Selfie section
+        const selfieSection = k.photo
+          ? `<div class="selfie-strip">
+               <div class="selfie-wrap" onclick="openLightbox('${k.photo}')">
+                 <img src="${k.photo}" alt="Selfie" onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:12px\'>No selfie</div>'">
+               </div>
+               <p class="selfie-note">Selfie / Live Photo submitted with the KYC application.<br>Click to enlarge.</p>
+             </div>`
+          : `<p style="font-size:13px;color:var(--muted);font-style:italic">No selfie uploaded.</p>`;
+
+        // Spouse row (conditional)
+        const spouseRow =
+          k.marital_status === "Married" || k.spouse_name
+            ? `<div class="info-item"><span class="info-lbl">Spouse Name</span>${val(k.spouse_name)}</div>`
+            : "";
+
         return `
+          <!-- Profile Top -->
           <div class="kyc-profile-top">
             <div class="kyc-big-av">${avHTML}</div>
             <div style="flex:1">
@@ -1801,23 +1867,56 @@
               <div class="kyc-status-badge">${badge(k.status)}</div>
             </div>
           </div>
+
+          <!-- 1. PERSONAL DETAILS -->
           <div class="info-section">
-            <div class="info-section-title">Personal Information</div>
+            <div class="info-section-title">Personal Details</div>
             <div class="info-grid">
-              <div class="info-item"><span class="info-lbl">Full Name</span><span class="info-val">${k.user_name}</span></div>
-              <div class="info-item"><span class="info-lbl">Phone Number</span><span class="info-val">${k.phone || "—"}</span></div>
-              <div class="info-item"><span class="info-lbl">Email Address</span><span class="info-val">${k.user_email}</span></div>
+              <div class="info-item"><span class="info-lbl">Full Name</span>${val(k.user_name)}</div>
+              <div class="info-item"><span class="info-lbl">Date of Birth</span>${val(k.date_of_birth)}</div>
+              <div class="info-item"><span class="info-lbl">Gender / Sex</span>${val(k.gender)}</div>
+              <div class="info-item"><span class="info-lbl">Nationality</span>${val(k.nationality)}</div>
+              <div class="info-item"><span class="info-lbl">Occupation</span>${val(k.occupation)}</div>
+              <div class="info-item"><span class="info-lbl">Phone Number</span>${val(k.phone)}</div>
+              <div class="info-item" style="grid-column:1/-1"><span class="info-lbl">Email Address</span>${val(k.user_email)}</div>
             </div>
           </div>
+
+          <!-- 2. ADDRESS DETAILS -->
           <div class="info-section">
-            <div class="info-section-title">Document Information</div>
+            <div class="info-section-title">Address Details</div>
             <div class="info-grid">
-              <div class="info-item"><span class="info-lbl">Document Type</span><span class="info-val">${k.doc_type || "—"}</span></div>
+              <div class="info-item"><span class="info-lbl">Permanent Address</span>${val(k.permanent_address)}</div>
+              <div class="info-item"><span class="info-lbl">Temporary Address</span>${val(k.temporary_address)}</div>
+            </div>
+          </div>
+
+          <!-- 3. FAMILY DETAILS -->
+          <div class="info-section">
+            <div class="info-section-title">Family Details</div>
+            <div class="info-grid">
+              <div class="info-item"><span class="info-lbl">Father's Name</span>${val(k.father_name)}</div>
+              <div class="info-item"><span class="info-lbl">Mother's Name</span>${val(k.mother_name)}</div>
+              <div class="info-item"><span class="info-lbl">Grandfather's Name</span>${val(k.grandfather_name)}</div>
+              <div class="info-item"><span class="info-lbl">Marital Status</span>${val(k.marital_status)}</div>
+              ${spouseRow}
+            </div>
+          </div>
+
+          <!-- 4. DOCUMENT DETAILS -->
+          <div class="info-section">
+            <div class="info-section-title">Document Details</div>
+            <div class="info-grid">
+              <div class="info-item"><span class="info-lbl">Document Type</span>${val(k.doc_type)}</div>
               <div class="info-item"><span class="info-lbl">Document Number</span><span class="info-val" style="font-family:'Space Mono',monospace">${k.doc_number || "—"}</span></div>
-              <div class="info-item"><span class="info-lbl">Submitted On</span><span class="info-val">${k.submitted || "—"}</span></div>
-              <div class="info-item"><span class="info-lbl">Current Status</span><span class="info-val">${badge(k.status)}</span></div>
+              <div class="info-item"><span class="info-lbl">Issue Date</span>${val(k.issue_date)}</div>
+              <div class="info-item"><span class="info-lbl">Expiry Date</span>${val(k.expiry_date)}</div>
+              <div class="info-item"><span class="info-lbl">Submitted On</span>${val(k.submitted)}</div>
+              <div class="info-item"><span class="info-lbl">Reviewed On</span>${val(k.reviewed)}</div>
             </div>
           </div>
+
+          <!-- 5. DOCUMENT IMAGES -->
           <div class="info-section">
             <div class="info-section-title">Document Images</div>
             <div class="doc-images">
@@ -1825,13 +1924,21 @@
               ${imgSlot(k.back_img, "Back Side")}
             </div>
           </div>
+
+          <!-- 6. SELFIE / LIVE PHOTO -->
+          <div class="info-section">
+            <div class="info-section-title">Selfie / Live Photo</div>
+            ${selfieSection}
+          </div>
+
+          <!-- 7. REJECTION REASON (if applicable) -->
           ${
             k.status === "rejected" && k.reason
               ? `
-            <div class="info-section">
-              <div class="info-section-title">Rejection Reason</div>
-              <div style="background:#fff5f5;border:1px solid #fecaca;border-radius:10px;padding:14px 16px;font-size:13.5px;color:#b91c1c;line-height:1.6">${k.reason}</div>
-            </div>`
+          <div class="info-section">
+            <div class="info-section-title">Rejection Reason</div>
+            <div style="background:#fff5f5;border:1px solid #fecaca;border-radius:10px;padding:14px 16px;font-size:13.5px;color:#b91c1c;line-height:1.6">${k.reason}</div>
+          </div>`
               : ""
           }
         `;
@@ -1878,8 +1985,7 @@
               <button class="btn-confirm-reject" onclick="confirmReject(${id})">Confirm Rejection</button>
               <button class="btn-cancel-reject"  onclick="cancelReject()">Cancel</button>
             </div>
-          </div>
-        `;
+          </div>`;
       }
 
       async function confirmReject(id) {
@@ -1928,7 +2034,7 @@
         }
       }
 
-      // ── FILTERS ──
+      // ── FILTERS ──────────────────────────────────────────────────────
       function applyFilters() {
         const status = document.getElementById("filterStatus").value;
         const docType = document.getElementById("filterDocType").value;
@@ -1964,7 +2070,7 @@
           `All ${data.length} submissions`;
       }
 
-      // ── LIGHTBOX ──
+      // ── LIGHTBOX ──────────────────────────────────────────────────────
       function openLightbox(src) {
         document.getElementById("lbImg").src = src;
         document.getElementById("lightbox").classList.add("open");
@@ -1973,7 +2079,7 @@
         document.getElementById("lightbox").classList.remove("open");
       }
 
-      // ── TOAST ──
+      // ── TOAST ─────────────────────────────────────────────────────────
       function showToast(msg, type = "success") {
         const t = document.getElementById("toast");
         t.textContent = msg;

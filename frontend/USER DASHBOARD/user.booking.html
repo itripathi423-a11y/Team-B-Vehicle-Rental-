@@ -12,22 +12,16 @@
     />
     <link href="userdashboard.css" rel="stylesheet" />
 
-    <!-- ══════════════════════════════════════════════════════════════════
-         AUTH GUARD — runs before page renders, blocks unauthenticated access
-         ══════════════════════════════════════════════════════════════════ -->
     <script>
       (async function authGuard() {
-        // Hide body immediately so unauthenticated users never see content flash
         document.documentElement.style.visibility = "hidden";
         try {
           const res = await fetch("http://localhost:5000/api/user/profile", {
             credentials: "include",
           });
           if (!res.ok) throw new Error("Not authenticated");
-          // Authenticated — reveal page
           document.documentElement.style.visibility = "";
         } catch (_) {
-          // Not logged in — save intended URL and redirect to login
           sessionStorage.setItem(
             "postLoginRedirect",
             window.location.pathname + window.location.search,
@@ -54,6 +48,9 @@
         --radius-sm: 8px;
         --shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
         --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.1);
+        --khalti: #5c2d91;
+        --khalti-light: #7c3db8;
+        --khalti-dim: rgba(92, 45, 145, 0.12);
       }
       *,
       *::before,
@@ -833,8 +830,6 @@
         font-family: "Space Mono", monospace;
         letter-spacing: 0.5px;
       }
-
-      /* Location notice for package mode */
       #pkg-location-notice {
         display: flex;
         align-items: center;
@@ -851,8 +846,6 @@
       #pkg-location-notice strong {
         color: #7c2d12;
       }
-
-      /* Locked field visual indicator */
       .locked-field-wrap {
         position: relative;
       }
@@ -1004,7 +997,7 @@
         margin-top: 4px;
       }
 
-      /* ── NOTES SECTION EXTRAS ── */
+      /* ── NOTES ── */
       .notes-suggestions {
         display: flex;
         flex-wrap: wrap;
@@ -1212,13 +1205,15 @@
         align-items: flex-end;
         gap: 10px;
       }
-      .submit-btn {
+
+      /* ── ✦ PAY WITH KHALTI BUTTON ── */
+      .pay-khalti-btn {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 10px;
-        padding: 15px 40px;
-        background: var(--orange);
+        padding: 15px 32px;
+        background: linear-gradient(135deg, #5c2d91 0%, #7c3db8 100%);
         border: none;
         border-radius: 11px;
         font-family: "DM Sans", sans-serif;
@@ -1226,31 +1221,54 @@
         font-weight: 700;
         color: #fff;
         cursor: pointer;
-        transition:
-          background 0.2s,
-          transform 0.2s,
-          box-shadow 0.2s;
         white-space: nowrap;
         letter-spacing: 0.3px;
+        transition:
+          opacity 0.2s,
+          transform 0.2s,
+          box-shadow 0.2s;
+        position: relative;
+        overflow: hidden;
       }
-      .submit-btn:hover {
-        background: var(--orange-light);
+      .pay-khalti-btn::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.08),
+          transparent
+        );
+        border-radius: inherit;
+      }
+      .pay-khalti-btn:hover {
+        opacity: 0.92;
         transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(255, 92, 26, 0.4);
+        box-shadow: 0 10px 30px rgba(92, 45, 145, 0.5);
       }
-      .submit-btn:disabled {
+      .pay-khalti-btn:active {
+        transform: translateY(0);
+      }
+      .pay-khalti-btn:disabled {
         background: #374151;
         cursor: not-allowed;
         transform: none;
         box-shadow: none;
         color: #4b5563;
       }
-      .sc-legal {
-        font-size: 11px;
-        color: rgba(255, 255, 255, 0.2);
-        text-align: right;
-        max-width: 280px;
-        line-height: 1.6;
+      .khalti-logo-inline {
+        width: 22px;
+        height: 22px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .khalti-logo-inline svg {
+        width: 14px;
+        height: 14px;
       }
 
       /* ── FOOTER ── */
@@ -1417,12 +1435,8 @@
           align-items: flex-start;
           width: 100%;
         }
-        .submit-btn {
+        .pay-khalti-btn {
           width: 100%;
-        }
-        .sc-legal {
-          text-align: left;
-          max-width: 100%;
         }
         .duration-opts {
           grid-template-columns: repeat(2, 1fr);
@@ -1474,7 +1488,7 @@
         }
       }
 
-      /* ── CHATBOT WIDGET ── */
+      /* ── CHATBOT ── */
       #chat-bubble {
         position: fixed;
         bottom: 24px;
@@ -1832,7 +1846,6 @@
         </button>
         <span class="topbar-page-title">Book a Vehicle</span>
         <div class="topbar-right">
-          <!-- NOTIFICATION BELL -->
           <div class="notif-wrap" id="notifWrap">
             <button
               class="icon-btn notif-trigger"
@@ -1861,8 +1874,8 @@
             </button>
             <div class="notif-panel" id="notifPanel">
               <div class="np-head">
-                <span class="np-title">Notifications</span>
-                <button class="np-mark-all" id="npMarkAll">
+                <span class="np-title">Notifications</span
+                ><button class="np-mark-all" id="npMarkAll">
                   Mark all read
                 </button>
               </div>
@@ -1876,8 +1889,6 @@
               </div>
             </div>
           </div>
-
-          <!-- USER DROPDOWN -->
           <div class="topbar-user user-dropdown-wrap" id="userDropdownWrap">
             <div class="topbar-avatar" id="topbarAvatar">
               <span id="topbarInitials"></span>
@@ -1913,9 +1924,8 @@
                   height="15"
                 >
                   <circle cx="12" cy="8" r="4" />
-                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
-                </svg>
-                My profile
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" /></svg
+                >My profile
               </button>
               <button
                 class="dd-item"
@@ -1932,9 +1942,8 @@
                   <rect x="3" y="4" width="18" height="18" rx="2" />
                   <line x1="16" y1="2" x2="16" y2="6" />
                   <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-                My bookings
+                  <line x1="3" y1="10" x2="21" y2="10" /></svg
+                >My bookings
               </button>
               <button class="dd-item" onclick="location.href = 'kyc.html'">
                 <svg
@@ -1945,10 +1954,10 @@
                   width="15"
                   height="15"
                 >
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-                KYC verification
-                <span class="dd-kyc-badge" id="ddKycBadge">Pending</span>
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+                >KYC verification<span class="dd-kyc-badge" id="ddKycBadge"
+                  >Pending</span
+                >
               </button>
               <div class="dd-divider"></div>
               <button class="dd-item dd-danger" id="logoutBtn">
@@ -1962,9 +1971,8 @@
                 >
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                   <polyline points="16 17 21 12 16 7" />
-                  <line x1="21" y1="12" x2="9" y2="12" />
-                </svg>
-                Log out
+                  <line x1="21" y1="12" x2="9" y2="12" /></svg
+                >Log out
               </button>
             </div>
           </div>
@@ -2027,7 +2035,6 @@
         </div>
 
         <div class="booking-col">
-          <!-- ══ PACKAGE BANNER (injected by JS if source=package) ══ -->
           <div id="pkg-banner" style="display: none"></div>
           <div id="pkg-location-notice" style="display: none">
             <span style="font-size: 20px; flex-shrink: 0">📍</span>
@@ -2069,8 +2076,8 @@
             <div id="userFields" style="display: none">
               <div class="form-row">
                 <div class="form-group">
-                  <label>Full Name</label>
-                  <input
+                  <label>Full Name</label
+                  ><input
                     type="text"
                     id="userName"
                     placeholder="Your full name"
@@ -2078,8 +2085,8 @@
                   />
                 </div>
                 <div class="form-group">
-                  <label>Email Address</label>
-                  <input
+                  <label>Email Address</label
+                  ><input
                     type="email"
                     id="userEmail"
                     placeholder="your@email.com"
@@ -2089,8 +2096,8 @@
               </div>
               <div class="form-row single">
                 <div class="form-group">
-                  <label>Phone Number</label>
-                  <input
+                  <label>Phone Number</label
+                  ><input
                     type="tel"
                     id="userPhone"
                     placeholder="+977 98XXXXXXXX"
@@ -2129,9 +2136,8 @@
                   flex-shrink: 0;
                   white-space: nowrap;
                 "
+                >Change →</a
               >
-                Change →
-              </a>
             </div>
           </div>
 
@@ -2294,8 +2300,8 @@
             </div>
             <div class="form-row single">
               <div class="form-group">
-                <label>
-                  <svg
+                <label
+                  ><svg
                     width="13"
                     height="13"
                     fill="none"
@@ -2309,10 +2315,9 @@
                     />
                     <path
                       d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
-                    />
-                  </svg>
-                  Notes / Special Requests
-                </label>
+                    /></svg
+                  >Notes / Special Requests</label
+                >
                 <textarea
                   id="bookingNotes"
                   maxlength="500"
@@ -2442,6 +2447,7 @@
                 <div class="sc-cell-val" id="scNotes">—</div>
               </div>
             </div>
+
             <div class="sc-bottom">
               <div>
                 <div class="sc-total-lbl">TOTAL AMOUNT</div>
@@ -2461,28 +2467,43 @@
                   Free cancellation up to 24 hrs before pickup
                 </div>
               </div>
+
+              <!-- ── PAYMENT BUTTON ── -->
               <div class="sc-right">
                 <button
-                  class="submit-btn"
-                  id="submitBtn"
-                  onclick="submitBooking()"
+                  class="pay-khalti-btn"
+                  id="khaltiBtn"
+                  onclick="payWithKhalti()"
                 >
-                  <svg
-                    width="18"
-                    height="18"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  </svg>
-                  Confirm Booking
+                  <div class="khalti-logo-inline">
+                    <svg
+                      viewBox="0 0 40 40"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 8 L10 32"
+                        stroke="white"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M10 20 L22 8"
+                        stroke="white"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M10 20 L26 32"
+                        stroke="white"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                      />
+                      <circle cx="30" cy="28" r="5" fill="#F5A623" />
+                    </svg>
+                  </div>
+                  Pay with Khalti · Rs <span id="khaltiTotal">0</span>
                 </button>
-                <div class="sc-legal">
-                  By confirming you agree to our Rental Terms &amp; Conditions
-                  and Privacy Policy.
-                </div>
               </div>
             </div>
           </div>
@@ -2496,11 +2517,10 @@
             </div>
           </div>
         </div>
-        <!-- /booking-col -->
       </main>
     </div>
 
-    <!-- SUCCESS MODAL -->
+    <!-- SUCCESS MODAL (kept for potential future use) -->
     <div class="modal-overlay" id="successModal">
       <div class="modal">
         <div class="modal-icon">🎉</div>
@@ -2512,6 +2532,7 @@
         <div class="modal-ref" id="modalRef">REF: AD-000000</div>
         <p style="font-size: 12px; color: var(--muted)">
           Our team will contact you before pickup to confirm delivery details.
+          Payment will be collected on pickup.
         </p>
         <div class="modal-divider"></div>
         <div class="modal-btns">
@@ -2607,13 +2628,9 @@
     <script src="notification.js"></script>
 
     <script>
-      /* ════════════════════════════════════════
-         CONFIG & STATE
-      ════════════════════════════════════════ */
       const BASE_URL = "/api";
       const urlParams = new URLSearchParams(location.search);
 
-      // ── Package mode detection ──
       const IS_PACKAGE = urlParams.get("source") === "package";
       const PKG_ID = urlParams.get("pkg_id") || "";
       const PKG_VID = urlParams.get("vehicle_id") || "";
@@ -2622,7 +2639,6 @@
       const PKG_DAYS = parseInt(urlParams.get("pkg_days") || "1", 10);
       const PKG_IMAGE = urlParams.get("pkg_image") || "";
 
-      // ── Regular vehicle mode ──
       const vehicleId = IS_PACKAGE
         ? parseInt(PKG_VID) || null
         : parseInt(urlParams.get("id")) || null;
@@ -2639,9 +2655,7 @@
       let selectedDuration = IS_PACKAGE ? "custom" : "4h";
       let currentPrice = IS_PACKAGE ? PKG_PRICE : 0;
 
-      /* ════════════════════════════════════════
-         API HELPER  (session-cookie based)
-      ════════════════════════════════════════ */
+      /* ── API helper ─────────────────────────────────────────────────────── */
       async function apiFetch(path, options = {}) {
         const res = await fetch(`${BASE_URL}${path}`, {
           credentials: "include",
@@ -2652,9 +2666,7 @@
         return res.json();
       }
 
-      /* ════════════════════════════════════════
-         USER DROPDOWN
-      ════════════════════════════════════════ */
+      /* ── User dropdown ──────────────────────────────────────────────────── */
       const userDropdownWrap = document.getElementById("userDropdownWrap");
       const userDropdownMenu = document.getElementById("userDropdownMenu");
       const topbarChevron = document.getElementById("topbarChevron");
@@ -2681,105 +2693,63 @@
           window.location.href = "/index.html";
         });
 
-      /* ════════════════════════════════════════
-         PACKAGE BANNER
-      ════════════════════════════════════════ */
+      /* ── Package banner ─────────────────────────────────────────────────── */
       function renderPackageBanner() {
         if (!IS_PACKAGE) return;
-
         const banner = document.getElementById("pkg-banner");
         const notice = document.getElementById("pkg-location-notice");
-
         const imgHTML = PKG_IMAGE
-          ? `<img class="pkg-banner-img" src="http://localhost:5000/uploads/tours/${PKG_IMAGE}"
-               alt="${PKG_TITLE}" onerror="this.outerHTML='<div class=pkg-banner-icon>🗺️</div>'">`
+          ? `<img class="pkg-banner-img" src="http://localhost:5000/uploads/tours/${PKG_IMAGE}" alt="${PKG_TITLE}" onerror="this.outerHTML='<div class=pkg-banner-icon>🗺️</div>'">`
           : `<div class="pkg-banner-icon">🗺️</div>`;
-
-        banner.innerHTML = `
-          ${imgHTML}
-          <div class="pkg-banner-info">
-            <div class="pkg-banner-tag">TOUR PACKAGE</div>
-            <div class="pkg-banner-title">${PKG_TITLE}</div>
-            <div class="pkg-banner-meta">
-              ${PKG_DAYS} day${PKG_DAYS > 1 ? "s" : ""}&nbsp;·&nbsp;
-              Rs ${PKG_PRICE.toLocaleString()} total
-            </div>
-          </div>
-          <div class="pkg-banner-pill">Booking for Package</div>
-        `;
+        banner.innerHTML = `${imgHTML}<div class="pkg-banner-info"><div class="pkg-banner-tag">TOUR PACKAGE</div><div class="pkg-banner-title">${PKG_TITLE}</div><div class="pkg-banner-meta">${PKG_DAYS} day${PKG_DAYS > 1 ? "s" : ""} · Rs ${PKG_PRICE.toLocaleString()} total</div></div><div class="pkg-banner-pill">Booking for Package</div>`;
         banner.style.display = "flex";
         notice.style.display = "flex";
-
-        // Update page subtitle
         document.getElementById("pageSubtitle").textContent =
           `Booking for "${PKG_TITLE}" — just enter your pickup location to confirm`;
-
-        // Hide "Change →" link when in package mode (vehicle is fixed)
         const changeLink = document.getElementById("changeVehicleLink");
         if (changeLink) changeLink.style.display = "none";
       }
 
-      /* ════════════════════════════════════════
-         PACKAGE FORM LOCK-IN
-      ════════════════════════════════════════ */
+      /* ── Package locks ──────────────────────────────────────────────────── */
       function applyPackageLocks() {
         if (!IS_PACKAGE) return;
-
-        // Lock duration to custom + set days
         document.querySelectorAll(".dur-opt").forEach((el) => {
           el.classList.remove("selected");
           el.classList.add("locked");
         });
-        // Show custom days wrap, set value, lock it
         const customWrap = document.getElementById("customDaysWrap");
         customWrap.classList.add("show");
         const customInput = document.getElementById("customDays");
         customInput.value = PKG_DAYS;
         customInput.setAttribute("readonly", true);
         customInput.setAttribute("disabled", true);
-
-        // Set pickup datetime to next rounded hour, dropoff = pickup + days
         const now = new Date();
         now.setMinutes(0, 0, 0);
         now.setHours(now.getHours() + 1);
         const pad = (n) => String(n).padStart(2, "0");
         const toLocalDT = (d) =>
           `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-
         const pickupDT = document.getElementById("pickupDT");
         const dropoffDT = document.getElementById("dropoffDT");
-
         pickupDT.value = toLocalDT(now);
         const drop = new Date(now.getTime() + PKG_DAYS * 24 * 3600000);
         dropoffDT.value = toLocalDT(drop);
-
-        // Lock datetime fields
         pickupDT.setAttribute("readonly", true);
         pickupDT.setAttribute("disabled", true);
-
-        // Override price display
         document.getElementById("dp4h").textContent = "—";
         document.getElementById("dp8h").textContent = "—";
         document.getElementById("dp1d").textContent = "—";
-
-        // Keep pickup location editable and focused
-        setTimeout(() => document.getElementById("pickupLoc")?.focus(), 400);
-
-        // Override calcPrice for this session
         currentPrice = PKG_PRICE;
+        setTimeout(() => document.getElementById("pickupLoc")?.focus(), 400);
       }
 
-      /* ════════════════════════════════════════
-         LOAD VEHICLE
-      ════════════════════════════════════════ */
+      /* ── Load vehicle ───────────────────────────────────────────────────── */
       async function loadVehicle() {
         if (!vehicleId) {
-          // Package with no vehicle linked — show generic placeholder
           if (IS_PACKAGE) {
             document.getElementById("vsName").textContent = PKG_TITLE;
             document.getElementById("vsChips").innerHTML =
-              `<span class="vs-chip">📦 Tour Package</span>
-               <span class="vs-chip">📅 ${PKG_DAYS} day${PKG_DAYS > 1 ? "s" : ""}</span>`;
+              `<span class="vs-chip">📦 Tour Package</span><span class="vs-chip">📅 ${PKG_DAYS} day${PKG_DAYS > 1 ? "s" : ""}</span>`;
             markStep(2, "done");
             updateSummary();
           } else {
@@ -2792,7 +2762,6 @@
           const res = await apiFetch(`/vehicles/${vehicleId}`);
           vehicle = res.data;
           const BASE_IMG = "http://localhost:5000/uploads/vehicles/";
-
           vehicle.images = [
             vehicle.thumbnail,
             vehicle.image_1,
@@ -2808,18 +2777,15 @@
           document.title = `AUTO DEALER — Book ${vehicle.name}`;
 
           const vsImg = document.getElementById("vsImg");
-          if (vehicle.images[0]) {
+          if (vehicle.images[0])
             vsImg.innerHTML = `<img src="${vehicle.images[0]}" alt="${vehicle.name}" onerror="this.parentNode.textContent='🚗'">`;
-          }
           document.getElementById("vsName").textContent = vehicle.name;
           document.getElementById("vsChips").innerHTML = `
-            <span class="vs-chip">${fuelIcons[vehicle.fuel_type] || "⛽"} ${vehicle.fuel_type}</span>
-            <span class="vs-chip">🚘 ${vehicle.body_type}</span>
-            <span class="vs-chip">⚙️ ${vehicle.transmission}</span>
-            <span class="vs-chip">👥 ${vehicle.seating_capacity} seats</span>
-          `;
+      <span class="vs-chip">${fuelIcons[vehicle.fuel_type] || "⛽"} ${vehicle.fuel_type}</span>
+      <span class="vs-chip">🚘 ${vehicle.body_type}</span>
+      <span class="vs-chip">⚙️ ${vehicle.transmission}</span>
+      <span class="vs-chip">👥 ${vehicle.seating_capacity} seats</span>`;
 
-          // Only populate pricing tiles if not package mode
           if (!IS_PACKAGE) {
             document.getElementById("dp4h").textContent =
               `Rs ${parseFloat(vehicle.price_4h).toLocaleString()}`;
@@ -2828,8 +2794,6 @@
             document.getElementById("dp1d").textContent =
               `Rs ${parseFloat(vehicle.price_1d).toLocaleString()}`;
             currentPrice = parseFloat(vehicle.price_4h) || 0;
-
-            // Set default pickup time for non-package
             const now = new Date();
             now.setMinutes(0, 0, 0);
             now.setHours(now.getHours() + 1);
@@ -2838,14 +2802,12 @@
               .slice(0, 16);
             updateDropoff();
           }
-
           markStep(2, "done");
           updateSummary();
           loadUserProfile();
         } catch (err) {
           console.error("Vehicle load failed:", err.message);
           if (IS_PACKAGE) {
-            // Package mode — show package title even if vehicle fetch fails
             document.getElementById("vsName").textContent = PKG_TITLE;
             document.getElementById("vsChips").innerHTML =
               `<span class="vs-chip">📦 Tour Package</span>`;
@@ -2855,19 +2817,15 @@
           } else {
             document.getElementById("vsName").textContent =
               "Failed to load vehicle";
-            document.getElementById("vsImg").textContent = "🚗";
           }
         }
       }
 
-      /* ════════════════════════════════════════
-         LOAD USER PROFILE
-      ════════════════════════════════════════ */
+      /* ── Load user profile ──────────────────────────────────────────────── */
       async function loadUserProfile() {
         try {
           const user = await apiFetch("/user/profile");
           if (!user) return;
-
           const fullName =
             `${user.first_name || ""} ${user.last_name || ""}`.trim() ||
             user.name ||
@@ -2931,7 +2889,6 @@
           const ddKycBadge = document.getElementById("ddKycBadge");
           if (ddKycBadge && isVerified) ddKycBadge.style.display = "none";
 
-          // Fill booking form
           const nameEl = document.getElementById("userName");
           const emailEl = document.getElementById("userEmail");
           const phoneEl = document.getElementById("userPhone");
@@ -2957,7 +2914,6 @@
             badge.innerHTML = `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Profile loaded from your account`;
             fsHead.insertAdjacentElement("afterend", badge);
           }
-
           markStep(1, "done");
           updateSummary();
         } catch (err) {
@@ -2973,11 +2929,9 @@
         }
       }
 
-      /* ════════════════════════════════════════
-         DURATION LOGIC
-      ════════════════════════════════════════ */
+      /* ── Duration logic ─────────────────────────────────────────────────── */
       function selectDuration(dur, el) {
-        if (IS_PACKAGE) return; // locked in package mode
+        if (IS_PACKAGE) return;
         selectedDuration = dur;
         document
           .querySelectorAll(".dur-opt")
@@ -2989,41 +2943,35 @@
         updateDropoff();
         updateSummary();
       }
-
       function clampDays() {
         const inp = document.getElementById("customDays");
         const v = parseInt(inp.value);
         if (!isNaN(v)) inp.value = Math.min(5, Math.max(2, v));
       }
-
       function syncDropoff() {
         document.getElementById("dropoffLoc").value =
           document.getElementById("pickupLoc").value;
       }
-
       function updateDropoff() {
-        if (IS_PACKAGE) return; // dates already locked
+        if (IS_PACKAGE) return;
         const pVal = document.getElementById("pickupDT").value;
         if (!pVal) return;
         const pickup = new Date(pVal);
         if (isNaN(pickup.getTime())) return;
-
         let hours = 4;
         if (selectedDuration === "8h") hours = 8;
         if (selectedDuration === "1day") hours = 24;
         if (selectedDuration === "custom")
           hours =
             (parseInt(document.getElementById("customDays").value) || 2) * 24;
-
         const drop = new Date(pickup.getTime() + hours * 3600000);
         const pad = (n) => String(n).padStart(2, "0");
         document.getElementById("dropoffDT").value =
           `${drop.getFullYear()}-${pad(drop.getMonth() + 1)}-${pad(drop.getDate())}T${pad(drop.getHours())}:${pad(drop.getMinutes())}`;
         updateSummary();
       }
-
       function calcPrice() {
-        if (IS_PACKAGE) return PKG_PRICE; // fixed package price
+        if (IS_PACKAGE) return PKG_PRICE;
         if (!vehicle) return 0;
         if (selectedDuration === "4h") return parseFloat(vehicle.price_4h) || 0;
         if (selectedDuration === "8h") return parseFloat(vehicle.price_8h) || 0;
@@ -3036,7 +2984,6 @@
         }
         return 0;
       }
-
       function durLabel() {
         if (IS_PACKAGE)
           return `${PKG_DAYS} Day${PKG_DAYS > 1 ? "s" : ""} (Tour Package)`;
@@ -3047,7 +2994,6 @@
           return `${parseInt(document.getElementById("customDays")?.value) || 2} Days (Custom)`;
         return "—";
       }
-
       function rentalTypeForDB() {
         if (IS_PACKAGE) return "custom";
         if (selectedDuration === "4h") return "4h";
@@ -3056,7 +3002,6 @@
         if (selectedDuration === "custom") return "custom";
         return "4h";
       }
-
       function fmtDT(val) {
         if (!val) return "—";
         return new Date(val).toLocaleString("en-US", {
@@ -3065,9 +3010,7 @@
         });
       }
 
-      /* ════════════════════════════════════════
-         NOTES HELPERS
-      ════════════════════════════════════════ */
+      /* ── Notes helpers ──────────────────────────────────────────────────── */
       function appendNote(text) {
         const ta = document.getElementById("bookingNotes");
         const current = ta.value.trim();
@@ -3076,7 +3019,6 @@
         updateSummary();
         ta.focus();
       }
-
       function updateCharCount() {
         const ta = document.getElementById("bookingNotes");
         const counter = document.getElementById("charCounter");
@@ -3086,9 +3028,7 @@
           "char-counter" + (len >= 500 ? " over" : len >= 400 ? " warn" : "");
       }
 
-      /* ════════════════════════════════════════
-         LIVE SUMMARY UPDATE
-      ════════════════════════════════════════ */
+      /* ── Live summary ───────────────────────────────────────────────────── */
       function updateSummary() {
         currentPrice = calcPrice();
         const name = document.getElementById("userName")?.value || "—";
@@ -3099,12 +3039,10 @@
         const ddt = document.getElementById("dropoffDT")?.value;
         const notes =
           document.getElementById("bookingNotes")?.value.trim() || "";
-
         const set = (id, v) => {
           const el = document.getElementById(id);
           if (el) el.textContent = v;
         };
-
         set("scName", name);
         set("scVehicle", IS_PACKAGE ? PKG_TITLE : vehicle?.name || "—");
         set("scPickup", pickup);
@@ -3114,7 +3052,7 @@
         set("scDropoffDT", fmtDT(ddt));
         set("scPhone", phone);
         set("scTotal", currentPrice.toLocaleString());
-
+        set("khaltiTotal", currentPrice.toLocaleString());
         const notesRow = document.getElementById("scNotesRow");
         const notesVal = document.getElementById("scNotes");
         if (notes) {
@@ -3127,114 +3065,123 @@
           if (el && !el.classList.contains("done"))
             el.className = "step active";
         }
-
         if (name && name !== "—") markStep(1, "done");
         markStep(2, "done");
         if (pickup && pickup !== "—") markStep(3, "done");
         if (pdt) markStep(4, "done");
         markStep(5, "done");
       }
-
       function markStep(n, state) {
         const el = document.getElementById(`step${n}`);
         if (el) el.className = "step " + state;
       }
 
-      /* ════════════════════════════════════════
-         SUBMIT BOOKING
-      ════════════════════════════════════════ */
-      async function submitBooking() {
+      /* ── Validation ─────────────────────────────────────────────────────── */
+      function validateForm() {
         const name = document.getElementById("userName")?.value.trim();
         const email = document.getElementById("userEmail")?.value.trim();
         const phone = document.getElementById("userPhone")?.value.trim();
         const pickup = document.getElementById("pickupLoc")?.value.trim();
-        const pdt = IS_PACKAGE
-          ? document.getElementById("pickupDT").defaultValue ||
-            document.getElementById("pickupDT").value
-          : document.getElementById("pickupDT")?.value;
-        const ddt = document.getElementById("dropoffDT")?.value;
-        const notes =
-          document.getElementById("bookingNotes")?.value.trim() || null;
-
-        // Read locked datetime for package mode from the actual input value
         const pickupVal = document.getElementById("pickupDT").value;
         const dropoffVal = document.getElementById("dropoffDT").value;
 
         if (!name || !email || !phone || !pickup) {
           alert("Please fill in all required fields before confirming.");
-          return;
+          return null;
+        }
+        if (!IS_PACKAGE && !vehicle) {
+          alert("Vehicle data not loaded. Please refresh the page.");
+          return null;
         }
         if (!pickupVal) {
           alert("Pickup date is missing. Please refresh and try again.");
-          return;
+          return null;
         }
-
         const pickupDate = new Date(pickupVal);
         const dropDate = new Date(dropoffVal);
         if (!dropoffVal || dropDate <= pickupDate) {
           alert(
             "Drop-off time must be after pickup time. Please check your date and duration.",
           );
-          return;
+          return null;
         }
-
-        // In package mode, validate that a vehicle exists (or allow null for packageOnly)
-        if (!IS_PACKAGE && !vehicle) {
-          alert("Vehicle data not loaded. Please refresh the page.");
-          return;
-        }
-
-        const btn = document.getElementById("submitBtn");
-        btn.disabled = true;
-        btn.innerHTML = `<svg style="animation:spin .8s linear infinite" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" opacity=".25"/><path d="M21 12a9 9 0 0 1-9 9"/></svg> Processing…`;
-
         const diffMs = dropDate - pickupDate;
         const totalDays = diffMs / (1000 * 60 * 60 * 24);
-
-        const payload = {
-          user_id: window._userId || null,
-          vehicle_id: vehicleId || vehicle?.id || null,
-          user_name: name,
-          user_email: email,
-          user_phone: phone,
-          pickup_location: pickup,
-          rental_type: rentalTypeForDB(),
-          pickup_datetime: pickupVal,
-          drop_datetime: dropoffVal,
-          total_days: totalDays,
-          price_per_unit: currentPrice,
-          total_price: currentPrice,
-          notes: notes,
-          ...(IS_PACKAGE && { pkg_id: PKG_ID }), // pass pkg_id if available
+        return {
+          name,
+          email,
+          phone,
+          pickup,
+          pickupVal,
+          dropoffVal,
+          totalDays,
+          notes: document.getElementById("bookingNotes")?.value.trim() || null,
         };
+      }
 
-        try {
-          const res = await apiFetch("/bookings", {
-            method: "POST",
-            body: JSON.stringify(payload),
-          });
-          if (!res.success) throw new Error(res.message || "Booking failed");
-
-          [1, 2, 3, 4, 5, 6, 7].forEach((n) => markStep(n, "done"));
-          document.getElementById("modalRef").textContent =
-            `REF: ${res.booking_ref}`;
-          document.getElementById("successModal").classList.add("show");
-        } catch (err) {
-          console.error("Booking error:", err);
-          alert("Booking failed: " + err.message + "\nPlease try again.");
-        } finally {
-          btn.disabled = false;
-          btn.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Confirm Booking`;
+      function disableButtons(loading) {
+        const kb = document.getElementById("khaltiBtn");
+        kb.disabled = loading;
+        if (loading) {
+          kb.innerHTML = `<svg style="animation:spin .8s linear infinite" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" opacity=".25"/><path d="M21 12a9 9 0 0 1-9 9"/></svg> Validating…`;
+        } else {
+          kb.innerHTML = `<div class="khalti-logo-inline"><svg viewBox="0 0 40 40" fill="none"><path d="M10 8 L10 32" stroke="white" stroke-width="4" stroke-linecap="round"/><path d="M10 20 L22 8" stroke="white" stroke-width="4" stroke-linecap="round"/><path d="M10 20 L26 32" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="30" cy="28" r="5" fill="#F5A623"/></svg></div> Pay with Khalti · Rs <span id="khaltiTotal">${currentPrice.toLocaleString()}</span>`;
         }
       }
 
-      /* ── Keyframe injection ── */
+      /* ════════════════════════════════════════════════════════════════════════
+   PAY WITH KHALTI
+   ─ CHANGED: NO longer creates the booking here.
+   ─ We only validate the form, then redirect to payment.html
+     with all booking data as URL params.
+   ─ The booking is created in payment.html only after OTP succeeds.
+════════════════════════════════════════════════════════════════════════ */
+      async function payWithKhalti() {
+        const data = validateForm();
+        if (!data) return;
+
+        disableButtons(true);
+
+        try {
+          // Mark all steps done visually
+          [1, 2, 3, 4, 5, 6, 7].forEach((n) => markStep(n, "done"));
+
+          // Build params — pass ALL booking data so payment.html can create the booking
+          const params = new URLSearchParams({
+            // booking details (no booking_id yet — will be created after OTP)
+            amount: currentPrice,
+            vehicle_id: vehicleId || "",
+            vehicle: IS_PACKAGE ? PKG_TITLE : vehicle?.name || "",
+            rental_type: rentalTypeForDB(),
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+            pickup: data.pickup,
+            dropoff:
+              document.getElementById("dropoffLoc")?.value || data.pickup,
+            pickup_dt: data.pickupVal,
+            dropoff_dt: data.dropoffVal,
+            total_days: data.totalDays,
+            duration: durLabel(),
+            notes: data.notes || "",
+            ...(IS_PACKAGE && { pkg_id: PKG_ID }),
+          });
+
+          window.location.href = `user.payment.html?${params.toString()}`;
+        } catch (err) {
+          console.error("Redirect error:", err);
+          alert("Something went wrong: " + err.message);
+          disableButtons(false);
+        }
+      }
+
+      /* ── Keyframe ── */
       const ks = document.createElement("style");
       ks.textContent =
         "@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}";
       document.head.appendChild(ks);
 
-      /* ── Mobile sidebar ── */
+      /* ── Mobile sidebar ─────────────────────────────────────────────────── */
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("sidebarOverlay");
       const toggle = document.getElementById("sidebarToggle");
@@ -3253,12 +3200,10 @@
       if (toggle)
         toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
 
-      /* ════════════════════════════════════════
-         BOOT — order matters
-      ════════════════════════════════════════ */
-      renderPackageBanner(); // 1. show banner immediately (no async)
-      applyPackageLocks(); // 2. lock fields before vehicle loads
-      loadVehicle(); // 3. fetch vehicle (also calls loadUserProfile)
+      /* ── Boot ── */
+      renderPackageBanner();
+      applyPackageLocks();
+      loadVehicle();
     </script>
   </body>
 </html>
