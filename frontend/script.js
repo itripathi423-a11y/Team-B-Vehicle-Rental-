@@ -18,11 +18,9 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     messageDiv.style.color = "green";
     messageDiv.textContent = data.message;
 
-    // IMPORTANT FIX HERE
     const role = data.user?.role;
 
     setTimeout(() => {
-      // CHECK SAVED REDIRECT
       const redirect = localStorage.getItem("redirectAfterLogin");
 
       if (redirect) {
@@ -31,7 +29,6 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
         return;
       }
 
-      // NORMAL LOGIN REDIRECT
       if (role === "admin") {
         window.location.href = "/ADMIN DASHBOARD/dashboard.html";
       } else {
@@ -42,4 +39,27 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     messageDiv.style.color = "red";
     messageDiv.textContent = data.message;
   }
+});
+
+// PASSWORD TOGGLE (EYE ICON)
+const togglePassword = document.getElementById("togglePassword");
+const passwordInput = document.getElementById("password");
+
+togglePassword.addEventListener("click", () => {
+  const isHidden = passwordInput.type === "password";
+
+  passwordInput.type = isHidden ? "text" : "password";
+
+  togglePassword.innerHTML = isHidden
+    ? `
+      <svg viewBox="0 0 24 24">
+        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M1 1l22 22"/>
+      </svg>
+    `
+    : `
+      <svg viewBox="0 0 24 24">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+    `;
 });

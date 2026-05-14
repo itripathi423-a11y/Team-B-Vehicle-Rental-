@@ -623,6 +623,49 @@
         font-size: 12px;
         color: rgba(255, 255, 255, 0.3);
       }
+      /* ── PAGINATION ── */
+      .pagination {
+        grid-column: 1 / -1;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+
+        margin-top: 30px;
+      }
+
+      .pagination button {
+        padding: 10px 18px;
+
+        border: none;
+        border-radius: 8px;
+
+        background: var(--orange);
+        color: white;
+
+        font-size: 14px;
+        font-weight: 500;
+
+        cursor: pointer;
+
+        transition: 0.2s;
+      }
+
+      .pagination button:hover {
+        background: #e04a0e;
+      }
+
+      .pagination button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .pagination span {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--dark);
+      }
 
       /* ── RESPONSIVE ── */
       @media (max-width: 1100px) {
@@ -846,12 +889,25 @@
       let VEHICLES = [];
       let filtered = [];
 
+      /* ── PAGINATION ── */
+      const ITEMS_PER_PAGE = 6;
+      let currentPage = 1;
+
       /* ── TOAST ── */
       function showToast(msg) {
         const t = document.getElementById("toast");
         t.textContent = msg;
         t.className = "toast show";
         setTimeout(() => (t.className = "toast"), 2200);
+      }
+
+      /* ── SYNC SORT TO URL ── */
+      function syncSortToURL() {
+        const sort = document.getElementById("sortSelect").value;
+        const p = new URLSearchParams(window.location.search);
+        if (sort) p.set("sort", sort);
+        else p.delete("sort");
+        history.replaceState(null, "", "?" + p.toString());
       }
 
       /* ── LOAD LOCATION DROPDOWN ── */
@@ -889,55 +945,146 @@
       /* ── RENDER ── */
       function renderGrid() {
         const sort = document.getElementById("sortSelect").value;
+
+        syncSortToURL(); // ← persists sort to URL on every render
+
         let data = [...filtered];
-        if (sort === "price-asc")
+
+        // SORTING
+        if (sort === "price-asc") {
           data.sort((a, b) => (a.price_4h || 0) - (b.price_4h || 0));
-        if (sort === "price-desc")
+        }
+
+        if (sort === "price-desc") {
           data.sort((a, b) => (b.price_4h || 0) - (a.price_4h || 0));
-        if (sort === "name-asc")
+        }
+
+        if (sort === "name-asc") {
           data.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+        }
 
         document.getElementById("resultCount").textContent = data.length;
+
         const grid = document.getElementById("vehicleGrid");
 
-        if (!data.length) {
-          grid.innerHTML = `<div class="empty-state"><h3>No vehicles found</h3><p>Try adjusting your filters.</p></div>`;
+        // PAGINATION
+        const totalPages = Math.ceil(data.length / ITEMS_PER_PAGE);
+
+        const start = (currentPage - 1) * ITEMS_PER_PAGE;
+        const end = start + ITEMS_PER_PAGE;
+
+        const paginatedData = data.slice(start, end);
+
+        if (!paginatedData.length) {
+          grid.innerHTML = `
+      <div class="empty-state">
+        <h3>No vehicles found</h3>
+        <p>Try adjusting your filters.</p>
+      </div>
+    `;
           return;
         }
 
-        grid.innerHTML = data
-          .map((v, i) => {
-            const img = v.thumbnail ? `/uploads/vehicles/${v.thumbnail}` : "";
-            const isAvail = v.status === "Available";
-            return `
-            <div class="vehicle-card" style="animation-delay:${i * 0.05}s">
-              <div class="vehicle-img-wrap">
-                ${
-                  img
-                    ? `<img src="${img}" alt="${v.name || "vehicle"}" loading="lazy">`
-                    : `<div class="vehicle-img-placeholder">🚗</div>`
-                }
-                <span class="avail-badge ${isAvail ? "available" : "booked"}">${isAvail ? "Available" : "Booked"}</span>
+        grid.innerHTML =
+          paginatedData
+            .map((v, i) => {
+              const img = v.thumbnail ? `/uploads/vehicles/${v.thumbnail}` : "";
+
+              const isAvail = v.status === "Available";
+
+              return `
+          <div class="vehicle-card" style="animation-delay:${i * 0.05}s">
+            <div class="vehicle-img-wrap">
+              ${
+                img
+                  ? `<img src="${img}" alt="${v.name || "vehicle"}" loading="lazy">`
+                  : `<div class="vehicle-img-placeholder">🚗</div>`
+              }
+
+              <span class="avail-badge ${isAvail ? "available" : "booked"}">
+                ${isAvail ? "Available" : "Booked"}
+              </span>
+            </div>
+
+            <div class="vehicle-card-body">
+              <div class="vc-name">${v.name || "Unknown"}</div>
+
+              <div class="vc-meta">
+                <span class="vc-meta-pill">⛽ ${v.fuel_type || "-"}</span>
+                <span class="vc-meta-pill">🚘 ${v.body_type || "-"}</span>
+                <span class="vc-meta-pill">⚙ ${v.transmission || "-"}</span>
               </div>
-              <div class="vehicle-card-body">
-                <div class="vc-name">${v.name || "Unknown"}</div>
-                <div class="vc-meta">
-                  <span class="vc-meta-pill">⛽ ${v.fuel_type || "-"}</span>
-                  <span class="vc-meta-pill">🚘 ${v.body_type || "-"}</span>
-                  <span class="vc-meta-pill">⚙ ${v.transmission || "-"}</span>
+
+              <div class="vc-prices">
+                <div class="price-box">
+                  <span class="price-box-dur">4h</span>
+                  <span class="price-box-val">
+                    ${(v.price_4h || 0).toLocaleString()}
+                  </span>
                 </div>
-                <div class="vc-prices">
-                  <div class="price-box"><span class="price-box-dur">4h</span><span class="price-box-val">${(v.price_4h || 0).toLocaleString()}</span></div>
-                  <div class="price-box"><span class="price-box-dur">8h</span><span class="price-box-val">${(v.price_8h || 0).toLocaleString()}</span></div>
-                  <div class="price-box"><span class="price-box-dur">1d</span><span class="price-box-val">${(v.price_1d || 0).toLocaleString()}</span></div>
+
+                <div class="price-box">
+                  <span class="price-box-dur">8h</span>
+                  <span class="price-box-val">
+                    ${(v.price_8h || 0).toLocaleString()}
+                  </span>
                 </div>
-                <a href="#" class="view-btn" onclick="handleViewDetails(${v.id}); return false;">
-                  View Details →
-                </a>
+
+                <div class="price-box">
+                  <span class="price-box-dur">1d</span>
+                  <span class="price-box-val">
+                    ${(v.price_1d || 0).toLocaleString()}
+                  </span>
+                </div>
               </div>
-            </div>`;
-          })
-          .join("");
+
+              <a
+                href="#"
+                class="view-btn"
+                onclick="handleViewDetails(${v.id}); return false;"
+              >
+                View Details →
+              </a>
+            </div>
+          </div>
+        `;
+            })
+            .join("") +
+          `
+      <div class="pagination">
+        <button
+          onclick="changePage(${currentPage - 1})"
+          ${currentPage === 1 ? "disabled" : ""}
+        >
+          Prev
+        </button>
+
+        <span>Page ${currentPage} of ${totalPages}</span>
+
+        <button
+          onclick="changePage(${currentPage + 1})"
+          ${currentPage === totalPages ? "disabled" : ""}
+        >
+          Next
+        </button>
+      </div>
+    `;
+      }
+
+      /* ── CHANGE PAGE ── */
+      function changePage(page) {
+        const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+
+        if (page < 1 || page > totalPages) return;
+
+        currentPage = page;
+
+        renderGrid();
+
+        window.scrollTo({
+          top: 450,
+          behavior: "smooth",
+        });
       }
 
       /* ── FILTERS ── */
@@ -963,6 +1110,8 @@
             matchText && matchBody && matchFuel && matchTrans && matchLocation
           );
         });
+
+        currentPage = 1; // reset to first page on filter change
         renderGrid();
       }
 
@@ -974,12 +1123,14 @@
           (id) => (document.getElementById(id).value = ""),
         );
         filtered = [...VEHICLES];
+        currentPage = 1;
         renderGrid();
       }
 
-      /* ── URL PARAMS (from homepage search) ── */
+      /* ── URL PARAMS (from homepage search + sort restore) ── */
       function applyURLParams() {
         const p = new URLSearchParams(window.location.search);
+
         const setVal = (id, key) => {
           const val = p.get(key);
           if (!val) return;
@@ -989,6 +1140,7 @@
           );
           if (opt) el.value = opt.value;
         };
+
         setVal("filterFuel", "fuel_type");
         setVal("filterBody", "body_type");
         setVal("filterTrans", "transmission");
@@ -1000,6 +1152,15 @@
             (o) => String(o.value) === String(destId),
           );
           if (opt) el.value = opt.value;
+        }
+
+        // ← Restore sort selection from URL
+        const sort = p.get("sort");
+        if (sort) {
+          const el = document.getElementById("sortSelect");
+          if ([...el.options].some((o) => o.value === sort)) {
+            el.value = sort;
+          }
         }
       }
 

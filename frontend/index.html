@@ -1,16 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DRIVE - LOGIN</title>
-    <link rel="stylesheet" href="style.css">
-</head>
 
-<body>
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Font Awesome for eye icon -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
     <div class="left-container">
-    <div class="overlay-content">
+      <div class="overlay-content">
         <span class="tag">PREMIUM FLEET</span>
 
         <h1>Rent your perfect ride</h1>
@@ -18,55 +24,81 @@
         <p class="subtitle">Fast. Easy. Reliable.</p>
 
         <div class="brand">
-            <span class="line"></span>
-            <p>AUTO DEALER</p>
+          <span class="line"></span>
+          <p>AUTO DEALER</p>
         </div>
+      </div>
     </div>
-</div>
 
     <div class="right-container">
+      <!-- MESSAGE -->
+      <div class="message">
+        <h1>WELCOME BACK</h1>
+        <p>Please enter your details to access your account</p>
+      </div>
 
-        <!-- MESSAGE -->
-        <div class="message">
-            <h1>WELCOME BACK</h1>
-            <p>Please enter your details to access your account</p>
-        </div>
+      <!-- FORM CONTAINER -->
+      <div class="form-container">
+        <form id="login-form">
+          <!-- EMAIL -->
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+            required
+          />
 
-        <!-- FORM CONTAINER -->
-        <div class="form-container">
-            <form id="login-form">
-                <!-- EMAIL -->
-                <label for="email">Email</label>
-                <input type="email" id="email" placeholder="Enter your email" required>
+          <!-- PASSWORD -->
+          <div class="form-group">
+            <div class="label-row">
+              <label for="password">Password</label>
+            </div>
 
-                <!-- PASSWORD -->
-                <div class="form-group">
-                    <div class="label-row">
-                        <label for="password">Password</label>
-                        <a href="forgot-password.html" class="forgot">Forgot password?</a>
-                    </div>
-                    <input type="password" id="password" placeholder="Enter your password" required>
-                </div>
+            <div class="password-wrap">
+              <input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                required
+              />
 
-                <!-- LOGIN BUTTON -->
-                <button type="submit" class="login-btn">Login</button>
+              <button type="button" id="togglePassword" class="eye-btn">
+                <svg viewBox="0 0 24 24">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </button>
+            </div>
+          </div>
 
-                <!-- GOOGLE LOGIN BUTTON -->
-                 <button type="button" class="google-btn" onclick="window.location.href='http://localhost:5000/api/auth/google'">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google Logo">
-                    <span>Sign in with Google</span>
-                </button>
-                
+          <!-- LOGIN BUTTON -->
+          <button type="submit" class="login-btn">Login</button>
 
-                <!-- SIGN UP -->
-                <p>Don't have an account?<a href="register.html"> Sign Up</a></p>
-            </form>
-        </div>
+          <!-- GOOGLE LOGIN BUTTON -->
+          <button
+            type="button"
+            class="google-btn"
+            onclick="
+              window.location.href = 'http://localhost:5000/api/auth/google'
+            "
+          >
+            <img
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg"
+              alt="Google Logo"
+            />
+            <span>Sign in with Google</span>
+          </button>
 
-        <!-- MESSAGE DIV OUTSIDE FORM CONTAINER -->
-        <div id="login-message"></div>
+          <!-- SIGN UP -->
+          <p>Don't have an account?<a href="register.html"> Sign Up</a></p>
+        </form>
+      </div>
 
-        <script src="script.js"></script>
-</body>
+      <!-- MESSAGE DIV OUTSIDE FORM CONTAINER -->
+      <div id="login-message"></div>
+    </div>
 
+    <script src="script.js"></script>
+  </body>
 </html>
