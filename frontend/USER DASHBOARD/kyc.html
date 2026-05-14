@@ -28,6 +28,10 @@
         --radius-sm: 8px;
         --shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
         --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.1);
+        --error: #dc2626;
+        --error-bg: #fef2f2;
+        --error-border: #fecaca;
+        --success: #16a34a;
       }
       *,
       *::before,
@@ -481,9 +485,6 @@
       .form-section:nth-child(5) {
         animation-delay: 0.2s;
       }
-      .form-section:nth-child(6) {
-        animation-delay: 0.25s;
-      }
       @keyframes fadeUp {
         from {
           opacity: 0;
@@ -584,6 +585,14 @@
         border-color: var(--orange);
         box-shadow: 0 0 0 3px rgba(255, 92, 26, 0.1);
       }
+      input.field-error {
+        border-color: var(--error) !important;
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+      }
+      input.field-ok {
+        border-color: #22c55e !important;
+        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.08) !important;
+      }
       input::placeholder {
         color: #c4c9d4;
       }
@@ -596,19 +605,31 @@
         padding-right: 38px;
       }
 
-      /* ── OPTIONAL BADGE ── */
-      .optional-badge {
-        display: inline-block;
-        font-size: 9px;
+      /* ── FIELD ERROR MESSAGE ── */
+      .field-error-msg {
+        font-size: 11.5px;
+        color: var(--error);
         font-family: "Space Mono", monospace;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-        color: #9ca3af;
-        background: #f3f4f6;
-        border-radius: 4px;
-        padding: 2px 6px;
-        margin-left: 6px;
-        vertical-align: middle;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 2px;
+        animation: errSlide 0.2s ease;
+      }
+      .field-error-msg::before {
+        content: "✕";
+        font-size: 10px;
+        font-weight: 700;
+      }
+      @keyframes errSlide {
+        from {
+          opacity: 0;
+          transform: translateY(-4px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
       }
 
       /* ── SPOUSE TOGGLE ── */
@@ -698,6 +719,10 @@
         border-color: #22c55e;
         background: #ecfdf5;
       }
+      .upload-zone.upload-error {
+        border-color: var(--error) !important;
+        background: var(--error-bg) !important;
+      }
       .upload-zone input[type="file"] {
         position: absolute;
         inset: 0;
@@ -723,6 +748,9 @@
       .upload-zone.has-file .upload-icon {
         background: #dcfce7;
       }
+      .upload-zone.upload-error .upload-icon {
+        background: #fee2e2;
+      }
       .upload-icon svg {
         width: 20px;
         height: 20px;
@@ -735,6 +763,9 @@
       .upload-zone.has-file .upload-icon svg {
         stroke: #16a34a;
       }
+      .upload-zone.upload-error .upload-icon svg {
+        stroke: var(--error);
+      }
       .upload-label {
         font-size: 13px;
         font-weight: 600;
@@ -743,6 +774,9 @@
       }
       .upload-zone.has-file .upload-label {
         color: #16a34a;
+      }
+      .upload-zone.upload-error .upload-label {
+        color: var(--error);
       }
       .upload-hint {
         font-size: 11px;
@@ -753,6 +787,18 @@
         font-size: 10.5px;
         color: #9ca3af;
         font-family: "Space Mono", monospace;
+      }
+      .upload-error-msg {
+        font-size: 11px;
+        color: var(--error);
+        font-family: "Space Mono", monospace;
+        text-align: center;
+        font-weight: 600;
+        animation: errSlide 0.2s ease;
+        display: none;
+      }
+      .upload-zone.upload-error .upload-error-msg {
+        display: block;
       }
       .upload-preview {
         width: 100%;
@@ -789,6 +835,10 @@
         border-color: #22c55e;
         background: #ecfdf5;
       }
+      .selfie-zone.upload-error {
+        border-color: var(--error) !important;
+        background: var(--error-bg) !important;
+      }
       .selfie-zone input[type="file"] {
         position: absolute;
         inset: 0;
@@ -818,6 +868,13 @@
       }
       .selfie-zone.has-file .selfie-circle svg {
         stroke: #16a34a;
+      }
+      .selfie-zone.upload-error .selfie-circle {
+        border-color: var(--error);
+        background: #fee2e2;
+      }
+      .selfie-zone.upload-error .selfie-circle svg {
+        stroke: var(--error);
       }
 
       /* ── CONSENT ── */
@@ -891,10 +948,14 @@
           transform 0.2s,
           box-shadow 0.2s;
       }
-      .btn-primary:hover {
+      .btn-primary:hover:not(:disabled) {
         background: var(--orange-light);
         transform: translateY(-1px);
         box-shadow: 0 6px 20px rgba(255, 92, 26, 0.35);
+      }
+      .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
       }
       .btn-primary svg {
         width: 16px;
@@ -1037,6 +1098,10 @@
       .btn-outline-orange:hover {
         background: var(--orange);
         color: #fff;
+      }
+      /* Hide Edit Submission button for verified users */
+      .btn-outline-orange.hidden {
+        display: none;
       }
 
       /* ── TIPS CARD ── */
@@ -1181,7 +1246,7 @@
         }
       }
 
-      /* ── CHATBOT WIDGET ── */
+      /* ── CHATBOT ── */
       #chat-bubble {
         position: fixed;
         bottom: 24px;
@@ -1445,9 +1510,8 @@
             <rect x="3" y="3" width="7" height="7" rx="1" />
             <rect x="14" y="3" width="7" height="7" rx="1" />
             <rect x="3" y="14" width="7" height="7" rx="1" />
-            <rect x="14" y="14" width="7" height="7" rx="1" />
-          </svg>
-          Dashboard
+            <rect x="14" y="14" width="7" height="7" rx="1" /></svg
+          >Dashboard
         </a>
         <a href="user.vehicle.listing.html" class="nav-item">
           <svg
@@ -1462,9 +1526,8 @@
             />
             <circle cx="7" cy="17" r="2" />
             <circle cx="17" cy="17" r="2" />
-            <path d="M5 17h8M3 9h18" />
-          </svg>
-          Vehicles
+            <path d="M5 17h8M3 9h18" /></svg
+          >Vehicles
         </a>
         <a href="mybooking.html" class="nav-item">
           <svg
@@ -1477,9 +1540,8 @@
             <rect x="3" y="4" width="18" height="18" rx="2" />
             <line x1="16" y1="2" x2="16" y2="6" />
             <line x1="8" y1="2" x2="8" y2="6" />
-            <line x1="3" y1="10" x2="21" y2="10" />
-          </svg>
-          My Bookings
+            <line x1="3" y1="10" x2="21" y2="10" /></svg
+          >My Bookings
         </a>
         <a href="kyc.html" class="nav-item active">
           <svg
@@ -1489,9 +1551,8 @@
             stroke="currentColor"
             stroke-width="1.8"
           >
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-          </svg>
-          KYC
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+          >KYC
         </a>
         <a href="user.wishlist.html" class="nav-item">
           <svg
@@ -1503,9 +1564,8 @@
           >
             <polygon
               points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
-            />
-          </svg>
-          Wishlist
+            /></svg
+          >Wishlist
         </a>
       </nav>
       <div class="sidebar-footer">
@@ -1542,7 +1602,7 @@
         </button>
         <span class="topbar-page-title">KYC Verification</span>
         <div class="topbar-right">
-          <!-- ── NOTIFICATION BELL ── -->
+          <!-- Notifications -->
           <div class="notif-wrap" id="notifWrap">
             <button
               class="icon-btn notif-trigger"
@@ -1586,8 +1646,7 @@
               </div>
             </div>
           </div>
-
-          <!-- ── USER DROPDOWN ── -->
+          <!-- User Dropdown -->
           <div class="topbar-user user-dropdown-wrap" id="userDropdownWrap">
             <div class="topbar-avatar" id="topbarAvatar">
               <span id="topbarInitials"></span>
@@ -1739,7 +1798,11 @@
             reviewing your information. You'll be notified within 24–48 hours.
           </p>
           <div style="margin-bottom: 28px">
-            <button class="btn-outline-orange" onclick="resetForm()">
+            <button
+              class="btn-outline-orange"
+              id="editSubmissionBtn"
+              onclick="resetForm()"
+            >
               Edit Submission
             </button>
           </div>
@@ -1786,7 +1849,9 @@
                 </p>
               </div>
             </div>
-            <div class="form-grid">
+
+            <!-- Row 1: Name, Email, Phone, Document Number -->
+            <div class="form-grid" style="margin-bottom: 18px">
               <div class="form-group">
                 <label for="fullName"
                   >Full Name <span class="req">*</span></label
@@ -1797,6 +1862,11 @@
                   placeholder="e.g. Swikar Regmi"
                   required
                 />
+                <span
+                  class="field-error-msg"
+                  id="err-fullName"
+                  style="display: none"
+                ></span>
               </div>
               <div class="form-group">
                 <label for="email"
@@ -1808,6 +1878,11 @@
                   placeholder="e.g. swikar@email.com"
                   required
                 />
+                <span
+                  class="field-error-msg"
+                  id="err-email"
+                  style="display: none"
+                ></span>
               </div>
               <div class="form-group">
                 <label for="phone"
@@ -1816,9 +1891,15 @@
                 <input
                   type="tel"
                   id="phone"
-                  placeholder="e.g. +977 98XXXXXXXX"
+                  placeholder="e.g. 9812345678"
+                  maxlength="10"
                   required
                 />
+                <span
+                  class="field-error-msg"
+                  id="err-phone"
+                  style="display: none"
+                ></span>
               </div>
               <div class="form-group">
                 <label for="dob"
@@ -1830,11 +1911,61 @@
                   placeholder="e.g. 12345-67890"
                   required
                 />
+                <span
+                  class="field-error-msg"
+                  id="err-dob"
+                  style="display: none"
+                ></span>
+              </div>
+            </div>
+
+            <!-- Row 2: DOB, Gender, Nationality (moved from Additional Info) -->
+            <div class="form-grid three">
+              <div class="form-group">
+                <label for="dateOfBirth"
+                  >Date of Birth <span class="req">*</span></label
+                >
+                <input type="date" id="dateOfBirth" required />
+                <span
+                  class="field-error-msg"
+                  id="err-dateOfBirth"
+                  style="display: none"
+                ></span>
+              </div>
+              <div class="form-group">
+                <label for="gender">Gender <span class="req">*</span></label>
+                <select id="gender" required>
+                  <option value="">Select gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+                <span
+                  class="field-error-msg"
+                  id="err-gender"
+                  style="display: none"
+                ></span>
+              </div>
+              <div class="form-group">
+                <label for="nationality"
+                  >Nationality <span class="req">*</span></label
+                >
+                <input
+                  type="text"
+                  id="nationality"
+                  placeholder="e.g. Nepali"
+                  required
+                />
+                <span
+                  class="field-error-msg"
+                  id="err-nationality"
+                  style="display: none"
+                ></span>
               </div>
             </div>
           </div>
 
-          <!-- ══ SECTION 2: Additional Information (NEW) ══ -->
+          <!-- ══ SECTION 2: Additional Information ══ -->
           <div class="form-section">
             <div class="section-title">
               <div class="section-icon" style="background: #eef2ff">
@@ -1853,45 +1984,31 @@
               <div class="section-title-text">
                 <h3>Additional Information</h3>
                 <p>
-                  Demographic and family details for complete identity
+                  Occupation, address and family details for complete identity
                   verification
                 </p>
               </div>
             </div>
 
-            <!-- Row 1: DOB, Gender, Nationality, Occupation -->
-            <div class="form-grid four" style="margin-bottom: 18px">
+            <!-- Row 1: Occupation -->
+            <div class="form-grid" style="margin-bottom: 18px">
               <div class="form-group">
-                <label for="dateOfBirth">Date of Birth </label>
-                <input type="date" id="dateOfBirth" />
-              </div>
-              <div class="form-group">
-                <label for="gender">Gender </label>
-                <select id="gender">
-                  <option value="">Select gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="nationality">Nationality </label>
-                <input type="text" id="nationality" placeholder="e.g. Nepali" />
-              </div>
-              <div class="form-group">
-                <label for="occupation">Occupation </label>
+                <label for="occupation">Occupation</label>
                 <input
                   type="text"
                   id="occupation"
                   placeholder="e.g. Software Engineer"
                 />
               </div>
+              <div class="form-group">
+                <!-- spacer -->
+              </div>
             </div>
 
             <!-- Row 2: Permanent & Temporary Address -->
             <div class="form-grid" style="margin-bottom: 18px">
               <div class="form-group">
-                <label for="permanentAddress">Permanent Address </label>
+                <label for="permanentAddress">Permanent Address</label>
                 <input
                   type="text"
                   id="permanentAddress"
@@ -1899,7 +2016,7 @@
                 />
               </div>
               <div class="form-group">
-                <label for="temporaryAddress">Temporary Address </label>
+                <label for="temporaryAddress">Temporary Address</label>
                 <input
                   type="text"
                   id="temporaryAddress"
@@ -1911,7 +2028,7 @@
             <!-- Row 3: Father, Mother, Grandfather -->
             <div class="form-grid three" style="margin-bottom: 18px">
               <div class="form-group">
-                <label for="fatherName">Father's Name </label>
+                <label for="fatherName">Father's Name</label>
                 <input
                   type="text"
                   id="fatherName"
@@ -1919,7 +2036,7 @@
                 />
               </div>
               <div class="form-group">
-                <label for="motherName">Mother's Name </label>
+                <label for="motherName">Mother's Name</label>
                 <input
                   type="text"
                   id="motherName"
@@ -1927,7 +2044,7 @@
                 />
               </div>
               <div class="form-group">
-                <label for="grandfatherName">Grandfather's Name </label>
+                <label for="grandfatherName">Grandfather's Name</label>
                 <input
                   type="text"
                   id="grandfatherName"
@@ -1936,10 +2053,10 @@
               </div>
             </div>
 
-            <!-- Row 4: Marital Status + Spouse Name (conditional) -->
+            <!-- Row 4: Marital Status + Spouse -->
             <div class="form-grid">
               <div class="form-group">
-                <label for="maritalStatus">Marital Status </label>
+                <label for="maritalStatus">Marital Status</label>
                 <select id="maritalStatus" onchange="toggleSpouse(this.value)">
                   <option value="">Select status</option>
                   <option value="Single">Single</option>
@@ -1949,24 +2066,12 @@
                 </select>
               </div>
               <div class="form-group" id="spouseGroup">
-                <label for="spouseName">Spouse's Name </label>
+                <label for="spouseName">Spouse's Name</label>
                 <input
                   type="text"
                   id="spouseName"
                   placeholder="e.g. Anita Sharma"
                 />
-              </div>
-            </div>
-
-            <!-- Row 5: Issue Date & Expiry Date -->
-            <div class="form-grid" style="margin-top: 18px">
-              <div class="form-group">
-                <label for="issueDate">Document Issue Date </label>
-                <input type="date" id="issueDate" />
-              </div>
-              <div class="form-group">
-                <label for="expiryDate">Document Expiry Date </label>
-                <input type="date" id="expiryDate" />
               </div>
             </div>
           </div>
@@ -2063,10 +2168,21 @@
                 </div>
               </div>
             </div>
-            <label style="margin-bottom: 12px; display: block"
-              >Upload Document <span class="req">*</span></label
-            >
+            <label style="margin-bottom: 12px; display: block">
+              Upload Document <span class="req">*</span>
+              <span
+                style="
+                  font-size: 10.5px;
+                  color: #9ca3af;
+                  font-family: &quot;Space Mono&quot;, monospace;
+                  margin-left: 8px;
+                  font-weight: 400;
+                "
+                >JPG, JPEG, PNG, WEBP only</span
+              >
+            </label>
             <div class="upload-grid">
+              <!-- Front -->
               <div
                 class="upload-zone"
                 id="frontZone"
@@ -2079,8 +2195,16 @@
                 <input
                   type="file"
                   id="frontInput"
-                  accept="image/*,.pdf"
-                  onchange="handleFile(this, 'frontZone', 'frontPreview')"
+                  accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                  onchange="
+                    handleFile(
+                      this,
+                      'frontZone',
+                      'frontPreview',
+                      'frontLabel',
+                      'err-front',
+                    )
+                  "
                 />
                 <div class="upload-icon">
                   <svg
@@ -2095,13 +2219,15 @@
                 </div>
                 <p class="upload-label" id="frontLabel">Front Side</p>
                 <p class="upload-hint">Drag & drop or click to browse</p>
-                <p class="upload-sub">JPG, PNG, PDF — max 5MB</p>
+                <p class="upload-sub">JPG, JPEG, PNG, WEBP — max 5MB</p>
+                <p class="upload-error-msg" id="err-front"></p>
                 <img
                   class="upload-preview"
                   id="frontPreview"
                   alt="Front preview"
                 />
               </div>
+              <!-- Back -->
               <div
                 class="upload-zone"
                 id="backZone"
@@ -2114,8 +2240,16 @@
                 <input
                   type="file"
                   id="backInput"
-                  accept="image/*,.pdf"
-                  onchange="handleFile(this, 'backZone', 'backPreview')"
+                  accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                  onchange="
+                    handleFile(
+                      this,
+                      'backZone',
+                      'backPreview',
+                      'backLabel',
+                      'err-back',
+                    )
+                  "
                 />
                 <div class="upload-icon">
                   <svg
@@ -2130,7 +2264,8 @@
                 </div>
                 <p class="upload-label" id="backLabel">Back Side</p>
                 <p class="upload-hint">Drag & drop or click to browse</p>
-                <p class="upload-sub">JPG, PNG, PDF — max 5MB</p>
+                <p class="upload-sub">JPG, JPEG, PNG, WEBP — max 5MB</p>
+                <p class="upload-error-msg" id="err-back"></p>
                 <img
                   class="upload-preview"
                   id="backPreview"
@@ -2175,9 +2310,17 @@
               <input
                 type="file"
                 id="selfieInput"
-                accept="image/*"
+                accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
                 capture="user"
-                onchange="handleFile(this, 'selfieZone', 'selfiePreview')"
+                onchange="
+                  handleFile(
+                    this,
+                    'selfieZone',
+                    'selfiePreview',
+                    'selfieLabel',
+                    'err-selfie',
+                  )
+                "
               />
               <div class="selfie-circle" id="selfieCircle">
                 <svg
@@ -2199,8 +2342,9 @@
                 Hold your ID document clearly visible beside your face
               </p>
               <p class="upload-sub">
-                JPG, PNG — max 5MB · Good lighting required
+                JPG, JPEG, PNG, WEBP — max 5MB · Good lighting required
               </p>
+              <p class="upload-error-msg" id="err-selfie"></p>
               <img
                 class="upload-preview"
                 id="selfiePreview"
@@ -2283,7 +2427,7 @@
               <button class="btn-secondary" onclick="resetForm()">
                 Clear Form
               </button>
-              <button class="btn-primary" onclick="submitKYC()">
+              <button class="btn-primary" id="submitBtn" onclick="submitKYC()">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -2395,7 +2539,22 @@
     <script src="notification.js"></script>
 
     <script>
-      /* ── Sidebar mobile ── */
+      /* ─────────────────────────────────────────
+         CONSTANTS
+      ───────────────────────────────────────── */
+      const API = "http://localhost:5000/api/kyc";
+      const ALLOWED_TYPES = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/webp",
+      ];
+      const ALLOWED_EXT = [".jpg", ".jpeg", ".png", ".webp"];
+      const MAX_SIZE_MB = 5;
+
+      /* ─────────────────────────────────────────
+         SIDEBAR MOBILE
+      ───────────────────────────────────────── */
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("sidebarOverlay");
       const toggle = document.getElementById("sidebarToggle");
@@ -2414,7 +2573,9 @@
       if (toggle)
         toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
 
-      /* ── User Dropdown ── */
+      /* ─────────────────────────────────────────
+         USER DROPDOWN
+      ───────────────────────────────────────── */
       const userDropdownWrap = document.getElementById("userDropdownWrap");
       const userDropdownMenu = document.getElementById("userDropdownMenu");
       const topbarChevron = document.getElementById("topbarChevron");
@@ -2431,11 +2592,9 @@
         window.location.href = "/index.html";
       });
 
-      const API = "http://localhost:5000/api/kyc";
-
-      /* ══════════════════════════════════════════
-         Spouse field toggle
-      ══════════════════════════════════════════ */
+      /* ─────────────────────────────────────────
+         SPOUSE TOGGLE
+      ───────────────────────────────────────── */
       function toggleSpouse(val) {
         const grp = document.getElementById("spouseGroup");
         if (val === "Married") {
@@ -2448,9 +2607,264 @@
         }
       }
 
-      /* ══════════════════════════════════════════
-         1. ON LOAD
-      ══════════════════════════════════════════ */
+      /* ─────────────────────────────────────────
+         VALIDATION HELPERS
+      ───────────────────────────────────────── */
+      function showErr(id, msg) {
+        const el = document.getElementById("err-" + id);
+        if (!el) return;
+        el.textContent = msg;
+        el.style.display = msg ? "flex" : "none";
+        const input = document.getElementById(id);
+        if (input) {
+          input.classList.toggle("field-error", !!msg);
+          input.classList.toggle("field-ok", !msg && input.value.trim() !== "");
+        }
+      }
+      function clearErr(id) {
+        showErr(id, "");
+      }
+
+      function validateFullName(val) {
+        if (!val.trim()) return "Full name is required.";
+        if (val.trim().length < 2) return "Name must be at least 2 characters.";
+        return "";
+      }
+      function validateEmail(val) {
+        if (!val.trim()) return "Email address is required.";
+        if (!val.includes("@") || !val.includes("."))
+          return "Enter a valid email address (must contain @ and .).";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val))
+          return "Invalid email format.";
+        return "";
+      }
+      function validatePhone(val) {
+        if (!val.trim()) return "Phone number is required.";
+        if (!/^\d{10}$/.test(val.trim()))
+          return "Phone must be exactly 10 digits, numbers only.";
+        return "";
+      }
+      function validateDocNumber(val) {
+        if (!val.trim()) return "Document number is required.";
+        return "";
+      }
+      function validateDOB(val) {
+        if (!val) return "Date of birth is required.";
+        const dob = new Date(val);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (dob >= today)
+          return "Date of birth cannot be today or a future date.";
+        const minAge = new Date(today);
+        minAge.setFullYear(minAge.getFullYear() - 120);
+        if (dob < minAge) return "Please enter a valid date of birth.";
+        return "";
+      }
+      function validateGender(val) {
+        if (!val) return "Please select a gender.";
+        return "";
+      }
+      function validateNationality(val) {
+        if (!val.trim()) return "Nationality is required.";
+        if (/\d/.test(val)) return "Nationality should not contain numbers.";
+        return "";
+      }
+
+      /* Live validation listeners */
+      const liveFields = [
+        { id: "fullName", fn: validateFullName },
+        { id: "email", fn: validateEmail },
+        { id: "phone", fn: validatePhone },
+        { id: "dob", fn: validateDocNumber },
+        { id: "dateOfBirth", fn: validateDOB },
+        { id: "nationality", fn: validateNationality },
+      ];
+      liveFields.forEach(({ id, fn }) => {
+        const el = document.getElementById(id);
+        el?.addEventListener("input", () => {
+          showErr(id, fn(el.value));
+          updateSteps();
+        });
+        el?.addEventListener("blur", () => {
+          showErr(id, fn(el.value));
+        });
+      });
+      document.getElementById("gender")?.addEventListener("change", (e) => {
+        showErr("gender", validateGender(e.target.value));
+        updateSteps();
+      });
+      /* Phone: allow only digits */
+      document.getElementById("phone")?.addEventListener("keypress", (e) => {
+        if (!/\d/.test(e.key)) e.preventDefault();
+      });
+      document.getElementById("phone")?.addEventListener("input", (e) => {
+        e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
+        showErr("phone", validatePhone(e.target.value));
+        updateSteps();
+      });
+
+      /* ─────────────────────────────────────────
+         FILE VALIDATION & UPLOAD HANDLERS
+      ───────────────────────────────────────── */
+      function isAllowedFile(file) {
+        if (!file) return false;
+        const ext = "." + file.name.split(".").pop().toLowerCase();
+        return ALLOWED_TYPES.includes(file.type) || ALLOWED_EXT.includes(ext);
+      }
+      function isFileSizeOk(file) {
+        return file.size <= MAX_SIZE_MB * 1024 * 1024;
+      }
+
+      function handleFile(input, zoneId, previewId, labelId, errId) {
+        const file = input.files[0];
+        const zone = document.getElementById(zoneId);
+        const preview = document.getElementById(previewId);
+        const labelEl = document.getElementById(labelId);
+        const errEl = document.getElementById(errId);
+
+        /* Reset state */
+        zone.classList.remove("has-file", "upload-error");
+        if (preview) {
+          preview.style.display = "none";
+          preview.src = "";
+        }
+
+        if (!file) return;
+
+        /* Format check */
+        if (!isAllowedFile(file)) {
+          zone.classList.add("upload-error");
+          errEl.textContent =
+            "✕ Invalid format. Only JPG, JPEG, PNG, WEBP allowed.";
+          labelEl.textContent = "Invalid file format";
+          input.value = "";
+          updateSteps();
+          return;
+        }
+
+        /* Size check */
+        if (!isFileSizeOk(file)) {
+          zone.classList.add("upload-error");
+          errEl.textContent = "✕ File too large. Maximum size is 5MB.";
+          labelEl.textContent = "File too large";
+          input.value = "";
+          updateSteps();
+          return;
+        }
+
+        /* Success */
+        zone.classList.add("has-file");
+        errEl.textContent = "";
+        const shortName =
+          file.name.substring(0, 22) + (file.name.length > 22 ? "…" : "");
+        labelEl.textContent = "✓ " + shortName;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          preview.src = e.target.result;
+          preview.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+
+        updateSteps();
+      }
+
+      function handleDrag(e, zoneId) {
+        e.preventDefault();
+        document.getElementById(zoneId).classList.add("drag");
+      }
+      function handleDragLeave(zoneId) {
+        document.getElementById(zoneId).classList.remove("drag");
+      }
+      function handleDrop(e, zoneId, inputId, previewId) {
+        e.preventDefault();
+        const zone = document.getElementById(zoneId);
+        zone.classList.remove("drag");
+        const file = e.dataTransfer.files[0];
+        if (!file) return;
+        const input = document.getElementById(inputId);
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        input.files = dt.files;
+
+        /* Determine labelId and errId from zoneId */
+        const map = {
+          frontZone: { label: "frontLabel", err: "err-front" },
+          backZone: { label: "backLabel", err: "err-back" },
+          selfieZone: { label: "selfieLabel", err: "err-selfie" },
+        };
+        const m = map[zoneId];
+        handleFile(input, zoneId, previewId, m.label, m.err);
+      }
+
+      /* ─────────────────────────────────────────
+         STEP PROGRESS
+      ───────────────────────────────────────── */
+      function updateSteps() {
+        const hasName = !validateFullName(
+          document.getElementById("fullName")?.value || "",
+        );
+        const hasEmail = !validateEmail(
+          document.getElementById("email")?.value || "",
+        );
+        const hasPhone = !validatePhone(
+          document.getElementById("phone")?.value || "",
+        );
+        const hasDOB = !validateDOB(
+          document.getElementById("dateOfBirth")?.value || "",
+        );
+        const hasGender = !validateGender(
+          document.getElementById("gender")?.value || "",
+        );
+        const hasNat = !validateNationality(
+          document.getElementById("nationality")?.value || "",
+        );
+
+        const hasFront = document
+          .getElementById("frontZone")
+          ?.classList.contains("has-file");
+        const hasBack = document
+          .getElementById("backZone")
+          ?.classList.contains("has-file");
+        const hasSelfie = document
+          .getElementById("selfieZone")
+          ?.classList.contains("has-file");
+
+        const s1 = document.getElementById("step1"),
+          c1 = document.getElementById("conn1");
+        const s2 = document.getElementById("step2"),
+          c2 = document.getElementById("conn2");
+        const s3 = document.getElementById("step3"),
+          c3 = document.getElementById("conn3");
+        const s4 = document.getElementById("step4");
+
+        const mark = (step, conn, done, active) => {
+          step.classList.toggle("done", done);
+          step.classList.toggle("active", active && !done);
+          if (conn) conn.classList.toggle("done", done);
+        };
+
+        const step1Done = !!(
+          hasName &&
+          hasEmail &&
+          hasPhone &&
+          hasDOB &&
+          hasGender &&
+          hasNat
+        );
+        const step2Done = step1Done;
+        const step3Done = !!(hasFront && hasBack && step2Done);
+        const step4Active = step3Done;
+
+        mark(s1, c1, step1Done, true);
+        mark(s2, c2, step2Done, step1Done);
+        mark(s3, c3, step3Done, step2Done);
+        mark(s4, null, false, step4Active);
+      }
+
+      /* ─────────────────────────────────────────
+         INIT: LOAD USER + KYC STATUS
+      ───────────────────────────────────────── */
       async function init() {
         await loadUserInfo();
         await loadKycStatus();
@@ -2534,6 +2948,7 @@
         const title = document.getElementById("statusTitle");
         const desc = document.getElementById("statusDesc");
         const kycStatus = document.getElementById("sidebarKycStatus");
+        const editBtn = document.getElementById("editSubmissionBtn");
 
         iconWrap.className = "status-icon-wrap";
         badge.className = "status-badge";
@@ -2550,6 +2965,8 @@
             kycStatus.textContent = "KYC Verified";
             kycStatus.className = "user-kyc-status verified";
           }
+          /* ── VERIFIED: hide Edit Submission button ── */
+          if (editBtn) editBtn.classList.add("hidden");
           const ddKycBadge = document.getElementById("ddKycBadge");
           if (ddKycBadge) ddKycBadge.style.display = "none";
         } else if (status === "rejected") {
@@ -2565,6 +2982,7 @@
             kycStatus.textContent = "KYC Rejected";
             kycStatus.className = "user-kyc-status unverified";
           }
+          if (editBtn) editBtn.classList.remove("hidden");
         } else {
           iconWrap.classList.add("pending");
           badge.classList.add("pending");
@@ -2577,6 +2995,7 @@
             kycStatus.textContent = "Under Review";
             kycStatus.className = "user-kyc-status unverified";
           }
+          if (editBtn) editBtn.classList.remove("hidden");
         }
 
         document.getElementById("statusRef").textContent = kycId
@@ -2601,106 +3020,57 @@
         );
       }
 
-      /* ══════════════════════════════════════════
-         2. FILE UPLOAD HANDLERS
-      ══════════════════════════════════════════ */
-      function handleFile(input, zoneId, previewId) {
-        const file = input.files[0];
-        if (!file) return;
-        const zone = document.getElementById(zoneId);
-        const preview = document.getElementById(previewId);
-        zone.classList.add("has-file");
-        if (file.type.startsWith("image/")) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            preview.src = e.target.result;
-            preview.style.display = "block";
-          };
-          reader.readAsDataURL(file);
-        }
-        const nameEl = zone.querySelector(".upload-label");
-        if (nameEl)
-          nameEl.textContent =
-            "✓ " +
-            file.name.substring(0, 22) +
-            (file.name.length > 22 ? "…" : "");
-        updateSteps();
-      }
-      function handleDrag(e, zoneId) {
-        e.preventDefault();
-        document.getElementById(zoneId).classList.add("drag");
-      }
-      function handleDragLeave(zoneId) {
-        document.getElementById(zoneId).classList.remove("drag");
-      }
-      function handleDrop(e, zoneId, inputId, previewId) {
-        e.preventDefault();
-        const zone = document.getElementById(zoneId);
-        zone.classList.remove("drag");
-        const file = e.dataTransfer.files[0];
-        if (!file) return;
-        const input = document.getElementById(inputId);
-        const dt = new DataTransfer();
-        dt.items.add(file);
-        input.files = dt.files;
-        handleFile(input, zoneId, previewId);
-      }
-
-      /* ══════════════════════════════════════════
-         3. STEP PROGRESS TRACKER (updated for 4 steps)
-      ══════════════════════════════════════════ */
-      function updateSteps() {
-        const hasName = document.getElementById("fullName")?.value.trim();
-        const hasEmail = document.getElementById("email")?.value.trim();
-        const hasPhone = document.getElementById("phone")?.value.trim();
-        const hasFront = document
-          .getElementById("frontZone")
-          ?.classList.contains("has-file");
-        const hasBack = document
-          .getElementById("backZone")
-          ?.classList.contains("has-file");
-        const hasSelfie = document
-          .getElementById("selfieZone")
-          ?.classList.contains("has-file");
-
-        const s1 = document.getElementById("step1"),
-          c1 = document.getElementById("conn1");
-        const s2 = document.getElementById("step2"),
-          c2 = document.getElementById("conn2");
-        const s3 = document.getElementById("step3"),
-          c3 = document.getElementById("conn3");
-        const s4 = document.getElementById("step4");
-
-        const mark = (step, conn, done, active) => {
-          step.classList.toggle("done", done);
-          step.classList.toggle("active", active && !done);
-          if (conn) conn.classList.toggle("done", done);
-        };
-
-        const step1Done = !!(hasName && hasEmail && hasPhone);
-        // Step 2 (Additional Info) is always "passable" since all fields are optional
-        const step2Done = step1Done; // auto-passes once step 1 is done
-        const step3Done = !!(hasFront && hasBack && step2Done);
-        const step4Active = step3Done;
-
-        mark(s1, c1, step1Done, true);
-        mark(s2, c2, step2Done, step1Done);
-        mark(s3, c3, step3Done, step2Done);
-        mark(s4, null, false, step4Active);
-      }
-
-      ["fullName", "email", "phone", "dob"].forEach((id) => {
-        document.getElementById(id)?.addEventListener("input", updateSteps);
-      });
-
-      /* ══════════════════════════════════════════
-         4. SUBMIT KYC (includes new fields)
-      ══════════════════════════════════════════ */
+      /* ─────────────────────────────────────────
+         SUBMIT KYC
+      ───────────────────────────────────────── */
       async function submitKYC() {
-        const fullName = document.getElementById("fullName").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const phone = document.getElementById("phone").value.trim();
-        const docNumber = document.getElementById("dob").value.trim();
+        /* ── Run all validations ── */
+        let hasErrors = false;
+
+        const checks = [
+          {
+            id: "fullName",
+            fn: validateFullName,
+            val: () => document.getElementById("fullName").value,
+          },
+          {
+            id: "email",
+            fn: validateEmail,
+            val: () => document.getElementById("email").value,
+          },
+          {
+            id: "phone",
+            fn: validatePhone,
+            val: () => document.getElementById("phone").value,
+          },
+          {
+            id: "dob",
+            fn: validateDocNumber,
+            val: () => document.getElementById("dob").value,
+          },
+          {
+            id: "dateOfBirth",
+            fn: validateDOB,
+            val: () => document.getElementById("dateOfBirth").value,
+          },
+          {
+            id: "gender",
+            fn: validateGender,
+            val: () => document.getElementById("gender").value,
+          },
+          {
+            id: "nationality",
+            fn: validateNationality,
+            val: () => document.getElementById("nationality").value,
+          },
+        ];
+
+        checks.forEach(({ id, fn, val }) => {
+          const err = fn(val());
+          showErr(id, err);
+          if (err) hasErrors = true;
+        });
+
         const hasFront = document
           .getElementById("frontZone")
           .classList.contains("has-file");
@@ -2713,21 +3083,47 @@
         const c1 = document.getElementById("consent1").checked;
         const c2 = document.getElementById("consent2").checked;
 
-        if (!fullName || !email || !phone)
-          return alert("Please fill in all personal information fields.");
-        if (!hasFront || !hasBack)
-          return alert("Please upload both front and back of your document.");
-        if (!hasSelfie)
-          return alert("Please upload your selfie with the document.");
-        if (!c1 || !c2) return alert("Please accept both consent statements.");
+        if (!hasFront) {
+          document.getElementById("frontZone").classList.add("upload-error");
+          document.getElementById("err-front").textContent =
+            "✕ Front document image is required.";
+          hasErrors = true;
+        }
+        if (!hasBack) {
+          document.getElementById("backZone").classList.add("upload-error");
+          document.getElementById("err-back").textContent =
+            "✕ Back document image is required.";
+          hasErrors = true;
+        }
+        if (!hasSelfie) {
+          document.getElementById("selfieZone").classList.add("upload-error");
+          document.getElementById("err-selfie").textContent =
+            "✕ Selfie with document is required.";
+          hasErrors = true;
+        }
+        if (!c1 || !c2) {
+          alert("Please accept both consent statements before submitting.");
+          hasErrors = true;
+        }
+
+        if (hasErrors) {
+          /* Scroll to first error */
+          const firstErr = document.querySelector(
+            ".field-error, .upload-error",
+          );
+          firstErr?.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
 
         const docType =
           document.querySelector('input[name="docType"]:checked')?.value ||
           "Citizenship";
-
         const formData = new FormData();
         formData.append("document_type", docType);
-        formData.append("document_number", docNumber || "N/A");
+        formData.append(
+          "document_number",
+          document.getElementById("dob").value.trim() || "N/A",
+        );
         formData.append(
           "document_front",
           document.getElementById("frontInput").files[0],
@@ -2741,11 +3137,19 @@
           document.getElementById("selfieInput").files[0],
         );
 
-        /* ── Append new optional fields (only if non-empty) ── */
+        /* Required personal fields */
+        formData.append(
+          "date_of_birth",
+          document.getElementById("dateOfBirth").value,
+        );
+        formData.append("gender", document.getElementById("gender").value);
+        formData.append(
+          "nationality",
+          document.getElementById("nationality").value.trim(),
+        );
+
+        /* Optional fields */
         const optionals = {
-          date_of_birth: document.getElementById("dateOfBirth").value,
-          gender: document.getElementById("gender").value,
-          nationality: document.getElementById("nationality").value.trim(),
           occupation: document.getElementById("occupation").value.trim(),
           permanent_address: document
             .getElementById("permanentAddress")
@@ -2760,16 +3164,21 @@
             .value.trim(),
           marital_status: document.getElementById("maritalStatus").value,
           spouse_name: document.getElementById("spouseName").value.trim(),
-          issue_date: document.getElementById("issueDate").value,
-          expiry_date: document.getElementById("expiryDate").value,
         };
         Object.entries(optionals).forEach(([key, val]) => {
           if (val) formData.append(key, val);
         });
 
-        const btn = document.querySelector(".btn-primary");
+        const btn = document.getElementById("submitBtn");
         btn.disabled = true;
-        btn.textContent = "Submitting…";
+        btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="animation:spin 1s linear infinite"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Submitting…`;
+        if (!document.getElementById("spin-style")) {
+          const s = document.createElement("style");
+          s.id = "spin-style";
+          s.textContent =
+            "@keyframes spin { to { transform: rotate(360deg); } }";
+          document.head.appendChild(s);
+        }
 
         try {
           const res = await fetch(`${API}/submit`, {
@@ -2802,18 +3211,18 @@
           alert("Submission failed: " + err.message);
         } finally {
           btn.disabled = false;
-          btn.textContent = "Send for Verification";
+          btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Send for Verification`;
         }
       }
 
-      /* ══════════════════════════════════════════
-         5. RESET FORM
-      ══════════════════════════════════════════ */
+      /* ─────────────────────────────────────────
+         RESET FORM
+      ───────────────────────────────────────── */
       function resetForm() {
         document.getElementById("kycForm").style.display = "";
         document.getElementById("statusPanel").classList.remove("visible");
 
-        [
+        const textFields = [
           "fullName",
           "email",
           "phone",
@@ -2827,9 +3236,8 @@
           "motherName",
           "grandfatherName",
           "spouseName",
-          "issueDate",
-          "expiryDate",
-        ].forEach((id) => {
+        ];
+        textFields.forEach((id) => {
           const el = document.getElementById(id);
           if (el) el.value = "";
         });
@@ -2837,10 +3245,27 @@
           const el = document.getElementById(id);
           if (el) el.value = "";
         });
+
+        /* Clear all field states */
+        [...textFields, "gender"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.classList.remove("field-error", "field-ok");
+          }
+          const errEl = document.getElementById("err-" + id);
+          if (errEl) {
+            errEl.textContent = "";
+            errEl.style.display = "none";
+          }
+        });
+
         toggleSpouse("");
 
+        /* Reset upload zones */
         ["frontZone", "backZone", "selfieZone"].forEach((id) => {
-          document.getElementById(id)?.classList.remove("has-file", "drag");
+          document
+            .getElementById(id)
+            ?.classList.remove("has-file", "drag", "upload-error");
         });
         ["frontPreview", "backPreview", "selfiePreview"].forEach((id) => {
           const p = document.getElementById(id);
@@ -2849,6 +3274,10 @@
             p.src = "";
           }
         });
+        ["err-front", "err-back", "err-selfie"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = "";
+        });
         document.getElementById("frontLabel").textContent = "Front Side";
         document.getElementById("backLabel").textContent = "Back Side";
         document.getElementById("selfieLabel").textContent =
@@ -2856,6 +3285,7 @@
         document.getElementById("consent1").checked = false;
         document.getElementById("consent2").checked = false;
         document.querySelector('input[name="docType"]').checked = true;
+
         updateSteps();
         loadUserInfo();
       }

@@ -33,6 +33,7 @@ const adminreviewRoutes = require("./routes/admin.review.routes");
 const adminNotificationRoutes = require("./routes/admin.notification.routes");
 const userProfileRoutes = require("./routes/user.profile.routes");
 const paymentRoutes = require("./routes/payment");
+const adminPaymentRoutes = require("./routes/admin.payments.routes");
 
 const app = express();
 const server = http.createServer(app);
@@ -116,6 +117,8 @@ app.use("/api/admin/reviews", adminreviewRoutes);
 app.use("/api/user/notifications", require("./routes/notificationRoutes"));
 app.use("/api/admin/notifications", adminNotificationRoutes);
 app.use("/api/payments", paymentRoutes);
+// ...
+app.use("/api/admin/payments", adminPaymentRoutes);
 
 app.use(express.static(path.join(__dirname, "../frontend")));
 

@@ -90,7 +90,8 @@ const KYC_META = {
 /* ═══════════════════════════════════════════════════════════════════════
    GET /api/admin/kyc
    Returns all KYC submissions including personal, address,
-   family, and document details stored in the kyc table.
+   and family details stored in the kyc table.
+   NOTE: issue_date and expiry_date have been removed from the schema.
 ════════════════════════════════════════════════════════════════════════ */
 exports.getAllKyc = (req, res) => {
   const sql = `
@@ -107,7 +108,7 @@ exports.getAllKyc = (req, res) => {
       k.submitted_at,
       k.reviewed_at,
 
-      -- Personal Details
+      -- Personal Details (now required)
       k.date_of_birth,
       k.gender,
       k.nationality,
@@ -123,10 +124,6 @@ exports.getAllKyc = (req, res) => {
       k.grandfather_name,
       k.marital_status,
       k.spouse_name,
-
-      -- Document Validity
-      k.issue_date,
-      k.expiry_date,
 
       -- User account info
       u.name  AS user_name,
@@ -144,7 +141,6 @@ exports.getAllKyc = (req, res) => {
 
     const BASE = "http://localhost:5000";
 
-    // Map DB enum values to display labels
     const DOC_TYPE_MAP = {
       Citizenship: "Citizenship",
       Passport: "Passport",
@@ -179,14 +175,12 @@ exports.getAllKyc = (req, res) => {
       doc_number: k.document_number || "",
       front_img: toUrl(k.document_front),
       back_img: toUrl(k.document_back),
-      issue_date: fmtDate(k.issue_date),
-      expiry_date: fmtDate(k.expiry_date),
 
       // Timestamps
       submitted: fmtDate(k.submitted_at),
       reviewed: fmtDate(k.reviewed_at),
 
-      // Personal details
+      // Personal details (required from frontend)
       date_of_birth: fmtDate(k.date_of_birth),
       gender: k.gender || "",
       nationality: k.nationality || "",

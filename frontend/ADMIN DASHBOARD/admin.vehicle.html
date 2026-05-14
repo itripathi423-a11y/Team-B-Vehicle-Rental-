@@ -12,6 +12,299 @@
     />
     <link rel="stylesheet" href="admin.vehicle.css" />
     <link rel="stylesheet" href="dashboard.css" />
+
+    <!-- ── DETAIL MODAL STYLES (inline so no extra file needed) ── -->
+    <style>
+      /* ── DETAIL MODAL ──────────────────────────────────────── */
+      .detail-modal {
+        max-width: 820px;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      /* Header */
+      .detail-modal .modal-header {
+        padding: 22px 28px 18px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 0;
+        background: #fff;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      .detail-header-left h2 {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--dark);
+        line-height: 1.2;
+      }
+
+      .detail-header-left p {
+        font-size: 12.5px;
+        color: var(--muted);
+        margin-top: 3px;
+        font-family: "Space Mono", monospace;
+      }
+
+      /* Hero image */
+      .detail-hero {
+        width: 100%;
+        height: 260px;
+        background: var(--bg);
+        overflow: hidden;
+        position: relative;
+      }
+
+      .detail-hero img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: opacity 0.25s ease;
+      }
+
+      .detail-hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.35) 0%,
+          transparent 55%
+        );
+        pointer-events: none;
+      }
+
+      /* Gallery thumbnails */
+      .detail-gallery {
+        display: flex;
+        gap: 8px;
+        padding: 10px 20px;
+        background: #fafafa;
+        border-bottom: 1px solid var(--border);
+        overflow-x: auto;
+        scrollbar-width: thin;
+      }
+
+      .detail-gallery::-webkit-scrollbar {
+        height: 4px;
+      }
+      .detail-gallery::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 4px;
+      }
+
+      .detail-gallery-thumb {
+        width: 72px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 7px;
+        cursor: pointer;
+        border: 2.5px solid transparent;
+        opacity: 0.6;
+        flex-shrink: 0;
+        transition:
+          opacity 0.15s,
+          border-color 0.15s,
+          transform 0.15s;
+      }
+
+      .detail-gallery-thumb:hover {
+        opacity: 0.85;
+        transform: translateY(-1px);
+      }
+      .detail-gallery-thumb.active {
+        opacity: 1;
+        border-color: var(--orange);
+      }
+
+      /* Body */
+      .detail-body {
+        padding: 22px 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      /* Two-column info grid */
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .detail-card {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 16px;
+      }
+
+      .detail-card-title {
+        font-family: "Space Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0;
+        font-size: 13px;
+        border-bottom: 1px solid #f3f4f6;
+      }
+
+      .detail-row:last-child {
+        border-bottom: none;
+      }
+
+      .detail-row-label {
+        color: var(--muted);
+      }
+
+      .detail-row-val {
+        font-weight: 600;
+        color: var(--dark);
+        text-align: right;
+        max-width: 60%;
+        word-break: break-word;
+      }
+
+      .detail-price {
+        color: var(--orange) !important;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+      }
+
+      /* Plate badge */
+      .plate-badge {
+        display: inline-block;
+        background: #1e293b;
+        color: #facc15;
+        font-family: "Space Mono", monospace;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        padding: 3px 10px;
+        border-radius: 5px;
+        border: 1.5px solid #facc15;
+      }
+
+      /* Color swatch */
+      .color-row {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+
+      .color-swatch {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 1.5px solid rgba(0, 0, 0, 0.15);
+        flex-shrink: 0;
+      }
+
+      /* Description */
+      .detail-desc {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 16px;
+      }
+
+      .detail-desc p {
+        font-size: 13.5px;
+        color: var(--text);
+        line-height: 1.65;
+        margin-top: 10px;
+      }
+
+      /* Features */
+      .detail-features-wrap {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 16px;
+      }
+
+      .detail-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .feature-tag {
+        background: var(--orange-dim);
+        color: var(--orange);
+        border: 1px solid rgba(255, 92, 26, 0.22);
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 4px 13px;
+      }
+
+      /* Footer */
+      .detail-modal .modal-footer {
+        padding: 16px 28px;
+        border-top: 1px solid var(--border);
+        margin-top: 0;
+        background: #fafafa;
+      }
+
+      /* Row hover highlight */
+      .vehicle-row {
+        transition: background 0.12s;
+      }
+      .vehicle-row:hover td {
+        background: #fff8f5 !important;
+      }
+      .vehicle-row td {
+        cursor: pointer;
+      }
+
+      /* No-image placeholder in hero */
+      .detail-hero-noimg {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #9ca3af;
+        font-size: 13px;
+      }
+
+      .detail-hero-noimg svg {
+        opacity: 0.35;
+      }
+
+      @media (max-width: 640px) {
+        .detail-grid {
+          grid-template-columns: 1fr;
+        }
+        .detail-hero {
+          height: 190px;
+        }
+        .detail-body {
+          padding: 16px 18px;
+        }
+        .detail-modal .modal-header {
+          padding: 16px 18px;
+        }
+        .detail-modal .modal-footer {
+          padding: 14px 18px;
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="layout">
@@ -175,11 +468,6 @@
             />
           </div>
           <div class="topbar-right">
-            <!--
-              The .notif-wrapper div below is a placeholder.
-              admin.notification.js will automatically REPLACE this
-              with the full notification panel on page load.
-            -->
             <div class="notif-wrapper">
               <button class="icon-btn notif-btn" id="notifBtn">
                 <svg
@@ -198,7 +486,6 @@
               <div class="notif-dropdown" id="notifDropdown"></div>
             </div>
 
-            <!-- TOPBAR USER + DROPDOWN -->
             <div class="topbar-user" id="topbarUser">
               <div class="topbar-avatar" id="topbarAvatarInitials"></div>
               <div class="topbar-info">
@@ -216,8 +503,6 @@
               >
                 <polyline points="6 9 12 15 18 9" />
               </svg>
-
-              <!-- DROPDOWN -->
               <div class="user-dropdown" id="userDropdown">
                 <div class="dropdown-header">
                   <p class="dh-name" id="dropdownAdminName">Admin</p>
@@ -237,7 +522,6 @@
                   </svg>
                   My Profile
                 </a>
-
                 <div class="dropdown-divider"></div>
                 <a
                   class="dropdown-item logout"
@@ -260,7 +544,6 @@
                 </a>
               </div>
             </div>
-            <!-- END TOPBAR USER -->
           </div>
         </header>
 
@@ -419,6 +702,11 @@
                   Loading...
                 </p>
               </div>
+              <p
+                style="font-size: 12px; color: var(--muted); align-self: center"
+              >
+                💡 Click any row to view details
+              </p>
             </div>
             <div style="overflow-x: auto">
               <table class="data-table">
@@ -446,7 +734,9 @@
       </div>
     </div>
 
-    <!-- ADD / EDIT MODAL -->
+    <!-- ══════════════════════════════════════════════════
+         ADD / EDIT MODAL
+    ══════════════════════════════════════════════════ -->
     <div class="modal-backdrop" id="vehicleModal">
       <div class="modal">
         <div class="modal-header">
@@ -582,7 +872,6 @@
               </select>
             </div>
 
-            <!-- ===== COLOR FIELD (NEW) ===== -->
             <div class="form-group">
               <label class="form-label">Exterior Color *</label>
               <div style="display: flex; align-items: center; gap: 10px">
@@ -621,6 +910,9 @@
                 id="f_service_date"
                 type="date"
               />
+              <span class="form-error"
+                >Service date must be today or a past date.</span
+              >
             </div>
             <div class="form-group">
               <label class="form-label">Service Status</label>
@@ -633,7 +925,6 @@
                 <option value="Needs Service">Needs Service</option>
               </select>
             </div>
-            <!-- ===== END COLOR FIELD ===== -->
 
             <p class="section-label">Rental Pricing (NPR)</p>
             <div class="form-group">
@@ -728,25 +1019,23 @@
                   Reverse Camera</label
                 >
               </div>
-              <span class="form-error"
-                >Select at least one feature (optional).</span
-              >
 
-              <p class="section-label">Images</p>
+              <p class="section-label" style="margin-top: 20px">Images</p>
               <p
                 style="
                   grid-column: 1/-1;
                   font-size: 12px;
                   color: var(--muted);
-                  margin-top: -10px;
+                  margin-top: -8px;
                   margin-bottom: 6px;
                 "
               >
-                Accepted: JPG, PNG, WEBP — Max 5MB each.
+                Accepted: JPG, PNG, WEBP — Max 5MB each. Thumbnail is required.
               </p>
             </div>
 
             <div class="img-upload-grid">
+              <!-- Thumbnail — required -->
               <div
                 class="img-upload-box thumb-box"
                 id="box_thumbnail"
@@ -761,7 +1050,7 @@
                   onchange="previewImage(this, 'box_thumbnail')"
                 />
                 <span class="upload-icon">🖼️</span>
-                <span class="upload-label">Thumbnail (Main image)</span>
+                <span class="upload-label">Thumbnail * (Main image)</span>
               </div>
               <div
                 class="img-upload-box"
@@ -844,6 +1133,11 @@
                 ><span class="upload-label">Photo 5</span>
               </div>
             </div>
+
+            <!-- thumbnail error shown below the grid -->
+            <div class="form-group full" style="margin-top: 4px">
+              <span class="form-error" id="thumb-error-display"></span>
+            </div>
           </div>
 
           <div class="modal-footer">
@@ -872,7 +1166,16 @@
       </div>
     </div>
 
-    <!-- CONFIRM MODAL -->
+    <!-- ══════════════════════════════════════════════════
+         VEHICLE DETAIL MODAL  ← NEW
+    ══════════════════════════════════════════════════ -->
+    <div class="modal-backdrop" id="vehicleDetailModal">
+      <!-- Content injected dynamically by openDetailModal() in JS -->
+    </div>
+
+    <!-- ══════════════════════════════════════════════════
+         CONFIRM MODAL
+    ══════════════════════════════════════════════════ -->
     <div class="modal-backdrop" id="confirmModal">
       <div class="modal confirm-modal">
         <div class="confirm-icon" id="confirmIcon">⚠️</div>
@@ -897,13 +1200,11 @@
     <script src="admin.vehicle.js"></script>
     <script src="admin.notification.js"></script>
     <script>
-      // ===== API BASE =====
       const API_ADMIN = "http://localhost:5000/api/admin";
 
-      // ===== COLOR PICKER SYNC =====
+      // Color picker sync
       const colorPicker = document.getElementById("f_color_picker");
       const colorText = document.getElementById("f_color");
-
       const colorNames = {
         "#ffffff": "Pearl White",
         "#000000": "Midnight Black",
@@ -918,18 +1219,16 @@
         "#1e90ff": "Dodger Blue",
         "#ff8c00": "Dark Orange",
       };
-
       colorPicker.addEventListener("input", () => {
         const hex = colorPicker.value.toLowerCase();
         if (
           !colorText.value ||
           Object.values(colorNames).includes(colorText.value)
-        ) {
+        )
           colorText.value = colorNames[hex] ?? "";
-        }
       });
 
-      // ===== LOAD ADMIN PROFILE =====
+      // Load admin profile
       async function loadAdmin() {
         try {
           const res = await fetch(`${API_ADMIN}/me`, {
@@ -937,7 +1236,6 @@
           });
           if (!res.ok) throw new Error();
           const d = await res.json();
-
           const name = d.name || "Admin";
           const role = d.role || "Admin";
           const email = d.email || "—";
@@ -946,7 +1244,6 @@
             .map((n) => n[0])
             .join("")
             .toUpperCase();
-
           document.getElementById("sidebarAdminName").textContent = name;
           document.getElementById("sidebarAdminRole").textContent = role;
           document.getElementById("sidebarAvatarInitials").textContent =
@@ -962,7 +1259,7 @@
         }
       }
 
-      // ===== DROPDOWN TOGGLE =====
+      // Dropdown toggle
       document
         .getElementById("topbarUser")
         .addEventListener("click", function (e) {
@@ -970,13 +1267,12 @@
           document.getElementById("userDropdown").classList.toggle("visible");
           this.classList.toggle("open");
         });
-
       document.addEventListener("click", function () {
         document.getElementById("userDropdown")?.classList.remove("visible");
         document.getElementById("topbarUser")?.classList.remove("open");
       });
 
-      // ===== LOGOUT =====
+      // Logout
       document
         .getElementById("logoutBtn")
         .addEventListener("click", async function (e) {
@@ -992,7 +1288,6 @@
           }
         });
 
-      // ===== INIT =====
       loadAdmin();
     </script>
   </body>
