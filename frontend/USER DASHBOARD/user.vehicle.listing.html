@@ -2058,7 +2058,7 @@
         } else {
           list.push(vehicle);
           saveWishlist(list);
-          showToast("⭐ Added to wishlist!", "orange");
+          showToast("Added to wishlist!", "orange");
           return true;
         }
       }
@@ -2594,6 +2594,24 @@
       }
       /* ── INIT ── */
       updateWishBadge();
+
+      /* Restore saved sorting after refresh */
+      const savedSort = localStorage.getItem("vehicle_sort");
+
+      if (savedSort) {
+        document.getElementById("sortSelect").value = savedSort;
+      }
+
+      /* Save sorting whenever user changes dropdown */
+      document.getElementById("sortSelect").addEventListener("change", () => {
+        localStorage.setItem(
+          "vehicle_sort",
+          document.getElementById("sortSelect").value,
+        );
+
+        renderGrid();
+      });
+
       Promise.all([
         loadVehicles(),
         loadUserProfile(),

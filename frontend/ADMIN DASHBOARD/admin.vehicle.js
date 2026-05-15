@@ -17,6 +17,11 @@ const DEFAULT_UPLOAD_PLACEHOLDER_SVG = `data:image/svg+xml;utf8,<svg xmlns='http
 const TODAY_ISO = new Date().toISOString().split("T")[0];
 const CUR_YEAR = new Date().getFullYear();
 
+// ── SVG Icons for confirm dialogs ──────────────────────────────
+const ICON_HIDE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="40" height="40" stroke-linecap="round" stroke-linejoin="round" style="color:#d97706"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+const ICON_RESTORE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="40" height="40" stroke-linecap="round" stroke-linejoin="round" style="color:#16a34a"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>`;
+const ICON_DELETE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="40" height="40" stroke-linecap="round" stroke-linejoin="round" style="color:#dc2626"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
+
 // ── Topbar user dropdown ───────────────────────────────────────
 document.getElementById("topbarUser").addEventListener("click", (e) => {
   e.stopPropagation();
@@ -57,9 +62,21 @@ async function loadStats() {
   } catch {}
 }
 
-// ── Load Vehicles ──────────────────────────────────────────────
+let tourPackages = [];
+
+async function loadTourPackages() {
+  try {
+    const r = await fetch("http://localhost:5000/api/tour-packages");
+    const d = await r.json();
+    tourPackages = d.data || [];
+  } catch {
+    tourPackages = [];
+  }
+}
+
 async function loadVehicles() {
   try {
+    await loadTourPackages();
     const url = showingDeleted ? `${API}?deleted=only` : API;
     const r = await fetch(url);
     const d = await r.json();
@@ -125,7 +142,13 @@ function renderTable(data) {
            <button class="btn-ghost btn-sm btn-warn"   onclick="confirmSoftDelete(${v.id},'${esc(v.name)}')" title="Hide">${iconHide} Hide</button>
            <button class="btn-ghost btn-sm btn-danger" onclick="confirmHardDelete(${v.id},'${esc(v.name)}')" title="Delete">${iconDelete} Delete</button>`;
 
-      return `<tr class="vehicle-row" onclick="openDetailModal(${v.id})" style="cursor:pointer;" title="Click to view details">
+      const tour = tourPackages.find((t) => t.vehicle_id === v.id);
+      const tourCell = tour
+        ? `<span style="display:inline-flex;align-items:center;gap:5px;background:#fff7ed;color:#ea580c;border:1px solid #fed7aa;border-radius:99px;font-size:11px;font-weight:600;padding:3px 10px;">
+      ${esc(tour.title)}
+     </span>`
+        : `<span style="color:#9ca3af;font-size:12px;">—</span>`;
+      return `<tr class="vehicle-row" onclick="window.location.href='/HOME/cars-details.html?id=${v.id}'" style="cursor:pointer;" title="Click to view vehicle page">
         <td style="display:flex;align-items:center;gap:10px;min-width:190px">
           ${thumb}
           <div>
@@ -137,7 +160,8 @@ function renderTable(data) {
         <td>${esc(v.body_type)}</td>
         <td>${esc(v.fuel_type)}</td>
         <td style="text-align:center">${v.seating_capacity}</td>
-        <td class="mono" style="font-size:12px">${fmt(v.price_4h)} / ${fmt(v.price_8h)} / ${fmt(v.price_1d)}</td>
+       <td class="mono" style="font-size:12px">${fmt(v.price_4h)} / ${fmt(v.price_8h)} / ${fmt(v.price_1d)}</td>
+        <td>${tourCell}</td>
         <td><span class="status ${statusClass}">${statusLabel}</span></td>
         <td><div class="action-btns" onclick="event.stopPropagation()">${actionBtns}</div></td>
       </tr>`;
@@ -754,7 +778,7 @@ function closeModal() {
 }
 
 function openConfirm(icon, msg, name, okCb) {
-  document.getElementById("confirmIcon").textContent = icon;
+  document.getElementById("confirmIcon").innerHTML = icon;
   document.getElementById("confirmMsg").textContent = msg;
   document.getElementById("confirmName").textContent = name;
   document.getElementById("confirmModal").classList.add("open");
@@ -931,8 +955,11 @@ document
 
 // ── Soft Delete ────────────────────────────────────────────────
 function confirmSoftDelete(id, name) {
-  openConfirm("🙈", "This will hide the vehicle from customers.", name, () =>
-    softDelete(id),
+  openConfirm(
+    ICON_HIDE,
+    "This will hide the vehicle from customers.",
+    name,
+    () => softDelete(id),
   );
 }
 async function softDelete(id) {
@@ -953,7 +980,7 @@ async function softDelete(id) {
 // ── Restore ────────────────────────────────────────────────────
 function restoreVehicle(id, name) {
   openConfirm(
-    "↩️",
+    ICON_RESTORE,
     "Restore this vehicle to the active fleet?",
     name,
     async () => {
@@ -972,7 +999,7 @@ function restoreVehicle(id, name) {
 // ── Hard Delete ────────────────────────────────────────────────
 function confirmHardDelete(id, name) {
   openConfirm(
-    "🗑️",
+    ICON_DELETE,
     "This will PERMANENTLY delete the vehicle and all its images. This cannot be undone!",
     name,
     () => hardDelete(id),
@@ -1024,6 +1051,30 @@ async function loadDestinations() {
   const svc = document.getElementById("f_service_date");
   if (svc) svc.max = TODAY_ISO;
 })();
+
+// ── MOBILE SIDEBAR ──
+const sidebar = document.getElementById("sidebar");
+const sidebarToggle = document.getElementById("sidebarToggle");
+const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+sidebarToggle?.addEventListener("click", () => {
+  sidebar.classList.toggle("open");
+  sidebarOverlay.classList.toggle("show");
+});
+
+sidebarOverlay?.addEventListener("click", () => {
+  sidebar.classList.remove("open");
+  sidebarOverlay.classList.remove("show");
+});
+
+document.querySelectorAll(".nav-item").forEach((item) => {
+  item.addEventListener("click", () => {
+    if (window.innerWidth <= 768) {
+      sidebar.classList.remove("open");
+      sidebarOverlay.classList.remove("show");
+    }
+  });
+});
 
 // ── Init ───────────────────────────────────────────────────────
 loadVehicles();

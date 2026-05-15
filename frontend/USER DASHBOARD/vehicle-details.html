@@ -1874,16 +1874,12 @@
     <script src="notification.js"></script>
 
     <script>
-      /* ═══════════════════════════════════════════
-         STATE
-      ═══════════════════════════════════════════ */
+      /* STATE */
       let vehicle = null;
       let selectedDur = "4h";
       const VAT_RATE = 0.13;
 
-      /* ═══════════════════════════════════════════
-         HELPERS
-      ═══════════════════════════════════════════ */
+      /* HELPERS */
       function escHtml(str) {
         if (str == null) return "";
         return String(str)
@@ -1898,9 +1894,7 @@
         if (el) el.textContent = val;
       }
 
-      /* ═══════════════════════════════════════════
-         USER DROPDOWN
-      ═══════════════════════════════════════════ */
+      /* USER DROPDOWN */
       const userDropdownWrap = document.getElementById("userDropdownWrap");
       const userDropdownMenu = document.getElementById("userDropdownMenu");
       const topbarChevron = document.getElementById("topbarChevron");
@@ -1918,9 +1912,7 @@
         window.location.href = "/index.html";
       });
 
-      /* ═══════════════════════════════════════════
-         LOAD USER PROFILE
-      ═══════════════════════════════════════════ */
+      /* LOAD USER PROFILE */
       async function loadUserProfile() {
         try {
           const res = await fetch("/api/user/profile", {
@@ -1993,9 +1985,7 @@
         }
       }
 
-      /* ═══════════════════════════════════════════
-         LOAD VEHICLE  →  render()  →  loadVehicleReviews()
-      ═══════════════════════════════════════════ */
+      /* LOAD VEHICLE  →  render()  →  loadVehicleReviews() */
       async function loadVehicle() {
         const params = new URLSearchParams(location.search);
         const id = params.get("id");
@@ -2042,9 +2032,7 @@
         }
       }
 
-      /* ═══════════════════════════════════════════
-         RENDER VEHICLE
-      ═══════════════════════════════════════════ */
+      /*  RENDER VEHICLE */
       function render() {
         if (!vehicle) return;
         const v = vehicle;
@@ -2219,9 +2207,7 @@
           : "Read more";
       }
 
-      /* ═══════════════════════════════════════════
-         LOAD VEHICLE REVIEWS
-      ═══════════════════════════════════════════ */
+      /* LOAD VEHICLE REVIEWS*/
       async function loadVehicleReviews(vehicleId) {
         const listEl = document.getElementById("reviewsList");
         const avgScoreEl = document.getElementById("avgScore");
@@ -2317,9 +2303,7 @@
         }
       }
 
-      /* ═══════════════════════════════════════════
-         STAR RENDERERS
-      ═══════════════════════════════════════════ */
+      /* STAR RENDERERS */
       function renderStarsFull(rating) {
         return Array.from({ length: 5 }, (_, i) => {
           const full = i + 1 <= Math.floor(rating);
@@ -2336,9 +2320,7 @@
         ).join("");
       }
 
-      /* ═══════════════════════════════════════════
-         INIT  — correct order: loadVehicle triggers render + reviews internally
-      ═══════════════════════════════════════════ */
+      /* INIT  — correct order: loadVehicle triggers render + reviews internally*/
       loadVehicle();
       loadUserProfile();
     </script>

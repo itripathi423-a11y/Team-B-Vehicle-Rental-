@@ -498,7 +498,6 @@
         border-color: var(--orange);
         color: white;
       }
-      /* count pill on tabs */
       .tab-count {
         display: inline-flex;
         align-items: center;
@@ -593,7 +592,7 @@
         overflow: hidden;
       }
 
-      /* badges — aligned to DB enum: Pending | Replied | Closed */
+      /* badges */
       .badge-pending {
         display: inline-flex;
         align-items: center;
@@ -704,13 +703,57 @@
       .skeleton-row td {
         padding: 16px 14px;
       }
-
-      /* empty */
       .empty-state {
         text-align: center;
         padding: 40px 20px;
         color: var(--muted);
         font-size: 14px;
+      }
+
+      /* ===== PAGINATION (ported from payments page) ===== */
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+      }
+      .pag-info {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .pag-btns {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .pag-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 7px;
+        border: 1px solid var(--border);
+        background: white;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text);
+        transition: all 0.18s;
+      }
+      .pag-btn:hover {
+        background: var(--bg);
+      }
+      .pag-btn.active {
+        background: var(--orange);
+        color: white;
+        border-color: var(--orange);
+      }
+      .pag-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
       }
 
       /* ===== MODAL ===== */
@@ -839,8 +882,6 @@
       .reply-area:focus {
         border-color: var(--orange);
       }
-
-      /* status badge in modal header */
       .modal-status-wrap {
         display: flex;
         align-items: center;
@@ -889,6 +930,11 @@
           flex-direction: column;
           align-items: flex-start;
           gap: 12px;
+        }
+        .pagination {
+          flex-direction: column;
+          gap: 12px;
+          align-items: flex-start;
         }
       }
     </style>
@@ -1041,14 +1087,10 @@
               type="text"
               id="enquirySearch"
               placeholder="Search enquiries, customers…"
+              oninput="onTopbarSearch()"
             />
           </div>
           <div class="topbar-right">
-            <!--
-              The .notif-wrapper div below is a placeholder.
-              admin.notification.js will automatically REPLACE this
-              with the full notification panel on page load.
-            -->
             <div class="notif-wrapper">
               <button class="icon-btn notif-btn" id="notifBtn">
                 <svg
@@ -1066,7 +1108,6 @@
               </button>
               <div class="notif-dropdown" id="notifDropdown"></div>
             </div>
-
             <div class="topbar-user" id="topbarUser">
               <div class="topbar-avatar" id="topbarAvatarInitials">—</div>
               <div class="topbar-info">
@@ -1147,7 +1188,7 @@
             </div>
           </div>
 
-          <!-- FILTER TABS — DB enum: Pending | Replied | Closed -->
+          <!-- FILTER TABS -->
           <div class="filter-tabs">
             <button class="filter-tab active" data-filter="all">
               All <span class="tab-count" id="cnt-all">0</span>
@@ -1184,7 +1225,6 @@
                   </tr>
                 </thead>
                 <tbody id="enquiryTableBody">
-                  <!-- skeleton rows -->
                   <tr class="skeleton-row">
                     <td><span class="skeleton" style="width: 50px"></span></td>
                     <td><span class="skeleton" style="width: 110px"></span></td>
@@ -1203,6 +1243,12 @@
                   </tr>
                 </tbody>
               </table>
+            </div>
+
+            <!-- PAGINATION (same structure as payments page) -->
+            <div class="pagination">
+              <p class="pag-info" id="pagInfo">—</p>
+              <div class="pag-btns" id="pagBtns"></div>
             </div>
           </div>
         </main>
@@ -1231,7 +1277,6 @@
           <p class="modal-label">Question</p>
           <div class="modal-msg" id="mdlMessage">—</div>
         </div>
-        <!-- shows existing admin reply if already replied -->
         <div
           class="modal-field"
           id="mdlExistingReplyWrap"
@@ -1262,11 +1307,42 @@
     <script src="admin.notification.js"></script>
     <script>
       const API = "http://localhost:5000/api/admin";
+
       let allEnquiries = [];
+      let filtered = [];
       let currentFilter = "all";
       let currentEnquiryId = null;
+      let currentPage = 1;
+      const PER_PAGE = 6;
 
-      // ===== ADMIN PROFILE =====
+      // ── HELPERS ──────────────────────────────────────────────
+      function fmtDate(d) {
+        if (!d) return "—";
+        return new Date(d).toLocaleDateString("en-NP", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 3000);
+      }
+
+      function statusBadge(s) {
+        const map = {
+          Pending: ["badge-pending", "Pending"],
+          Replied: ["badge-replied", "Replied"],
+          Closed: ["badge-closed", "Closed"],
+        };
+        const [cls, label] = map[s] || ["badge-closed", s || "—"];
+        return `<span class="${cls}"><span class="dot"></span>${label}</span>`;
+      }
+
+      // ── ADMIN PROFILE ─────────────────────────────────────────
       async function loadAdmin() {
         try {
           const res = await fetch(`${API}/me`, { credentials: "include" });
@@ -1293,27 +1369,7 @@
         } catch (e) {}
       }
 
-      // ===== STATUS BADGE — DB enum: Pending | Replied | Closed =====
-      function statusBadge(s) {
-        const map = {
-          Pending: ["badge-pending", "Pending"],
-          Replied: ["badge-replied", "Replied"],
-          Closed: ["badge-closed", "Closed"],
-        };
-        const [cls, label] = map[s] || ["badge-closed", s || "—"];
-        return `<span class="${cls}"><span class="dot"></span>${label}</span>`;
-      }
-
-      function fmtDate(d) {
-        if (!d) return "—";
-        return new Date(d).toLocaleDateString("en-NP", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        });
-      }
-
-      // ===== UPDATE TAB COUNTS =====
+      // ── TAB COUNTS ────────────────────────────────────────────
       function updateCounts(list) {
         document.getElementById("cnt-all").textContent = list.length;
         document.getElementById("cnt-pending").textContent = list.filter(
@@ -1327,7 +1383,7 @@
         ).length;
       }
 
-      // ===== LOAD ENQUIRIES =====
+      // ── LOAD ENQUIRIES ────────────────────────────────────────
       async function loadEnquiries() {
         try {
           const res = await fetch(`${API}/enquiries`, {
@@ -1337,24 +1393,62 @@
           const data = await res.json();
           allEnquiries = data.data || data || [];
           updateCounts(allEnquiries);
-          renderTable(allEnquiries);
+          applyFilter();
         } catch (e) {
           document.getElementById("enquiryTableBody").innerHTML =
             `<tr><td colspan="6" class="empty-state">❌ Failed to load enquiries</td></tr>`;
           document.getElementById("enquirySubtitle").textContent =
             "Error loading data";
+          document.getElementById("pagInfo").textContent = "";
+          document.getElementById("pagBtns").innerHTML = "";
         }
       }
 
-      function renderTable(list) {
+      // ── APPLY FILTER + SEARCH then reset to page 1 ────────────
+      function applyFilter() {
+        const q = (
+          document.getElementById("enquirySearch").value || ""
+        ).toLowerCase();
+
+        filtered = allEnquiries.filter((e) => {
+          const matchFilter =
+            currentFilter === "all" || e.status === currentFilter;
+          const matchSearch =
+            !q ||
+            [
+              e.id,
+              e.name,
+              e.user_name,
+              e.email,
+              e.user_email,
+              e.question,
+              e.message,
+            ].some((v) => (v || "").toString().toLowerCase().includes(q));
+          return matchFilter && matchSearch;
+        });
+
+        currentPage = 1;
+        renderTable();
+      }
+
+      // ── RENDER TABLE (paginated) ──────────────────────────────
+      function renderTable() {
         const tbody = document.getElementById("enquiryTableBody");
-        if (!list.length) {
+        const total = filtered.length;
+        const start = (currentPage - 1) * PER_PAGE;
+        const page = filtered.slice(start, start + PER_PAGE);
+
+        document.getElementById("enquirySubtitle").textContent =
+          `Showing ${total} enquir${total !== 1 ? "ies" : "y"}`;
+
+        if (!page.length) {
           tbody.innerHTML = `<tr><td colspan="6" class="empty-state">📋 No enquiries found</td></tr>`;
-          document.getElementById("enquirySubtitle").textContent =
-            "No enquiries";
+          document.getElementById("pagInfo").textContent = "No records";
+          document.getElementById("pagBtns").innerHTML = "";
           return;
         }
-        tbody.innerHTML = list
+
+        tbody.innerHTML = page
           .map(
             (e) => `
           <tr onclick="openModal(${e.id})">
@@ -1380,11 +1474,40 @@
         `,
           )
           .join("");
-        document.getElementById("enquirySubtitle").textContent =
-          `Showing ${list.length} enquir${list.length !== 1 ? "ies" : "y"}`;
+
+        // ── Pagination info
+        const totalPages = Math.ceil(total / PER_PAGE);
+        document.getElementById("pagInfo").textContent =
+          `Page ${currentPage} of ${totalPages} — ${total} record${total !== 1 ? "s" : ""}`;
+
+        // ── Pagination buttons (same ellipsis logic as payments)
+        const pagBtns = document.getElementById("pagBtns");
+        let btns = `<button class="pag-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? "disabled" : ""}>‹</button>`;
+        for (let i = 1; i <= totalPages; i++) {
+          if (
+            totalPages > 7 &&
+            i > 3 &&
+            i < totalPages - 1 &&
+            Math.abs(i - currentPage) > 1
+          ) {
+            if (i === 4 || i === totalPages - 2)
+              btns += `<span style="padding:0 4px;color:var(--muted)">…</span>`;
+            continue;
+          }
+          btns += `<button class="pag-btn ${i === currentPage ? "active" : ""}" onclick="goPage(${i})">${i}</button>`;
+        }
+        btns += `<button class="pag-btn" onclick="goPage(${currentPage + 1})" ${currentPage === totalPages ? "disabled" : ""}>›</button>`;
+        pagBtns.innerHTML = btns;
       }
 
-      // ===== FILTER =====
+      function goPage(n) {
+        const total = Math.ceil(filtered.length / PER_PAGE);
+        if (n < 1 || n > total) return;
+        currentPage = n;
+        renderTable();
+      }
+
+      // ── FILTER TABS ───────────────────────────────────────────
       document.querySelectorAll(".filter-tab").forEach((btn) => {
         btn.addEventListener("click", function () {
           document
@@ -1392,27 +1515,16 @@
             .forEach((b) => b.classList.remove("active"));
           this.classList.add("active");
           currentFilter = this.dataset.filter;
-          const filtered =
-            currentFilter === "all"
-              ? allEnquiries
-              : allEnquiries.filter((e) => e.status === currentFilter);
-          renderTable(filtered);
+          applyFilter();
         });
       });
 
-      // ===== SEARCH =====
-      document
-        .getElementById("enquirySearch")
-        ?.addEventListener("input", function () {
-          const q = this.value.toLowerCase();
-          document.querySelectorAll("#enquiryTableBody tr").forEach((row) => {
-            row.style.display = row.textContent.toLowerCase().includes(q)
-              ? ""
-              : "none";
-          });
-        });
+      // ── TOPBAR SEARCH ─────────────────────────────────────────
+      function onTopbarSearch() {
+        applyFilter();
+      }
 
-      // ===== MODAL =====
+      // ── MODAL ─────────────────────────────────────────────────
       function openModal(id) {
         const e = allEnquiries.find((x) => x.id == id);
         if (!e) return;
@@ -1429,7 +1541,6 @@
         );
         document.getElementById("mdlReply").value = "";
 
-        // Show previous reply if it exists
         const existingWrap = document.getElementById("mdlExistingReplyWrap");
         if (e.admin_reply) {
           document.getElementById("mdlExistingReply").textContent =
@@ -1439,7 +1550,6 @@
           existingWrap.style.display = "none";
         }
 
-        // If Closed, hide reply input and change button
         const replyInputWrap = document.getElementById("mdlReplyInputWrap");
         const sendBtn = document.getElementById("mdlSendBtn");
         if (e.status === "Closed") {
@@ -1483,19 +1593,13 @@
             },
           );
           if (!res.ok) throw new Error();
-
-          // update local state
           const idx = allEnquiries.findIndex((e) => e.id == currentEnquiryId);
           if (idx !== -1) {
             allEnquiries[idx].status = "Replied";
             allEnquiries[idx].admin_reply = reply;
           }
           updateCounts(allEnquiries);
-          const filtered =
-            currentFilter === "all"
-              ? allEnquiries
-              : allEnquiries.filter((e) => e.status === currentFilter);
-          renderTable(filtered);
+          applyFilter();
           showToast("Reply sent successfully ✓");
           closeModal();
         } catch (e) {
@@ -1503,7 +1607,7 @@
         }
       }
 
-      // ===== UPDATE STATUS (PATCH /:id/status) =====
+      // ── STATUS UPDATE ──────────────────────────────────────────
       async function updateStatus(id, status) {
         try {
           const res = await fetch(`${API}/enquiries/${id}/status`, {
@@ -1513,22 +1617,17 @@
             body: JSON.stringify({ status }),
           });
           if (!res.ok) throw new Error();
-
           const idx = allEnquiries.findIndex((e) => e.id == id);
           if (idx !== -1) allEnquiries[idx].status = status;
           updateCounts(allEnquiries);
-          const filtered =
-            currentFilter === "all"
-              ? allEnquiries
-              : allEnquiries.filter((e) => e.status === currentFilter);
-          renderTable(filtered);
+          applyFilter();
           showToast(`Enquiry marked as ${status} ✓`);
         } catch (e) {
           showToast("Failed to update status");
         }
       }
 
-      // ===== DELETE =====
+      // ── DELETE ─────────────────────────────────────────────────
       async function deleteEnquiry(id) {
         if (!confirm("Delete this enquiry? This cannot be undone.")) return;
         try {
@@ -1539,18 +1638,14 @@
           if (!res.ok) throw new Error();
           allEnquiries = allEnquiries.filter((e) => e.id != id);
           updateCounts(allEnquiries);
-          const filtered =
-            currentFilter === "all"
-              ? allEnquiries
-              : allEnquiries.filter((e) => e.status === currentFilter);
-          renderTable(filtered);
+          applyFilter();
           showToast("Enquiry deleted ✓");
         } catch (e) {
           showToast("Failed to delete enquiry");
         }
       }
 
-      // ===== EXPORT =====
+      // ── EXPORT ─────────────────────────────────────────────────
       function exportEnquiries() {
         const rows = [
           [
@@ -1581,15 +1676,7 @@
         a.click();
       }
 
-      // ===== TOAST =====
-      function showToast(msg) {
-        const t = document.getElementById("toast");
-        t.textContent = msg;
-        t.classList.add("show");
-        setTimeout(() => t.classList.remove("show"), 3000);
-      }
-
-      // ===== DROPDOWN =====
+      // ── DROPDOWN ───────────────────────────────────────────────
       document
         .getElementById("topbarUser")
         .addEventListener("click", function (e) {
@@ -1604,7 +1691,7 @@
         document.getElementById("topbarUser")?.classList.remove("open");
       });
 
-      // ===== LOGOUT =====
+      // ── LOGOUT ─────────────────────────────────────────────────
       document
         .getElementById("logoutBtn")
         .addEventListener("click", async function (e) {
@@ -1620,7 +1707,7 @@
           }
         });
 
-      // ===== INIT =====
+      // ── INIT ───────────────────────────────────────────────────
       loadAdmin();
       loadEnquiries();
     </script>

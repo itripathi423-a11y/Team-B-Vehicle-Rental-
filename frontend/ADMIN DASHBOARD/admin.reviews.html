@@ -1436,7 +1436,26 @@
               <div style="font-weight:500;">${r.user_name || r.customer_name || "—"}</div>
               <div style="font-size:11px;color:var(--muted);">${r.email || ""}</div>
             </td>
-            <td><span class="vehicle-tag">🚗 ${r.vehicle_name || "—"}</span></td>
+            <td>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <img
+      src="${r.vehicle_img || "https://via.placeholder.com/70x45?text=Car"}"
+      alt="vehicle"
+      style="
+        width:70px;
+        height:45px;
+        object-fit:cover;
+        border-radius:8px;
+        border:1px solid #e5e7eb;
+        background:#f3f4f6;
+      "
+    />
+
+    <span class="vehicle-tag">
+      ${r.vehicle_name || "—"}
+    </span>
+  </div>
+</td>
             <td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);">${r.booking_ref || "#" + (r.booking_id || "—")}</td>
             <td>
               <div class="stars">${starsHtml(r.rating)}</div>
