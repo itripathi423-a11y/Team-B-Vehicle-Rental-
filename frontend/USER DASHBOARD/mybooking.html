@@ -2144,9 +2144,7 @@
     <script src="notification.js"></script>
 
     <script>
-      /* ════════════════════════════════════════
-         STATE
-      ════════════════════════════════════════ */
+      /* STATE */
       let bookings = [];
       let activeFilter = "all";
       let deleteIdx = null;
@@ -2157,9 +2155,7 @@
       const API_BASE = "http://localhost:5000/api/bookings";
       const IMG_BASE = "http://localhost:5000/uploads/vehicles/";
 
-      /* ════════════════════════════════════════
-         USER DROPDOWN
-      ════════════════════════════════════════ */
+      /*  USER DROPDOWN */
       const userDropdownWrap = document.getElementById("userDropdownWrap");
       const userDropdownMenu = document.getElementById("userDropdownMenu");
       const topbarChevron = document.getElementById("topbarChevron");
@@ -2176,9 +2172,7 @@
         window.location.href = "/index.html";
       });
 
-      /* ════════════════════════════════════════
-         MOBILE SIDEBAR
-      ════════════════════════════════════════ */
+      /* MOBILE SIDEBAR*/
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("sidebarOverlay");
       const toggle = document.getElementById("sidebarToggle");
@@ -2197,9 +2191,7 @@
       if (toggle)
         toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
 
-      /* ════════════════════════════════════════
-         HELPERS
-      ════════════════════════════════════════ */
+      /* HELPERS*/
       function normalizeStatus(s) {
         const map = {
           Pending: "pending",
@@ -2269,9 +2261,7 @@
         return `<span style="font-size:${size === "large" ? "28" : "20"}px">${b.emoji}</span>`;
       }
 
-      /* ════════════════════════════════════════
-         LOAD USER PROFILE
-      ════════════════════════════════════════ */
+      /* LOAD USER PROFILE */
       async function loadUserProfile() {
         try {
           const res = await fetch("/api/user/profile", {
@@ -2338,9 +2328,7 @@
         }
       }
 
-      /* ════════════════════════════════════════
-         LOAD BOOKINGS
-      ════════════════════════════════════════ */
+      /* LOAD BOOKINGS*/
       async function loadBookings() {
         try {
           const res = await fetch(`${API_BASE}/my`, { credentials: "include" });
@@ -2389,9 +2377,7 @@
         ).length;
       }
 
-      /* ════════════════════════════════════════
-         RENDER TABLE
-      ════════════════════════════════════════ */
+      /* RENDER TABLE*/
       function render() {
         const q = document.getElementById("searchInput").value.toLowerCase();
         const sort = document.getElementById("sortSelect").value;
@@ -2472,9 +2458,7 @@
           .join("");
       }
 
-      /* ════════════════════════════════════════
-         FILTER / SORT / PAGINATION
-      ════════════════════════════════════════ */
+      /* FILTER / SORT / PAGINATION*/
       function setFilter(f) {
         activeFilter = f;
         currentPage = 1;
@@ -2496,9 +2480,7 @@
         render();
       }
 
-      /* ════════════════════════════════════════
-         VIEW BOOKING — Rich card
-      ════════════════════════════════════════ */
+      /*  VIEW BOOKING — Rich card*/
       function viewBooking(idx) {
         const b = bookings[idx];
         const raw = b._raw;
@@ -2594,9 +2576,7 @@
         openModal("viewModal");
       }
 
-      /* ════════════════════════════════════════
-         CANCEL — reason chips
-      ════════════════════════════════════════ */
+      /* CANCEL — reason chips */
       function selectReason(el, reason) {
         document
           .querySelectorAll(".reason-chip")

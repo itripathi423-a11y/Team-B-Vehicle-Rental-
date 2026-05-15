@@ -1592,7 +1592,62 @@
       .modal-btn-sec:hover {
         background: var(--bg);
       }
+      /* ── STEP BAR RESPONSIVE ── */
+      .step-bar {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        flex-wrap: nowrap;
+      }
+      .step-bar::-webkit-scrollbar {
+        display: none;
+      }
 
+      @media (max-width: 1100px) {
+        .step-label {
+          display: none;
+        }
+        .step-line {
+          min-width: 10px;
+          margin: 0 4px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .step-bar {
+          padding: 10px 14px;
+          gap: 0;
+        }
+        .step {
+          flex: 0 0 auto;
+        }
+        .step-num {
+          width: 26px;
+          height: 26px;
+          font-size: 11px;
+          flex-shrink: 0;
+        }
+        .step-line {
+          min-width: 8px;
+          margin: 0 3px;
+          flex-shrink: 1;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .step-bar {
+          padding: 8px 10px;
+        }
+        .step-num {
+          width: 22px;
+          height: 22px;
+          font-size: 10px;
+        }
+        .step-line {
+          min-width: 6px;
+          margin: 0 2px;
+        }
+      }
       /* FOOTER */
       .footer-strip {
         padding-top: 24px;

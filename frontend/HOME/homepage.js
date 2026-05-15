@@ -1,22 +1,4 @@
 "use strict";
-// ── AUTO REDIRECT LOGGED-IN USER TO DASHBOARD ──
-(async () => {
-  try {
-    const res = await fetch("http://localhost:5000/api/user/profile", {
-      credentials: "include",
-    });
-    if (res.ok) {
-      const data = await res.json();
-      const role = data.user?.role || data.role;
-      if (role === "user") {
-        window.location.href = "/USER DASHBOARD/userdashboard.html";
-      }
-      // admin stays on homepage — do nothing
-    }
-  } catch {
-    // not logged in — stay on homepage
-  }
-})();
 
 function escHtml(s) {
   return String(s || "")

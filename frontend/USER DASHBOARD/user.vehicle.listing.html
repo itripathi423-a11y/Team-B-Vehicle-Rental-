@@ -41,10 +41,47 @@
         stroke: var(--orange);
       }
       .search-row {
-        display: grid;
-        grid-template-columns: 1fr 180px 180px 180px auto;
+        display: flex;
+        flex-wrap: wrap;
         gap: 10px;
-        align-items: end;
+        align-items: flex-end;
+      }
+
+      .search-row .search-field {
+        flex: 1;
+        min-width: 140px;
+      }
+
+      .search-row .search-field:first-child {
+        flex: 2;
+        min-width: 200px;
+      }
+
+      .search-btn-wrap {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        align-self: flex-end;
+        flex-shrink: 0;
+      }
+
+      @media (max-width: 768px) {
+        .search-row .search-field {
+          flex: 1 1 calc(50% - 5px);
+        }
+        .search-row .search-field:first-child {
+          flex: 1 1 100%;
+        }
+        .search-btn-wrap {
+          flex: 1 1 100%;
+        }
+        .search-btn {
+          flex: 1;
+          justify-content: center;
+        }
+        .clear-btn {
+          flex: 1;
+        }
       }
       .search-field {
         display: flex;
@@ -1392,10 +1429,7 @@
             </svg>
             Search &amp; Filter Vehicles
           </div>
-          <div
-            class="search-row"
-            style="grid-template-columns: 1fr 180px 180px 180px 180px auto"
-          >
+          <div class="search-row">
             <div class="search-field">
               <label>Search by name or keyword</label>
               <input
@@ -1406,6 +1440,7 @@
                 oninput="applyFilters()"
               />
             </div>
+
             <div class="search-field">
               <label>Location</label>
               <select
@@ -1416,6 +1451,7 @@
                 <option value="">All Locations</option>
               </select>
             </div>
+
             <div class="search-field">
               <label>Body Type</label>
               <select
@@ -1432,6 +1468,7 @@
                 <option>Pickup</option>
               </select>
             </div>
+
             <div class="search-field">
               <label>Fuel Type</label>
               <select
@@ -1447,7 +1484,9 @@
                 <option>CNG</option>
               </select>
             </div>
-            <div style="display: flex; gap: 8px; align-self: flex-end">
+
+            <!-- Buttons grouped so they span full width on mobile -->
+            <div class="search-btn-wrap">
               <button class="search-btn" onclick="applyFilters()">
                 <svg
                   viewBox="0 0 24 24"

@@ -3,9 +3,7 @@
 const db = require("../config/db");
 const { createAdminNotification } = require("./admin.notification.controller");
 
-// =======================================================
-// 1. FETCH REVIEW DATA FOR FORM
-// =======================================================
+// FETCH REVIEW DATA FOR FORM
 exports.getReviewForm = (req, res) => {
   const bookingId = req.params.bookingId;
 
@@ -38,10 +36,8 @@ exports.getReviewForm = (req, res) => {
   });
 };
 
-// =======================================================
 // 2. SUBMIT REVIEW
-// ✅ Added: notifies ADMIN via admin_notifications + socket
-// =======================================================
+
 exports.submitReview = (req, res) => {
   const { booking_id, user_id, vehicle_id, rating, comment } = req.body;
 
@@ -142,5 +138,26 @@ exports.getVehicleReviews = (req, res) => {
   db.query(sql, [vehicleId], (err, result) => {
     if (err) return res.status(500).json({ message: "DB error", error: err });
     res.json(result);
+  });
+};
+// GET /api/user/reviews  — all reviews submitted by the logged-in user
+// controllers/reviewController.js — add this
+
+exports.getUserReviews = (req, res) => {
+  const userId = req.params.userId;
+
+  const sql = `
+    SELECT 
+      r.id, r.booking_id, r.vehicle_id, r.rating, r.comment, r.created_at,
+      v.name AS vehicle_name, v.brand, v.model, v.thumbnail, v.body_type
+    FROM reviews r
+    JOIN vehicles v ON v.id = r.vehicle_id
+    WHERE r.user_id = ?
+    ORDER BY r.created_at DESC
+  `;
+
+  db.query(sql, [userId], (err, rows) => {
+    if (err) return res.status(500).json({ message: "DB error", error: err });
+    res.json({ success: true, reviews: rows });
   });
 };

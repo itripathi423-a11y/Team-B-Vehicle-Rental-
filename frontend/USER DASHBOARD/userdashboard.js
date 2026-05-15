@@ -478,8 +478,19 @@ function submitReview() {
       if (formView) formView.style.display = "none";
       if (successView) successView.style.display = "flex";
       if (successStars) {
-        successStars.textContent =
-          "★".repeat(selectedRating) + "☆".repeat(5 - selectedRating);
+        let starsHtml = "";
+        for (let i = 1; i <= 5; i++) {
+          starsHtml += `
+            <svg viewBox="0 0 24 24" style="width:22px;height:22px">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                fill="${i <= selectedRating ? "#f59e0b" : "#e5e7eb"}"
+                stroke="${i <= selectedRating ? "#d97706" : "#d1d5db"}"
+                stroke-width="1"
+              />
+            </svg>`;
+        }
+        successStars.innerHTML = starsHtml;
       }
 
       sessionStorage.setItem(

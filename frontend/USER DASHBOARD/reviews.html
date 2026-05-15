@@ -1,0 +1,2988 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AUTO DEALER — My Reviews</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="userdashboard.css" rel="stylesheet" />
+    <style>
+      /* ── CSS VARIABLES ── */
+      :root {
+        --orange: #ff5c1a;
+        --orange-light: #ff7a3d;
+        --orange-dim: rgba(255, 92, 26, 0.12);
+        --bg: #f4f5f7;
+        --white: #ffffff;
+        --sidebar-bg: #0a0a0a;
+        --sidebar-w: 240px;
+        --dark: #111827;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --radius: 14px;
+        --radius-sm: 8px;
+        --shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+        --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.1);
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        font-size: 15px;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        width: var(--sidebar-w);
+        min-height: 100vh;
+        background: var(--sidebar-bg);
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        z-index: 200;
+        transition: transform 0.3s ease;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .sidebar-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 24px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        text-decoration: none;
+      }
+      .logo-mark {
+        width: 36px;
+        height: 36px;
+        background: var(--orange);
+        color: #fff;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        flex-shrink: 0;
+      }
+      .logo-text-block {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+      .logo-brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 17px;
+        letter-spacing: 2.5px;
+        color: #fff;
+        line-height: 1;
+      }
+      .logo-sub {
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        color: rgba(255, 255, 255, 0.3);
+        font-family: "Space Mono", monospace;
+      }
+      .sidebar-nav {
+        flex: 1;
+        padding: 16px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 9px;
+        color: rgba(255, 255, 255, 0.45);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 400;
+        transition: all 0.18s;
+        cursor: pointer;
+      }
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .nav-item.active {
+        background: var(--orange-dim);
+        color: var(--orange);
+        font-weight: 500;
+      }
+      .nav-item.active .nav-icon {
+        stroke: var(--orange);
+      }
+      .nav-icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        transition: stroke 0.18s;
+      }
+      .sidebar-footer {
+        padding: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .sidebar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+      }
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        overflow: hidden;
+        position: relative;
+      }
+      .user-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        inset: 0;
+      }
+      .user-info {
+        min-width: 0;
+      }
+      .user-name {
+        display: block;
+        font-size: 13px;
+        color: #fff;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .user-kyc-status {
+        display: block;
+        font-size: 10px;
+        font-family: "Space Mono", monospace;
+        letter-spacing: 0.5px;
+      }
+      .user-kyc-status.verified {
+        color: #22c55e;
+      }
+      .user-kyc-status.unverified {
+        color: #f59e0b;
+      }
+
+      /* ── MAIN WRAP ── */
+      .main-wrap {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        width: calc(100% - var(--sidebar-w));
+      }
+
+      /* ── TOPBAR ── */
+      .topbar {
+        height: 64px;
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        padding: 0 28px;
+        gap: 16px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .topbar-page-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .topbar-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+      }
+      .icon-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 9px;
+        background: none;
+        border: 1px solid var(--border);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        transition: background 0.2s;
+      }
+      .icon-btn:hover {
+        background: var(--bg);
+      }
+      .icon-btn svg {
+        width: 17px;
+        height: 17px;
+        color: var(--muted);
+      }
+      .topbar-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 12px;
+        border-radius: 9px;
+        cursor: pointer;
+        transition: background 0.2s;
+        margin-left: 4px;
+      }
+      .topbar-user:hover {
+        background: var(--bg);
+      }
+      .topbar-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+        flex-shrink: 0;
+      }
+      .topbar-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        inset: 0;
+      }
+      .topbar-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+      }
+      .topbar-role {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .user-dropdown-wrap {
+        position: relative;
+        cursor: pointer;
+      }
+      .topbar-chevron {
+        transition: transform 0.2s;
+        color: #9ca3af;
+        flex-shrink: 0;
+      }
+      .topbar-chevron.open {
+        transform: rotate(180deg);
+      }
+      .user-dropdown-menu {
+        display: none;
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        min-width: 210px;
+        background: #fff;
+        border: 0.5px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 6px;
+        z-index: 999;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      }
+      .user-dropdown-menu.open {
+        display: block;
+      }
+      .dd-header {
+        padding: 10px 10px 8px;
+        border-bottom: 0.5px solid #f0f0f0;
+        margin-bottom: 4px;
+      }
+      .dd-header-email {
+        font-size: 11px;
+        color: #9ca3af;
+      }
+      .dd-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 8px 10px;
+        border: none;
+        background: none;
+        border-radius: 8px;
+        font-size: 13px;
+        color: #111;
+        cursor: pointer;
+        text-align: left;
+      }
+      .dd-item:hover {
+        background: #f9fafb;
+      }
+      .dd-item svg {
+        color: #6b7280;
+        flex-shrink: 0;
+      }
+      .dd-kyc-badge {
+        margin-left: auto;
+        font-size: 10px;
+        padding: 2px 7px;
+        border-radius: 99px;
+        background: #fff8e1;
+        color: #b45309;
+        font-weight: 500;
+      }
+      .dd-divider {
+        height: 0.5px;
+        background: #f0f0f0;
+        margin: 4px 0;
+      }
+      .dd-danger {
+        color: #dc2626;
+      }
+      .dd-danger svg {
+        color: #dc2626;
+      }
+      .dd-danger:hover {
+        background: #fef2f2;
+      }
+
+      /* ── NOTIFICATION ── */
+      .notif-wrap {
+        position: relative;
+      }
+      .notif-dot {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 9px;
+        height: 9px;
+        background: #ef4444;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        pointer-events: none;
+        animation: notifPulse 2s ease infinite;
+      }
+      @keyframes notifPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.45);
+        }
+        50% {
+          box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+        }
+      }
+      .notif-count {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        min-width: 17px;
+        height: 17px;
+        padding: 0 4px;
+        background: #ef4444;
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        border-radius: 99px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #fff;
+        pointer-events: none;
+        font-family: "Space Mono", monospace;
+      }
+      .notif-panel {
+        display: none;
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        width: 370px;
+        max-height: 500px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.13);
+        z-index: 9999;
+        overflow: hidden;
+        flex-direction: column;
+      }
+      .notif-panel.open {
+        display: flex;
+        animation: npSlide 0.18s ease both;
+      }
+      @keyframes npSlide {
+        from {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .np-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 18px 12px;
+        border-bottom: 1px solid #f3f4f6;
+        flex-shrink: 0;
+        background: #fff;
+      }
+      .np-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #111827;
+      }
+      .np-mark-all {
+        font-size: 11.5px;
+        color: #ff5c1a;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        font-weight: 500;
+        padding: 0;
+      }
+      .np-mark-all:hover {
+        opacity: 0.7;
+      }
+      .np-list {
+        overflow-y: auto;
+        flex: 1;
+        overscroll-behavior: contain;
+      }
+      .np-placeholder,
+      .np-empty {
+        padding: 36px 20px;
+        text-align: center;
+        font-size: 13px;
+        color: #9ca3af;
+      }
+      .np-empty-icon {
+        font-size: 34px;
+        margin-bottom: 8px;
+      }
+      .np-item {
+        display: flex;
+        gap: 12px;
+        padding: 13px 18px;
+        border-bottom: 1px solid #f9fafb;
+        cursor: default;
+        transition: background 0.15s;
+        align-items: flex-start;
+        position: relative;
+      }
+      .np-item:last-child {
+        border-bottom: none;
+      }
+      .np-item:hover {
+        background: #fafafa;
+      }
+      .np-item.unread {
+        background: #fff8f5;
+      }
+      .np-item.unread:hover {
+        background: #fff2ec;
+      }
+      .np-item.unread::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: #ff5c1a;
+        border-radius: 0 2px 2px 0;
+      }
+      @keyframes npHighlight {
+        0% {
+          background: #fff0e8;
+        }
+        100% {
+          background: #fff8f5;
+        }
+      }
+      .np-item.new-flash {
+        animation: npHighlight 0.9s ease forwards;
+      }
+      .np-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .np-icon.booking {
+        background: #fff0e8;
+      }
+      .np-icon.kyc {
+        background: #f0fdf4;
+      }
+      .np-icon.reminder {
+        background: #eff6ff;
+      }
+      .np-icon.service {
+        background: #faf5ff;
+      }
+      .np-icon.general {
+        background: #f3f4f6;
+      }
+      .np-content {
+        flex: 1;
+        min-width: 0;
+      }
+      .np-item-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 3px;
+        line-height: 1.35;
+      }
+      .np-item-msg {
+        font-size: 12px;
+        color: #6b7280;
+        line-height: 1.55;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .np-item-time {
+        font-size: 10.5px;
+        color: #9ca3af;
+        margin-top: 5px;
+        font-family: "Space Mono", monospace;
+      }
+      .np-foot {
+        border-top: 1px solid #f3f4f6;
+        padding: 10px 18px;
+        flex-shrink: 0;
+      }
+      .np-load-more {
+        width: 100%;
+        padding: 9px;
+        background: none;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 12.5px;
+        color: #6b7280;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .np-load-more:hover {
+        border-color: #ff5c1a;
+        color: #ff5c1a;
+      }
+      .notif-toast {
+        position: fixed;
+        bottom: 88px;
+        right: 24px;
+        min-width: 280px;
+        max-width: 340px;
+        background: #111827;
+        color: #fff;
+        border-radius: 12px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+        z-index: 10000;
+        opacity: 0;
+        transform: translateY(10px);
+        transition:
+          opacity 0.25s,
+          transform 0.25s;
+        pointer-events: none;
+      }
+      .notif-toast.show {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: all;
+      }
+      .nt-icon {
+        font-size: 20px;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .nt-body {
+        flex: 1;
+        min-width: 0;
+      }
+      .nt-title {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 3px;
+      }
+      .nt-msg {
+        font-size: 11.5px;
+        color: rgba(255, 255, 255, 0.65);
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .nt-close {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.45);
+        cursor: pointer;
+        font-size: 16px;
+        padding: 0;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+
+      /* ── SIDEBAR OVERLAY ── */
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 199;
+      }
+      .sidebar-overlay.open {
+        display: block;
+      }
+
+      /* ── CONTENT ── */
+      .content {
+        flex: 1;
+        padding: 28px;
+        overflow-y: auto;
+      }
+
+      /* ── PAGE HEADER ── */
+      .page-header {
+        background: var(--dark);
+        border-radius: var(--radius);
+        padding: 28px 36px;
+        margin-bottom: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        position: relative;
+        overflow: hidden;
+      }
+      .page-header::before {
+        content: "";
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 240px;
+        height: 240px;
+        background: radial-gradient(
+          circle,
+          rgba(255, 92, 26, 0.18) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .page-header::after {
+        content: "REVIEWS";
+        position: absolute;
+        right: 36px;
+        bottom: -10px;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 80px;
+        color: rgba(255, 255, 255, 0.03);
+        letter-spacing: 8px;
+        pointer-events: none;
+        user-select: none;
+      }
+      .page-header-text h1 {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 30px;
+        letter-spacing: 1.5px;
+        color: #fff;
+        line-height: 1.1;
+        margin-bottom: 6px;
+      }
+      .page-header-text p {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.45);
+      }
+
+      /* ── SECTION TABS ── */
+      .review-tabs {
+        display: flex;
+        gap: 4px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 4px;
+        margin-bottom: 24px;
+        width: fit-content;
+      }
+      .review-tab {
+        padding: 8px 20px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        background: none;
+        color: var(--muted);
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.18s;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .review-tab .tab-count {
+        background: var(--border);
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+        font-size: 9px;
+        padding: 2px 6px;
+        border-radius: 99px;
+        font-weight: 700;
+        transition: all 0.18s;
+      }
+      .review-tab.active {
+        background: var(--dark);
+        color: #fff;
+      }
+      .review-tab.active .tab-count {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+      }
+      .review-tab:not(.active):hover {
+        background: var(--bg);
+        color: var(--dark);
+      }
+
+      /* ── REVIEW CARDS GRID ── */
+      .reviews-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+        gap: 18px;
+        margin-bottom: 28px;
+      }
+
+      /* ── SUBMITTED REVIEW CARD ── */
+      .rv-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s,
+          border-color 0.2s;
+        animation: fadeUp 0.4s ease both;
+      }
+      .rv-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+        border-color: rgba(255, 92, 26, 0.25);
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .rv-card-header {
+        padding: 16px 18px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        border-bottom: 1px solid var(--border);
+        background: var(--bg);
+      }
+      .rv-veh-thumb {
+        width: 68px;
+        height: 48px;
+        border-radius: var(--radius-sm);
+        background: var(--border);
+        overflow: hidden;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        border: 1px solid var(--border);
+      }
+      .rv-veh-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .rv-veh-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .rv-veh-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--dark);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .rv-veh-meta {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+        font-family: "Space Mono", monospace;
+      }
+      .rv-status-badge {
+        background: #ecfdf5;
+        color: #16a34a;
+        font-size: 9px;
+        font-weight: 700;
+        padding: 4px 9px;
+        border-radius: 99px;
+        font-family: "Space Mono", monospace;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+      }
+      .rv-card-body {
+        padding: 16px 18px 18px;
+      }
+      .rv-stars {
+        display: flex;
+        gap: 3px;
+        margin-bottom: 10px;
+      }
+      .rv-stars svg {
+        width: 18px;
+        height: 18px;
+      }
+      .rv-stars .filled {
+        fill: #f59e0b;
+        stroke: #d97706;
+      }
+      .rv-stars .empty {
+        fill: #e5e7eb;
+        stroke: #d1d5db;
+      }
+      .rv-comment {
+        font-size: 13.5px;
+        color: var(--text);
+        line-height: 1.65;
+        margin-bottom: 12px;
+        font-style: italic;
+      }
+      .rv-comment.empty-comment {
+        color: var(--muted);
+        font-style: normal;
+        font-size: 12.5px;
+      }
+      .rv-meta-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid #f3f4f6;
+        padding-top: 12px;
+        margin-top: 4px;
+      }
+      .rv-date {
+        font-family: "Space Mono", monospace;
+        font-size: 10px;
+        color: #9ca3af;
+      }
+      .rv-booking-ref {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .rv-booking-ref span {
+        color: var(--orange);
+        font-weight: 500;
+      }
+
+      /* ── PENDING REVIEW CARD ── */
+      .rv-pending-card {
+        background: var(--white);
+        border: 1px dashed #d1d5db;
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s,
+          border-color 0.2s;
+        animation: fadeUp 0.4s ease both;
+      }
+      .rv-pending-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--orange);
+        border-style: solid;
+      }
+      .rv-pending-header {
+        padding: 16px 18px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        border-bottom: 1px solid var(--border);
+        background: #fffaf8;
+      }
+      .rv-pending-badge {
+        background: #fff8e1;
+        color: #b45309;
+        font-size: 9px;
+        font-weight: 700;
+        padding: 4px 9px;
+        border-radius: 99px;
+        font-family: "Space Mono", monospace;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+      }
+      .rv-pending-body {
+        padding: 20px 18px;
+      }
+      .rv-pending-prompt {
+        display: flex;
+        align-items: flex-start;
+        gap: 13px;
+        margin-bottom: 16px;
+      }
+      .rv-prompt-icon {
+        width: 42px;
+        height: 42px;
+        flex-shrink: 0;
+        background: var(--orange-dim);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .rv-prompt-icon svg {
+        width: 20px;
+        height: 20px;
+        stroke: var(--orange);
+      }
+      .rv-prompt-text strong {
+        display: block;
+        font-size: 14px;
+        color: var(--dark);
+        margin-bottom: 3px;
+      }
+      .rv-prompt-text span {
+        font-size: 12.5px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .rv-write-btn {
+        width: 100%;
+        padding: 10px 20px;
+        background: var(--orange);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition:
+          background 0.2s,
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .rv-write-btn:hover {
+        background: var(--orange-light);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(255, 92, 26, 0.35);
+      }
+
+      /* ── EMPTY STATE ── */
+      .rv-empty {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 56px 20px;
+        color: var(--muted);
+      }
+      .rv-empty-icon {
+        font-size: 48px;
+        margin-bottom: 12px;
+      }
+      .rv-empty-title {
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 6px;
+      }
+      .rv-empty-sub {
+        font-size: 13px;
+        color: var(--muted);
+        max-width: 300px;
+        margin: 0 auto 20px;
+        line-height: 1.6;
+      }
+      .rv-empty-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 24px;
+        background: var(--dark);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.2s;
+      }
+      .rv-empty-btn:hover {
+        background: var(--orange);
+      }
+
+      /* ── LOADING SKELETON ── */
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          #f3f4f6 25%,
+          #e9eaec 50%,
+          #f3f4f6 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 4px;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      /* ── FOOTER ── */
+      .footer-strip {
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .footer-strip p {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .footer-links {
+        display: flex;
+        gap: 20px;
+      }
+      .footer-links a {
+        font-size: 12px;
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .footer-links a:hover {
+        color: var(--orange);
+      }
+
+      /* ── CHATBOT ── */
+      #chat-bubble {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: var(--orange);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 12px rgba(255, 92, 26, 0.35);
+        z-index: 1000;
+        transition:
+          transform 0.15s,
+          background 0.15s;
+      }
+      #chat-bubble:hover {
+        background: #e04a0e;
+        transform: scale(1.07);
+      }
+      #chat-bubble svg {
+        color: #fff;
+      }
+      .chat-notif-dot {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 10px;
+        height: 10px;
+        background: #22c55e;
+        border-radius: 50%;
+        border: 2px solid #fff;
+      }
+      #chat-panel {
+        position: fixed;
+        bottom: 88px;
+        right: 24px;
+        width: 320px;
+        height: 420px;
+        background: #fff;
+        border: 0.5px solid #e5e7eb;
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        z-index: 999;
+        overflow: hidden;
+        transform: scale(0.92) translateY(12px);
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+          opacity 0.18s;
+      }
+      #chat-panel.open {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+        pointer-events: all;
+      }
+      .cp-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 16px;
+        border-bottom: 0.5px solid #f0f0f0;
+        background: #fff;
+      }
+      .cp-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #fff0e8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .cp-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #111;
+      }
+      .cp-sub {
+        font-size: 11px;
+        color: #22c55e;
+      }
+      .cp-close {
+        margin-left: auto;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        padding: 4px;
+      }
+      .cp-close:hover {
+        background: #f9fafb;
+      }
+      .cp-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 14px 14px 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .cp-msg {
+        display: flex;
+        gap: 8px;
+        align-items: flex-end;
+      }
+      .cp-msg.user {
+        flex-direction: row-reverse;
+      }
+      .cp-bubble {
+        max-width: 76%;
+        padding: 9px 12px;
+        border-radius: 12px;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .cp-msg.bot .cp-bubble {
+        background: #f3f4f6;
+        color: #111;
+        border-bottom-left-radius: 4px;
+      }
+      .cp-msg.user .cp-bubble {
+        background: #ff5c1a;
+        color: #fff;
+        border-bottom-right-radius: 4px;
+      }
+      .cp-av {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: #fff0e8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 600;
+        color: #ff5c1a;
+        flex-shrink: 0;
+      }
+      .cp-quick {
+        padding: 6px 14px 10px;
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .cp-chip {
+        font-size: 11px;
+        padding: 5px 10px;
+        border-radius: 99px;
+        border: 0.5px solid #e5e7eb;
+        background: none;
+        color: #6b7280;
+        cursor: pointer;
+      }
+      .cp-chip:hover {
+        background: #fff0e8;
+        color: #ff5c1a;
+        border-color: #ff5c1a;
+      }
+      .cp-input-row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        padding: 10px 12px;
+        border-top: 0.5px solid #f0f0f0;
+      }
+      .cp-input {
+        flex: 1;
+        border: 0.5px solid #e5e7eb;
+        border-radius: 20px;
+        padding: 8px 14px;
+        font-size: 13px;
+        outline: none;
+        font-family: inherit;
+      }
+      .cp-input:focus {
+        border-color: #ff5c1a;
+      }
+      .cp-send {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #ff5c1a;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .cp-send:hover {
+        background: #e04a0e;
+      }
+      .cp-send svg {
+        color: #fff;
+      }
+
+      /* ── REVIEW MODAL ── */
+      .review-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(10, 10, 10, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 600;
+        animation: rbFadeIn 0.18s ease;
+      }
+      .review-backdrop.hidden {
+        display: none;
+      }
+      @keyframes rbFadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .review-modal {
+        background: var(--white);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        width: 100%;
+        max-width: 460px;
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+        animation: rmSlideUp 0.25s cubic-bezier(0.34, 1.3, 0.64, 1);
+      }
+      @keyframes rmSlideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px) scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      .review-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 22px;
+        border-bottom: 1px solid var(--border);
+      }
+      .review-modal-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 20px;
+        letter-spacing: 1.5px;
+        color: var(--dark);
+      }
+      .review-close-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border);
+        background: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .review-close-btn:hover {
+        background: var(--bg);
+        color: var(--dark);
+      }
+      .review-close-btn svg {
+        width: 14px;
+        height: 14px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+      }
+      .review-vehicle-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 22px;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+      }
+      .review-veh-thumb {
+        width: 72px;
+        height: 50px;
+        border-radius: var(--radius-sm);
+        background: var(--border);
+        overflow: hidden;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        border: 1px solid var(--border);
+      }
+      .review-veh-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .review-veh-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .review-veh-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--dark);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .review-veh-meta {
+        font-family: "Space Mono", monospace;
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .review-completed-badge {
+        background: #ecfdf5;
+        color: #16a34a;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 99px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        font-family: "Space Mono", monospace;
+      }
+      .review-form-body {
+        padding: 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .review-field-label {
+        display: block;
+        font-family: "Space Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+      .review-field-label .req {
+        color: var(--orange);
+      }
+      .review-field-label .opt {
+        color: #9ca3af;
+        text-transform: none;
+        font-size: 10px;
+        letter-spacing: 0;
+      }
+      .review-stars {
+        display: flex;
+        gap: 4px;
+      }
+      .review-star {
+        width: 38px;
+        height: 38px;
+        cursor: pointer;
+        border: none;
+        background: none;
+        padding: 2px;
+        border-radius: var(--radius-sm);
+        transition:
+          transform 0.12s,
+          background 0.12s;
+      }
+      .review-star:hover {
+        transform: scale(1.18);
+        background: var(--orange-dim);
+      }
+      .review-star svg {
+        width: 34px;
+        height: 34px;
+        display: block;
+        fill: var(--border);
+        stroke: var(--border);
+        stroke-width: 1;
+        transition:
+          fill 0.15s,
+          stroke 0.15s;
+      }
+      .review-star.filled svg {
+        fill: #f59e0b;
+        stroke: #d97706;
+      }
+      .review-star.preview svg {
+        fill: #fcd34d;
+        stroke: #f59e0b;
+      }
+      .review-star-sentiment {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--muted);
+        margin-top: 8px;
+        min-height: 18px;
+        transition: color 0.2s;
+      }
+      .review-error {
+        font-size: 12px;
+        color: #dc2626;
+        margin-top: 5px;
+        display: none;
+        align-items: center;
+        gap: 5px;
+      }
+      .review-error.visible {
+        display: flex;
+      }
+      .review-error::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #dc2626;
+        flex-shrink: 0;
+      }
+      .review-textarea {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 11px 14px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        color: var(--text);
+        background: var(--white);
+        resize: vertical;
+        min-height: 108px;
+        outline: none;
+        line-height: 1.65;
+        transition:
+          border-color 0.18s,
+          box-shadow 0.18s;
+      }
+      .review-textarea:focus {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 3px var(--orange-dim);
+      }
+      .review-textarea::placeholder {
+        color: #9ca3af;
+      }
+      .review-char-row {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 5px;
+      }
+      .review-char-count {
+        font-family: "Space Mono", monospace;
+        font-size: 10px;
+        color: #9ca3af;
+        letter-spacing: 0.4px;
+      }
+      .review-submit-btn {
+        width: 100%;
+        padding: 11px 22px;
+        background: var(--orange);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition:
+          background 0.2s,
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .review-submit-btn:hover {
+        background: var(--orange-light);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(255, 92, 26, 0.35);
+      }
+      .review-submit-btn:disabled {
+        background: var(--border);
+        color: var(--muted);
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+      .review-success {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        padding: 36px 24px;
+        text-align: center;
+        gap: 10px;
+      }
+      .review-success.visible {
+        display: flex;
+        animation: rmSlideUp 0.3s cubic-bezier(0.34, 1.3, 0.64, 1);
+      }
+      .review-success-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #ecfdf5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #bbf7d0;
+      }
+      .review-success-icon svg {
+        width: 26px;
+        height: 26px;
+        stroke: #16a34a;
+        fill: none;
+        stroke-width: 2.2;
+      }
+      .review-success-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 26px;
+        letter-spacing: 1.5px;
+        color: var(--dark);
+      }
+      .review-success-sub {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.65;
+        max-width: 290px;
+      }
+      .review-success-stars {
+        display: flex;
+        gap: 4px;
+        margin: 4px 0;
+      }
+      .review-success-stars svg {
+        width: 22px;
+        height: 22px;
+      }
+      .review-done-btn {
+        margin-top: 6px;
+        padding: 10px 32px;
+        background: var(--dark);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .review-done-btn:hover {
+        background: var(--orange);
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
+          transform: none;
+        }
+        .main-wrap {
+          margin-left: 0;
+          width: 100%;
+        }
+        .content {
+          padding: 20px 16px;
+        }
+        .topbar {
+          padding: 0 16px;
+        }
+        #sidebarToggle {
+          display: flex !important;
+        }
+        .page-header {
+          padding: 22px 20px;
+        }
+        .reviews-grid {
+          grid-template-columns: 1fr;
+        }
+        .review-tabs {
+          width: 100%;
+        }
+        .review-tab {
+          flex: 1;
+          justify-content: center;
+        }
+        .review-backdrop {
+          padding: 0;
+          align-items: flex-end;
+        }
+        .review-modal {
+          border-radius: 16px 16px 0 0;
+          max-width: 100%;
+        }
+        .footer-strip {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+      @media (max-width: 480px) {
+        .review-tabs {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar" id="sidebar">
+      <a href="userdashboard.html" class="sidebar-logo">
+        <div class="logo-mark">AD</div>
+        <div class="logo-text-block">
+          <span class="logo-brand">Auto Dealer</span>
+          <span class="logo-sub">Fleet Management</span>
+        </div>
+      </a>
+      <nav class="sidebar-nav">
+        <a href="userdashboard.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard
+        </a>
+        <a href="user.vehicle.listing.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path
+              d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2"
+            />
+            <circle cx="7" cy="17" r="2" />
+            <circle cx="17" cy="17" r="2" />
+            <path d="M5 17h8M3 9h18" />
+          </svg>
+          Vehicles
+        </a>
+        <a href="mybooking.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          My Bookings
+        </a>
+        <a href="kyc.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          KYC
+        </a>
+        <a href="user.wishlist.html" class="nav-item">
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <polygon
+              points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+            />
+          </svg>
+          Wishlist
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar" id="sidebarAvatar">
+            <span id="sidebarInitials"></span>
+          </div>
+          <div class="user-info">
+            <span class="user-name" id="sidebarName"></span>
+            <span class="user-kyc-status unverified" id="sidebarKyc"></span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ── MAIN WRAP ── -->
+    <div class="main-wrap">
+      <header class="topbar">
+        <button class="icon-btn" id="sidebarToggle" style="display: none">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <span class="topbar-page-title">Reviews</span>
+
+        <div class="topbar-right">
+          <!-- NOTIFICATION BELL -->
+          <div class="notif-wrap" id="notifWrap">
+            <button
+              class="icon-btn notif-trigger"
+              id="notifBtn"
+              title="Notifications"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                width="17"
+                height="17"
+              >
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              <span
+                class="notif-dot"
+                id="notifDot"
+                style="display: none"
+              ></span>
+              <span class="notif-count" id="notifCount" style="display: none"
+                >0</span
+              >
+            </button>
+            <div class="notif-panel" id="notifPanel">
+              <div class="np-head">
+                <span class="np-title">Notifications</span>
+                <button class="np-mark-all" id="npMarkAll">
+                  Mark all read
+                </button>
+              </div>
+              <div class="np-list" id="npList">
+                <div class="np-placeholder">Loading…</div>
+              </div>
+              <div class="np-foot" id="npFoot" style="display: none">
+                <button class="np-load-more" id="npLoadMore">
+                  Load older notifications
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- USER DROPDOWN -->
+          <div class="topbar-user user-dropdown-wrap" id="userDropdownWrap">
+            <div class="topbar-avatar" id="topbarAvatar">
+              <span id="topbarInitials"></span>
+            </div>
+            <div>
+              <p class="topbar-name" id="topbarName"></p>
+              <p class="topbar-role" id="topbarRole"></p>
+            </div>
+            <svg
+              class="topbar-chevron"
+              id="topbarChevron"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              width="14"
+              height="14"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+
+            <div class="user-dropdown-menu" id="userDropdownMenu">
+              <div class="dd-header">
+                <div class="topbar-name" id="ddName"></div>
+                <div class="dd-header-email" id="ddEmail"></div>
+              </div>
+              <button class="dd-item" onclick="location.href = 'profile.html'">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="15"
+                  height="15"
+                >
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                </svg>
+                My profile
+              </button>
+              <button
+                class="dd-item"
+                onclick="location.href = 'mybooking.html'"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="15"
+                  height="15"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                My bookings
+              </button>
+              <button class="dd-item" onclick="location.href = 'kyc.html'">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="15"
+                  height="15"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                KYC verification
+                <!-- Badge text & color updated dynamically in loadUserProfile() -->
+                <span class="dd-kyc-badge" id="ddKycBadge">Pending</span>
+              </button>
+              <div class="dd-divider"></div>
+              <button class="dd-item dd-danger" id="logoutBtn">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  width="15"
+                  height="15"
+                >
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Log out
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- Page Header Banner -->
+        <div class="page-header">
+          <div class="page-header-text">
+            <h1>My Reviews</h1>
+            <p>
+              Rate your completed trips and help other customers choose better.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="review-tabs">
+          <button
+            class="review-tab active"
+            id="tabAll"
+            onclick="switchTab('all')"
+          >
+            All <span class="tab-count" id="countAll">0</span>
+          </button>
+          <button
+            class="review-tab"
+            id="tabSubmitted"
+            onclick="switchTab('submitted')"
+          >
+            Submitted <span class="tab-count" id="countSubmitted">0</span>
+          </button>
+          <button
+            class="review-tab"
+            id="tabPending"
+            onclick="switchTab('pending')"
+          >
+            Awaiting Review <span class="tab-count" id="countPending">0</span>
+          </button>
+        </div>
+
+        <!-- Reviews Grid -->
+        <div class="reviews-grid" id="reviewsGrid">
+          <!-- Skeleton loaders -->
+          <div class="rv-card" style="animation-delay: 0.05s">
+            <div class="rv-card-header" style="background: var(--bg)">
+              <div
+                class="skeleton"
+                style="
+                  width: 68px;
+                  height: 48px;
+                  border-radius: 8px;
+                  flex-shrink: 0;
+                "
+              ></div>
+              <div
+                style="flex: 1; display: flex; flex-direction: column; gap: 7px"
+              >
+                <div class="skeleton" style="width: 60%; height: 13px"></div>
+                <div class="skeleton" style="width: 40%; height: 10px"></div>
+              </div>
+            </div>
+            <div class="rv-card-body">
+              <div
+                class="skeleton"
+                style="width: 100px; height: 18px; margin-bottom: 10px"
+              ></div>
+              <div
+                class="skeleton"
+                style="width: 100%; height: 12px; margin-bottom: 6px"
+              ></div>
+              <div class="skeleton" style="width: 80%; height: 12px"></div>
+            </div>
+          </div>
+          <div class="rv-card" style="animation-delay: 0.1s">
+            <div class="rv-card-header" style="background: var(--bg)">
+              <div
+                class="skeleton"
+                style="
+                  width: 68px;
+                  height: 48px;
+                  border-radius: 8px;
+                  flex-shrink: 0;
+                "
+              ></div>
+              <div
+                style="flex: 1; display: flex; flex-direction: column; gap: 7px"
+              >
+                <div class="skeleton" style="width: 55%; height: 13px"></div>
+                <div class="skeleton" style="width: 35%; height: 10px"></div>
+              </div>
+            </div>
+            <div class="rv-card-body">
+              <div
+                class="skeleton"
+                style="width: 120px; height: 18px; margin-bottom: 10px"
+              ></div>
+              <div
+                class="skeleton"
+                style="width: 100%; height: 12px; margin-bottom: 6px"
+              ></div>
+              <div class="skeleton" style="width: 70%; height: 12px"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-strip">
+          <p>© 2026 Auto Dealer Fleet Management. All rights reserved.</p>
+          <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact Us</a>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ── CHATBOT (single instance) ── -->
+    <button id="chat-bubble" title="Chat with us">
+      <div class="chat-notif-dot"></div>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        width="22"
+        height="22"
+      >
+        <path
+          d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+        />
+      </svg>
+    </button>
+
+    <div id="chat-panel">
+      <div class="cp-header">
+        <div class="cp-avatar">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#FF5C1A"
+            stroke-width="1.8"
+            width="16"
+            height="16"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </div>
+        <div>
+          <div class="cp-title">Auto Dealer Support</div>
+          <div class="cp-sub">● Online now</div>
+        </div>
+        <button class="cp-close" id="chat-close">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            width="16"
+            height="16"
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="cp-messages" id="cpMessages">
+        <div class="cp-msg bot">
+          <div class="cp-av">AD</div>
+          <div class="cp-bubble">Hi there! 👋 How can I help you today?</div>
+        </div>
+      </div>
+      <div class="cp-quick" id="cpQuick">
+        <button class="cp-chip" onclick="cpSendChip(this)">
+          Browse vehicles
+        </button>
+        <button class="cp-chip" onclick="cpSendChip(this)">My bookings</button>
+        <button class="cp-chip" onclick="cpSendChip(this)">KYC status</button>
+      </div>
+      <div class="cp-input-row">
+        <input class="cp-input" id="cpInput" placeholder="Type a message…" />
+        <button class="cp-send" id="cpSendBtn">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            width="14"
+            height="14"
+          >
+            <line x1="22" y1="2" x2="11" y2="13" />
+            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── REVIEW MODAL ── -->
+    <div class="review-backdrop hidden" id="reviewBackdrop">
+      <div class="review-modal">
+        <div id="reviewFormView">
+          <div class="review-modal-header">
+            <span class="review-modal-title">Rate Your Experience</span>
+            <button class="review-close-btn" onclick="closeReviewModal()">
+              <svg viewBox="0 0 24 24">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+          <div class="review-vehicle-row">
+            <div class="review-veh-thumb" id="reviewVehThumb">🚗</div>
+            <div class="review-veh-info">
+              <div class="review-veh-name" id="reviewVehName">Vehicle</div>
+              <div class="review-veh-meta" id="reviewVehMeta"></div>
+            </div>
+            <span class="review-completed-badge">✔ Completed</span>
+          </div>
+          <div class="review-form-body">
+            <div>
+              <label class="review-field-label"
+                >Your Rating <span class="req">*</span></label
+              >
+              <div class="review-stars" id="reviewStars">
+                <button
+                  class="review-star"
+                  data-v="1"
+                  onmouseenter="previewStars(1)"
+                  onmouseleave="clearPreview()"
+                  onclick="setRating(1)"
+                >
+                  <svg viewBox="0 0 24 24" stroke-width="1">
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                    />
+                  </svg>
+                </button>
+                <button
+                  class="review-star"
+                  data-v="2"
+                  onmouseenter="previewStars(2)"
+                  onmouseleave="clearPreview()"
+                  onclick="setRating(2)"
+                >
+                  <svg viewBox="0 0 24 24" stroke-width="1">
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                    />
+                  </svg>
+                </button>
+                <button
+                  class="review-star"
+                  data-v="3"
+                  onmouseenter="previewStars(3)"
+                  onmouseleave="clearPreview()"
+                  onclick="setRating(3)"
+                >
+                  <svg viewBox="0 0 24 24" stroke-width="1">
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                    />
+                  </svg>
+                </button>
+                <button
+                  class="review-star"
+                  data-v="4"
+                  onmouseenter="previewStars(4)"
+                  onmouseleave="clearPreview()"
+                  onclick="setRating(4)"
+                >
+                  <svg viewBox="0 0 24 24" stroke-width="1">
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                    />
+                  </svg>
+                </button>
+                <button
+                  class="review-star"
+                  data-v="5"
+                  onmouseenter="previewStars(5)"
+                  onmouseleave="clearPreview()"
+                  onclick="setRating(5)"
+                >
+                  <svg viewBox="0 0 24 24" stroke-width="1">
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div class="review-star-sentiment" id="reviewSentiment">
+                Tap a star to rate
+              </div>
+              <div class="review-error" id="reviewStarError">
+                Please select a rating before submitting.
+              </div>
+            </div>
+            <div>
+              <label class="review-field-label" for="reviewComment"
+                >Your Review <span class="opt">(optional)</span></label
+              >
+              <textarea
+                class="review-textarea"
+                id="reviewComment"
+                placeholder="Tell us about your experience…"
+                maxlength="500"
+                oninput="updateCharCount()"
+              ></textarea>
+              <div class="review-char-row">
+                <span class="review-char-count" id="reviewCharCount"
+                  >0 / 500</span
+                >
+              </div>
+            </div>
+            <button
+              class="review-submit-btn"
+              id="reviewSubmitBtn"
+              onclick="submitReview()"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                width="15"
+                height="15"
+              >
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+              Submit Review
+            </button>
+          </div>
+        </div>
+        <div class="review-success" id="reviewSuccessView">
+          <div class="review-success-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#16a34a"
+              stroke-width="2.2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9 12l2 2 4-4" />
+            </svg>
+          </div>
+          <div class="review-success-title">Review Submitted!</div>
+          <div class="review-success-sub">
+            Thanks for your feedback. Your review helps other customers choose
+            the right vehicle.
+          </div>
+          <div class="review-success-stars" id="reviewSuccessStars"></div>
+          <button class="review-done-btn" onclick="handleReviewDone()">
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SCRIPTS ── -->
+    <script src="chatbot.js" defer></script>
+    <script src="/socket.io/socket.io.js" defer></script>
+    <script src="notification.js" defer></script>
+
+    <script>
+      "use strict";
+
+      const BASE_URL = "http://localhost:5000/api";
+      const IMAGE_BASE_VEH = "http://localhost:5000/uploads/vehicles/";
+
+      function authHeaders() {
+        const token = localStorage.getItem("ad_token");
+        const h = { "Content-Type": "application/json" };
+        if (token) h["Authorization"] = `Bearer ${token}`;
+        return h;
+      }
+
+      async function apiFetch(endpoint, options = {}) {
+        const res = await fetch(`${BASE_URL}${endpoint}`, {
+          credentials: "include",
+          headers: authHeaders(),
+          ...options,
+        });
+        if (res.status === 401) {
+          window.location.href = "/index.html";
+          return;
+        }
+        const data = await res.json().catch(() => null);
+        if (!res.ok) throw new Error(data?.message || `HTTP ${res.status}`);
+        return data;
+      }
+
+      function escHtml(str) {
+        return String(str ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function fmtDate(iso) {
+        if (!iso) return "—";
+        return new Date(iso).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+      }
+
+      function vehicleEmoji(bt) {
+        const m = {
+          SUV: "🚙",
+          Sedan: "🚗",
+          Hatchback: "🚗",
+          Pickup: "🛻",
+          Van: "🚐",
+          Minivan: "🚐",
+          Convertible: "🏎️",
+          Electric: "⚡",
+        };
+        return m[bt] || "🚗";
+      }
+
+      function starsHtml(rating) {
+        let html = "";
+        for (let i = 1; i <= 5; i++) {
+          html += `<svg viewBox="0 0 24 24" style="width:18px;height:18px">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+              fill="${i <= rating ? "#f59e0b" : "#e5e7eb"}"
+              stroke="${i <= rating ? "#d97706" : "#d1d5db"}"
+              stroke-width="1"/></svg>`;
+        }
+        return html;
+      }
+
+      /* ── DATA ── */
+      let allSubmitted = [];
+      let allPending = [];
+      let currentTab = "all";
+      let selectedRating = 0;
+      window.reviewData = null;
+
+      /* ══════════════════════════════════════════
+         LOAD USER PROFILE + KYC BADGE FIX
+      ══════════════════════════════════════════ */
+      async function loadUserProfile() {
+        try {
+          const user = await apiFetch("/user/profile");
+          if (!user) return;
+
+          const fullName = `${user.first_name} ${user.last_name}`;
+          const initials =
+            `${user.first_name?.[0] ?? ""}${user.last_name?.[0] ?? ""}`.toUpperCase();
+          const kycStatus = (user.kyc_status || "not_submitted").toLowerCase();
+          const isVerified = kycStatus === "verified";
+          const isPending = kycStatus === "pending";
+          const isRejected = kycStatus === "rejected";
+
+          /* Names */
+          document.getElementById("sidebarName").textContent = fullName;
+          document.getElementById("topbarName").textContent = fullName;
+          document.getElementById("ddName").textContent = fullName;
+          document.getElementById("ddEmail").textContent = user.email;
+
+          /* Sidebar KYC pill */
+          const sidebarKycEl = document.getElementById("sidebarKyc");
+          if (isVerified) {
+            sidebarKycEl.textContent = "✔ KYC Verified";
+            sidebarKycEl.className = "user-kyc-status verified";
+          } else if (isRejected) {
+            sidebarKycEl.textContent = "✖ KYC Rejected";
+            sidebarKycEl.className = "user-kyc-status unverified";
+          } else if (isPending) {
+            sidebarKycEl.textContent = "⏳ KYC Pending";
+            sidebarKycEl.className = "user-kyc-status unverified";
+          } else {
+            sidebarKycEl.textContent = "⚠ KYC Not Submitted";
+            sidebarKycEl.className = "user-kyc-status unverified";
+          }
+
+          /* Topbar role */
+          const topbarRoleEl = document.getElementById("topbarRole");
+          if (topbarRoleEl) {
+            topbarRoleEl.textContent = isVerified
+              ? "✔ Verified Member"
+              : "Member";
+            topbarRoleEl.style.color = isVerified ? "#16a34a" : "";
+          }
+
+          /* ── Dropdown KYC badge — dynamically updated ── */
+          const ddKycBadge = document.getElementById("ddKycBadge");
+          if (ddKycBadge) {
+            if (isVerified) {
+              ddKycBadge.textContent = "Verified";
+              ddKycBadge.style.background = "#ecfdf5";
+              ddKycBadge.style.color = "#16a34a";
+            } else if (isRejected) {
+              ddKycBadge.textContent = "Rejected";
+              ddKycBadge.style.background = "#fef2f2";
+              ddKycBadge.style.color = "#dc2626";
+            } else if (isPending) {
+              ddKycBadge.textContent = "Pending";
+              ddKycBadge.style.background = "#fff8e1";
+              ddKycBadge.style.color = "#b45309";
+            } else {
+              ddKycBadge.textContent = "Not Submitted";
+              ddKycBadge.style.background = "#f3f4f6";
+              ddKycBadge.style.color = "#6b7280";
+            }
+          }
+
+          /* Avatars */
+          function setAvatar(containerEl, initialsEl) {
+            if (!containerEl) return;
+            if (user.profile_photo) {
+              if (initialsEl) initialsEl.style.display = "none";
+              const img = document.createElement("img");
+              img.src = user.profile_photo;
+              img.alt = fullName;
+              containerEl.appendChild(img);
+            } else {
+              if (initialsEl) initialsEl.textContent = initials;
+            }
+          }
+          setAvatar(
+            document.getElementById("sidebarAvatar"),
+            document.getElementById("sidebarInitials"),
+          );
+          setAvatar(
+            document.getElementById("topbarAvatar"),
+            document.getElementById("topbarInitials"),
+          );
+
+          window._userId = user.id;
+        } catch (err) {
+          console.error("Profile load failed:", err.message);
+        }
+      }
+
+      /* LOAD REVIEWS DATA*/
+      async function loadReviews() {
+        try {
+          const userId = window._userId;
+          if (!userId) throw new Error("User ID not available");
+
+          const [bookingsRes, reviewsRes] = await Promise.allSettled([
+            apiFetch(`/bookings/user/${userId}`),
+            apiFetch(`/reviews/user/${userId}`),
+          ]);
+
+          const bookings =
+            bookingsRes.status === "fulfilled"
+              ? Array.isArray(bookingsRes.value)
+                ? bookingsRes.value
+                : (bookingsRes.value?.bookings ?? bookingsRes.value?.data ?? [])
+              : [];
+
+          const completedBookings = bookings.filter(
+            (b) =>
+              String(b.status ?? "")
+                .trim()
+                .toLowerCase() === "completed",
+          );
+
+          const reviews =
+            reviewsRes.status === "fulfilled"
+              ? (reviewsRes.value?.reviews ?? reviewsRes.value ?? [])
+              : [];
+
+          const reviewedBookingIds = new Set(
+            reviews.map((r) => Number(r.booking_id)),
+          );
+
+          allSubmitted = reviews;
+          allPending = completedBookings
+            .filter((b) => {
+              const id = Number(b.booking_id || b.id);
+              return id && !reviewedBookingIds.has(id);
+            })
+            .map((b) => ({
+              ...b,
+              thumbnail: null, // suppress prefix path — use full URL below
+              _full_img: b.vehicle_img || null, // already a full URL from getUserBookings
+              body_type: b.body_type || b.vehicle_type || null,
+            }));
+
+          updateCounts();
+          renderGrid(currentTab);
+        } catch (err) {
+          console.error("Reviews load error:", err.message);
+          document.getElementById("reviewsGrid").innerHTML = `
+            <div style="grid-column:1/-1;text-align:center;padding:36px;color:#dc2626;font-size:13px;">
+              ⚠ Could not load reviews. ${escHtml(err.message)}
+            </div>`;
+        }
+      }
+
+      function updateCounts() {
+        const total = allSubmitted.length + allPending.length;
+        document.getElementById("countAll").textContent = total;
+        document.getElementById("countSubmitted").textContent =
+          allSubmitted.length;
+        document.getElementById("countPending").textContent = allPending.length;
+      }
+
+      function switchTab(tab) {
+        currentTab = tab;
+        document
+          .querySelectorAll(".review-tab")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .getElementById("tab" + tab.charAt(0).toUpperCase() + tab.slice(1))
+          .classList.add("active");
+        renderGrid(tab);
+      }
+
+      function renderGrid(tab) {
+        const grid = document.getElementById("reviewsGrid");
+        grid.innerHTML = "";
+
+        const submittedToShow = tab === "pending" ? [] : allSubmitted;
+        const pendingToShow = tab === "submitted" ? [] : allPending;
+
+        if (!submittedToShow.length && !pendingToShow.length) {
+          const msgs = {
+            all: {
+              icon: "⭐",
+              title: "No reviews yet",
+              sub: "Complete a booking to leave your first review.",
+              btn: true,
+            },
+            submitted: {
+              icon: "📝",
+              title: "No submitted reviews",
+              sub: "You haven't reviewed any trips yet.",
+              btn: false,
+            },
+            pending: {
+              icon: "✅",
+              title: "All caught up!",
+              sub: "You've reviewed all your completed trips.",
+              btn: false,
+            },
+          };
+          const m = msgs[tab];
+          grid.innerHTML = `
+            <div class="rv-empty">
+              <div class="rv-empty-icon">${m.icon}</div>
+              <div class="rv-empty-title">${m.title}</div>
+              <div class="rv-empty-sub">${m.sub}</div>
+              ${
+                m.btn
+                  ? `<a href="mybooking.html" class="rv-empty-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>View My Bookings</a>`
+                  : ""
+              }
+            </div>`;
+          return;
+        }
+
+        pendingToShow.forEach((b, idx) => {
+          const id = b.booking_id || b.id;
+          const thumbnail = b.thumbnail || b.vehicle_thumbnail;
+          grid.appendChild(buildPendingCard(b, id, thumbnail, idx));
+        });
+
+        submittedToShow.forEach((r, idx) => {
+          grid.appendChild(buildSubmittedCard(r, idx + pendingToShow.length));
+        });
+      }
+
+      function buildPendingCard(b, bookingId, thumbnail, idx) {
+        const card = document.createElement("div");
+        card.className = "rv-pending-card";
+        card.style.animationDelay = `${idx * 0.06}s`;
+
+        const fullImg =
+          b._full_img || (thumbnail ? IMAGE_BASE_VEH + thumbnail : null);
+        const thumbHtml = fullImg
+          ? `<img src="${escHtml(fullImg)}" alt="${escHtml(b.vehicle_name)}" onerror="this.parentElement.innerHTML='${vehicleEmoji(b.body_type)}'" />`
+          : vehicleEmoji(b.body_type);
+        card.innerHTML = `
+          <div class="rv-pending-header">
+            <div class="rv-veh-thumb">${thumbHtml}</div>
+            <div class="rv-veh-info">
+              <div class="rv-veh-name">${escHtml(b.vehicle_name || "Unknown Vehicle")}</div>
+              <div class="rv-veh-meta">${escHtml(b.license_plate || "")} · ${escHtml(b.brand || "")} ${escHtml(b.model || "")}</div>
+            </div>
+            <span class="rv-pending-badge">⏳ PENDING</span>
+          </div>
+          <div class="rv-pending-body">
+            <div class="rv-pending-prompt">
+              <div class="rv-prompt-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              </div>
+              <div class="rv-prompt-text">
+                <strong>How was your trip?</strong>
+                <span>You completed this booking on ${escHtml(fmtDate(b.pickup_datetime))}. Share your experience to help other customers.</span>
+              </div>
+            </div>
+            <button class="rv-write-btn" onclick="openReviewModal(${bookingId})">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+                <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+              </svg>
+              Write a Review
+            </button>
+          </div>`;
+        return card;
+      }
+
+      function buildSubmittedCard(r, idx) {
+        const card = document.createElement("div");
+        card.className = "rv-card";
+        card.style.animationDelay = `${idx * 0.06}s`;
+
+        const thumbnail = r.thumbnail || r.vehicle_thumbnail;
+        const thumbHtml = thumbnail
+          ? `<img src="${IMAGE_BASE_VEH}${escHtml(thumbnail)}" alt="${escHtml(r.vehicle_name)}" onerror="this.style.display='none'" />`
+          : vehicleEmoji(r.body_type);
+
+        const commentHtml = r.comment
+          ? `<p class="rv-comment">"${escHtml(r.comment)}"</p>`
+          : `<p class="rv-comment empty-comment">No written review added.</p>`;
+
+        card.innerHTML = `
+          <div class="rv-card-header">
+            <div class="rv-veh-thumb">${thumbHtml}</div>
+            <div class="rv-veh-info">
+              <div class="rv-veh-name">${escHtml(r.vehicle_name || "Unknown Vehicle")}</div>
+              <div class="rv-veh-meta">${escHtml(r.brand || "")} ${escHtml(r.model || "")}</div>
+            </div>
+            <span class="rv-status-badge">✔ REVIEWED</span>
+          </div>
+          <div class="rv-card-body">
+            <div class="rv-stars">${starsHtml(r.rating)}</div>
+            ${commentHtml}
+            <div class="rv-meta-row">
+              <span class="rv-date">${escHtml(fmtDate(r.created_at || r.review_date))}</span>
+              <span class="rv-booking-ref">Booking <span>#${escHtml(String(r.booking_id || ""))}</span></span>
+            </div>
+          </div>`;
+        return card;
+      }
+
+      /* ══════════════════════════════════════════
+         REVIEW MODAL
+      ══════════════════════════════════════════ */
+      function openReviewModal(bookingId) {
+        if (!bookingId) return;
+        fetch(`${BASE_URL}/reviews/form/${bookingId}`, {
+          credentials: "include",
+          headers: authHeaders(),
+        })
+          .then((res) => {
+            if (res.status === 409) return null;
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+          })
+          .then((data) => {
+            if (!data) return;
+            window.reviewData = data;
+
+            const vehThumbEl = document.getElementById("reviewVehThumb");
+            document.getElementById("reviewVehName").innerText =
+              data.vehicle_name || "Unknown Vehicle";
+            document.getElementById("reviewVehMeta").innerText =
+              `${data.brand || ""} ${data.model || ""}`.trim();
+
+            if (data.thumbnail) {
+              vehThumbEl.innerHTML = `<img src="${IMAGE_BASE_VEH}${escHtml(data.thumbnail)}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;" onerror="this.parentElement.innerHTML='🚗'" />`;
+            } else {
+              vehThumbEl.innerHTML = vehicleEmoji(data.body_type);
+            }
+
+            selectedRating = 0;
+            document
+              .querySelectorAll(".review-star")
+              .forEach((btn) => btn.classList.remove("filled", "preview"));
+            document.getElementById("reviewSentiment").textContent =
+              "Tap a star to rate";
+            document.getElementById("reviewComment").value = "";
+            document.getElementById("reviewCharCount").textContent = "0 / 500";
+            document.getElementById("reviewStarError").style.display = "none";
+
+            const submitBtn = document.getElementById("reviewSubmitBtn");
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg> Submit Review`;
+
+            document.getElementById("reviewFormView").style.display = "block";
+            document.getElementById("reviewSuccessView").style.display = "none";
+            document
+              .getElementById("reviewSuccessView")
+              .classList.remove("visible");
+            document
+              .getElementById("reviewBackdrop")
+              .classList.remove("hidden");
+          })
+          .catch((err) => console.error("Review modal error:", err));
+      }
+
+      function closeReviewModal() {
+        document.getElementById("reviewBackdrop").classList.add("hidden");
+        selectedRating = 0;
+        window.reviewData = null;
+      }
+
+      function handleReviewDone() {
+        closeReviewModal();
+        loadReviews(); // refresh grid after submission
+      }
+
+      function updateCharCount() {
+        const v = document.getElementById("reviewComment").value.length;
+        document.getElementById("reviewCharCount").textContent = `${v} / 500`;
+      }
+
+      const SENTIMENTS = ["", "Poor", "Fair", "Good", "Very Good", "Excellent"];
+
+      function previewStars(r) {
+        document
+          .querySelectorAll(".review-star")
+          .forEach((btn, i) => btn.classList.toggle("preview", i < r));
+      }
+
+      function clearPreview() {
+        document.querySelectorAll(".review-star").forEach((btn, i) => {
+          btn.classList.remove("preview");
+          btn.classList.toggle("filled", i < selectedRating);
+        });
+      }
+
+      function setRating(r) {
+        selectedRating = r;
+        document.querySelectorAll(".review-star").forEach((btn, i) => {
+          btn.classList.toggle("filled", i < r);
+          btn.classList.remove("preview");
+        });
+        document.getElementById("reviewSentiment").textContent =
+          SENTIMENTS[r] || "";
+        document.getElementById("reviewStarError").style.display = "none";
+      }
+
+      function submitReview() {
+        if (!window.reviewData) {
+          alert("No review data found.");
+          return;
+        }
+        if (!selectedRating) {
+          document.getElementById("reviewStarError").style.display = "block";
+          return;
+        }
+
+        const comment = document.getElementById("reviewComment").value.trim();
+        const submitBtn = document.getElementById("reviewSubmitBtn");
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span style="width:15px;height:15px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;display:inline-block;animation:spin .7s linear infinite"></span> Submitting…`;
+
+        fetch(`${BASE_URL}/reviews/submit`, {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json", ...authHeaders() },
+          body: JSON.stringify({
+            booking_id: window.reviewData.booking_id,
+            user_id: window.reviewData.user_id,
+            vehicle_id: window.reviewData.vehicle_id,
+            rating: selectedRating,
+            comment,
+          }),
+        })
+          .then((res) => {
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+          })
+          .then(() => {
+            document.getElementById("reviewFormView").style.display = "none";
+            const successView = document.getElementById("reviewSuccessView");
+            successView.style.display = "flex";
+            successView.classList.add("visible");
+
+            const stars = document.getElementById("reviewSuccessStars");
+            stars.innerHTML = "";
+            for (let i = 1; i <= 5; i++) {
+              stars.innerHTML += `<svg viewBox="0 0 24 24" style="width:22px;height:22px">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                  fill="${i <= selectedRating ? "#f59e0b" : "#e5e7eb"}"
+                  stroke="${i <= selectedRating ? "#d97706" : "#d1d5db"}"
+                  stroke-width="1"/></svg>`;
+            }
+          })
+          .catch((err) => {
+            console.error("Submit error:", err);
+            alert("Failed to submit. Please try again.");
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg> Submit Review`;
+          });
+      }
+
+      /* ══════════════════════════════════════════
+         SIDEBAR / TOPBAR WIRING
+      ══════════════════════════════════════════ */
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("sidebarOverlay");
+      const toggle = document.getElementById("sidebarToggle");
+
+      toggle?.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("open");
+      });
+      overlay?.addEventListener("click", () => {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("open");
+      });
+      window.addEventListener("resize", () => {
+        if (toggle)
+          toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
+      });
+      if (toggle)
+        toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
+
+      const ddWrap = document.getElementById("userDropdownWrap");
+      const ddMenu = document.getElementById("userDropdownMenu");
+      const ddChev = document.getElementById("topbarChevron");
+      ddWrap?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const open = ddMenu.classList.toggle("open");
+        ddChev.classList.toggle("open", open);
+      });
+      document.addEventListener("click", () => {
+        ddMenu?.classList.remove("open");
+        ddChev?.classList.remove("open");
+      });
+      document.getElementById("logoutBtn")?.addEventListener("click", () => {
+        window.location.href = "/index.html";
+      });
+
+      /* ESC / backdrop close */
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeReviewModal();
+      });
+      document
+        .getElementById("reviewBackdrop")
+        ?.addEventListener("click", (e) => {
+          if (e.target === e.currentTarget) closeReviewModal();
+        });
+
+      /* ══════════════════════════════════════════
+         INIT
+      ══════════════════════════════════════════ */
+      document.addEventListener("DOMContentLoaded", async () => {
+        await loadUserProfile();
+        await loadReviews();
+      });
+    </script>
+  </body>
+</html>
