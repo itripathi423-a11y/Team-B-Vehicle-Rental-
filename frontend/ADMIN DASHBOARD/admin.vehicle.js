@@ -5,10 +5,13 @@ let allVehicles = [];
 let filteredVehicles = [];
 let showingDeleted = false;
 let currentPage = 1;
-const ITEMS_PER_PAGE = 5; // ── FIX: was 10, now 5 per page
+const ITEMS_PER_PAGE = 5;
 
-// ── Default SVG placeholder ────────────────────────────────────
+// ── Default SVG placeholder (car icon) ────────────────────────
 const DEFAULT_THUMB_SVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='52' height='38' viewBox='0 0 52 38'><rect width='52' height='38' rx='8' fill='%23f3f4f6'/><g transform='translate(7,7)' stroke='%239ca3af' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'><path d='M2 15h34'/><path d='M4 15l3-6h24l3 6'/><rect x='4' y='15' width='30' height='7' rx='2'/><circle cx='11' cy='23' r='3'/><circle cx='27' cy='23' r='3'/></g></svg>`;
+
+// ── Default car placeholder for upload boxes (larger, nicer) ──
+const DEFAULT_UPLOAD_PLACEHOLDER_SVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='80' viewBox='0 0 120 80'><rect width='120' height='80' rx='10' fill='%23f3f4f6'/><g transform='translate(20,12)' stroke='%23d1d5db' stroke-width='2' fill='%23e5e7eb' stroke-linecap='round' stroke-linejoin='round'><path d='M10 36h60' stroke='%23d1d5db'/><path d='M12 36l6-14h44l6 14' fill='%23e5e7eb'/><rect x='8' y='36' width='64' height='14' rx='4' fill='%23e5e7eb'/><circle cx='22' cy='53' r='5' fill='%23d1d5db' stroke='none'/><circle cx='58' cy='53' r='5' fill='%23d1d5db' stroke='none'/><rect x='28' y='22' width='24' height='10' rx='2' fill='%23f9fafb' stroke='%23d1d5db'/></g><text x='60' y='74' text-anchor='middle' font-family='sans-serif' font-size='9' fill='%239ca3af'>No image</text></svg>`;
 
 // ── Date constants ─────────────────────────────────────────────
 const TODAY_ISO = new Date().toISOString().split("T")[0];
@@ -110,14 +113,18 @@ function renderTable(data) {
           : "status--booked";
       const statusLabel = v.is_deleted ? "Hidden" : v.status;
 
-      const actionBtns = v.is_deleted
-        ? `<button class="btn-ghost btn-sm btn-success" onclick="restoreVehicle(${v.id},'${esc(v.name)}')">↩ Restore</button>
-           <button class="btn-ghost btn-sm btn-danger"  onclick="confirmHardDelete(${v.id},'${esc(v.name)}')">🗑 Delete</button>`
-        : `<button class="btn-ghost btn-sm btn-info"   onclick="openEdit(${v.id})">✏️ Edit</button>
-           <button class="btn-ghost btn-sm btn-warn"   onclick="confirmSoftDelete(${v.id},'${esc(v.name)}')">🙈 Hide</button>
-           <button class="btn-ghost btn-sm btn-danger" onclick="confirmHardDelete(${v.id},'${esc(v.name)}')">🗑 Delete</button>`;
+      const iconEdit = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+      const iconHide = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+      const iconDelete = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
+      const iconRestore = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>`;
 
-      // ── Row is clickable; buttons inside use stopPropagation via onclick wrapper
+      const actionBtns = v.is_deleted
+        ? `<button class="btn-ghost btn-sm btn-success" onclick="restoreVehicle(${v.id},'${esc(v.name)}')" title="Restore">${iconRestore} Restore</button>
+           <button class="btn-ghost btn-sm btn-danger"  onclick="confirmHardDelete(${v.id},'${esc(v.name)}')" title="Delete">${iconDelete} Delete</button>`
+        : `<button class="btn-ghost btn-sm btn-info"   onclick="openEdit(${v.id})" title="Edit">${iconEdit} Edit</button>
+           <button class="btn-ghost btn-sm btn-warn"   onclick="confirmSoftDelete(${v.id},'${esc(v.name)}')" title="Hide">${iconHide} Hide</button>
+           <button class="btn-ghost btn-sm btn-danger" onclick="confirmHardDelete(${v.id},'${esc(v.name)}')" title="Delete">${iconDelete} Delete</button>`;
+
       return `<tr class="vehicle-row" onclick="openDetailModal(${v.id})" style="cursor:pointer;" title="Click to view details">
         <td style="display:flex;align-items:center;gap:10px;min-width:190px">
           ${thumb}
@@ -148,7 +155,6 @@ async function openDetailModal(id) {
     if (!d.success) return toast("Could not load vehicle details.", "error");
     const v = d.data;
 
-    // Build features list
     let features = [];
     try {
       features =
@@ -159,7 +165,6 @@ async function openDetailModal(id) {
       features = [];
     }
 
-    // Build image gallery
     const images = [
       v.thumbnail,
       v.image_1,
@@ -214,13 +219,11 @@ async function openDetailModal(id) {
           </div>
         </div>
 
-        <!-- Image Section -->
         <div class="detail-img-section">
           <div class="detail-main-wrap">${mainImg}</div>
           ${galleryHTML}
         </div>
 
-        <!-- Info Grid -->
         <div class="detail-info-grid">
           <div class="detail-section">
             <p class="detail-section-title">Basic Info</p>
@@ -304,7 +307,6 @@ function setMainImage(src) {
   });
 }
 
-// Close detail modal on backdrop click
 document
   .getElementById("vehicleDetailModal")
   .addEventListener("click", function (e) {
@@ -345,7 +347,6 @@ function renderPagination(total) {
   }
   bar.style.display = "flex";
 
-  // Info on the LEFT
   const info = document.createElement("div");
   info.className = "page-info";
   const start = (currentPage - 1) * ITEMS_PER_PAGE + 1;
@@ -353,7 +354,6 @@ function renderPagination(total) {
   info.textContent = `Showing ${start}–${end} of ${total}`;
   bar.appendChild(info);
 
-  // Buttons on the RIGHT
   const btnGroup = document.createElement("div");
   btnGroup.style.display = "flex";
   btnGroup.style.gap = "6px";
@@ -438,7 +438,7 @@ document.getElementById("toggleDeleted").addEventListener("click", function () {
   loadVehicles();
 });
 
-// ── Image Validation & Preview ─────────────────────────────────
+// ── Image Validation ───────────────────────────────────────────
 const ALLOWED_MIME = ["image/jpeg", "image/png", "image/webp"];
 const ALLOWED_EXT = /\.(jpe?g|png|webp)$/i;
 const MAX_IMG_SIZE = 5 * 1024 * 1024;
@@ -454,6 +454,7 @@ function validateImageFile(file) {
   return { valid: true };
 }
 
+// ── Image Preview with × Remove Button ────────────────────────
 function previewImage(input, boxId) {
   if (!input.files[0]) return;
   const file = input.files[0];
@@ -463,32 +464,103 @@ function previewImage(input, boxId) {
     input.value = "";
     return;
   }
+
   const box = document.getElementById(boxId);
-  const old = box.querySelector(".img-preview");
-  if (old) old.remove();
+  // Remove old preview + remove button if any
+  box.querySelector(".img-preview")?.remove();
+  box.querySelector(".img-remove-btn")?.remove();
+
   const img = document.createElement("img");
   img.className = "img-preview";
   img.src = URL.createObjectURL(file);
   box.appendChild(img);
 
+  // Add × remove button
+  _addRemoveButton(box, input, boxId);
+
+  // Clear thumbnail error if applicable
   if (boxId === "box_thumbnail") {
-    const thumbInput = document.getElementById("f_thumbnail");
-    if (thumbInput) {
-      thumbInput.classList.remove("invalid");
-      const sp = thumbInput
-        .closest(".form-group")
-        ?.querySelector(".form-error.visible");
-      if (sp) {
-        sp.classList.remove("visible");
-        sp.textContent = "";
-      }
-    }
+    _clearThumbError();
   }
+}
+
+function _addRemoveButton(box, input, boxId) {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "img-remove-btn";
+  btn.title = "Remove image";
+  btn.innerHTML = "×";
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    // Clear the file input
+    if (input) input.value = "";
+    // Remove preview and button
+    box.querySelector(".img-preview")?.remove();
+    btn.remove();
+    // Show default placeholder
+    _showDefaultPlaceholder(box, boxId);
+  });
+  box.appendChild(btn);
+}
+
+function _showDefaultPlaceholder(box, boxId) {
+  // If there's already a default placeholder, skip
+  if (box.querySelector(".img-default-placeholder")) return;
+  const ph = document.createElement("img");
+  ph.className = "img-default-placeholder";
+  ph.src = DEFAULT_UPLOAD_PLACEHOLDER_SVG;
+  ph.alt = "No image";
+  box.appendChild(ph);
+}
+
+function _clearThumbError() {
+  const thumbInput = document.getElementById("f_thumbnail");
+  if (!thumbInput) return;
+  thumbInput.classList.remove("invalid");
+  const sp = thumbInput
+    .closest(".form-group")
+    ?.querySelector(".form-error.visible");
+  if (sp) {
+    sp.classList.remove("visible");
+    sp.textContent = "";
+  }
+  const display = document.getElementById("thumb-error-display");
+  if (display) {
+    display.classList.remove("visible");
+    display.textContent = "";
+  }
+}
+
+// ── Initialize default placeholders on page load ───────────────
+function initUploadBoxPlaceholders() {
+  const boxes = [
+    { boxId: "box_thumbnail", inputId: "f_thumbnail" },
+    { boxId: "box_image_1", inputId: "f_img1" },
+    { boxId: "box_image_2", inputId: "f_img2" },
+    { boxId: "box_image_3", inputId: "f_img3" },
+    { boxId: "box_image_4", inputId: "f_img4" },
+    { boxId: "box_image_5", inputId: "f_img5" },
+  ];
+  boxes.forEach(({ boxId }) => {
+    const box = document.getElementById(boxId);
+    if (!box) return;
+    if (
+      !box.querySelector(".img-preview") &&
+      !box.querySelector(".img-default-placeholder")
+    ) {
+      _showDefaultPlaceholder(box, boxId);
+    }
+  });
 }
 
 // ── Form Validation ────────────────────────────────────────────
 const REQUIRED_FIELDS = [
-  { id: "f_name", label: "Vehicle Name", minLen: 2 },
+  {
+    id: "f_name",
+    label: "Vehicle Name",
+    minLen: 2,
+    hint: "Vehicle name must be at least 2 letters.",
+  },
   { id: "f_brand", label: "Brand", minLen: 1 },
   { id: "f_model", label: "Model", minLen: 1 },
   {
@@ -548,15 +620,30 @@ function validateForm() {
       isValid = false;
       continue;
     }
-    if (field.minLen && val.length < field.minLen) {
+
+    // ── Vehicle name: must be at least 2 letters (not just characters) ──
+    if (field.id === "f_name") {
+      const letterCount = (val.match(/[a-zA-Z]/g) || []).length;
+      if (val.length < 2 || letterCount < 2) {
+        showFieldError(
+          field.id,
+          field.hint || "Vehicle name must be at least 2 letters.",
+        );
+        if (!firstError) firstError = el;
+        isValid = false;
+        continue;
+      }
+    } else if (field.minLen && val.length < field.minLen) {
       showFieldError(
         field.id,
-        `${field.label} must be at least ${field.minLen} character(s).`,
+        field.hint ||
+          `${field.label} must be at least ${field.minLen} character(s).`,
       );
       if (!firstError) firstError = el;
       isValid = false;
       continue;
     }
+
     if (field.type === "number") {
       const num = Number(val);
       if (isNaN(num)) {
@@ -620,6 +707,11 @@ function validateForm() {
   const hasNewThumbFile = thumbnailInput?.files?.length > 0;
   const hasExistingThumb = !!thumbnailPreview;
   if (!hasNewThumbFile && !hasExistingThumb) {
+    const errDisplay = document.getElementById("thumb-error-display");
+    if (errDisplay) {
+      errDisplay.textContent = "⚠ A thumbnail image is required.";
+      errDisplay.classList.add("visible");
+    }
     showFieldError("f_thumbnail", "A thumbnail image is required.");
     if (!firstError) firstError = thumbnailInput;
     isValid = false;
@@ -632,6 +724,7 @@ function validateForm() {
   return isValid;
 }
 
+// Live clear errors on input
 REQUIRED_FIELDS.forEach(({ id }) => {
   const el = document.getElementById(id);
   if (!el) return;
@@ -677,14 +770,22 @@ document.getElementById("cancelModal").onclick = closeModal;
 document.getElementById("addVehicleBtn").onclick = () => {
   document.getElementById("vehicleId").value = "";
   document.getElementById("modalTitle").textContent = "Add New Vehicle";
+  resetForm();
   openModal();
 };
 
 function resetForm() {
   document.getElementById("vehicleForm").reset();
   document.getElementById("vehicleId").value = "";
+  // Remove all previews, remove buttons, and default placeholders
   document.querySelectorAll(".img-preview").forEach((el) => el.remove());
+  document.querySelectorAll(".img-remove-btn").forEach((el) => el.remove());
+  document
+    .querySelectorAll(".img-default-placeholder")
+    .forEach((el) => el.remove());
   clearValidationErrors();
+  // Re-show default placeholders
+  initUploadBoxPlaceholders();
 }
 
 // ── Open Edit ──────────────────────────────────────────────────
@@ -738,26 +839,40 @@ async function openEdit(id) {
       cb.checked = features.includes(cb.value);
     });
 
+    // Load existing images into upload boxes
     const imgMap = {
-      box_thumbnail: v.thumbnail,
-      box_image_1: v.image_1,
-      box_image_2: v.image_2,
-      box_image_3: v.image_3,
-      box_image_4: v.image_4,
-      box_image_5: v.image_5,
+      box_thumbnail: { file: v.thumbnail, inputId: "f_thumbnail" },
+      box_image_1: { file: v.image_1, inputId: "f_img1" },
+      box_image_2: { file: v.image_2, inputId: "f_img2" },
+      box_image_3: { file: v.image_3, inputId: "f_img3" },
+      box_image_4: { file: v.image_4, inputId: "f_img4" },
+      box_image_5: { file: v.image_5, inputId: "f_img5" },
     };
-    Object.entries(imgMap).forEach(([boxId, fname]) => {
-      if (!fname) return;
+
+    Object.entries(imgMap).forEach(([boxId, { file: fname, inputId }]) => {
       const box = document.getElementById(boxId);
-      const old = box.querySelector(".img-preview");
-      if (old) old.remove();
-      const img = document.createElement("img");
-      img.className = "img-preview";
-      img.src = `${IMG_BASE}${fname}`;
-      img.onerror = () => {
-        img.src = DEFAULT_THUMB_SVG;
-      };
-      box.appendChild(img);
+      if (!box) return;
+
+      // Remove placeholder first
+      box.querySelector(".img-default-placeholder")?.remove();
+      box.querySelector(".img-preview")?.remove();
+      box.querySelector(".img-remove-btn")?.remove();
+
+      if (fname) {
+        const img = document.createElement("img");
+        img.className = "img-preview";
+        img.src = `${IMG_BASE}${fname}`;
+        img.onerror = () => {
+          img.src = DEFAULT_THUMB_SVG;
+        };
+        box.appendChild(img);
+
+        // Add remove button for existing images
+        const input = document.getElementById(inputId);
+        _addRemoveButton(box, input, boxId);
+      } else {
+        _showDefaultPlaceholder(box, boxId);
+      }
     });
 
     const picker = document.getElementById("f_color_picker");
@@ -913,3 +1028,4 @@ async function loadDestinations() {
 // ── Init ───────────────────────────────────────────────────────
 loadVehicles();
 loadDestinations();
+initUploadBoxPlaceholders();

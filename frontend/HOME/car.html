@@ -1175,8 +1175,17 @@
           });
 
           if (res.ok) {
-            window.location.href = loggedInPage;
+            const data = await res.json();
+            const role = data.user?.role || data.role || null;
+
+            if (role === "user") {
+              window.location.href = loggedInPage;
+            } else {
+              // admin or unknown role → public page
+              window.location.href = guestPage;
+            }
           } else {
+            // not logged in → public page
             window.location.href = guestPage;
           }
         } catch (err) {

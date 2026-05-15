@@ -2215,8 +2215,12 @@
 
       async function executeConfirmedStatus() {
         if (!pendingStatusId || !pendingStatusValue) return;
+
+        const id = pendingStatusId;
+        const status = pendingStatusValue;
+
         dismissConfirm();
-        await doStatus(pendingStatusId, pendingStatusValue);
+        await doStatus(id, status);
       }
 
       /* ── CANCEL FLOW ── */

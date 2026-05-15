@@ -3076,42 +3076,194 @@
         if (el) el.className = "step " + state;
       }
 
-      /* ── Validation ─────────────────────────────────────────────────────── */
-      function validateForm() {
-        const name = document.getElementById("userName")?.value.trim();
-        const email = document.getElementById("userEmail")?.value.trim();
-        const phone = document.getElementById("userPhone")?.value.trim();
-        const pickup = document.getElementById("pickupLoc")?.value.trim();
-        const pickupVal = document.getElementById("pickupDT").value;
-        const dropoffVal = document.getElementById("dropoffDT").value;
+      /* ── INLINE ERROR HELPERS ── */
+      function showError(id, msg) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.style.borderColor = "#dc2626";
+        el.style.boxShadow = "0 0 0 3px rgba(220,38,38,0.12)";
+        let err = el.parentElement.querySelector(".field-error");
+        if (!err) {
+          err = document.createElement("span");
+          err.className = "field-error";
+          err.style.cssText =
+            "font-size:11px;color:#dc2626;margin-top:4px;display:flex;align-items:center;gap:4px;";
+          el.insertAdjacentElement("afterend", err);
+        }
+        err.innerHTML = `<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>${msg}`;
+      }
 
-        if (!name || !email || !phone || !pickup) {
-          alert("Please fill in all required fields before confirming.");
+      function clearError(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.style.borderColor = "";
+        el.style.boxShadow = "";
+        const err = el.parentElement.querySelector(".field-error");
+        if (err) err.remove();
+      }
+
+      function showSuccess(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.style.borderColor = "#16a34a";
+        el.style.boxShadow = "0 0 0 3px rgba(22,163,74,0.1)";
+      }
+
+      /* ── LIVE VALIDATORS (attach to inputs) ── */
+      function validateName() {
+        const val = document.getElementById("userName")?.value.trim();
+        if (!val || val.length < 2) {
+          showError("userName", "Name must be at least 2 characters.");
+          return false;
+        }
+        clearError("userName");
+        showSuccess("userName");
+        return true;
+      }
+
+      function validateEmail() {
+        const val = document.getElementById("userEmail")?.value.trim();
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!val || !regex.test(val)) {
+          showError(
+            "userEmail",
+            "Enter a valid email address (e.g. name@example.com).",
+          );
+          return false;
+        }
+        clearError("userEmail");
+        showSuccess("userEmail");
+        return true;
+      }
+
+      function validatePhone() {
+        const raw = document.getElementById("userPhone")?.value || "";
+        const digits = raw.replace(/[\s\-\+]/g, "");
+        if (!/^\d{10}$/.test(digits)) {
+          showError(
+            "userPhone",
+            "Phone must be exactly 10 digits (e.g. 9812345678).",
+          );
+          return false;
+        }
+        clearError("userPhone");
+        showSuccess("userPhone");
+        return true;
+      }
+
+      function validatePickupLoc() {
+        const val = document.getElementById("pickupLoc")?.value.trim();
+        if (!val) {
+          showError("pickupLoc", "Pickup location is required.");
+          return false;
+        }
+        clearError("pickupLoc");
+        showSuccess("pickupLoc");
+        return true;
+      }
+
+      function validatePickupDT() {
+        const val = document.getElementById("pickupDT")?.value;
+        if (!val) {
+          showError("pickupDT", "Please select a pickup date and time.");
+          return false;
+        }
+        if (new Date(val) < new Date()) {
+          showError("pickupDT", "Pickup date cannot be in the past.");
+          return false;
+        }
+        clearError("pickupDT");
+        showSuccess("pickupDT");
+        return true;
+      }
+
+      /* ── ATTACH LIVE LISTENERS ── */
+      function attachLiveValidation() {
+        document
+          .getElementById("userName")
+          ?.addEventListener("input", validateName);
+        document
+          .getElementById("userName")
+          ?.addEventListener("blur", validateName);
+
+        document
+          .getElementById("userEmail")
+          ?.addEventListener("input", validateEmail);
+        document
+          .getElementById("userEmail")
+          ?.addEventListener("blur", validateEmail);
+
+        document
+          .getElementById("userPhone")
+          ?.addEventListener("input", validatePhone);
+        document
+          .getElementById("userPhone")
+          ?.addEventListener("blur", validatePhone);
+
+        document
+          .getElementById("pickupLoc")
+          ?.addEventListener("input", validatePickupLoc);
+        document
+          .getElementById("pickupLoc")
+          ?.addEventListener("blur", validatePickupLoc);
+
+        document
+          .getElementById("pickupDT")
+          ?.addEventListener("change", validatePickupDT);
+        document
+          .getElementById("pickupDT")
+          ?.addEventListener("blur", validatePickupDT);
+      }
+
+      /* ── VALIDATE FORM (on submit) ── */
+      function validateForm() {
+        const nameOk = validateName();
+        const emailOk = validateEmail();
+        const phoneOk = validatePhone();
+        const pickupOk = validatePickupLoc();
+        const dtOk = validatePickupDT();
+
+        if (!nameOk || !emailOk || !phoneOk || !pickupOk || !dtOk) {
+          // scroll to first error
+          const firstErr = document.querySelector(".field-error");
+          if (firstErr) {
+            firstErr.closest(".form-section")?.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          }
           return null;
         }
+
         if (!IS_PACKAGE && !vehicle) {
           alert("Vehicle data not loaded. Please refresh the page.");
           return null;
         }
-        if (!pickupVal) {
-          alert("Pickup date is missing. Please refresh and try again.");
-          return null;
-        }
+
+        const pickupVal = document.getElementById("pickupDT").value;
+        const dropoffVal = document.getElementById("dropoffDT").value;
         const pickupDate = new Date(pickupVal);
         const dropDate = new Date(dropoffVal);
+
         if (!dropoffVal || dropDate <= pickupDate) {
-          alert(
-            "Drop-off time must be after pickup time. Please check your date and duration.",
+          showError(
+            "dropoffDT",
+            "Drop-off must be after pickup. Check your duration.",
           );
           return null;
         }
+
         const diffMs = dropDate - pickupDate;
         const totalDays = diffMs / (1000 * 60 * 60 * 24);
+        const phone = document
+          .getElementById("userPhone")
+          .value.replace(/[\s\-\+]/g, "");
+
         return {
-          name,
-          email,
+          name: document.getElementById("userName").value.trim(),
+          email: document.getElementById("userEmail").value.trim(),
           phone,
-          pickup,
+          pickup: document.getElementById("pickupLoc").value.trim(),
           pickupVal,
           dropoffVal,
           totalDays,

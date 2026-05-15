@@ -1,4 +1,22 @@
 "use strict";
+// ── AUTO REDIRECT LOGGED-IN USER TO DASHBOARD ──
+(async () => {
+  try {
+    const res = await fetch("http://localhost:5000/api/user/profile", {
+      credentials: "include",
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const role = data.user?.role || data.role;
+      if (role === "user") {
+        window.location.href = "/USER DASHBOARD/userdashboard.html";
+      }
+      // admin stays on homepage — do nothing
+    }
+  } catch {
+    // not logged in — stay on homepage
+  }
+})();
 
 function escHtml(s) {
   return String(s || "")
@@ -28,24 +46,31 @@ function buildPackageBookingURL(pkg) {
   return `../USER%20DASHBOARD/user.booking.html?${params.toString()}`;
 }
 
-async function isLoggedIn() {
+async function getUserRole() {
   try {
     const res = await fetch("http://localhost:5000/api/user/profile", {
       credentials: "include",
     });
-    return res.ok;
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.user?.role || data.role || null;
   } catch {
-    return false;
+    return null;
   }
 }
 
+async function isLoggedIn() {
+  const role = await getUserRole();
+  return role !== null;
+}
+
 async function redirectIfLoggedIn(loggedInPage, guestPage) {
-  try {
-    const res = await fetch("http://localhost:5000/api/user/profile", {
-      credentials: "include",
-    });
-    window.location.href = res.ok ? loggedInPage : guestPage;
-  } catch {
+  const role = await getUserRole();
+  if (role === "user") {
+    window.location.href = loggedInPage;
+  } else if (role === "admin") {
+    window.location.href = guestPage;
+  } else {
     window.location.href = guestPage;
   }
 }
@@ -74,7 +99,6 @@ function openPkgModal(pkg, idx) {
 
   const gradient = GRADIENTS_HP[idx % GRADIENTS_HP.length];
 
-  /* Hero */
   const heroEl = modal.querySelector(".pkm-hero");
   if (heroEl) {
     if (pkg.image_url) {
@@ -87,7 +111,6 @@ function openPkgModal(pkg, idx) {
     }
   }
 
-  /* Package info */
   modal.querySelector(".pkm-title").textContent = pkg.title || "—";
   modal.querySelector(".pkm-desc").textContent =
     pkg.description || "An unforgettable journey through Nepal.";
@@ -97,7 +120,6 @@ function openPkgModal(pkg, idx) {
     pkg.price,
   ).toLocaleString("en-IN")}`;
 
-  /* Vehicle section — remap flat API columns → object */
   const vehicle = pkg.vehicle_id
     ? {
         id: pkg.vehicle_id,
@@ -167,7 +189,6 @@ function openPkgModal(pkg, idx) {
     vehSection.style.display = "none";
   }
 
-  /* Book Now inside modal */
   const bookBtn = modal.querySelector(".pkm-book-btn");
   if (bookBtn) {
     const freshBtn = bookBtn.cloneNode(true);
@@ -177,13 +198,19 @@ function openPkgModal(pkg, idx) {
       freshBtn.textContent = "Checking...";
       freshBtn.disabled = true;
 
-      const loggedIn = await isLoggedIn();
+      const role = await getUserRole();
       const url = buildPackageBookingURL(pkg);
 
-      if (!loggedIn) {
+      if (!role) {
         sessionStorage.setItem("postLoginRedirect", url);
         window.location.href = "../index.html";
         return;
+      }
+
+      if (role === "admin") {
+        freshBtn.textContent = "Book Now";
+        freshBtn.disabled = false;
+        return; // admin stays on page
       }
 
       window.location.href = url;
@@ -203,7 +230,6 @@ function closePkgModal() {
 // ── DOMContentLoaded ──────────────────────────────────────────────────────────
 
 document.addEventListener("DOMContentLoaded", () => {
-  /* Close modal on backdrop click + ESC */
   const modal = document.getElementById("pkgDetailModal");
   if (modal) {
     modal.addEventListener("click", (e) => {
@@ -394,7 +420,6 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
 
-        /* Fix broken tour image */
         const imgEl = card.querySelector("img[data-fallback]");
         if (imgEl) {
           imgEl.addEventListener("error", () => {
@@ -402,13 +427,11 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         }
 
-        /* View button → open detail modal */
         card.querySelector(".pkg-view-btn").addEventListener("click", (e) => {
           e.stopPropagation();
           openPkgModal(pkg, i);
         });
 
-        /* Book Now button — auth-aware */
         card
           .querySelector(".pkg-book-btn")
           .addEventListener("click", async (e) => {
@@ -417,13 +440,19 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.textContent = "Checking...";
             btn.disabled = true;
 
-            const loggedIn = await isLoggedIn();
+            const role = await getUserRole();
             const url = buildPackageBookingURL(pkg);
 
-            if (!loggedIn) {
+            if (!role) {
               sessionStorage.setItem("postLoginRedirect", url);
               window.location.href = "../index.html";
               return;
+            }
+
+            if (role === "admin") {
+              btn.textContent = "Book Now";
+              btn.disabled = false;
+              return; // admin stays on page
             }
 
             window.location.href = url;
@@ -432,7 +461,6 @@ document.addEventListener("DOMContentLoaded", () => {
         grid.appendChild(card);
       });
 
-      /* Carousel */
       const PAGE_SIZE = 3;
       let page = 0;
       const totalPages = Math.ceil(packages.length / PAGE_SIZE);
@@ -482,7 +510,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("browseBtn")?.addEventListener("click", () => {
     redirectIfLoggedIn(
       "/USER%20DASHBOARD/user.vehicle.listing.html",
-      "/HOME/car.html",
+      "/HOME/car.html", // admin + guest both go here
     );
   });
 });
