@@ -903,6 +903,51 @@
         opacity: 1;
         transform: translateY(0);
       }
+      /* ===== PAGINATION ===== */
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+      }
+      .pag-info {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .pag-btns {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .pag-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 7px;
+        border: 1px solid var(--border);
+        background: white;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text);
+        transition: all 0.18s;
+      }
+      .pag-btn:hover {
+        background: var(--bg);
+      }
+      .pag-btn.active {
+        background: var(--orange);
+        color: white;
+        border-color: var(--orange);
+      }
+      .pag-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
 
       @media (max-width: 768px) {
         .sidebar {
@@ -1247,6 +1292,11 @@
                 </tbody>
               </table>
             </div>
+            <!-- PAGINATION -->
+            <div class="pagination">
+              <p class="pag-info" id="pagInfo">—</p>
+              <div class="pag-btns" id="pagBtns"></div>
+            </div>
           </div>
         </main>
       </div>
@@ -1305,15 +1355,19 @@
     <script src="admin.notification.js"></script>
     <script>
       const API = "http://localhost:5000/api/admin";
+
       let allReviews = [];
+      let filtered = [];
       let currentStarFilter = 0;
       let currentReviewId = null;
-      // UI-only hidden set (no status column in DB — track locally)
+      let currentPage = 1;
+      const PER_PAGE = 6;
+
       let hiddenIds = new Set(
         JSON.parse(localStorage.getItem("hidden_reviews") || "[]"),
       );
 
-      // ===== ADMIN =====
+      // ── ADMIN ──────────────────────────────────────
       async function loadAdmin() {
         try {
           const res = await fetch(`${API}/me`, { credentials: "include" });
@@ -1340,7 +1394,7 @@
         } catch (e) {}
       }
 
-      // ===== HELPERS =====
+      // ── HELPERS ─────────────────────────────────────
       function starsHtml(rating, size = 14) {
         let s = "";
         for (let i = 1; i <= 5; i++)
@@ -1357,7 +1411,14 @@
         });
       }
 
-      // ===== RATING SUMMARY =====
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 3000);
+      }
+
+      // ── RATING SUMMARY ──────────────────────────────
       function buildSummary(reviews) {
         if (!reviews.length) return;
         const counts = [0, 0, 0, 0, 0];
@@ -1385,16 +1446,16 @@
             const cnt = counts[star - 1];
             const pct = total ? Math.round((cnt / total) * 100) : 0;
             return `<div class="rs-row">
-            <span class="rs-row-label">${star}</span>
-            <div class="rs-bar"><div class="rs-fill" style="width:${pct}%"></div></div>
-            <span class="rs-count">${cnt}</span>
-          </div>`;
+        <span class="rs-row-label">${star}</span>
+        <div class="rs-bar"><div class="rs-fill" style="width:${pct}%"></div></div>
+        <span class="rs-count">${cnt}</span>
+      </div>`;
           })
           .join("");
         document.getElementById("ratingSummary").style.display = "flex";
       }
 
-      // ===== LOAD REVIEWS =====
+      // ── LOAD ────────────────────────────────────────
       async function loadReviews() {
         try {
           const res = await fetch(`${API}/reviews`, { credentials: "include" });
@@ -1402,91 +1463,142 @@
           const data = await res.json();
           allReviews = data.data || data || [];
           buildSummary(allReviews);
-          renderTable(applyFilters());
+          applyFilters();
         } catch (e) {
           document.getElementById("reviewTableBody").innerHTML =
             `<tr><td colspan="8" class="empty-state">❌ Failed to load reviews</td></tr>`;
           document.getElementById("reviewSubtitle").textContent =
             "Error loading data";
+          document.getElementById("pagInfo").textContent = "";
+          document.getElementById("pagBtns").innerHTML = "";
         }
       }
 
+      // ── APPLY FILTERS → resets to page 1 ───────────
       function applyFilters() {
-        let list = allReviews;
-        if (currentStarFilter > 0)
-          list = list.filter((r) => Number(r.rating) === currentStarFilter);
-        return list;
+        const q = (
+          document.getElementById("reviewSearch")?.value || ""
+        ).toLowerCase();
+
+        filtered = allReviews.filter((r) => {
+          const matchStar =
+            currentStarFilter === 0 || Number(r.rating) === currentStarFilter;
+          const matchSearch =
+            !q ||
+            [
+              r.user_name,
+              r.customer_name,
+              r.email,
+              r.vehicle_name,
+              r.comment,
+            ].some((v) => (v || "").toLowerCase().includes(q));
+          return matchStar && matchSearch;
+        });
+
+        currentPage = 1;
+        renderTable();
       }
 
-      function renderTable(list) {
+      // ── RENDER TABLE (paginated) ────────────────────
+      function renderTable() {
         const tbody = document.getElementById("reviewTableBody");
-        if (!list.length) {
+        const total = filtered.length;
+        const start = (currentPage - 1) * PER_PAGE;
+        const page = filtered.slice(start, start + PER_PAGE);
+
+        document.getElementById("reviewSubtitle").textContent =
+          `Showing ${total} review${total !== 1 ? "s" : ""}`;
+
+        if (!page.length) {
           tbody.innerHTML = `<tr><td colspan="8" class="empty-state">⭐ No reviews found</td></tr>`;
-          document.getElementById("reviewSubtitle").textContent = "No reviews";
+          document.getElementById("pagInfo").textContent = "No records";
+          document.getElementById("pagBtns").innerHTML = "";
           return;
         }
-        tbody.innerHTML = list
+
+        tbody.innerHTML = page
           .map((r) => {
             const id = r.id || r.review_id;
             const isHidden = hiddenIds.has(id);
             return `
-          <tr class="${isHidden ? "hidden-row" : ""}" onclick="openModal(${id})">
-            <td style="font-family:'Space Mono',monospace;font-size:12px;">#${id}</td>
-            <td>
-              <div style="font-weight:500;">${r.user_name || r.customer_name || "—"}</div>
-              <div style="font-size:11px;color:var(--muted);">${r.email || ""}</div>
-            </td>
-            <td>
-  <div style="display:flex;align-items:center;gap:10px;">
-    <img
-      src="${r.vehicle_img || "https://via.placeholder.com/70x45?text=Car"}"
-      alt="vehicle"
-      style="
-        width:70px;
-        height:45px;
-        object-fit:cover;
-        border-radius:8px;
-        border:1px solid #e5e7eb;
-        background:#f3f4f6;
-      "
-    />
-
-    <span class="vehicle-tag">
-      ${r.vehicle_name || "—"}
-    </span>
-  </div>
-</td>
-            <td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);">${r.booking_ref || "#" + (r.booking_id || "—")}</td>
-            <td>
-              <div class="stars">${starsHtml(r.rating)}</div>
-              <span class="rating-num">${Number(r.rating || 0).toFixed(1)}</span>
-            </td>
-            <td class="review-cell">
+        <tr class="${isHidden ? "hidden-row" : ""}" onclick="openModal(${id})">
+          <td style="font-family:'Space Mono',monospace;font-size:12px;">#${id}</td>
+          <td>
+            <div style="font-weight:500;">${r.user_name || r.customer_name || "—"}</div>
+            <div style="font-size:11px;color:var(--muted);">${r.email || ""}</div>
+          </td>
+          <td>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <img
+                src="${r.vehicle_img || "https://via.placeholder.com/70x45?text=Car"}"
+                alt="vehicle"
+                style="width:70px;height:45px;object-fit:cover;border-radius:8px;border:1px solid #e5e7eb;background:#f3f4f6;"
+              />
+              <span class="vehicle-tag">${r.vehicle_name || "—"}</span>
+            </div>
+          </td>
+          <td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);">
+            ${r.booking_ref || "#" + (r.booking_id || "—")}
+          </td>
+          <td>
+            <div class="stars">${starsHtml(r.rating)}</div>
+            <span class="rating-num">${Number(r.rating || 0).toFixed(1)}</span>
+          </td>
+          <td class="review-cell">
+            ${
+              r.comment
+                ? `<div class="review-preview">${r.comment}</div>`
+                : `<span class="review-empty">No comment</span>`
+            }
+          </td>
+          <td style="font-size:12px;color:var(--muted);white-space:nowrap;">${fmtDate(r.created_at)}</td>
+          <td onclick="event.stopPropagation()">
+            <div class="action-wrap">
+              <button class="act-btn view" onclick="openModal(${id})">View</button>
               ${
-                r.comment
-                  ? `<div class="review-preview">${r.comment}</div>`
-                  : `<span class="review-empty">No comment</span>`
+                isHidden
+                  ? `<button class="act-btn do-show" onclick="toggleHide(${id})">Show</button>`
+                  : `<button class="act-btn do-hide" onclick="toggleHide(${id})">Hide</button>`
               }
-            </td>
-            <td style="font-size:12px;color:var(--muted);white-space:nowrap;">${fmtDate(r.created_at)}</td>
-            <td onclick="event.stopPropagation()">
-              <div class="action-wrap">
-                <button class="act-btn view" onclick="openModal(${id})">View</button>
-                ${
-                  isHidden
-                    ? `<button class="act-btn do-show" onclick="toggleHide(${id})">Show</button>`
-                    : `<button class="act-btn do-hide" onclick="toggleHide(${id})">Hide</button>`
-                }
-              </div>
-            </td>
-          </tr>`;
+            </div>
+          </td>
+        </tr>`;
           })
           .join("");
-        document.getElementById("reviewSubtitle").textContent =
-          `Showing ${list.length} review${list.length !== 1 ? "s" : ""}`;
+
+        // ── Pagination info
+        const totalPages = Math.ceil(total / PER_PAGE);
+        document.getElementById("pagInfo").textContent =
+          `Page ${currentPage} of ${totalPages} — ${total} record${total !== 1 ? "s" : ""}`;
+
+        // ── Pagination buttons (ellipsis logic)
+        const pagBtns = document.getElementById("pagBtns");
+        let btns = `<button class="pag-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? "disabled" : ""}>‹</button>`;
+        for (let i = 1; i <= totalPages; i++) {
+          if (
+            totalPages > 7 &&
+            i > 3 &&
+            i < totalPages - 1 &&
+            Math.abs(i - currentPage) > 1
+          ) {
+            if (i === 4 || i === totalPages - 2)
+              btns += `<span style="padding:0 4px;color:var(--muted)">…</span>`;
+            continue;
+          }
+          btns += `<button class="pag-btn ${i === currentPage ? "active" : ""}" onclick="goPage(${i})">${i}</button>`;
+        }
+        btns += `<button class="pag-btn" onclick="goPage(${currentPage + 1})" ${currentPage === totalPages ? "disabled" : ""}>›</button>`;
+        pagBtns.innerHTML = btns;
       }
 
-      // ===== STAR FILTERS =====
+      function goPage(n) {
+        const total = Math.ceil(filtered.length / PER_PAGE);
+        if (n < 1 || n > total) return;
+        currentPage = n;
+        renderTable();
+      }
+
+      // ── STAR FILTERS ────────────────────────────────
       document.querySelectorAll(".star-filter").forEach((btn) => {
         btn.addEventListener("click", function () {
           document
@@ -1494,34 +1606,25 @@
             .forEach((b) => b.classList.remove("active"));
           this.classList.add("active");
           currentStarFilter = Number(this.dataset.stars);
-          renderTable(applyFilters());
+          applyFilters();
         });
       });
 
-      // ===== SEARCH =====
+      // ── SEARCH ──────────────────────────────────────
       document
         .getElementById("reviewSearch")
-        ?.addEventListener("input", function () {
-          const q = this.value.toLowerCase();
-          document.querySelectorAll("#reviewTableBody tr").forEach((row) => {
-            row.style.display = row.textContent.toLowerCase().includes(q)
-              ? ""
-              : "none";
-          });
-        });
+        ?.addEventListener("input", applyFilters);
 
-      // ===== HIDE TOGGLE =====
+      // ── HIDE TOGGLE ─────────────────────────────────
       function toggleHide(id) {
         if (hiddenIds.has(id)) hiddenIds.delete(id);
         else hiddenIds.add(id);
         localStorage.setItem("hidden_reviews", JSON.stringify([...hiddenIds]));
-        renderTable(applyFilters());
+        renderTable();
         showToast(hiddenIds.has(id) ? "Review hidden" : "Review visible again");
-        // If your backend supports it, also call the API:
-        // fetch(`${API}/reviews/${id}/status`, { method:"PATCH", headers:{"Content-Type":"application/json"}, credentials:"include", body:JSON.stringify({ status: hiddenIds.has(id) ? "hidden" : "visible" }) });
       }
 
-      // ===== MODAL =====
+      // ── MODAL ────────────────────────────────────────
       function openModal(id) {
         const r = allReviews.find((x) => (x.id || x.review_id) == id);
         if (!r) return;
@@ -1563,15 +1666,7 @@
         closeModal();
       }
 
-      // ===== TOAST =====
-      function showToast(msg) {
-        const t = document.getElementById("toast");
-        t.textContent = msg;
-        t.classList.add("show");
-        setTimeout(() => t.classList.remove("show"), 3000);
-      }
-
-      // ===== DROPDOWN =====
+      // ── DROPDOWN ─────────────────────────────────────
       document
         .getElementById("topbarUser")
         .addEventListener("click", function (e) {
@@ -1586,7 +1681,7 @@
         document.getElementById("topbarUser")?.classList.remove("open");
       });
 
-      // ===== LOGOUT =====
+      // ── LOGOUT ───────────────────────────────────────
       document
         .getElementById("logoutBtn")
         .addEventListener("click", async function (e) {
@@ -1602,7 +1697,7 @@
           }
         });
 
-      // ===== INIT =====
+      // ── INIT ─────────────────────────────────────────
       loadAdmin();
       loadReviews();
     </script>

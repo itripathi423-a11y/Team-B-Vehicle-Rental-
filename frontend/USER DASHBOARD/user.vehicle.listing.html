@@ -2216,6 +2216,10 @@
       }
 
       /* ── RENDER GRID ── */
+      /* ── PAGINATION STATE ── */
+      let currentPage = 1;
+      const PER_PAGE = 6; //
+
       function renderGrid() {
         const sort = document.getElementById("sortSelect").value;
         let data = [...filtered];
@@ -2232,49 +2236,96 @@
 
         if (!data.length) {
           grid.innerHTML = `<div class="empty-state"><h3>No vehicles found</h3><p>Try adjusting filters</p></div>`;
+          document.getElementById("pagination").innerHTML = "";
           return;
         }
 
-        grid.innerHTML = data
+        const totalPages = Math.ceil(data.length / PER_PAGE);
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const start = (currentPage - 1) * PER_PAGE;
+        const page = data.slice(start, start + PER_PAGE);
+
+        grid.innerHTML = page
           .map((v, i) => {
             const img = v.thumbnail ? `/uploads/vehicles/${v.thumbnail}` : "";
             const isAvail = v.status === "Available";
             const wished = isWishlisted(v.id);
             return `
-          <div class="vehicle-card" style="animation-delay:${i * 0.05}s">
-            <div class="vehicle-img-wrap">
-              ${img ? `<img src="${img}" alt="${v.name || "vehicle"}">` : `<div class="vehicle-img-placeholder">🚗</div>`}
-              <span class="avail-badge ${isAvail ? "available" : "booked"}">${isAvail ? "Available" : "Booked"}</span>
-              <button
-                class="wish-btn ${wished ? "wishlisted" : ""}"
-                title="${wished ? "Remove from wishlist" : "Add to wishlist"}"
-                data-id="${v.id}"
-                onclick="handleWishClick(event, this, ${i})"
-              >
-                <svg viewBox="0 0 24 24" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                </svg>
-              </button>
+        <div class="vehicle-card" style="animation-delay:${i * 0.05}s">
+          <div class="vehicle-img-wrap">
+            ${img ? `<img src="${img}" alt="${v.name || "vehicle"}">` : `<div class="vehicle-img-placeholder">🚗</div>`}
+            <span class="avail-badge ${isAvail ? "available" : "booked"}">${isAvail ? "Available" : "Booked"}</span>
+            <button
+              class="wish-btn ${wished ? "wishlisted" : ""}"
+              title="${wished ? "Remove from wishlist" : "Add to wishlist"}"
+              data-id="${v.id}"
+              onclick="handleWishClick(event, this, ${i})"
+            >
+              <svg viewBox="0 0 24 24" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </button>
+          </div>
+          <div class="vehicle-card-body">
+            <div class="vc-name">${v.name || "Unknown"}</div>
+            <div class="vc-meta">
+              <span class="vc-meta-pill">⛽ ${v.fuel_type || "-"}</span>
+              <span class="vc-meta-pill">🚘 ${v.body_type || "-"}</span>
+              <span class="vc-meta-pill">⚙ ${v.transmission || "-"}</span>
             </div>
-            <div class="vehicle-card-body">
-              <div class="vc-name">${v.name || "Unknown"}</div>
-              <div class="vc-meta">
-                <span class="vc-meta-pill">⛽ ${v.fuel_type || "-"}</span>
-                <span class="vc-meta-pill">🚘 ${v.body_type || "-"}</span>
-                <span class="vc-meta-pill">⚙ ${v.transmission || "-"}</span>
-              </div>
-              <div class="vc-prices">
-                <div class="price-box"><span class="price-box-dur">4h</span><span class="price-box-val">${(v.price_4h || 0).toLocaleString()}</span></div>
-                <div class="price-box"><span class="price-box-dur">8h</span><span class="price-box-val">${(v.price_8h || 0).toLocaleString()}</span></div>
-                <div class="price-box"><span class="price-box-dur">1d</span><span class="price-box-val">${(v.price_1d || 0).toLocaleString()}</span></div>
-              </div>
-              <a href="vehicle-details.html?id=${v.id}" class="view-btn">View Details →</a>
+            <div class="vc-prices">
+              <div class="price-box"><span class="price-box-dur">4h</span><span class="price-box-val">${(v.price_4h || 0).toLocaleString()}</span></div>
+              <div class="price-box"><span class="price-box-dur">8h</span><span class="price-box-val">${(v.price_8h || 0).toLocaleString()}</span></div>
+              <div class="price-box"><span class="price-box-dur">1d</span><span class="price-box-val">${(v.price_1d || 0).toLocaleString()}</span></div>
             </div>
-          </div>`;
+            <a href="vehicle-details.html?id=${v.id}" class="view-btn">View Details →</a>
+          </div>
+        </div>`;
           })
           .join("");
 
+        renderPagination(totalPages);
         updateWishBadge();
+      }
+
+      function renderPagination(totalPages) {
+        const container = document.getElementById("pagination");
+        if (totalPages <= 1) {
+          container.innerHTML = "";
+          return;
+        }
+
+        let btns = `<button class="page-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? "disabled" : ""}>‹</button>`;
+
+        for (let i = 1; i <= totalPages; i++) {
+          if (
+            totalPages > 7 &&
+            i > 3 &&
+            i < totalPages - 1 &&
+            Math.abs(i - currentPage) > 1
+          ) {
+            if (i === 4 || i === totalPages - 2)
+              btns += `<span style="padding:0 4px;color:var(--muted)">…</span>`;
+            continue;
+          }
+          btns += `<button class="page-btn ${i === currentPage ? "active" : ""}" onclick="goPage(${i})">${i}</button>`;
+        }
+
+        btns += `<button class="page-btn" onclick="goPage(${currentPage + 1})" ${currentPage === totalPages ? "disabled" : ""}>›</button>`;
+        container.innerHTML = btns;
+      }
+
+      function goPage(n) {
+        const totalPages = Math.ceil(filtered.length / PER_PAGE);
+        if (n < 1 || n > totalPages) return;
+        currentPage = n;
+        renderGrid();
+        // Scroll back to top of grid smoothly
+        document
+          .getElementById("vehicleGrid")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
       }
 
       /* ── WISH CLICK ── */
@@ -2303,6 +2354,8 @@
         const text = document.getElementById("searchText").value.toLowerCase();
         const body = document.getElementById("filterBody").value;
         const fuel = document.getElementById("filterFuel").value;
+        const locationId = document.getElementById("locationSelect").value;
+
         filtered = VEHICLES.filter((v) => {
           const matchText =
             !text ||
@@ -2311,8 +2364,12 @@
             (v.model || "").toLowerCase().includes(text);
           const matchBody = !body || v.body_type === body;
           const matchFuel = !fuel || v.fuel_type === fuel;
-          return matchText && matchBody && matchFuel;
+          const matchLocation =
+            !locationId || String(v.destination_id) === String(locationId);
+          return matchText && matchBody && matchFuel && matchLocation;
         });
+
+        currentPage = 1; // ← reset to page 1 on every filter change
         renderGrid();
       }
       function clearFilters() {
@@ -2608,7 +2665,7 @@
           "vehicle_sort",
           document.getElementById("sortSelect").value,
         );
-
+        currentPage = 1;
         renderGrid();
       });
 

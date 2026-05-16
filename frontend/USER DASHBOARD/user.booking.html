@@ -2769,33 +2769,48 @@
       /* ── Package locks ──────────────────────────────────────────────────── */
       function applyPackageLocks() {
         if (!IS_PACKAGE) return;
+
+        // Lock duration tiles — package controls the days
         document.querySelectorAll(".dur-opt").forEach((el) => {
           el.classList.remove("selected");
           el.classList.add("locked");
         });
+
+        // Show custom days input but lock it
         const customWrap = document.getElementById("customDaysWrap");
         customWrap.classList.add("show");
         const customInput = document.getElementById("customDays");
         customInput.value = PKG_DAYS;
         customInput.setAttribute("readonly", true);
         customInput.setAttribute("disabled", true);
+
+        // Set a sensible default for pickup (next full hour) but keep it EDITABLE
         const now = new Date();
         now.setMinutes(0, 0, 0);
         now.setHours(now.getHours() + 1);
         const pad = (n) => String(n).padStart(2, "0");
         const toLocalDT = (d) =>
           `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+
         const pickupDT = document.getElementById("pickupDT");
         const dropoffDT = document.getElementById("dropoffDT");
+
+        // Set default pickup — user CAN change it
         pickupDT.value = toLocalDT(now);
-        const drop = new Date(now.getTime() + PKG_DAYS * 24 * 3600000);
+
+        // Auto-calculate dropoff based on package days
+        const drop = new Date(now.getTime() + PKG_DAYS * 24 * 3600_000);
         dropoffDT.value = toLocalDT(drop);
-        pickupDT.setAttribute("readonly", true);
-        pickupDT.setAttribute("disabled", true);
+        // dropoffDT stays readonly — it auto-updates when pickup changes
+
+        // Lock price display since package has fixed price
         document.getElementById("dp4h").textContent = "—";
         document.getElementById("dp8h").textContent = "—";
         document.getElementById("dp1d").textContent = "—";
+
         currentPrice = PKG_PRICE;
+
+        // Focus pickup location since that's what's left to fill
         setTimeout(() => document.getElementById("pickupLoc")?.focus(), 400);
       }
 
@@ -3009,18 +3024,23 @@
           document.getElementById("pickupLoc").value;
       }
       function updateDropoff() {
-        if (IS_PACKAGE) return;
         const pVal = document.getElementById("pickupDT").value;
         if (!pVal) return;
         const pickup = new Date(pVal);
         if (isNaN(pickup.getTime())) return;
+
         let hours = 4;
-        if (selectedDuration === "8h") hours = 8;
-        if (selectedDuration === "1day") hours = 24;
-        if (selectedDuration === "custom")
-          hours =
-            (parseInt(document.getElementById("customDays").value) || 2) * 24;
-        const drop = new Date(pickup.getTime() + hours * 3600000);
+        if (IS_PACKAGE) {
+          hours = PKG_DAYS * 24; // ← use package days
+        } else {
+          if (selectedDuration === "8h") hours = 8;
+          if (selectedDuration === "1day") hours = 24;
+          if (selectedDuration === "custom")
+            hours =
+              (parseInt(document.getElementById("customDays").value) || 2) * 24;
+        }
+
+        const drop = new Date(pickup.getTime() + hours * 3_600_000);
         const pad = (n) => String(n).padStart(2, "0");
         document.getElementById("dropoffDT").value =
           `${drop.getFullYear()}-${pad(drop.getMonth() + 1)}-${pad(drop.getDate())}T${pad(drop.getHours())}:${pad(drop.getMinutes())}`;

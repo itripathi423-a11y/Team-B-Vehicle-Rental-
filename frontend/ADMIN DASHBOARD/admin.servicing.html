@@ -992,6 +992,51 @@
           transform: translateY(0);
         }
       }
+      /* ===== PAGINATION ===== */
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+      }
+      .pag-info {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .pag-btns {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .pag-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 7px;
+        border: 1px solid var(--border);
+        background: white;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text);
+        transition: all 0.18s;
+      }
+      .pag-btn:hover {
+        background: var(--bg);
+      }
+      .pag-btn.active {
+        background: var(--orange);
+        color: white;
+        border-color: var(--orange);
+      }
+      .pag-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
 
       /* RESPONSIVE */
       @media (max-width: 1100px) {
@@ -1534,6 +1579,11 @@
                 </tbody>
               </table>
             </div>
+            <!-- PAGINATION -->
+            <div class="pagination">
+              <p class="pag-info" id="pagInfo">—</p>
+              <div class="pag-btns" id="pagBtns"></div>
+            </div>
           </div>
         </main>
       </div>
@@ -1545,10 +1595,13 @@
       const IMG_BASE = "http://localhost:5000/uploads/vehicles/";
 
       let allRecords = [];
+      let filtered = [];
       let showOnlyOverdue = false;
       let currentRecord = null;
+      let currentPage = 1;
+      const PER_PAGE = 6;
 
-      /* ── TOAST ─────────────────────────────── */
+      // ── TOAST ──────────────────────────────────────
       function toast(msg, type = "success") {
         const icons = { success: "✅", error: "❌", warning: "⚠️" };
         const el = document.createElement("div");
@@ -1558,7 +1611,7 @@
         setTimeout(() => el.remove(), 3800);
       }
 
-      /* ── ADMIN PROFILE ──────────────────────── */
+      // ── ADMIN ───────────────────────────────────────
       async function loadAdmin() {
         try {
           const res = await fetch(`${API}/me`, { credentials: "include" });
@@ -1585,7 +1638,7 @@
         } catch {}
       }
 
-      /* ── LOAD SERVICING ─────────────────────── */
+      // ── LOAD SERVICING ──────────────────────────────
       async function loadServicing() {
         try {
           const res = await fetch(`${API}/servicing`, {
@@ -1606,7 +1659,6 @@
           const res = await fetch(VEHICLE_API);
           const data = await res.json();
           const vehicles = data.data || [];
-
           const statuses = [
             "scheduled",
             "in_progress",
@@ -1615,18 +1667,15 @@
             "scheduled",
             "completed",
           ];
-
           allRecords = vehicles.map((v, i) => {
             const today = new Date();
             const offset = (i % 2 === 0 ? -1 : 1) * (i + 1) * 7;
             const svcDate = new Date(today);
             svcDate.setDate(svcDate.getDate() + offset);
-
             const status = statuses[i % statuses.length];
             const isPast = svcDate < today;
             const finalStatus =
               isPast && status === "scheduled" ? "overdue" : status;
-
             return {
               id: v.id,
               vehicle_name: v.name,
@@ -1639,16 +1688,17 @@
               status: finalStatus,
             };
           });
-
           updateStats(allRecords);
           applyFilters();
         } catch {
           document.getElementById("servicingTableBody").innerHTML =
             `<tr><td colspan="6" class="empty-state"><span class="empty-icon">🔧</span>Could not load servicing data.</td></tr>`;
+          document.getElementById("pagInfo").textContent = "";
+          document.getElementById("pagBtns").innerHTML = "";
         }
       }
 
-      /* ── STATS ──────────────────────────────── */
+      // ── STATS ───────────────────────────────────────
       function updateStats(records) {
         const counts = {
           scheduled: 0,
@@ -1667,7 +1717,7 @@
         document.getElementById("statOverdue").textContent = counts.overdue;
       }
 
-      /* ── DATE HELPERS ───────────────────────── */
+      // ── DATE HELPERS ────────────────────────────────
       function formatDate(d) {
         if (!d) return "—";
         return new Date(d).toLocaleDateString("en-GB", {
@@ -1687,7 +1737,7 @@
         return diff <= 7 ? "date-due-soon" : "date-ok";
       }
 
-      /* ── STATUS BADGE ───────────────────────── */
+      // ── STATUS BADGE ────────────────────────────────
       function statusBadge(s) {
         const map = {
           scheduled: ["badge-blue", "Scheduled"],
@@ -1703,67 +1753,13 @@
         return `<span class="${cls}"><span class="dot"></span>${label}</span>`;
       }
 
-      /* ── RENDER TABLE ───────────────────────── */
-      function renderTable(data) {
-        const tbody = document.getElementById("servicingTableBody");
-        const label = document.getElementById("tableCountLabel");
-        label.textContent = `${data.length} record${data.length !== 1 ? "s" : ""}`;
-
-        if (!data.length) {
-          tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><span class="empty-icon">🔧</span>No servicing records found.</td></tr>`;
-          return;
-        }
-
-        const esc = (s) =>
-          String(s || "")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;");
-
-        tbody.innerHTML = data
-          .map((r) => {
-            const thumb = r.thumbnail
-              ? `<img class="vehicle-thumb" src="${IMG_BASE}${r.thumbnail}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
-              : "";
-            const placeholder = `<div class="thumb-placeholder" style="${r.thumbnail ? "display:none" : ""}">🚗</div>`;
-            const dc = dateClass(r.servicing_date, r.status);
-            const rawDate = r.servicing_date || "";
-            // Safely encode record for onclick
-            const encoded = encodeURIComponent(JSON.stringify(r));
-
-            return `<tr>
-            <td>
-              <div class="vehicle-cell">
-                ${thumb}${placeholder}
-                <div>
-                  <div class="vehicle-name">${esc(r.vehicle_name)}</div>
-                  <div class="vehicle-meta">${esc(r.vehicle_brand || "")} ${esc(r.vehicle_model || "")}</div>
-                </div>
-              </div>
-            </td>
-            <td style="font-family:'Space Mono',monospace;font-size:12.5px">${esc(r.vehicle_plate)}</td>
-            <td>${esc(r.vehicle_type || "—")}</td>
-            <td><span class="date-cell ${dc}">${formatDate(rawDate)}</span></td>
-            <td>${statusBadge(r.status)}</td>
-            <td>
-              <div class="action-cell">
-                <button class="btn-action edit" onclick="openEdit(decodeURIComponent('${encoded}'))">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                  Edit
-                </button>
-              </div>
-            </td>
-          </tr>`;
-          })
-          .join("");
-      }
-
-      /* ── FILTERS ────────────────────────────── */
+      // ── APPLY FILTERS → resets to page 1 ───────────
       function applyFilters() {
         const q = document.getElementById("searchInput").value.toLowerCase();
         const st = document.getElementById("filterStatus").value;
         const tp = document.getElementById("filterType").value;
 
-        const filtered = allRecords.filter((r) => {
+        filtered = allRecords.filter((r) => {
           if (showOnlyOverdue && r.status !== "overdue") return false;
           if (st && r.status !== st) return false;
           if (tp && r.vehicle_type !== tp) return false;
@@ -1774,9 +1770,103 @@
           }
           return true;
         });
-        renderTable(filtered);
+
+        currentPage = 1;
+        renderTable();
       }
 
+      // ── RENDER TABLE (paginated) ────────────────────
+      function renderTable() {
+        const tbody = document.getElementById("servicingTableBody");
+        const total = filtered.length;
+        const start = (currentPage - 1) * PER_PAGE;
+        const page = filtered.slice(start, start + PER_PAGE);
+
+        document.getElementById("tableCountLabel").textContent =
+          `${total} record${total !== 1 ? "s" : ""}`;
+
+        if (!page.length) {
+          tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><span class="empty-icon">🔧</span>No servicing records found.</td></tr>`;
+          document.getElementById("pagInfo").textContent = "No records";
+          document.getElementById("pagBtns").innerHTML = "";
+          return;
+        }
+
+        const esc = (s) =>
+          String(s || "")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
+        tbody.innerHTML = page
+          .map((r) => {
+            const thumb = r.thumbnail
+              ? `<img class="vehicle-thumb" src="${IMG_BASE}${r.thumbnail}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+              : "";
+            const placeholder = `<div class="thumb-placeholder" style="${r.thumbnail ? "display:none" : ""}">🚗</div>`;
+            const dc = dateClass(r.servicing_date, r.status);
+            const encoded = encodeURIComponent(JSON.stringify(r));
+            return `<tr>
+        <td>
+          <div class="vehicle-cell">
+            ${thumb}${placeholder}
+            <div>
+              <div class="vehicle-name">${esc(r.vehicle_name)}</div>
+              <div class="vehicle-meta">${esc(r.vehicle_brand || "")} ${esc(r.vehicle_model || "")}</div>
+            </div>
+          </div>
+        </td>
+        <td style="font-family:'Space Mono',monospace;font-size:12.5px">${esc(r.vehicle_plate)}</td>
+        <td>${esc(r.vehicle_type || "—")}</td>
+        <td><span class="date-cell ${dc}">${formatDate(r.servicing_date)}</span></td>
+        <td>${statusBadge(r.status)}</td>
+        <td>
+          <div class="action-cell">
+            <button class="btn-action edit" onclick="openEdit(decodeURIComponent('${encoded}'))">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              Edit
+            </button>
+          </div>
+        </td>
+      </tr>`;
+          })
+          .join("");
+
+        // ── Pagination info
+        const totalPages = Math.ceil(total / PER_PAGE);
+        document.getElementById("pagInfo").textContent =
+          `Page ${currentPage} of ${totalPages} — ${total} record${total !== 1 ? "s" : ""}`;
+
+        // ── Pagination buttons (ellipsis logic)
+        const pagBtns = document.getElementById("pagBtns");
+        let btns = `<button class="pag-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? "disabled" : ""}>‹</button>`;
+        for (let i = 1; i <= totalPages; i++) {
+          if (
+            totalPages > 7 &&
+            i > 3 &&
+            i < totalPages - 1 &&
+            Math.abs(i - currentPage) > 1
+          ) {
+            if (i === 4 || i === totalPages - 2)
+              btns += `<span style="padding:0 4px;color:var(--muted)">…</span>`;
+            continue;
+          }
+          btns += `<button class="pag-btn ${i === currentPage ? "active" : ""}" onclick="goPage(${i})">${i}</button>`;
+        }
+        btns += `<button class="pag-btn" onclick="goPage(${currentPage + 1})" ${currentPage === totalPages ? "disabled" : ""}>›</button>`;
+        pagBtns.innerHTML = btns;
+      }
+
+      function goPage(n) {
+        const total = Math.ceil(filtered.length / PER_PAGE);
+        if (n < 1 || n > total) return;
+        currentPage = n;
+        renderTable();
+      }
+
+      // ── FILTER EVENTS ───────────────────────────────
       document
         .getElementById("searchInput")
         .addEventListener("input", applyFilters);
@@ -1800,7 +1890,7 @@
           applyFilters();
         });
 
-      /* ── EXPORT CSV ─────────────────────────── */
+      // ── EXPORT ──────────────────────────────────────
       document.getElementById("exportBtn").addEventListener("click", () => {
         const rows = [["Vehicle", "Plate", "Type", "Servicing Date", "Status"]];
         allRecords.forEach((r) => {
@@ -1825,27 +1915,23 @@
         toast("Report exported as CSV", "success");
       });
 
-      /* ── EDIT MODAL ─────────────────────────── */
+      // ── EDIT MODAL ──────────────────────────────────
       function openEdit(recordJson) {
         const record =
           typeof recordJson === "string" ? JSON.parse(recordJson) : recordJson;
         currentRecord = record;
-
         document.getElementById("modalVehicleName").textContent =
           record.vehicle_name || "—";
         document.getElementById("modalVehiclePlate").textContent =
           record.vehicle_plate || "—";
-
         const imgEl = document.getElementById("modalVehicleImg");
         imgEl.src = record.thumbnail
           ? `${IMG_BASE}${record.thumbnail}`
           : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='48'><rect width='64' height='48' fill='%23f3f4f6'/><text x='32' y='28' text-anchor='middle' font-size='18'>🚗</text></svg>";
-
         document.getElementById("editDate").value = record.servicing_date || "";
         document.getElementById("editStatus").value = (
           record.status || "scheduled"
         ).toLowerCase();
-
         document.getElementById("editModal").classList.add("open");
       }
 
@@ -1886,16 +1972,9 @@
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(payload),
             });
-
-            // Update local state regardless of response (api may not be wired yet)
             const idx = allRecords.findIndex((r) => r.id === currentRecord.id);
-            if (idx !== -1) {
-              allRecords[idx] = {
-                ...allRecords[idx],
-                status: payload.status,
-                servicing_date: payload.servicing_date,
-              };
-            }
+            if (idx !== -1)
+              allRecords[idx] = { ...allRecords[idx], ...payload };
             updateStats(allRecords);
             applyFilters();
             closeEditModal();
@@ -1919,7 +1998,7 @@
           }
         });
 
-      /* ── TOPBAR DROPDOWN ────────────────────── */
+      // ── DROPDOWN ─────────────────────────────────────
       document
         .getElementById("topbarUser")
         .addEventListener("click", function (e) {
@@ -1934,7 +2013,7 @@
         document.getElementById("topbarUser")?.classList.remove("open");
       });
 
-      /* ── LOGOUT ─────────────────────────────── */
+      // ── LOGOUT ───────────────────────────────────────
       document
         .getElementById("logoutBtn")
         .addEventListener("click", async function (e) {
@@ -1950,7 +2029,7 @@
           }
         });
 
-      /* ── INIT ───────────────────────────────── */
+      // ── INIT ─────────────────────────────────────────
       loadAdmin();
       loadServicing();
     </script>
