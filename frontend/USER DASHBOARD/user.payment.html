@@ -1473,6 +1473,78 @@
         }
       }
 
+      /* ESEWA CARD */
+      .esewa-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .ec-header {
+        background: linear-gradient(135deg, #60bb46 0%, #1a2335 100%);
+        padding: 20px 22px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        position: relative;
+        overflow: hidden;
+      }
+      .esewa-logo-wrap {
+        width: 46px;
+        height: 46px;
+        background: #fff;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        position: relative;
+        z-index: 1;
+      }
+      .esewa-logo-wrap svg {
+        width: 32px;
+        height: 32px;
+      }
+      .ec-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.2;
+      }
+      .ec-sub {
+        font-size: 11.5px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 2px;
+      }
+      .ec-body {
+        padding: 22px;
+      }
+      .btn-esewa {
+        width: 100%;
+        height: 52px;
+        background: #60bb46;
+        border: none;
+        border-radius: 11px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: all 0.2s;
+      }
+      .btn-esewa:hover {
+        background: #52a83b;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(96, 187, 70, 0.3);
+      }
+
+
       /* SUCCESS MODAL */
       .modal-overlay {
         position: fixed;
@@ -2390,6 +2462,31 @@
                   <span class="or-text">SECURED BY KHALTI</span>
                   <div class="or-line"></div>
                 </div>
+              </div>
+            </div>
+
+            <!-- ESEWA CARD -->
+            <div class="esewa-card">
+              <div class="ec-header">
+                <div class="esewa-logo-wrap">
+                  <svg viewBox="0 0 40 40" fill="none">
+                    <text x="5" y="28" font-family="sans-serif" font-weight="800" font-size="24" fill="#60BB46">e</text>
+                    <text x="18" y="28" font-family="sans-serif" font-weight="700" font-size="12" fill="#1a1a2e">S</text>
+                  </svg>
+                </div>
+                <div class="ec-header-text">
+                  <div class="ec-title">Pay with eSewa</div>
+                  <div class="ec-sub">Nepal's #1 Digital Wallet</div>
+                </div>
+                <div class="kc-secure-badge">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>SSL Secured
+                </div>
+              </div>
+              <div class="ec-body">
+                <button class="btn-esewa" onclick="payWithEsewa()" id="esewaBtn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+                  Pay Rs <span class="esewa-total">0</span> with eSewa
+                </button>
               </div>
             </div>
 

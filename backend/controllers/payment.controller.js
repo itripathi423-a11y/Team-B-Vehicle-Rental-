@@ -3,6 +3,8 @@ const db = require("../config/db");
 const transporter = require("../utils/mailer");
 const { createNotification } = require("./notification.controller");
 const { createAdminNotification } = require("./admin.notification.controller");
+const CryptoJS = require("crypto-js");
+const { v4: uuidv4 } = require("uuid");
 
 const KHALTI_INITIATE = "https://dev.khalti.com/api/v2/epayment/initiate/";
 const KHALTI_LOOKUP = "https://dev.khalti.com/api/v2/epayment/lookup/";
@@ -109,6 +111,205 @@ exports.initiatePayment = async (req, res) => {
     pidx: mockPidx,
   });
 };
+
+/* ═══════════════════════════════════════════════════════════════════════
+   POST /api/payments/esewa/initiate
+   Initiates eSewa payment
+════════════════════════════════════════════════════════════════════════ */
+exports.initiateEsewaPayment = async (req, res) => {
+  const userId = req.session?.user?.id;
+  if (!userId) return res.status(401).json({ success: false, message: "Not logged in" });
+
+  const { booking_id } = req.body;
+  if (!booking_id) return res.status(400).json({ success: false, message: "booking_id required" });
+
+  let booking;
+  try {
+    const [rows] = await new Promise((resolve, reject) =>
+      db.query(
+        "SELECT * FROM bookings WHERE id = ? AND user_id = ?",
+        [booking_id, userId],
+        (e, r) => (e ? reject(e) : resolve([r])),
+      ),
+    );
+    booking = rows?.[0];
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+
+  if (!booking) return res.status(404).json({ success: false, message: "Booking not found" });
+  if (booking.payment_status === "Paid") return res.status(400).json({ success: false, message: "Already paid" });
+
+  const merchantCode = process.env.ESEWA_MERCHANT_CODE || "EPAYTEST";
+  const secretKey = process.env.ESEWA_SECRET_KEY || "8gBm/:&EnhH.1/q";
+  const baseUrl = process.env.BACKEND_URL || "http://localhost:5000";
+  const gatewayUrl = process.env.ESEWA_GATEWAY_URL || "https://rc-epay.esewa.com.np/api/epay/main/v2/form";
+
+  const transactionUuid = uuidv4();
+  const totalAmount = String(booking.total_price);
+
+  const signatureData = `total_amount=${totalAmount},transaction_uuid=${transactionUuid},product_code=${merchantCode}`;
+  const signature = CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256(signatureData, secretKey));
+
+  // Save transaction to payments table
+  db.query(
+    `INSERT INTO payments (booking_id, user_id, pidx, amount, status, created_at)
+     VALUES (?, ?, ?, ?, 'Pending', NOW())`,
+    [booking.id, userId, transactionUuid, booking.total_price],
+    (e) => {
+      if (e) console.error("eSewa payment insert error:", e.message);
+    },
+  );
+
+  const formHtml = `
+    <html>
+      <body onload="document.getElementById('esewaForm').submit()">
+        <form id="esewaForm" action="${gatewayUrl}" method="POST">
+          <input type="hidden" name="amount" value="${totalAmount}" />
+          <input type="hidden" name="tax_amount" value="0" />
+          <input type="hidden" name="total_amount" value="${totalAmount}" />
+          <input type="hidden" name="transaction_uuid" value="${transactionUuid}" />
+          <input type="hidden" name="product_code" value="${merchantCode}" />
+          <input type="hidden" name="product_service_charge" value="0" />
+          <input type="hidden" name="product_delivery_charge" value="0" />
+          <input type="hidden" name="success_url" value="${baseUrl}/api/payments/esewa/verify" />
+          <input type="hidden" name="failure_url" value="${process.env.FRONTEND_URL}/user.payment.html?error=esewa_failed" />
+          <input type="hidden" name="signed_field_names" value="total_amount,transaction_uuid,product_code" />
+          <input type="hidden" name="signature" value="${signature}" />
+        </form>
+      </body>
+    </html>
+  `;
+
+  return res.json({ success: true, formHtml });
+};
+
+/* ═══════════════════════════════════════════════════════════════════════
+   GET /api/payments/esewa/verify
+   eSewa redirects here after payment
+════════════════════════════════════════════════════════════════════════ */
+exports.verifyEsewaPayment = async (req, res) => {
+  const { data } = req.query;
+  const FAIL_URL = `${process.env.FRONTEND_URL}/user.payment.html?error=esewa_verification_failed`;
+
+  if (!data) return res.redirect(FAIL_URL);
+
+  try {
+    const decoded = JSON.parse(Buffer.from(data, "base64").toString("utf-8"));
+    const { transaction_uuid, total_amount, status, transaction_code } = decoded;
+
+    if (status !== "COMPLETE") return res.redirect(`${FAIL_URL}&status=${status}`);
+
+    const verifyUrl = process.env.ESEWA_VERIFY_URL || "https://rc-epay.esewa.com.np/api/epay/transaction/status/";
+    const merchantCode = process.env.ESEWA_MERCHANT_CODE || "EPAYTEST";
+
+    const verifyRes = await axios.get(
+      `${verifyUrl}?product_code=${merchantCode}&transaction_uuid=${transaction_uuid}&total_amount=${total_amount}`
+    );
+    
+    if (verifyRes.data.status !== "COMPLETE") return res.redirect(FAIL_URL);
+
+    // Fetch booking
+    let booking;
+    const [rows] = await new Promise((resolve, reject) =>
+      db.query(
+        `SELECT b.*, v.name AS vehicle_name, u.email AS user_email, u.full_name AS user_name
+         FROM bookings b
+         LEFT JOIN vehicles v ON b.vehicle_id = v.id
+         LEFT JOIN users u ON b.user_id = u.id
+         WHERE b.id = (SELECT booking_id FROM payments WHERE pidx = ?)`,
+        [transaction_uuid],
+        (e, r) => (e ? reject(e) : resolve([r])),
+      ),
+    );
+    booking = rows?.[0];
+
+    if (!booking) return res.redirect(FAIL_URL);
+
+    // Update booking and payment
+    await new Promise((resolve) =>
+      db.query(
+        `UPDATE bookings
+         SET payment_status = 'Paid', payment_method = 'eSewa',
+             transaction_id = ?, paid_at = NOW(), updated_at = NOW()
+         WHERE id = ?`,
+        [transaction_code, booking.id],
+        (e) => {
+          if (e) console.error("Booking update error:", e.message);
+          resolve();
+        },
+      ),
+    );
+
+    await new Promise((resolve) =>
+      db.query(
+        `UPDATE payments SET status = 'Completed', transaction_id = ? WHERE pidx = ?`,
+        [transaction_code, transaction_uuid],
+        (e) => {
+          if (e) console.error("Payment update error:", e.message);
+          resolve();
+        },
+      ),
+    );
+
+    // Notify and email
+    const txnAmount = parseFloat(total_amount);
+    
+    try {
+      await createNotification({
+        user_id: booking.user_id,
+        booking_id: booking.id,
+        title: "Payment Confirmed 💳",
+        message: `Your eSewa payment of ${fmtPrice(txnAmount)} for booking ${booking.booking_ref} has been confirmed.`,
+        type: "booking",
+        target_role: "user",
+      });
+      await createAdminNotification({
+        title: "eSewa Payment Received 💳",
+        message: `${booking.user_name} paid ${fmtPrice(txnAmount)} for ${booking.booking_ref} via eSewa.`,
+        type: "booking",
+        ref_id: booking.id,
+        ref_type: "booking",
+      });
+    } catch (e) { console.warn("Notification error:", e.message); }
+
+    try {
+      await transporter.sendMail({
+        from: `"Auto Dealer" <${process.env.EMAIL_USER}>`,
+        to: booking.user_email,
+        subject: `Payment Confirmed — ${booking.booking_ref}`,
+        html: emailWrapper(`
+          ${emailHeader("Payment Confirmed")}
+          <tr><td style="padding:32px;">
+            <p style="margin:0 0 6px;font-size:20px;font-weight:600;color:#111827;">Hi ${booking.user_name},</p>
+            <p style="margin:0 0 24px;font-size:14px;color:#6b7280;line-height:1.6;">
+              Your eSewa payment has been confirmed.
+            </p>
+            <div style="background:#f4f5f7;border-radius:8px;padding:20px 24px;margin-bottom:24px;">
+              <table width="100%" cellpadding="0" cellspacing="0">
+                ${infoRow("Booking Ref", booking.booking_ref)}
+                ${infoRow("Amount Paid", fmtPrice(txnAmount))}
+                ${infoRow("Method", "eSewa")}
+                ${infoRow("Status", "Paid ✓")}
+              </table>
+            </div>
+          </td></tr>
+          ${emailFooter()}
+        `),
+      });
+    } catch (e) { console.error("Email error:", e.message); }
+
+    return res.redirect(
+      `${process.env.FRONTEND_URL}/user.payment.success.html` +
+        `?ref=${booking.booking_ref}&txn=${transaction_code}&amount=${txnAmount}&method=esewa&paid=true`
+    );
+
+  } catch (err) {
+    console.error("eSewa verification error:", err);
+    return res.redirect(FAIL_URL);
+  }
+};
+
 
 /* ═══════════════════════════════════════════════════════════════════════
    GET /api/payments/verify?pidx=...&purchase_order_id=...&status=...

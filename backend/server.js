@@ -37,26 +37,28 @@ const adminPaymentRoutes = require("./routes/admin.payments.routes");
 
 const app = express();
 const server = http.createServer(app);
-const { initSocket } = require("./socket"); // ← ADD
+
+const { initSocket } = require("./socket");
 initSocket(server);
+
 require("./utils/reminderCron");
 
-/* ── BODY PARSING ── */
+/* BODY PARSING */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/* ── CORS ── */
+/* CORS */
 app.use(
   cors({
     origin: ["http://localhost:5500", "http://127.0.0.1:5500"],
     credentials: true,
-  }),
+  })
 );
 
-/* ── SESSION ── */
+/* SESSION */
 app.use(
   session({
-    secret: "vehicle_rental_secret",
+    secret: process.env.SESSION_SECRET || "vehicle_rental_secret",
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -65,68 +67,74 @@ app.use(
       sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000,
     },
-  }),
+  })
 );
 
-/* ── HOME ── */
+/* PASSPORT */
+app.use(passport.initialize());
+app.use(passport.session());
+
+/* HOME */
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/HOME/homepage.html"));
 });
 
-/* ── STATIC ── */
+/* STATIC */
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+app.use(express.static(path.join(__dirname, "../frontend")));
+app.use(
+  express.static(path.join(__dirname, "../frontend/USER DASHBOARD"))
+);
 
-// After session middleware, add:
-app.use(passport.initialize());
-app.use(passport.session());
-
-// After other auth routes, add:
+/* AUTH ROUTES */
 app.use("/api/auth", require("./routes/auth.google.routes"));
-/* ── ROUTES ── */
-app.use("/api/user", userProfileRoutes);
-app.use("/api/user/vehicle-details", vehicleDetailsRoutes);
 app.use("/api/auth", require("./routes/auth.forgot.routes"));
 app.use("/api/auth", require("./routes/auth.otp.routes"));
 
+/* USER ROUTES */
 app.use("/api", userRoutes);
-app.use("/api/tour-packages", tourPackagesRouter);
-app.use("/api/vehicles", vehicleRoutes);
-app.use("/api/destinations", destinationRoutes);
-
-app.use("/api/admin/vehicles", vehicleRoutes);
-app.use("/api/admin/kyc", adminKycRoutes);
-app.use("/api/admin/bookings", adminBookingRoutes); // NEW
-
-app.use("/api/admin/tour-packages", adminTourRoutes);
-app.use("/api/admin", adminRoutes);
-
-app.use("/api", userDashboardRoutes);
+app.use("/api/user", userProfileRoutes);
 app.use("/api/user/vehicles", userVehicleListingRoutes);
 app.use("/api/user/vehicle-details", vehicleDetailsRoutes);
+app.use("/api/user", enquiryRoutes);
+app.use("/api/user/notifications", require("./routes/notificationRoutes"));
+
+/* VEHICLE ROUTES */
+app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/vehicles", vehicleRoutes_booking);
+
+/* TOUR & DESTINATIONS */
+app.use("/api/tour-packages", tourPackagesRouter);
+app.use("/api/destinations", destinationRoutes);
+
+/* BOOKINGS */
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/bookings", mybookingRoutes);
+
+/* OTHER USER SERVICES */
 app.use("/api/kyc", kycRoutes);
 app.use("/api/chat", chatRoutes);
-app.use("/api/admin/servicing", serviceRoutes);
 app.use("/api/reviews", reviewRoutes);
-app.use("/api/user", enquiryRoutes);
+app.use("/api/payments", paymentRoutes);
 
+/* ADMIN ROUTES */
+app.use("/api/admin", adminRoutes);
+app.use("/api/admin/vehicles", vehicleRoutes);
+app.use("/api/admin/kyc", adminKycRoutes);
+app.use("/api/admin/bookings", adminBookingRoutes);
+app.use("/api/admin/tour-packages", adminTourRoutes);
+app.use("/api/admin/servicing", serviceRoutes);
 app.use("/api/admin/enquiries", adminEnquiryRoutes);
 app.use("/api/admin/reviews", adminreviewRoutes);
-app.use("/api/user/notifications", require("./routes/notificationRoutes"));
 app.use("/api/admin/notifications", adminNotificationRoutes);
-app.use("/api/payments", paymentRoutes);
-// ...
 app.use("/api/admin/payments", adminPaymentRoutes);
 
-app.use(express.static(path.join(__dirname, "../frontend")));
+/* DASHBOARD */
+app.use("/api", userDashboardRoutes);
 
-app.use(express.static(path.join(__dirname, "../frontend/USER DASHBOARD")));
-
-/* ── START ── */
+/* START SERVER */
 const PORT = process.env.PORT || 5000;
+
 server.listen(PORT, () => {
-  // ← CHANGE app.listen → server.listen
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
