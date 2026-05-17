@@ -64,7 +64,6 @@ async function buildUserContext(userId) {
          ORDER BY status ASC, name ASC`,
     ),
 
-    // User's enquiries
     query(
       `SELECT id, question, status, admin_reply, created_at
          FROM enquiries
@@ -73,7 +72,6 @@ async function buildUserContext(userId) {
       [userId],
     ),
 
-    // User's own reviews
     query(
       `SELECT r.rating, r.comment, r.created_at,
                 v.name AS vehicle_name, b.booking_ref
@@ -85,7 +83,6 @@ async function buildUserContext(userId) {
       [userId],
     ),
 
-    // Top rated vehicles by average rating (all users)
     query(
       `SELECT v.id, v.name, v.brand, v.model, v.body_type, v.fuel_type,
                 v.seating_capacity, v.price_1d, v.status,
@@ -113,7 +110,7 @@ async function buildUserContext(userId) {
 }
 
 /* ════════════════════════════════════
-   BUILD SYSTEM PROMPT
+   BUILD SYSTEM PROMPT (logged-in)
 ════════════════════════════════════ */
 function buildSystemPrompt(data, pageContext) {
   const {
@@ -126,7 +123,6 @@ function buildSystemPrompt(data, pageContext) {
     topRatedVehicles,
   } = data;
 
-  // ── User profile ──
   const userSection = user
     ? `Name: ${user.name}
 Email: ${user.email}
@@ -135,7 +131,6 @@ Role: ${user.role}
 Member since: ${new Date(user.created_at).toLocaleDateString("en-NP")}`
     : "Guest (not logged in)";
 
-  // ── KYC ──
   let kycSection;
   if (!kyc) {
     kycSection = `Status: Not submitted
@@ -154,7 +149,6 @@ Submitted: ${new Date(kyc.submitted_at).toLocaleDateString("en-NP")}${kyc.review
 ${nextStep}`;
   }
 
-  // ── Bookings ──
   const bookingsSection = !bookings.length
     ? "No bookings yet."
     : bookings
@@ -169,7 +163,6 @@ ${nextStep}`;
         )
         .join("\n\n");
 
-  // ── Available vehicles ──
   const available = vehicles.filter((v) => v.status === "Available");
   const vehiclesSection = !available.length
     ? "No vehicles available."
@@ -180,7 +173,6 @@ ${nextStep}`;
         )
         .join("\n");
 
-  // ── User's Enquiries ──
   const enquiriesSection = !enquiries.length
     ? "No enquiries submitted yet."
     : enquiries
@@ -193,7 +185,6 @@ ${nextStep}`;
         )
         .join("\n\n");
 
-  // ── User's Own Reviews ──
   const userReviewsSection = !userReviews.length
     ? "No reviews submitted yet."
     : userReviews
@@ -206,7 +197,6 @@ ${nextStep}`;
         )
         .join("\n\n");
 
-  // ── Top Rated Vehicles ──
   const topRatedSection = !topRatedVehicles.length
     ? "No reviewed vehicles yet."
     : topRatedVehicles
@@ -216,7 +206,6 @@ ${nextStep}`;
         )
         .join("\n");
 
-  // ── Page context ──
   let pageSection = "";
   if (pageContext) {
     if (pageContext.vehicle) {
@@ -238,7 +227,6 @@ ${nextStep}`;
     }
   }
 
-  // ── KYC status summary ──
   const kycStatusLine = !kyc
     ? "not submitted"
     : kyc.status === "verified"
@@ -412,14 +400,128 @@ router.post("/", async (req, res) => {
         .json({ reply: "Please send a message.", suggestions: [] });
     }
 
+    /* ── GUEST MODE: no userId → serve public data only ── */
     if (!userId) {
-      return res.status(401).json({
-        reply: "Please log in to use the assistant.",
-        suggestions: ["Login", "Register"],
-      });
-    }
+      let vehicles = [];
+      let topRatedVehicles = [];
+      try {
+        [vehicles, topRatedVehicles] = await Promise.all([
+          query(
+            `SELECT id, name, brand, model, year, body_type, fuel_type,
+                    transmission, seating_capacity, color, status,
+                    price_4h, price_8h, price_1d
+             FROM vehicles WHERE is_deleted = 0
+             ORDER BY status ASC, name ASC`,
+          ),
+          query(
+            `SELECT v.id, v.name, v.brand, v.model, v.body_type, v.fuel_type,
+                    v.seating_capacity, v.price_1d, v.status,
+                    ROUND(AVG(r.rating), 1) AS avg_rating,
+                    COUNT(r.id) AS review_count
+             FROM vehicles v
+             JOIN reviews r ON r.vehicle_id = v.id
+             WHERE v.is_deleted = 0
+             GROUP BY v.id
+             HAVING review_count > 0
+             ORDER BY avg_rating DESC, review_count DESC
+             LIMIT 5`,
+          ),
+        ]);
+      } catch (dbErr) {
+        console.error("[DB Error - guest]", dbErr.message);
+      }
 
-    // ── Fetch user data ──
+      const available = vehicles.filter((v) => v.status === "Available");
+      const msg = message.toLowerCase().trim();
+
+      const guestSystemPrompt = `You are a helpful support assistant for AutoDrive Nepal, a vehicle rental platform in Nepal.
+You are talking to a guest (not logged in). Be friendly, concise, and helpful.
+Today: ${new Date().toLocaleDateString("en-NP")}
+
+════════ AVAILABLE VEHICLES (${available.length} of ${vehicles.length}) ════════
+${
+  available.length
+    ? available
+        .map(
+          (v) =>
+            `• ${v.name} (${v.brand} ${v.model}, ${v.year}) | ${v.body_type} | ${v.fuel_type} | ${v.seating_capacity} seats | 4h: Rs${v.price_4h} | 8h: Rs${v.price_8h} | 1d: Rs${v.price_1d}`,
+        )
+        .join("\n")
+    : "No vehicles available right now."
+}
+
+════════ TOP RATED VEHICLES ════════
+${
+  topRatedVehicles.length
+    ? topRatedVehicles
+        .map(
+          (v, i) =>
+            `${i + 1}. ${v.name} (${v.brand} ${v.model}) | ${v.body_type} | ${v.fuel_type} | Rs${v.price_1d}/day | ⭐ ${v.avg_rating}/5 (${v.review_count} review${v.review_count > 1 ? "s" : ""})`,
+        )
+        .join("\n")
+    : "No reviewed vehicles yet."
+}
+
+════════ INSTRUCTIONS ════════
+- You are helping a guest who is NOT logged in.
+- You can answer questions about available vehicles, pricing, top rated vehicles, and general platform info.
+- For anything account-specific (bookings, KYC, profile, reviews, enquiries), tell them to log in or register first.
+- To book a vehicle the process is: 1) Register/Login  2) Complete KYC  3) Browse vehicles and book.
+- Keep responses short and friendly. Use bullet points for lists.
+- Never make up vehicle data — only use what is listed above.`;
+
+      try {
+        const result = await groq.chat.completions.create({
+          model: "llama-3.3-70b-versatile",
+          max_tokens: 512,
+          messages: [
+            { role: "system", content: guestSystemPrompt },
+            ...sanitizeHistory(history).map((h) => ({
+              role: h.role === "model" ? "assistant" : "user",
+              content: h.parts[0].text,
+            })),
+            { role: "user", content: message },
+          ],
+        });
+
+        const replyText = result.choices[0].message.content;
+        const suggestions =
+          msg.includes("vehicle") || msg.includes("car")
+            ? ["Pricing", "Top rated vehicles", "Log in to book"]
+            : msg.includes("book")
+              ? ["Available vehicles", "Pricing", "Log in to book"]
+              : ["Available vehicles", "Top rated vehicles", "Log in to book"];
+
+        return res.json({ reply: replyText, suggestions });
+      } catch (aiErr) {
+        console.error("[Groq Error - guest]", aiErr.message);
+        // Simple keyword fallback for guests
+        if (
+          msg.includes("vehicle") ||
+          msg.includes("car") ||
+          msg.includes("available")
+        ) {
+          const lines = available.map(
+            (v) =>
+              `• ${v.name} — ${v.body_type} | ${v.fuel_type} | Rs${v.price_1d}/day`,
+          );
+          return res.json({
+            reply: available.length
+              ? `Available vehicles:\n${lines.join("\n")}`
+              : "No vehicles available right now.",
+            suggestions: ["Pricing", "Top rated vehicles", "Log in to book"],
+          });
+        }
+        return res.json({
+          reply:
+            "Hi! I can help you explore our vehicles and pricing. Log in to access bookings and KYC.",
+          suggestions: ["Available vehicles", "Pricing", "Top rated vehicles"],
+        });
+      }
+    }
+    /* ── END GUEST MODE ── */
+
+    // ── Fetch user data (logged-in) ──
     let data;
     try {
       data = await buildUserContext(userId);
@@ -485,7 +587,6 @@ function buildFallbackReply(
   const name = user?.name?.split(" ")[0] || "there";
   const available = vehicles.filter((v) => v.status === "Available");
 
-  // ── Booking process fallback ──
   if (
     msg.includes("how to book") ||
     msg.includes("booking process") ||
@@ -510,7 +611,6 @@ function buildFallbackReply(
     };
   }
 
-  // ── KYC process fallback ──
   if (
     msg.includes("kyc process") ||
     msg.includes("how to do kyc") ||
@@ -542,7 +642,6 @@ function buildFallbackReply(
     };
   }
 
-  // ── Enquiry process fallback ──
   if (
     msg.includes("how to enquir") ||
     msg.includes("how to contact") ||
@@ -560,7 +659,6 @@ function buildFallbackReply(
     };
   }
 
-  // ── Review process fallback ──
   if (
     msg.includes("how to review") ||
     msg.includes("how to rate") ||
@@ -580,7 +678,6 @@ function buildFallbackReply(
     };
   }
 
-  // ── My enquiries fallback ──
   if (msg.includes("enquir") || msg.includes("my question")) {
     if (!enquiries.length) {
       return {
@@ -598,7 +695,6 @@ function buildFallbackReply(
     };
   }
 
-  // ── Top rated vehicles fallback ──
   if (
     msg.includes("top rated") ||
     msg.includes("highest rated") ||
@@ -622,7 +718,6 @@ function buildFallbackReply(
     };
   }
 
-  // ── My reviews fallback ──
   if (
     msg.includes("my review") ||
     msg.includes("my rating") ||
@@ -644,7 +739,6 @@ function buildFallbackReply(
     };
   }
 
-  // ── My profile fallback ──
   if (
     msg.includes("my info") ||
     msg.includes("my profile") ||
@@ -656,7 +750,6 @@ function buildFallbackReply(
     };
   }
 
-  // ── My bookings fallback ──
   if (msg.includes("booking")) {
     if (!bookings.length) {
       return {
@@ -674,7 +767,6 @@ function buildFallbackReply(
     };
   }
 
-  // ── KYC status fallback ──
   if (msg.includes("kyc")) {
     if (!kyc) {
       return {
@@ -693,7 +785,6 @@ function buildFallbackReply(
     };
   }
 
-  // ── Pricing fallback ──
   if (msg.includes("price") || msg.includes("rate") || msg.includes("cost")) {
     if (!available.length)
       return { reply: "No vehicles available.", suggestions: [] };
@@ -707,7 +798,6 @@ function buildFallbackReply(
     };
   }
 
-  // ── Available vehicles fallback ──
   if (
     msg.includes("vehicle") ||
     msg.includes("car") ||
