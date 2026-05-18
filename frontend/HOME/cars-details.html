@@ -1071,7 +1071,41 @@
               <button class="dur-btn" data-dur="1d" onclick="selectDur(this)">
                 1 Day<span class="dur-price" id="price1d">—</span>
               </button>
+              <button
+                class="dur-btn"
+                data-dur="custom"
+                onclick="selectDur(this)"
+              >
+                Custom<span class="dur-price">2–5 Days</span>
+              </button>
             </div>
+            <div class="custom-days-wrap" id="customDaysWrap">
+              <div class="field-label" style="margin-top: 10px">
+                Number of Days (2–5)
+              </div>
+              <input
+                class="b-input"
+                type="number"
+                id="customDays"
+                min="2"
+                max="5"
+                value="2"
+                oninput="
+                  clampDays();
+                  calcPrice();
+                "
+              />
+            </div>
+          </div>
+          <div>
+            <div class="field-label">Pickup Location</div>
+            <input
+              class="b-input"
+              type="text"
+              id="pickupLocInput"
+              placeholder="e.g. Thamel, Kathmandu"
+              style="margin-bottom: 0"
+            />
           </div>
           <div>
             <div class="field-label">Pickup Date &amp; Time</div>
@@ -1092,13 +1126,16 @@
             </div>
           </div>
 
-          <!-- TOTAL PRICE ONLY — no VAT breakdown -->
+          <!-- PRICE BREAKDOWN -->
           <div class="price-total-box">
             <div>
               <div class="price-total-label">Total Price</div>
-              <div class="price-total-note" id="durNote">
-                4 hours · VAT incl.
-              </div>
+              <div class="price-total-note" id="durNote">4 hours</div>
+              <div
+                class="price-total-note"
+                id="perDayNote"
+                style="display: none; margin-top: 2px"
+              ></div>
             </div>
             <div class="price-total-value" id="totalVal">—</div>
           </div>
@@ -1528,29 +1565,57 @@
           .forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
         selectedDur = btn.dataset.dur;
+        const wrap = document.getElementById("customDaysWrap");
+        if (wrap) wrap.classList.toggle("show", selectedDur === "custom");
         calcPrice();
       }
 
-      /* ── PRICE CALC------ */
+      function clampDays() {
+        const inp = document.getElementById("customDays");
+        if (!inp) return;
+        const v = parseInt(inp.value);
+        if (!isNaN(v)) inp.value = Math.min(5, Math.max(2, v));
+      }
+
+      /* ── PRICE CALC ── */
       function calcPrice() {
         if (!vehicle) return;
-        const base =
-          selectedDur === "4h"
-            ? Number(vehicle.price_4h || 0)
-            : selectedDur === "8h"
-              ? Number(vehicle.price_8h || 0)
-              : Number(vehicle.price_1d || 0);
-        const total = Math.round(base);
-        const label =
-          selectedDur === "4h"
-            ? "4 hours"
-            : selectedDur === "8h"
-              ? "8 hours"
-              : "1 day";
 
-        document.getElementById("durNote").textContent = `${label}`;
+        const perDayNote = document.getElementById("perDayNote");
+        let base = 0,
+          label = "",
+          total = 0;
+
+        if (selectedDur === "4h") {
+          base = Number(vehicle.price_4h || 0);
+          label = "4 hours";
+          total = base;
+          if (perDayNote) perDayNote.style.display = "none";
+        } else if (selectedDur === "8h") {
+          base = Number(vehicle.price_8h || 0);
+          label = "8 hours";
+          total = base;
+          if (perDayNote) perDayNote.style.display = "none";
+        } else if (selectedDur === "1d") {
+          base = Number(vehicle.price_1d || 0);
+          label = "1 day";
+          total = base;
+          if (perDayNote) perDayNote.style.display = "none";
+        } else if (selectedDur === "custom") {
+          const days =
+            parseInt(document.getElementById("customDays")?.value) || 2;
+          base = Number(vehicle.price_1d || 0);
+          label = `${days} days (custom)`;
+          total = base * days;
+          if (perDayNote) {
+            perDayNote.style.display = "block";
+            perDayNote.textContent = `NPR ${base.toLocaleString()} × ${days} days`;
+          }
+        }
+
+        document.getElementById("durNote").textContent = label;
         document.getElementById("totalVal").textContent =
-          `NPR ${total.toLocaleString()}`;
+          `NPR ${Math.round(total).toLocaleString()}`;
       }
 
       function goToBooking() {
@@ -1562,7 +1627,25 @@
           openLoginModal();
           return;
         }
-        window.location.href = `user.booking.html?id=${vehicle.id}`;
+        const pickup =
+          document.getElementById("pickupLocInput")?.value.trim() || "";
+        const pickupDate = document.getElementById("pickupDate")?.value || "";
+        const pickupTime =
+          document.getElementById("pickupTime")?.value || "09:00";
+        const params = new URLSearchParams({
+          id: vehicle.id,
+          dur: selectedDur,
+          pickup,
+          pickup_date: pickupDate,
+          pickup_time: pickupTime,
+        });
+        if (selectedDur === "custom") {
+          params.set(
+            "custom_days",
+            document.getElementById("customDays")?.value || "2",
+          );
+        }
+        window.location.href = `user.booking.html?${params.toString()}`;
       }
 
       let descExp = false;

@@ -1348,7 +1348,7 @@
   <body>
     <!-- ── SIDEBAR ── -->
     <aside class="sidebar" id="sidebar">
-      <a href="userdashboard.html" class="sidebar-logo">
+      <a href="/HOME/homepage.html" class="sidebar-logo">
         <div class="logo-mark">AD</div>
         <div class="logo-text-block">
           <span class="logo-brand">Auto Dealer</span>
@@ -1700,7 +1700,40 @@
                   >
                     1 Day<span class="dur-price" id="price1d">—</span>
                   </button>
+                  <button
+                    class="dur-btn"
+                    data-dur="custom"
+                    onclick="selectDuration(this)"
+                  >
+                    Custom<span class="dur-price">2–5 Days</span>
+                  </button>
                 </div>
+              </div>
+              <div id="customDaysWrapDetail" style="display: none">
+                <div class="field-label">Number of Days (2–5)</div>
+                <input
+                  class="booking-input"
+                  type="number"
+                  id="customDaysDetail"
+                  min="2"
+                  max="5"
+                  value="2"
+                  oninput="
+                    clampDetailDays();
+                    calcPrice();
+                  "
+                />
+              </div>
+              <div>
+                <div class="field-label">Pickup Location</div>
+                <input
+                  class="booking-input"
+                  type="text"
+                  id="pickupLocDetail"
+                  placeholder="e.g. Thamel, Kathmandu"
+                  oninput="calcPrice()"
+                  style="margin-bottom: 8px"
+                />
               </div>
               <div>
                 <div class="field-label">Pickup Date &amp; Time</div>
@@ -1725,7 +1758,14 @@
                   <span id="baseLabel">Base rate (4 hrs)</span>
                   <span id="baseVal">—</span>
                 </div>
-
+                <div
+                  class="price-row muted"
+                  id="perDayRow"
+                  style="display: none"
+                >
+                  <span id="perDayLabel">Per day rate</span>
+                  <span id="perDayVal">—</span>
+                </div>
                 <div class="price-row total">
                   <span>Total</span><span class="val" id="totalVal">—</span>
                 </div>
@@ -2165,7 +2205,63 @@
           .forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
         selectedDur = btn.dataset.dur;
+        const customWrap = document.getElementById("customDaysWrapDetail");
+        if (customWrap)
+          customWrap.style.display = selectedDur === "custom" ? "" : "none";
         calcPrice();
+      }
+
+      function clampDetailDays() {
+        const inp = document.getElementById("customDaysDetail");
+        if (!inp) return;
+        const v = parseInt(inp.value);
+        if (!isNaN(v)) inp.value = Math.min(5, Math.max(2, v));
+      }
+
+      function calcPrice() {
+        if (!vehicle) return;
+
+        const perDayRow = document.getElementById("perDayRow");
+        const perDayLabel = document.getElementById("perDayLabel");
+        const perDayVal = document.getElementById("perDayVal");
+
+        let base = 0,
+          label = "",
+          total = 0;
+
+        if (selectedDur === "4h") {
+          base = Number(vehicle.price_4h || 0);
+          label = "Base rate (4 hrs)";
+          total = base;
+          if (perDayRow) perDayRow.style.display = "none";
+        } else if (selectedDur === "8h") {
+          base = Number(vehicle.price_8h || 0);
+          label = "Base rate (8 hrs)";
+          total = base;
+          if (perDayRow) perDayRow.style.display = "none";
+        } else if (selectedDur === "1d") {
+          base = Number(vehicle.price_1d || 0);
+          label = "Base rate (1 day)";
+          total = base;
+          if (perDayRow) perDayRow.style.display = "none";
+        } else if (selectedDur === "custom") {
+          const days =
+            parseInt(document.getElementById("customDaysDetail")?.value) || 2;
+          base = Number(vehicle.price_1d || 0);
+          label = "Per day rate";
+          total = base * days;
+          if (perDayRow) {
+            perDayRow.style.display = "";
+            perDayLabel.textContent = `× ${days} days`;
+            perDayVal.textContent = `NPR ${base.toLocaleString()} / day`;
+          }
+        }
+
+        document.getElementById("baseLabel").textContent = label;
+        document.getElementById("baseVal").textContent =
+          `NPR ${base.toLocaleString()}`;
+        document.getElementById("totalVal").textContent =
+          `NPR ${total.toLocaleString()}`;
       }
 
       function calcPrice() {
@@ -2193,7 +2289,24 @@
 
       function goToBooking() {
         if (!vehicle?.id) return alert("Vehicle not loaded yet.");
-        window.location.href = `user.booking.html?id=${vehicle.id}`;
+        const pickup =
+          document.getElementById("pickupLocDetail")?.value.trim() || "";
+        const pDate = document.getElementById("pickupDate")?.value || "";
+        const pTime = document.getElementById("pickupTime")?.value || "09:00";
+        const params = new URLSearchParams({
+          id: vehicle.id,
+          dur: selectedDur,
+          pickup,
+          pickup_date: pDate,
+          pickup_time: pTime,
+        });
+        if (selectedDur === "custom") {
+          params.set(
+            "custom_days",
+            document.getElementById("customDaysDetail")?.value || "2",
+          );
+        }
+        window.location.href = `user.booking.html?${params.toString()}`;
       }
 
       let descExpanded = false;

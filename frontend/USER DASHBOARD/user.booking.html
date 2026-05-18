@@ -1682,7 +1682,7 @@
   <body>
     <!-- ── SIDEBAR ── -->
     <aside class="sidebar" id="sidebar">
-      <a href="userdashboard.html" class="sidebar-logo">
+      <a href="/HOME/homepage.html" class="sidebar-logo">
         <div class="logo-mark">AD</div>
         <div class="logo-text-block">
           <span class="logo-brand">Auto Dealer</span>
@@ -2210,7 +2210,7 @@
                     "
                   />
                   <span class="hint"
-                    >Edit if returning to a different location</span
+                    >Same as pickup — contact support to change</span
                   >
                 </div>
               </div>
@@ -2745,8 +2745,12 @@
       function syncDropoffFree() {
         const free = document.getElementById("dropoffLocFree");
         const pickup = document.getElementById("pickupLocFree")?.value || "";
-        if (free && !free.value) {
+        if (free) {
           free.value = pickup;
+          free.setAttribute("readonly", true);
+          free.style.borderStyle = "dashed";
+          free.style.color = "var(--muted)";
+          free.title = "Drop-off location matches pickup";
           document.getElementById("dropoffLocHidden").value = pickup;
         }
       }
@@ -2960,6 +2964,9 @@
             updateDropoff();
           }
           markStep(2, "done");
+
+          prefillFromDetailParams();
+
           updateSummary();
           loadUserProfile();
         } catch (err) {
@@ -2976,6 +2983,78 @@
               "Failed to load vehicle";
           }
         }
+      }
+      /* ── Pre-fill fields passed from vehicle detail page ── */
+      function prefillFromDetailParams() {
+        if (IS_PACKAGE) return; // packages handle their own state
+
+        const dur = urlParams.get("dur");
+        const pickup = urlParams.get("pickup");
+        const pickupDate = urlParams.get("pickup_date");
+        const pickupTime = urlParams.get("pickup_time") || "09:00";
+        const customDays = urlParams.get("custom_days");
+
+        /* Location */
+        if (pickup) {
+          const freePickup = document.getElementById("pickupLocFree");
+          if (freePickup) {
+            freePickup.value = pickup;
+            document.getElementById("pickupLocHidden").value = pickup;
+          }
+          /* Drop-off auto-matches pickup and stays locked */
+          const freeDrop = document.getElementById("dropoffLocFree");
+          if (freeDrop) {
+            freeDrop.value = pickup;
+            freeDrop.setAttribute("readonly", true);
+            freeDrop.style.borderStyle = "dashed";
+            freeDrop.style.color = "var(--muted)";
+            freeDrop.title = "Drop-off location matches pickup";
+          }
+          document.getElementById("dropoffLocHidden").value = pickup;
+        }
+
+        /* Pickup datetime */
+        if (pickupDate) {
+          const dt = `${pickupDate}T${pickupTime}`;
+          const pickupDT = document.getElementById("pickupDT");
+          if (pickupDT) pickupDT.value = dt;
+        }
+
+        /* Duration */
+        if (dur) {
+          selectedDuration = dur;
+
+          /* Map detail dur keys → booking page dur keys */
+          const durMap = {
+            "4h": "4h",
+            "8h": "8h",
+            "1d": "1day",
+            custom: "custom",
+          };
+          const mapped = durMap[dur] || "4h";
+          selectedDuration = mapped;
+
+          document.querySelectorAll(".dur-opt").forEach((el) => {
+            el.classList.remove("selected");
+          });
+
+          const durOptMap = { "4h": 0, "8h": 1, "1day": 2, custom: 3 };
+          const opts = document.querySelectorAll(".dur-opt");
+          const idx = durOptMap[mapped];
+          if (opts[idx]) opts[idx].classList.add("selected");
+
+          if (mapped === "custom") {
+            const wrap = document.getElementById("customDaysWrap");
+            if (wrap) wrap.classList.add("show");
+            const inp = document.getElementById("customDays");
+            if (inp && customDays) {
+              inp.value = Math.min(5, Math.max(2, parseInt(customDays) || 2));
+            }
+          }
+        }
+
+        updateDropoff();
+        updateSummary();
       }
 
       /* ── Load user profile ── */
