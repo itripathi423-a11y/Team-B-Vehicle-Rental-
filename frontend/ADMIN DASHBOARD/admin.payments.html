@@ -401,11 +401,21 @@
           </div>
         </div>
       </aside>
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
       <!-- MAIN WRAP -->
       <div class="main-wrap">
         <!-- TOPBAR -->
         <header class="topbar">
+          <button
+            class="sidebar-toggle"
+            id="sidebarToggle"
+            aria-label="Open menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
           <div class="search-wrap">
             <svg
               viewBox="0 0 24 24"
@@ -1070,6 +1080,26 @@
       // ── INIT ──────────────────────────────────────────────────
       loadAdmin();
       loadPayments();
+
+      // ── MOBILE SIDEBAR ────────────────────────────────────────
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("sidebarOverlay");
+      const sidebarToggle = document.getElementById("sidebarToggle");
+
+      sidebarToggle?.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("open");
+      });
+      overlay?.addEventListener("click", () => {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("open");
+      });
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 768) {
+          sidebar.classList.remove("open");
+          overlay.classList.remove("open");
+        }
+      });
     </script>
   </body>
 </html>

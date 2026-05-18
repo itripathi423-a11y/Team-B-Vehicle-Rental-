@@ -60,6 +60,7 @@
         flex-direction: column;
         z-index: 200;
         border-right: 1px solid rgba(255, 255, 255, 0.05);
+        transition: transform 0.3s ease;
       }
       .sidebar-logo {
         display: flex;
@@ -1356,6 +1357,9 @@
         .sidebar {
           transform: translateX(-100%);
         }
+        .sidebar.open {
+          transform: translateX(0);
+        }
         .main-wrap {
           margin-left: 0;
         }
@@ -1372,6 +1376,19 @@
         .info-cols {
           grid-template-columns: 1fr;
         }
+        #sidebarToggle {
+          display: flex !important;
+        }
+      }
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 199;
+      }
+      .sidebar-overlay.open {
+        display: block;
       }
     </style>
   </head>
@@ -1511,10 +1528,23 @@
           </div>
         </div>
       </aside>
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
       <!-- MAIN -->
       <div class="main-wrap">
         <header class="topbar">
+          <button class="icon-btn" id="sidebarToggle" style="display: none">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
           <div class="search-wrap">
             <svg
               viewBox="0 0 24 24"
@@ -1898,6 +1928,29 @@
         document
           .getElementById("bSearch")
           .addEventListener("input", applyFilters);
+
+        const sidebar =
+          document.getElementById("sidebar") ||
+          document.querySelector(".sidebar");
+        const sidebarToggle = document.getElementById("sidebarToggle");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+        sidebarToggle?.addEventListener("click", () => {
+          sidebar.classList.toggle("open");
+          sidebarOverlay.classList.toggle("open");
+        });
+        sidebarOverlay?.addEventListener("click", () => {
+          sidebar.classList.remove("open");
+          sidebarOverlay.classList.remove("open");
+        });
+        window.addEventListener("resize", () => {
+          if (window.innerWidth > 768) {
+            sidebar.classList.remove("open");
+            sidebarOverlay.classList.remove("open");
+          }
+        });
+        if (sidebarToggle)
+          sidebarToggle.style.display =
+            window.innerWidth <= 768 ? "flex" : "none";
         document
           .getElementById("overlay")
           .addEventListener("click", function (e) {

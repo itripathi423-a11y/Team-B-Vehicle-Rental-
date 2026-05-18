@@ -2595,44 +2595,33 @@
       let selectedDuration = IS_PACKAGE ? "custom" : "4h";
       let currentPrice = IS_PACKAGE ? PKG_PRICE : 0;
 
-      /* ═══════════════════════════════════════════════════
-         TOUR PACKAGE LOCATION PRESETS
-         Five well-known Kathmandu pickup/drop-off points
-         ═══════════════════════════════════════════════════ */
       const TOUR_LOCATIONS = [
         {
           id: "thamel",
           name: "Thamel",
           sub: "Thamel Marg, Kathmandu",
-          icon: "🏨",
+          icon: "1",
         },
         {
           id: "banepa",
           name: "Banepa",
           sub: "Banepa, Kavrepalanchok",
-          icon: "🏘️",
+          icon: "2",
         },
         {
           id: "kalanki",
           name: "Kalanki",
           sub: "Kalanki Chowk, Kathmandu",
-          icon: "🚦",
+          icon: "3",
         },
         {
           id: "bouddha",
           name: "Bouddha",
           sub: "Bouddhanath Stupa, Kathmandu",
-          icon: "🕌",
-        },
-        {
-          id: "pokhara",
-          name: "Pokhara Bus Park",
-          sub: "Prithvi Chowk, Pokhara",
-          icon: "⛵",
+          icon: "4",
         },
       ];
 
-      /* Currently selected location values (pkg mode) */
       let selectedPickupId = null;
       let selectedDropoffId = null;
 
@@ -2645,29 +2634,33 @@
             `<div class="loc-menu-header">Select ${type} point</div>` +
             TOUR_LOCATIONS.map(
               (loc) => `
-              <div class="loc-menu-item" data-id="${loc.id}" data-type="${type}" onclick="selectLocation('${type}','${loc.id}')">
-                <div class="loc-item-icon">${loc.icon}</div>
-                <div class="loc-item-info">
-                  <div class="loc-item-name">${loc.name}</div>
-                  <div class="loc-item-sub">${loc.sub}</div>
-                </div>
-                <span class="loc-item-check">✓</span>
-              </div>`,
+          <div class="loc-menu-item" data-id="${loc.id}" data-type="${type}" onclick="selectLocation('${type}','${loc.id}')">
+            <div class="loc-item-icon">${loc.icon}</div>
+            <div class="loc-item-info">
+              <div class="loc-item-name">${loc.name}</div>
+              <div class="loc-item-sub">${loc.sub}</div>
+            </div>
+            <span class="loc-item-check">✓</span>
+          </div>`,
             ).join("");
         });
       }
 
       /* ─── Toggle open/close ─── */
       function toggleLocDrop(type) {
-        const menu = document.getElementById(type + "DropMenu");
         const btn = document.getElementById(type + "DropBtn");
         const chevron = document.getElementById(type + "DropChevron");
+        const menu = document.getElementById(type + "DropMenu");
         const isOpen = menu.classList.contains("open");
 
-        /* close all first */
-        document
-          .querySelectorAll(".loc-dropdown-menu.open")
-          .forEach((m) => m.classList.remove("open"));
+        document.querySelectorAll(".loc-dropdown-menu.open").forEach((m) => {
+          m.classList.remove("open");
+          m.style.position = "";
+          m.style.top = "";
+          m.style.left = "";
+          m.style.width = "";
+          m.style.zIndex = "";
+        });
         document
           .querySelectorAll(".loc-dropdown-btn.open")
           .forEach((b) => b.classList.remove("open"));
@@ -2676,18 +2669,28 @@
           .forEach((c) => c.classList.remove("open"));
 
         if (!isOpen) {
+          const rect = btn.getBoundingClientRect();
+          menu.style.position = "fixed";
+          menu.style.top = rect.bottom + 6 + "px";
+          menu.style.left = rect.left + "px";
+          menu.style.width = rect.width + "px";
+          menu.style.zIndex = "99999";
           menu.classList.add("open");
           btn.classList.add("open");
           chevron.classList.add("open");
         }
       }
 
-      /* Close on outside click */
       document.addEventListener("click", (e) => {
         if (!e.target.closest(".loc-dropdown-wrap")) {
-          document
-            .querySelectorAll(".loc-dropdown-menu.open")
-            .forEach((m) => m.classList.remove("open"));
+          document.querySelectorAll(".loc-dropdown-menu.open").forEach((m) => {
+            m.classList.remove("open");
+            m.style.position = "";
+            m.style.top = "";
+            m.style.left = "";
+            m.style.width = "";
+            m.style.zIndex = "";
+          });
           document
             .querySelectorAll(".loc-dropdown-btn.open")
             .forEach((b) => b.classList.remove("open"));
@@ -2709,39 +2712,36 @@
         const btnEl = document.getElementById(type + "DropBtn");
         const menuEl = document.getElementById(type + "DropMenu");
 
-        /* Update label */
-        labelEl.textContent = `${loc.icon}  ${loc.name} — ${loc.sub}`;
+        labelEl.textContent = `${loc.name} — ${loc.sub}`;
         labelEl.classList.remove("placeholder");
-
-        /* Update hidden input */
         document.getElementById(hiddenId).value = `${loc.name}, ${loc.sub}`;
 
-        /* Track selection */
         if (type === "pickup") {
           selectedPickupId = id;
-          /* If dropoff not yet set, mirror it */
           if (!selectedDropoffId) {
             selectLocation("dropoff", id);
-            return; /* avoid double close */
+            return;
           }
         } else {
           selectedDropoffId = id;
         }
 
-        /* Highlight selected item */
         menuEl.querySelectorAll(".loc-menu-item").forEach((item) => {
           item.classList.toggle("selected", item.dataset.id === id);
         });
 
-        /* Close menu */
         menuEl.classList.remove("open");
+        menuEl.style.position = "";
+        menuEl.style.top = "";
+        menuEl.style.left = "";
+        menuEl.style.width = "";
+        menuEl.style.zIndex = "";
         btnEl.classList.remove("open");
         chevronEl.classList.remove("open");
 
         updateSummary();
       }
 
-      /* ─── Free-text helpers (non-package mode) ─── */
       function syncDropoffFree() {
         const free = document.getElementById("dropoffLocFree");
         const pickup = document.getElementById("pickupLocFree")?.value || "";
@@ -2751,7 +2751,6 @@
         }
       }
 
-      /* ─── Get current pickup / dropoff values ─── */
       function getPickup() {
         return document.getElementById("pickupLocHidden")?.value || "";
       }
@@ -2759,8 +2758,47 @@
         return document.getElementById("dropoffLocHidden")?.value || "";
       }
 
-      /* ═══════════════════════════════════════════════════ */
+      /* ─── KYC Error Banner ─── */
+      function showKycError(msg, kycStatus) {
+        let box = document.getElementById("kycErrorBox");
+        if (!box) {
+          box = document.createElement("div");
+          box.id = "kycErrorBox";
+          box.style.cssText = `
+        background:#fff1f2;border:1px solid #fecdd3;border-radius:12px;
+        padding:18px 22px;margin-bottom:20px;display:flex;align-items:flex-start;
+        gap:14px;font-size:13.5px;color:#991b1b;
+      `;
+          box.innerHTML = `
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+          viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 8v4M12 16h.01"/>
+        </svg>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px;">
+            KYC Verification Required
+          </div>
+          <div id="kycErrorMsg" style="line-height:1.6;margin-bottom:10px;"></div>
+          <a href="kyc.html"
+            style="display:inline-flex;align-items:center;gap:6px;background:#ff5c1a;
+                   color:#fff;padding:8px 18px;border-radius:8px;font-size:13px;
+                   font-weight:600;text-decoration:none;">
+            Complete KYC Verification →
+          </a>
+        </div>`;
+          const col = document.querySelector(".booking-col");
+          if (col) col.prepend(box);
+        }
+        document.getElementById("kycErrorMsg").textContent = msg;
+        box.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
 
+      function hideKycError() {
+        document.getElementById("kycErrorBox")?.remove();
+      }
+
+      /* ─── API fetch helper ─── */
       async function apiFetch(path, options = {}) {
         const res = await fetch(`${BASE_URL}${path}`, {
           credentials: "include",
@@ -2796,6 +2834,7 @@
           sessionStorage.removeItem("postLoginRedirect");
           window.location.href = "/index.html";
         });
+
       document.querySelectorAll(".form-section").forEach((el) => {
         el.addEventListener(
           "animationend",
@@ -2806,6 +2845,7 @@
           { once: true },
         );
       });
+
       /* ── Package banner ── */
       function renderPackageBanner() {
         if (!IS_PACKAGE) return;
@@ -2819,14 +2859,11 @@
         notice.style.display = "flex";
         document.getElementById("pageSubtitle").textContent =
           `Booking for "${PKG_TITLE}" — select your pickup location to confirm`;
-
-        /* Show dropdown mode, hide free-text mode */
         document.getElementById("pkgLocationWrap").style.display = "";
         document.getElementById("freeLocationWrap").style.display = "none";
         document.getElementById("locationSubtitle").textContent =
           "Choose from our 5 supported pickup & drop-off points";
         buildLocMenus();
-
         const changeLink = document.getElementById("changeVehicleLink");
         if (changeLink) changeLink.style.display = "none";
       }
@@ -2862,7 +2899,6 @@
       /* ── Load vehicle ── */
       async function loadVehicle() {
         if (!IS_PACKAGE) {
-          /* Show free-text inputs for regular bookings */
           document.getElementById("freeLocationWrap").style.display = "";
           document.getElementById("pkgLocationWrap").style.display = "none";
           document.getElementById("locationSubtitle").textContent =
@@ -2903,10 +2939,10 @@
             vsImg.innerHTML = `<img src="${vehicle.images[0]}" alt="${vehicle.name}" onerror="this.parentNode.textContent='🚗'">`;
           document.getElementById("vsName").textContent = vehicle.name;
           document.getElementById("vsChips").innerHTML = `
-            <span class="vs-chip">${fuelIcons[vehicle.fuel_type] || "⛽"} ${vehicle.fuel_type}</span>
-            <span class="vs-chip">🚘 ${vehicle.body_type}</span>
-            <span class="vs-chip">⚙️ ${vehicle.transmission}</span>
-            <span class="vs-chip">👥 ${vehicle.seating_capacity} seats</span>`;
+        <span class="vs-chip">${fuelIcons[vehicle.fuel_type] || "⛽"} ${vehicle.fuel_type}</span>
+        <span class="vs-chip">🚘 ${vehicle.body_type}</span>
+        <span class="vs-chip">⚙️ ${vehicle.transmission}</span>
+        <span class="vs-chip">👥 ${vehicle.seating_capacity} seats</span>`;
           if (!IS_PACKAGE) {
             document.getElementById("dp4h").textContent =
               `Rs ${parseFloat(vehicle.price_4h).toLocaleString()}`;
@@ -2959,6 +2995,7 @@
             .toUpperCase();
           const isVerified = user.kyc_status === "verified";
           const hasPhoto = !!user.profile_photo;
+
           function populateAvatar(containerEl, initialsEl) {
             if (!containerEl) return;
             if (hasPhoto) {
@@ -2972,6 +3009,7 @@
               if (initialsEl) initialsEl.textContent = initials;
             }
           }
+
           populateAvatar(
             document.getElementById("sidebarAvatar"),
             document.getElementById("sidebarInitials"),
@@ -3005,18 +3043,23 @@
           if (de) de.textContent = user.email;
           const db = document.getElementById("ddKycBadge");
           if (db && isVerified) db.style.display = "none";
+
           const nameEl = document.getElementById("userName");
           if (nameEl) nameEl.value = fullName;
           const emailEl = document.getElementById("userEmail");
           if (emailEl) emailEl.value = user.email || "";
           const phoneEl = document.getElementById("userPhone");
           if (phoneEl) phoneEl.value = user.phone || "";
+
           window._userId = user.id;
           window._userEmail = user.email;
           window._userName = fullName;
+          window._kycStatus = user.kyc_status || "not_submitted";
+
           document.getElementById("profileLoadingState")?.remove();
           const fields = document.getElementById("userFields");
           if (fields) fields.style.display = "";
+
           const fsHead = document
             .querySelector("#userFields")
             ?.closest(".form-section")
@@ -3027,8 +3070,39 @@
             badge.innerHTML = `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Profile loaded from your account`;
             fsHead.insertAdjacentElement("afterend", badge);
           }
+
           markStep(1, "done");
           updateSummary();
+
+          /* ── Show KYC warning if not verified ── */
+          if (!isVerified) {
+            const kycMsgs = {
+              pending:
+                "Your KYC verification is pending approval. You cannot complete a booking until it is verified.",
+              rejected:
+                "Your KYC was rejected. Please resubmit your documents before making a booking.",
+              not_submitted:
+                "You must complete KYC verification before making a booking.",
+            };
+            showKycError(
+              kycMsgs[user.kyc_status] ||
+                "KYC verification is required to proceed.",
+              user.kyc_status,
+            );
+            /* Disable pay button */
+            const btn = document.getElementById("esewaBtn");
+            if (btn) {
+              btn.disabled = true;
+              btn.title = "Complete KYC to enable booking";
+            }
+          } else {
+            hideKycError();
+            const btn = document.getElementById("esewaBtn");
+            if (btn) {
+              btn.disabled = false;
+              btn.title = "";
+            }
+          }
         } catch (err) {
           console.warn("Profile fetch failed:", err.message);
           const loader = document.getElementById("profileLoadingState");
@@ -3217,8 +3291,6 @@
         el.style.borderColor = "#16a34a";
         el.style.boxShadow = "0 0 0 3px rgba(22,163,74,0.1)";
       }
-
-      /* Show dropdown error (package mode) */
       function showDropdownError(type, msg) {
         const btn = document.getElementById(type + "DropBtn");
         if (!btn) return;
@@ -3245,7 +3317,6 @@
       }
 
       function validateForm() {
-        /* ─ User fields ─ */
         let ok = true;
         const nameVal = document.getElementById("userName")?.value.trim();
         if (!nameVal || nameVal.length < 2) {
@@ -3255,6 +3326,7 @@
           clearFieldError("userName");
           showFieldSuccess("userName");
         }
+
         const emailVal = document.getElementById("userEmail")?.value.trim();
         if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
           showFieldError("userEmail", "Enter a valid email address.");
@@ -3263,6 +3335,7 @@
           clearFieldError("userEmail");
           showFieldSuccess("userEmail");
         }
+
         const phoneRaw = document.getElementById("userPhone")?.value || "";
         const phoneDig = phoneRaw.replace(/[\s\-\+]/g, "");
         if (!/^\d{10}$/.test(phoneDig)) {
@@ -3273,9 +3346,7 @@
           showFieldSuccess("userPhone");
         }
 
-        /* ─ Location ─ */
         const pickup = getPickup();
-        const dropoff = getDropoff();
         if (!pickup) {
           if (IS_PACKAGE)
             showDropdownError("pickup", "Please select a pickup point.");
@@ -3289,7 +3360,6 @@
           }
         }
 
-        /* ─ Pickup datetime ─ */
         const pVal = document.getElementById("pickupDT")?.value;
         if (!pVal) {
           showFieldError("pickupDT", "Please select a pickup date and time.");
@@ -3311,7 +3381,7 @@
           return null;
         }
         if (!IS_PACKAGE && !vehicle) {
-          alert("Vehicle data not loaded. Please refresh the page.");
+          alert("Vehicle data not loaded. Please refresh.");
           return null;
         }
 
@@ -3326,18 +3396,15 @@
           return null;
         }
 
-        const diffMs = dropDate - pickupDate;
-        const totalDays = diffMs / (1000 * 60 * 60 * 24);
-
         return {
           name: nameVal,
           email: emailVal,
           phone: phoneDig,
           pickup,
-          dropoff: dropoff || pickup,
+          dropoff: getDropoff() || pickup,
           pickupVal: pVal,
           dropoffVal,
-          totalDays,
+          totalDays: (dropDate - pickupDate) / (1000 * 60 * 60 * 24),
           notes: document.getElementById("bookingNotes")?.value.trim() || null,
         };
       }
@@ -3352,10 +3419,32 @@
         }
       }
 
+      /* ── Pay with eSewa ── */
       async function payWithEsewa() {
+        /* ─ KYC gate ─ */
+        const kycStatus = window._kycStatus || "not_submitted";
+        if (kycStatus !== "verified") {
+          const kycMsgs = {
+            pending:
+              "Your KYC is pending approval. Please wait for verification before booking.",
+            rejected: "Your KYC was rejected. Please resubmit your documents.",
+            not_submitted:
+              "Please complete KYC verification before making a booking.",
+          };
+          showKycError(
+            kycMsgs[kycStatus] || "KYC verification required.",
+            kycStatus,
+          );
+          document
+            .getElementById("kycErrorBox")
+            ?.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+
         const data = validateForm();
         if (!data) return;
         disableBtn(true);
+
         try {
           [1, 2, 3, 4, 5, 6, 7].forEach((n) => markStep(n, "done"));
           const params = new URLSearchParams({

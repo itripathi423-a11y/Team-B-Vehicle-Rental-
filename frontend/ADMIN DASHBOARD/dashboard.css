@@ -1754,3 +1754,14 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 199;
+}
+.sidebar-overlay.open {
+  display: block;
+}
