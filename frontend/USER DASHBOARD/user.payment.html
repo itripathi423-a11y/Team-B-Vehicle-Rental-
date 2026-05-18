@@ -45,12 +45,11 @@
         --muted: #6b7280;
         --border: #e5e7eb;
         --radius: 14px;
-        --radius-sm: 8px;
         --shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
         --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.1);
-        --khalti: #5c2d91;
-        --khalti-light: #7c3db8;
-        --khalti-dim: rgba(92, 45, 145, 0.1);
+        --esewa: #007b5e;
+        --esewa-light: #00a876;
+        --esewa-dim: rgba(0, 123, 94, 0.1);
       }
       *,
       *::before,
@@ -153,9 +152,6 @@
         background: var(--orange-dim);
         color: var(--orange);
         font-weight: 500;
-      }
-      .nav-item.active .nav-icon {
-        stroke: var(--orange);
       }
       .nav-icon {
         width: 18px;
@@ -433,9 +429,6 @@
         text-decoration: none;
         font-weight: 500;
       }
-      .breadcrumb a:hover {
-        text-decoration: underline;
-      }
       .bc-sep {
         color: var(--border);
       }
@@ -453,7 +446,7 @@
         margin-bottom: 5px;
       }
       .page-header h1 span {
-        color: var(--orange);
+        color: var(--esewa);
       }
       .page-header p {
         font-size: 13.5px;
@@ -470,6 +463,12 @@
         border-radius: var(--radius);
         padding: 16px 24px;
         box-shadow: var(--shadow);
+        overflow-x: auto;
+        scrollbar-width: none;
+        flex-wrap: nowrap;
+      }
+      .step-bar::-webkit-scrollbar {
+        display: none;
       }
       .step {
         display: flex;
@@ -489,14 +488,12 @@
         font-weight: 700;
         color: var(--muted);
         flex-shrink: 0;
-        transition: all 0.3s;
         font-family: "Space Mono", monospace;
       }
       .step-label {
         font-size: 12.5px;
         color: var(--muted);
         font-weight: 500;
-        transition: color 0.3s;
         white-space: nowrap;
       }
       .step-line {
@@ -505,11 +502,10 @@
         background: var(--border);
         margin: 0 12px;
         min-width: 16px;
-        transition: background 0.3s;
       }
       .step.active .step-num {
-        border-color: var(--orange);
-        background: var(--orange);
+        border-color: var(--esewa);
+        background: var(--esewa);
         color: #fff;
       }
       .step.active .step-label {
@@ -530,7 +526,7 @@
       /* PAYMENT LAYOUT */
       .payment-layout {
         display: grid;
-        grid-template-columns: 1fr 380px;
+        grid-template-columns: 1fr 400px;
         gap: 24px;
         max-width: 960px;
         margin: 0 auto;
@@ -556,7 +552,7 @@
         height: 300px;
         background: radial-gradient(
           circle,
-          rgba(255, 92, 26, 0.14) 0%,
+          rgba(0, 123, 94, 0.12) 0%,
           transparent 70%
         );
         pointer-events: none;
@@ -586,16 +582,16 @@
         gap: 10px;
       }
       .rc-head .accent {
-        color: var(--orange);
+        color: var(--esewa-light);
       }
       .rc-ref {
         font-family: "Space Mono", monospace;
         font-size: 11px;
-        color: var(--orange);
-        background: var(--orange-dim);
+        color: var(--esewa-light);
+        background: rgba(0, 168, 118, 0.12);
         padding: 4px 12px;
         border-radius: 99px;
-        border: 1px solid rgba(255, 92, 26, 0.2);
+        border: 1px solid rgba(0, 168, 118, 0.25);
         letter-spacing: 2px;
         margin-left: auto;
       }
@@ -626,7 +622,7 @@
         word-break: break-word;
       }
       .rc-val.hi {
-        color: var(--orange);
+        color: var(--esewa-light);
       }
       .rc-divider {
         height: 1px;
@@ -650,7 +646,7 @@
       .rc-total-amt {
         font-family: "Bebas Neue", sans-serif;
         font-size: 44px;
-        color: var(--orange);
+        color: var(--esewa-light);
         line-height: 1;
         letter-spacing: 1px;
       }
@@ -708,6 +704,27 @@
         border: 1px solid rgba(255, 255, 255, 0.08);
       }
 
+      /* PAYMENT PENDING WARNING BANNER */
+      .pending-warn {
+        background: #fffbeb;
+        border: 1.5px solid #fcd34d;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 18px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 12.5px;
+        color: #92400e;
+        line-height: 1.6;
+      }
+      .pending-warn strong {
+        color: #78350f;
+        display: block;
+        margin-bottom: 2px;
+        font-size: 13px;
+      }
+
       /* PAYMENT PANEL */
       .payment-panel {
         display: flex;
@@ -716,34 +733,34 @@
         animation: fadeUp 0.35s ease 0.1s both;
       }
 
-      /* KHALTI CARD */
-      .khalti-card {
+      /* ESEWA CARD */
+      .esewa-card {
         background: var(--white);
         border: 1px solid var(--border);
         border-radius: var(--radius);
         overflow: hidden;
         box-shadow: var(--shadow);
       }
-      .kc-header {
-        background: linear-gradient(135deg, #5c2d91 0%, #7c3db8 100%);
-        padding: 20px 22px;
+      .esewa-header {
+        background: linear-gradient(135deg, #007b5e 0%, #00a876 100%);
+        padding: 22px;
         display: flex;
         align-items: center;
         gap: 14px;
         position: relative;
         overflow: hidden;
       }
-      .kc-header::before {
+      .esewa-header::before {
         content: "";
         position: absolute;
         top: -30px;
         right: -30px;
         width: 120px;
         height: 120px;
-        background: rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.07);
         border-radius: 50%;
       }
-      .kc-header::after {
+      .esewa-header::after {
         content: "";
         position: absolute;
         bottom: -40px;
@@ -753,305 +770,221 @@
         background: rgba(255, 255, 255, 0.04);
         border-radius: 50%;
       }
-      .khalti-logo {
-        width: 46px;
-        height: 46px;
+      .esewa-logo-box {
+        width: 52px;
+        height: 52px;
         background: #fff;
         border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        position: relative;
+        z-index: 1;
+        font-size: 26px;
+      }
+      .esewa-header-text {
         position: relative;
         z-index: 1;
       }
-      .khalti-logo svg {
-        width: 28px;
-        height: 28px;
-      }
-      .kc-header-text {
-        position: relative;
-        z-index: 1;
-      }
-      .kc-title {
-        font-size: 15px;
+      .esewa-title {
+        font-size: 16px;
         font-weight: 700;
         color: #fff;
         line-height: 1.2;
       }
-      .kc-sub {
-        font-size: 11.5px;
-        color: rgba(255, 255, 255, 0.65);
-        margin-top: 2px;
+      .esewa-sub {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.75);
+        margin-top: 3px;
       }
-      .kc-secure-badge {
+      .esewa-badge {
         margin-left: auto;
         display: flex;
         align-items: center;
         gap: 5px;
         font-size: 10px;
-        color: rgba(255, 255, 255, 0.7);
+        color: rgba(255, 255, 255, 0.8);
         font-family: "Space Mono", monospace;
         position: relative;
         z-index: 1;
+        background: rgba(255, 255, 255, 0.12);
+        padding: 5px 10px;
+        border-radius: 99px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
       }
-
-      /* KHALTI MINI STEPS */
-      .khalti-steps {
-        display: flex;
-        align-items: center;
-        padding: 14px 22px 0;
-        gap: 0;
+      .esewa-body {
+        padding: 22px;
       }
-      .ks-item {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        flex: 1;
-      }
-      .ks-dot {
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        border: 2px solid var(--border);
-        background: var(--white);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 10px;
-        font-weight: 700;
-        color: var(--muted);
-        font-family: "Space Mono", monospace;
-        flex-shrink: 0;
-        transition: all 0.3s;
-      }
-      .ks-lbl {
-        font-size: 10.5px;
-        color: var(--muted);
-        font-weight: 500;
-        transition: color 0.3s;
-        white-space: nowrap;
-      }
-      .ks-line {
-        flex: 1;
-        height: 1px;
-        background: var(--border);
-        margin: 0 6px;
-        transition: background 0.3s;
-        min-width: 8px;
-      }
-      .ks-item.ks-active .ks-dot {
-        border-color: var(--khalti);
-        background: var(--khalti);
-        color: #fff;
-      }
-      .ks-item.ks-active .ks-lbl {
-        color: var(--khalti);
-        font-weight: 600;
-      }
-      .ks-item.ks-done .ks-dot {
-        border-color: #22c55e;
-        background: #22c55e;
-        color: #fff;
-      }
-      .ks-item.ks-done .ks-lbl {
-        color: var(--muted);
-      }
-      .ks-item.ks-done + .ks-line {
-        background: #22c55e;
-      }
-      .kc-body {
-        padding: 16px 22px 22px;
-      }
-
-      /* AMOUNT DISPLAY */
-      .amount-display {
-        background: var(--bg);
-        border: 1.5px solid var(--border);
-        border-radius: 10px;
-        padding: 16px;
+      .amount-box {
+        background: linear-gradient(135deg, #f0fdf9, #dcfce7);
+        border: 1.5px solid #86efac;
+        border-radius: 12px;
+        padding: 18px 20px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
       }
-      .ad-lbl {
-        font-size: 11px;
-        color: var(--muted);
+      .ab-lbl {
+        font-size: 10px;
+        color: #065f46;
         font-family: "Space Mono", monospace;
         letter-spacing: 0.8px;
+        margin-bottom: 4px;
       }
-      .ad-amt {
+      .ab-amt {
         font-family: "Bebas Neue", sans-serif;
-        font-size: 32px;
-        color: var(--khalti);
+        font-size: 36px;
+        color: var(--esewa);
         line-height: 1;
       }
-      .ad-amt .rs-sm {
-        font-size: 14px;
-        color: var(--muted);
+      .ab-amt .rs-sm {
+        font-size: 15px;
+        color: #047857;
         font-family: "DM Sans", sans-serif;
         font-weight: 400;
       }
-      .ad-right {
-        text-align: right;
-      }
-      .ad-ref {
+      .ab-ref {
         font-family: "Space Mono", monospace;
         font-size: 10px;
-        color: var(--muted);
+        color: #047857;
         margin-top: 3px;
       }
 
-      /* FORM FIELDS */
-      .form-group {
+      /* INFO BOXES */
+      .info-box {
         display: flex;
-        flex-direction: column;
-        gap: 6px;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 13px 15px;
+        border-radius: 10px;
         margin-bottom: 14px;
       }
-      .form-group label {
-        font-size: 11px;
-        font-weight: 700;
-        color: var(--text);
-        font-family: "Space Mono", monospace;
-        letter-spacing: 0.8px;
-        text-transform: uppercase;
-        display: flex;
-        align-items: center;
-        gap: 6px;
+      .info-box.green {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
       }
-      .form-group input {
-        border: 1.5px solid var(--border);
+      .info-box.amber {
+        background: #fffbeb;
+        border: 1px solid #fcd34d;
+      }
+      .ib-icon {
+        width: 36px;
+        height: 36px;
         border-radius: 9px;
-        padding: 0 14px;
-        height: 44px;
-        font-family: "DM Sans", sans-serif;
-        font-size: 13.5px;
-        color: var(--text);
-        background: var(--white);
-        outline: none;
-        transition:
-          border-color 0.2s,
-          box-shadow 0.2s;
-        width: 100%;
-      }
-      .form-group input:focus {
-        border-color: var(--khalti);
-        box-shadow: 0 0 0 3px var(--khalti-dim);
-      }
-      .form-group input::placeholder {
-        color: #c0c5cd;
-      }
-
-      /* PHONE ROW */
-      .phone-input-wrap {
-        display: flex;
-        gap: 8px;
-      }
-      .phone-prefix {
-        height: 44px;
-        padding: 0 12px;
-        border: 1.5px solid var(--border);
-        border-radius: 9px;
-        background: var(--bg);
-        font-size: 13px;
-        color: var(--muted);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        flex-shrink: 0;
-        white-space: nowrap;
-        font-family: "Space Mono", monospace;
-      }
-      .phone-input-wrap input {
-        flex: 1;
-      }
-
-      /* KHALTI APP HINT */
-      .khalti-app-hint {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        background: linear-gradient(135deg, #f5f0ff 0%, #ede9fe 100%);
-        border: 1px solid #ddd6fe;
-        border-radius: 10px;
-        padding: 12px 14px;
-        margin-bottom: 16px;
-      }
-      .kah-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #5c2d91, #7c3db8);
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        font-size: 18px;
       }
-      .kah-icon svg {
-        width: 22px;
-        height: 22px;
+      .ib-icon.green {
+        background: linear-gradient(135deg, #007b5e, #00a876);
       }
-      .kah-text {
-        flex: 1;
-      }
-      .kah-title {
+      .ib-title {
         font-size: 12.5px;
         font-weight: 600;
-        color: #4c1d95;
+        margin-bottom: 2px;
       }
-      .kah-sub {
+      .ib-title.green {
+        color: #065f46;
+      }
+      .ib-title.amber {
+        color: #92400e;
+      }
+      .ib-sub {
+        font-size: 11.5px;
+        line-height: 1.55;
+      }
+      .ib-sub.green {
+        color: #047857;
+      }
+      .ib-sub.amber {
+        color: #78350f;
+      }
+      .cred-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 6px;
+      }
+      .cred-pill {
         font-size: 11px;
-        color: #6d28d9;
-        margin-top: 1px;
+        background: #fff;
+        border: 1px solid #fcd34d;
+        border-radius: 6px;
+        padding: 3px 10px;
+        font-family: "Space Mono", monospace;
+        color: #92400e;
       }
 
       /* PAY BUTTON */
-      .pay-btn {
+      .esewa-pay-btn {
         width: 100%;
-        height: 52px;
-        background: linear-gradient(135deg, #5c2d91 0%, #7c3db8 100%);
+        height: 56px;
+        background: linear-gradient(135deg, #007b5e 0%, #00a876 100%);
         border: none;
-        border-radius: 11px;
+        border-radius: 12px;
         font-family: "DM Sans", sans-serif;
-        font-size: 15px;
+        font-size: 16px;
         font-weight: 700;
         color: #fff;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 10px;
+        gap: 12px;
         transition:
           opacity 0.2s,
           transform 0.2s,
           box-shadow 0.2s;
-        margin-top: 4px;
         letter-spacing: 0.3px;
+        position: relative;
+        overflow: hidden;
       }
-      .pay-btn:hover {
-        opacity: 0.92;
+      .esewa-pay-btn::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
+        border-radius: inherit;
+      }
+      .esewa-pay-btn:hover {
+        opacity: 0.93;
         transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(92, 45, 145, 0.4);
+        box-shadow: 0 12px 32px rgba(0, 123, 94, 0.4);
       }
-      .pay-btn:active {
+      .esewa-pay-btn:active {
         transform: translateY(0);
       }
-      .pay-btn:disabled {
+      .esewa-pay-btn:disabled {
         background: #9ca3af;
         cursor: not-allowed;
         transform: none;
         box-shadow: none;
       }
-
-      /* OR DIVIDER */
+      .esewa-btn-icon {
+        width: 38px;
+        height: 38px;
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+      }
       .or-divider {
         display: flex;
         align-items: center;
         gap: 10px;
-        margin: 6px 0 0;
+        margin: 14px 0 0;
       }
       .or-line {
         flex: 1;
@@ -1064,7 +997,7 @@
         font-family: "Space Mono", monospace;
       }
 
-      /* SECURITY INFO */
+      /* SECURITY STRIP */
       .security-strip {
         background: var(--white);
         border: 1px solid var(--border);
@@ -1103,9 +1036,9 @@
         background: #eff6ff;
         color: #2563eb;
       }
-      .ss-icon.orange {
-        background: var(--orange-dim);
-        color: var(--orange);
+      .ss-icon.esewa {
+        background: rgba(0, 123, 94, 0.1);
+        color: var(--esewa);
       }
       .ss-text {
         font-size: 12px;
@@ -1132,245 +1065,6 @@
         gap: 5px;
       }
       .cancel-row a:hover {
-        color: var(--text);
-      }
-
-      /* OTP STEP */
-      .otp-step {
-        display: none;
-        animation: fadeUp 0.35s ease both;
-      }
-      .otp-step.show {
-        display: block;
-      }
-      .otp-hint {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        background: #f0fdf4;
-        border: 1px solid #bbf7d0;
-        border-radius: 9px;
-        padding: 12px 14px;
-        margin-bottom: 16px;
-        font-size: 12px;
-        color: #166534;
-        line-height: 1.6;
-      }
-      .otp-boxes {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin-bottom: 16px;
-      }
-      .otp-box {
-        width: 62px;
-        height: 64px;
-        border: 1.5px solid var(--border);
-        border-radius: 10px;
-        font-size: 28px;
-        font-weight: 700;
-        text-align: center;
-        font-family: "Space Mono", monospace;
-        color: var(--khalti);
-        background: var(--white);
-        outline: none;
-        transition:
-          border-color 0.2s,
-          box-shadow 0.2s;
-      }
-      .otp-box:focus {
-        border-color: var(--khalti);
-        box-shadow: 0 0 0 3px var(--khalti-dim);
-      }
-      .otp-resend {
-        text-align: center;
-        font-size: 12px;
-        color: var(--muted);
-        margin-bottom: 16px;
-      }
-      .otp-resend a {
-        color: var(--khalti);
-        cursor: pointer;
-        font-weight: 500;
-      }
-
-      /* MPIN STEP */
-      .mpin-step {
-        display: none;
-        animation: fadeUp 0.35s ease both;
-      }
-      .mpin-step.show {
-        display: block;
-      }
-      .mpin-hint {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%);
-        border: 1px solid #e9d5ff;
-        border-radius: 9px;
-        padding: 12px 14px;
-        margin-bottom: 16px;
-        font-size: 12px;
-        color: #6b21a8;
-        line-height: 1.6;
-      }
-      .mpin-hint svg {
-        flex-shrink: 0;
-        margin-top: 1px;
-      }
-      .mpin-label-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 6px;
-      }
-      .mpin-label-row label {
-        font-size: 11px;
-        font-weight: 700;
-        color: var(--text);
-        font-family: "Space Mono", monospace;
-        letter-spacing: 0.8px;
-        text-transform: uppercase;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-      .mpin-toggle {
-        font-size: 11px;
-        color: var(--khalti);
-        cursor: pointer;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        font-family: "Space Mono", monospace;
-        background: none;
-        border: none;
-        padding: 0;
-        transition: opacity 0.2s;
-      }
-      .mpin-toggle:hover {
-        opacity: 0.75;
-      }
-      .mpin-dots-wrap {
-        display: flex;
-        gap: 12px;
-        justify-content: center;
-        margin-bottom: 4px;
-      }
-      .mpin-dot-indicator {
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-        border: 2px solid #d8b4fe;
-        background: transparent;
-        transition:
-          background 0.2s,
-          border-color 0.2s,
-          transform 0.15s;
-      }
-      .mpin-dot-indicator.filled {
-        background: var(--khalti);
-        border-color: var(--khalti);
-        transform: scale(1.15);
-      }
-      .mpin-input-wrap {
-        position: relative;
-        margin-bottom: 14px;
-      }
-      .mpin-input-wrap input {
-        border: 1.5px solid var(--border);
-        border-radius: 9px;
-        padding: 0 48px 0 14px;
-        height: 52px;
-        font-family: "Space Mono", monospace;
-        font-size: 22px;
-        letter-spacing: 10px;
-        color: var(--khalti);
-        background: var(--white);
-        outline: none;
-        width: 100%;
-        transition:
-          border-color 0.2s,
-          box-shadow 0.2s;
-      }
-      .mpin-input-wrap input:focus {
-        border-color: var(--khalti);
-        box-shadow: 0 0 0 3px var(--khalti-dim);
-      }
-      .mpin-input-wrap input::placeholder {
-        color: #d8b4fe;
-        letter-spacing: 3px;
-        font-size: 14px;
-      }
-      .mpin-eye {
-        position: absolute;
-        right: 14px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: var(--muted);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 4px;
-        transition: color 0.2s;
-      }
-      .mpin-eye:hover {
-        color: var(--khalti);
-      }
-      .mpin-strength-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 11px;
-        color: var(--muted);
-        margin-bottom: 14px;
-        font-family: "Space Mono", monospace;
-      }
-      .mpin-strength-bar {
-        flex: 1;
-        height: 3px;
-        border-radius: 99px;
-        background: var(--border);
-        overflow: hidden;
-      }
-      .mpin-strength-fill {
-        height: 100%;
-        border-radius: 99px;
-        width: 0;
-        transition:
-          width 0.3s,
-          background 0.3s;
-      }
-      .mpin-forgot {
-        text-align: right;
-        font-size: 11.5px;
-        margin-bottom: 14px;
-      }
-      .mpin-forgot a {
-        color: var(--khalti);
-        text-decoration: none;
-        font-weight: 500;
-        cursor: pointer;
-      }
-      .mpin-forgot a:hover {
-        text-decoration: underline;
-      }
-      .mpin-back-row {
-        text-align: center;
-        font-size: 12px;
-        color: var(--muted);
-        margin-bottom: 12px;
-      }
-      .mpin-back-row a {
-        color: var(--muted);
-        cursor: pointer;
-      }
-      .mpin-back-row a:hover {
         color: var(--text);
       }
 
@@ -1411,7 +1105,7 @@
         width: 64px;
         height: 64px;
         margin: 0 auto 20px;
-        background: linear-gradient(135deg, #5c2d91, #7c3db8);
+        background: linear-gradient(135deg, #007b5e, #00a876);
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -1422,11 +1116,11 @@
         0%,
         100% {
           transform: scale(1);
-          box-shadow: 0 0 0 0 rgba(92, 45, 145, 0.4);
+          box-shadow: 0 0 0 0 rgba(0, 123, 94, 0.4);
         }
         50% {
           transform: scale(1.05);
-          box-shadow: 0 0 0 16px rgba(92, 45, 145, 0);
+          box-shadow: 0 0 0 16px rgba(0, 123, 94, 0);
         }
       }
       .proc-title {
@@ -1437,7 +1131,7 @@
         margin-bottom: 6px;
       }
       .proc-title span {
-        color: var(--khalti);
+        color: var(--esewa);
       }
       .proc-sub {
         font-size: 13px;
@@ -1453,7 +1147,7 @@
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background: var(--khalti);
+        background: var(--esewa);
         animation: dotbounce 1.2s infinite;
       }
       .proc-dots span:nth-child(2) {
@@ -1473,181 +1167,6 @@
         }
       }
 
-      /* SUCCESS MODAL */
-      .modal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.65);
-        z-index: 500;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        backdrop-filter: blur(6px);
-      }
-      .modal-overlay.show {
-        display: flex;
-      }
-      .modal {
-        background: var(--white);
-        border-radius: 20px;
-        padding: 44px 40px;
-        max-width: 460px;
-        width: 100%;
-        text-align: center;
-        animation: modalIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
-      .modal-icon {
-        width: 76px;
-        height: 76px;
-        border-radius: 50%;
-        background: #ecfdf5;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 22px;
-        font-size: 38px;
-        border: 3px solid #bbf7d0;
-      }
-      .modal h2 {
-        font-family: "Bebas Neue", sans-serif;
-        font-size: 34px;
-        letter-spacing: 1.5px;
-        color: var(--dark);
-        margin-bottom: 8px;
-      }
-      .modal h2 span {
-        color: var(--khalti);
-      }
-      .modal p {
-        font-size: 13.5px;
-        color: var(--muted);
-        line-height: 1.75;
-        margin-bottom: 6px;
-      }
-      .modal-ref {
-        font-family: "Space Mono", monospace;
-        font-size: 12px;
-        color: var(--khalti);
-        background: var(--khalti-dim);
-        padding: 7px 18px;
-        border-radius: 99px;
-        display: inline-block;
-        margin: 10px 0;
-        border: 1px solid rgba(92, 45, 145, 0.2);
-        letter-spacing: 2px;
-      }
-      .modal-txn {
-        font-family: "Space Mono", monospace;
-        font-size: 11px;
-        color: var(--muted);
-        margin: 4px 0;
-      }
-      .modal-divider {
-        height: 1px;
-        background: var(--border);
-        margin: 20px 0;
-      }
-      .modal-btns {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-      .modal-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 12px 28px;
-        background: var(--orange);
-        border: none;
-        border-radius: 10px;
-        color: #fff;
-        font-family: "DM Sans", sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        text-decoration: none;
-        transition: background 0.2s;
-      }
-      .modal-btn:hover {
-        background: var(--orange-light);
-      }
-      .modal-btn-sec {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 11px 22px;
-        background: none;
-        border: 1.5px solid var(--border);
-        border-radius: 10px;
-        color: var(--text);
-        font-family: "DM Sans", sans-serif;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        text-decoration: none;
-        transition: background 0.2s;
-      }
-      .modal-btn-sec:hover {
-        background: var(--bg);
-      }
-      /* ── STEP BAR RESPONSIVE ── */
-      .step-bar {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        flex-wrap: nowrap;
-      }
-      .step-bar::-webkit-scrollbar {
-        display: none;
-      }
-
-      @media (max-width: 1100px) {
-        .step-label {
-          display: none;
-        }
-        .step-line {
-          min-width: 10px;
-          margin: 0 4px;
-        }
-      }
-
-      @media (max-width: 768px) {
-        .step-bar {
-          padding: 10px 14px;
-          gap: 0;
-        }
-        .step {
-          flex: 0 0 auto;
-        }
-        .step-num {
-          width: 26px;
-          height: 26px;
-          font-size: 11px;
-          flex-shrink: 0;
-        }
-        .step-line {
-          min-width: 8px;
-          margin: 0 3px;
-          flex-shrink: 1;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .step-bar {
-          padding: 8px 10px;
-        }
-        .step-num {
-          width: 22px;
-          height: 22px;
-          font-size: 10px;
-        }
-        .step-line {
-          min-width: 6px;
-          margin: 0 2px;
-        }
-      }
       /* FOOTER */
       .footer-strip {
         padding-top: 24px;
@@ -1713,6 +1232,15 @@
         }
         .step-label {
           display: none;
+        }
+      }
+      @media (max-width: 1100px) {
+        .step-label {
+          display: none;
+        }
+        .step-line {
+          min-width: 10px;
+          margin: 0 4px;
         }
       }
     </style>
@@ -1856,8 +1384,8 @@
             </button>
             <div class="notif-panel" id="notifPanel">
               <div class="np-head">
-                <span class="np-title">Notifications</span>
-                <button class="np-mark-all" id="npMarkAll">
+                <span class="np-title">Notifications</span
+                ><button class="np-mark-all" id="npMarkAll">
                   Mark all read
                 </button>
               </div>
@@ -1937,8 +1465,9 @@
                   height="15"
                 >
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
-                >KYC verification
-                <span class="dd-kyc-badge" id="ddKycBadge">Pending</span>
+                >KYC verification<span class="dd-kyc-badge" id="ddKycBadge"
+                  >Pending</span
+                >
               </button>
               <div class="dd-divider"></div>
               <button class="dd-item dd-danger" id="logoutBtn">
@@ -1973,9 +1502,13 @@
 
         <div class="page-header">
           <h1>Complete <span>Payment</span></h1>
-          <p>Review your booking and pay securely via Khalti</p>
+          <p>
+            Review your booking and pay securely via eSewa — booking confirms
+            only after payment
+          </p>
         </div>
 
+        <!-- STEP BAR -->
         <div class="step-bar">
           <div class="step done">
             <div class="step-num">✓</div>
@@ -2018,8 +1551,20 @@
           <div class="receipt-card">
             <div class="rc-head">
               Booking <span class="accent">Receipt</span>
-              <div class="rc-ref" id="rcRef">REF: —</div>
+              <div class="rc-ref" id="rcRef">PENDING PAYMENT</div>
             </div>
+
+            <!-- ⚠️ Pending warning — booking not yet created -->
+            <div class="pending-warn">
+              <span style="font-size: 20px; flex-shrink: 0">⏳</span>
+              <div>
+                <strong>Booking not confirmed yet</strong>
+                Your reservation will only be created and confirmed after your
+                eSewa payment is successfully verified. No slot is held until
+                payment completes.
+              </div>
+            </div>
+
             <div class="vehicle-thumb">
               <div class="vt-img" id="vtImg">🚗</div>
               <div>
@@ -2066,389 +1611,130 @@
 
           <!-- RIGHT: PAYMENT PANEL -->
           <div class="payment-panel">
-            <div class="khalti-card">
-              <div class="kc-header">
-                <div class="khalti-logo">
-                  <svg
-                    viewBox="0 0 40 40"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect width="40" height="40" rx="8" fill="#5C2D91" />
-                    <path
-                      d="M12 10 L12 30"
-                      stroke="white"
-                      stroke-width="3.5"
-                      stroke-linecap="round"
-                    />
-                    <path
-                      d="M12 20 L22 10"
-                      stroke="white"
-                      stroke-width="3.5"
-                      stroke-linecap="round"
-                    />
-                    <path
-                      d="M12 20 L26 30"
-                      stroke="white"
-                      stroke-width="3.5"
-                      stroke-linecap="round"
-                    />
-                    <circle cx="28" cy="26" r="4" fill="#F5A623" />
-                  </svg>
+            <!-- ESEWA CARD -->
+            <div class="esewa-card">
+              <div class="esewa-header">
+                <div class="esewa-logo-box">💚</div>
+                <div class="esewa-header-text">
+                  <div class="esewa-title">Pay with eSewa</div>
+                  <div class="esewa-sub">Nepal's #1 Digital Wallet</div>
                 </div>
-                <div class="kc-header-text">
-                  <div class="kc-title">Pay with Khalti</div>
-                  <div class="kc-sub">Digital Wallet · Fast & Secure</div>
-                </div>
-                <div class="kc-secure-badge">
+                <div class="esewa-badge">
                   <svg
-                    width="11"
-                    height="11"
+                    width="10"
+                    height="10"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
                     stroke-width="2.5"
                   >
                     <rect x="3" y="11" width="18" height="11" rx="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg
-                  >SSL Secured
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                  SSL Secured
                 </div>
               </div>
 
-              <div class="khalti-steps">
-                <div class="ks-item ks-active" id="ks1">
-                  <div class="ks-dot">1</div>
-                  <span class="ks-lbl">Mobile</span>
-                </div>
-                <div class="ks-line" id="ksLine1"></div>
-                <div class="ks-item" id="ks2">
-                  <div class="ks-dot">2</div>
-                  <span class="ks-lbl">MPIN</span>
-                </div>
-                <div class="ks-line" id="ksLine2"></div>
-                <div class="ks-item" id="ks3">
-                  <div class="ks-dot">3</div>
-                  <span class="ks-lbl">OTP</span>
-                </div>
-              </div>
-
-              <div class="kc-body">
-                <div class="amount-display">
+              <div class="esewa-body">
+                <div class="amount-box">
                   <div>
-                    <div class="ad-lbl">AMOUNT DUE</div>
-                    <div class="ad-amt">
+                    <div class="ab-lbl">AMOUNT DUE</div>
+                    <div class="ab-amt">
                       <span class="rs-sm">Rs </span><span id="adTotal">0</span>
                     </div>
                   </div>
-                  <div class="ad-right">
-                    <div class="ad-lbl">BOOKING REF</div>
-                    <div class="ad-ref" id="adRef">—</div>
+                  <div style="text-align: right">
+                    <div class="ab-lbl">STATUS</div>
+                    <div
+                      class="ab-ref"
+                      style="color: #dc2626; font-weight: 700"
+                    >
+                      ⏳ Awaiting Payment
+                    </div>
                   </div>
                 </div>
 
-                <!-- STEP 1: Phone -->
-                <div id="phoneStep">
-                  <div class="khalti-app-hint">
-                    <div class="kah-icon">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="white"
-                        stroke-width="1.8"
-                      >
-                        <rect x="5" y="2" width="14" height="20" rx="2" />
-                        <circle cx="12" cy="17" r="1" fill="white" />
-                      </svg>
-                    </div>
-                    <div class="kah-text">
-                      <div class="kah-title">
-                        Enter your Khalti mobile number
-                      </div>
-                      <div class="kah-sub">
-                        You'll verify with your MPIN, then an OTP
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label>
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2.5"
-                      >
-                        <path
-                          d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.59 1.21h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.93a16 16 0 0 0 6.16 6.16l.93-.93a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16.92z"
-                        />
-                      </svg>
-                      Khalti Registered Mobile
-                    </label>
-                    <div class="phone-input-wrap">
-                      <div class="phone-prefix">🇳🇵 +977</div>
-                      <input
-                        type="tel"
-                        id="khaltiPhone"
-                        placeholder="98XXXXXXXX"
-                        maxlength="10"
-                      />
-                    </div>
-                  </div>
-                  <button
-                    class="pay-btn"
-                    id="requestOtpBtn"
-                    onclick="requestOtp()"
-                  >
+                <!-- HOW IT WORKS -->
+                <div class="info-box green">
+                  <div class="ib-icon green">
                     <svg
                       width="18"
                       height="18"
                       viewBox="0 0 24 24"
                       fill="none"
-                      stroke="currentColor"
-                      stroke-width="2.5"
+                      stroke="white"
+                      stroke-width="2"
                     >
                       <path
-                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.59 1.21h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.93a16 16 0 0 0 6.16 6.16l.93-.93a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16.92z"
+                        d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
                       />
+                      <polyline points="15 3 21 3 21 9" />
+                      <line x1="10" y1="14" x2="21" y2="3" />
                     </svg>
-                    Continue to MPIN
-                  </button>
-                </div>
-
-                <!-- STEP 2: MPIN -->
-                <div class="mpin-step" id="mpinStep">
-                  <div class="mpin-hint">
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#7c3aed"
-                      stroke-width="2.5"
-                    >
-                      <rect x="3" y="11" width="18" height="11" rx="2" />
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg>
-                    Enter your
-                    <strong style="margin: 0 3px">Khalti MPIN</strong> (4
-                    digits) to verify your identity.
                   </div>
-                  <div class="mpin-dots-wrap" id="mpinDots">
-                    <div class="mpin-dot-indicator" id="md0"></div>
-                    <div class="mpin-dot-indicator" id="md1"></div>
-                    <div class="mpin-dot-indicator" id="md2"></div>
-                    <div class="mpin-dot-indicator" id="md3"></div>
-                  </div>
-                  <div class="mpin-label-row">
-                    <label>
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2.5"
-                      >
-                        <rect x="3" y="11" width="18" height="11" rx="2" />
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                      </svg>
-                      Khalti MPIN
-                    </label>
-                    <button
-                      class="mpin-toggle"
-                      id="mpinToggleBtn"
-                      onclick="toggleMpin()"
-                    >
-                      <svg
-                        id="mpinEyeIcon"
-                        width="13"
-                        height="13"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2.2"
-                      >
-                        <path
-                          d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
-                        />
-                        <circle cx="12" cy="12" r="3" />
-                      </svg>
-                      Show
-                    </button>
-                  </div>
-                  <div class="mpin-input-wrap">
-                    <input
-                      type="password"
-                      id="mpinInput"
-                      placeholder="Enter 4-digit MPIN"
-                      maxlength="4"
-                      inputmode="numeric"
-                      autocomplete="one-time-code"
-                      oninput="onMpinInput(this)"
-                    />
-                    <button
-                      class="mpin-eye"
-                      onclick="toggleMpin()"
-                      tabindex="-1"
-                    >
-                      <svg
-                        id="mpinEyeIcon2"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <path
-                          d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
-                        />
-                        <circle cx="12" cy="12" r="3" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div class="mpin-strength-row">
-                    <div class="mpin-strength-bar">
-                      <div
-                        class="mpin-strength-fill"
-                        id="mpinStrengthFill"
-                      ></div>
+                  <div>
+                    <div class="ib-title green">How it works</div>
+                    <div class="ib-sub green">
+                      1. Click Pay → redirected to eSewa<br />
+                      2. Login &amp; confirm payment on eSewa<br />
+                      3. eSewa notifies us → booking is created &amp;
+                      confirmed<br />
+                      4. You return to your confirmed booking page ✅
                     </div>
-                    <span id="mpinStrengthLabel">Enter MPIN</span>
                   </div>
-                  <div class="mpin-forgot">
-                    <a
-                      onclick="
-                        alert('Please reset your MPIN via the Khalti app.')
-                      "
-                      >Forgot MPIN?</a
-                    >
-                  </div>
-                  <div class="mpin-back-row">
-                    <a onclick="backToPhone()">← Change number</a>
-                  </div>
-                  <button
-                    class="pay-btn"
-                    id="proceedToOtpBtn"
-                    onclick="proceedToOtp()"
-                  >
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2.5"
-                    >
-                      <path d="M5 13l4 4L19 7" />
-                    </svg>
-                    Verify MPIN & Get OTP
-                  </button>
                 </div>
 
-                <!-- STEP 3: OTP -->
-                <div class="otp-step" id="otpStep">
-                  <div class="otp-hint">
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#16a34a"
-                      stroke-width="2.5"
-                    >
-                      <path d="M5 13l4 4L19 7" />
-                    </svg>
-                    MPIN verified! OTP sent to
-                    <strong id="otpSentTo" style="margin-left: 4px"
-                      >+977 98XXXXXXXX</strong
-                    >. Enter the 4-digit code below.
-                  </div>
-                  <div class="form-group" style="margin-bottom: 6px">
-                    <label>
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2.5"
-                      >
-                        <rect x="3" y="11" width="18" height="11" rx="2" />
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                      </svg>
-                      Enter OTP
-                    </label>
-                  </div>
-                  <div class="otp-boxes">
-                    <input
-                      class="otp-box"
-                      maxlength="1"
-                      type="text"
-                      inputmode="numeric"
-                      id="otp0"
-                      oninput="otpNav(this, 0)"
-                    />
-                    <input
-                      class="otp-box"
-                      maxlength="1"
-                      type="text"
-                      inputmode="numeric"
-                      id="otp1"
-                      oninput="otpNav(this, 1)"
-                    />
-                    <input
-                      class="otp-box"
-                      maxlength="1"
-                      type="text"
-                      inputmode="numeric"
-                      id="otp2"
-                      oninput="otpNav(this, 2)"
-                    />
-                    <input
-                      class="otp-box"
-                      maxlength="1"
-                      type="text"
-                      inputmode="numeric"
-                      id="otp3"
-                      oninput="otpNav(this, 3)"
-                    />
-                  </div>
-                  <div class="otp-resend">
-                    Didn't get it? <a onclick="resendOtp()">Resend OTP</a> ·
-                    <a onclick="backToMpin()" style="color: var(--muted)"
-                      >← Back to MPIN</a
-                    >
-                  </div>
-                  <button
-                    class="pay-btn"
-                    id="confirmPayBtn"
-                    onclick="confirmPayment()"
+                <!-- TEST CREDENTIALS -->
+                <div class="info-box amber">
+                  <div
+                    class="ib-icon"
+                    style="background: #fef3c7; font-size: 18px"
                   >
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2.5"
-                    >
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    </svg>
-                    Confirm Payment · Rs <span id="btnTotal">0</span>
-                  </button>
+                    🧪
+                  </div>
+                  <div>
+                    <div class="ib-title amber">Test Credentials (Sandbox)</div>
+                    <div class="cred-row">
+                      <span class="cred-pill">ID: 9806800001</span>
+                      <span class="cred-pill">Password: Nepal@123</span>
+                      <span class="cred-pill">Token: 123456</span>
+                    </div>
+                  </div>
                 </div>
 
-                <div class="or-divider" style="margin-top: 14px">
+                <!-- PAY BUTTON -->
+                <button
+                  class="esewa-pay-btn"
+                  id="esewaPayBtn"
+                  onclick="payWithEsewa()"
+                >
+                  <div class="esewa-btn-icon">💚</div>
+                  <span>Pay Rs <span id="btnTotal">0</span> via eSewa</span>
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    style="margin-left: auto; opacity: 0.8"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </button>
+
+                <div class="or-divider">
                   <div class="or-line"></div>
-                  <span class="or-text">SECURED BY KHALTI</span>
+                  <span class="or-text"
+                    >BOOKING CONFIRMS ONLY AFTER PAYMENT</span
+                  >
                   <div class="or-line"></div>
                 </div>
               </div>
             </div>
 
-            <!-- SECURITY INFO -->
+            <!-- SECURITY STRIP -->
             <div class="security-strip">
               <div class="ss-row">
                 <div class="ss-icon green">
@@ -2469,7 +1755,7 @@
                 </div>
               </div>
               <div class="ss-row">
-                <div class="ss-icon blue">
+                <div class="ss-icon esewa">
                   <svg
                     width="14"
                     height="14"
@@ -2482,12 +1768,12 @@
                   </svg>
                 </div>
                 <div class="ss-text">
-                  <strong>Verified by Khalti</strong><br />Regulated by Nepal
-                  Rastra Bank
+                  <strong>Booking confirmed only on payment</strong><br />No
+                  booking is created until eSewa verifies your payment
                 </div>
               </div>
               <div class="ss-row">
-                <div class="ss-icon orange">
+                <div class="ss-icon blue">
                   <svg
                     width="14"
                     height="14"
@@ -2557,110 +1843,9 @@
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           </svg>
         </div>
-        <div class="proc-title">Processing <span>Payment</span></div>
-        <div class="proc-sub" id="procMsg">Connecting to Khalti…</div>
+        <div class="proc-title">Redirecting to <span>eSewa</span></div>
+        <div class="proc-sub" id="procMsg">Preparing your payment…</div>
         <div class="proc-dots"><span></span><span></span><span></span></div>
-      </div>
-    </div>
-
-    <!-- SUCCESS MODAL -->
-    <div class="modal-overlay" id="successModal">
-      <div class="modal">
-        <div class="modal-icon">✅</div>
-        <h2>Payment <span>Successful!</span></h2>
-        <p>
-          Your payment has been confirmed via Khalti.<br />Your vehicle booking
-          is now active.
-        </p>
-        <div class="modal-ref" id="modalRef">REF: —</div>
-        <div class="modal-txn" id="modalTxn">TXN: —</div>
-        <p style="font-size: 12px; color: var(--muted)">
-          A receipt has been sent to your registered email address.
-        </p>
-        <div class="modal-divider"></div>
-        <div class="modal-btns">
-          <a href="mybooking.html" class="modal-btn">📋 View My Booking</a>
-          <a href="userdashboard.html" class="modal-btn-sec">🏠 Dashboard</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- ChatBot -->
-    <button id="chat-bubble" title="Chat with us">
-      <div class="chat-notif-dot"></div>
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        width="22"
-        height="22"
-      >
-        <path
-          d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
-        />
-      </svg>
-    </button>
-    <div id="chat-panel">
-      <div class="cp-header">
-        <div class="cp-avatar">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#FF5C1A"
-            stroke-width="1.8"
-            width="16"
-            height="16"
-          >
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-          </svg>
-        </div>
-        <div>
-          <div class="cp-title">Auto Dealer Support</div>
-          <div class="cp-sub">● Online now</div>
-        </div>
-        <button class="cp-close" id="chat-close">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            width="16"
-            height="16"
-          >
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
-      </div>
-      <div class="cp-messages" id="cpMessages">
-        <div class="cp-msg bot">
-          <div class="cp-av">AD</div>
-          <div class="cp-bubble">Hi there! 👋 How can I help you today?</div>
-        </div>
-      </div>
-      <div class="cp-quick" id="cpQuick">
-        <button class="cp-chip" onclick="cpSendChip(this)">
-          Browse vehicles
-        </button>
-        <button class="cp-chip" onclick="cpSendChip(this)">My bookings</button>
-        <button class="cp-chip" onclick="cpSendChip(this)">KYC status</button>
-      </div>
-      <div class="cp-input-row">
-        <input class="cp-input" id="cpInput" placeholder="Type a message…" />
-        <button class="cp-send" id="cpSendBtn">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            width="14"
-            height="14"
-          >
-            <line x1="22" y1="2" x2="11" y2="13" />
-            <polygon points="22 2 15 22 11 13 2 9 22 2" />
-          </svg>
-        </button>
       </div>
     </div>
 
@@ -2670,7 +1855,6 @@
 
     <script>
       const BASE_URL = "/api";
-
       const urlParams = new URLSearchParams(location.search);
       const totalAmount = parseFloat(urlParams.get("amount") || "0");
       const vehicleId = urlParams.get("vehicle_id") || "";
@@ -2688,7 +1872,6 @@
       const notes = urlParams.get("notes") || null;
       const pkgId = urlParams.get("pkg_id") || null;
 
-      /* ── API helper ── */
       async function apiFetch(path, options = {}) {
         const res = await fetch(`${BASE_URL}${path}`, {
           credentials: "include",
@@ -2697,6 +1880,30 @@
         });
         if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`);
         return res.json();
+      }
+
+      /* ── Populate receipt ── */
+      function populateReceipt() {
+        const fmtDT = (v) =>
+          v
+            ? new Date(v).toLocaleString("en-US", {
+                dateStyle: "medium",
+                timeStyle: "short",
+              })
+            : "—";
+        const fmt = (n) => parseFloat(n).toLocaleString();
+        document.getElementById("vtName").textContent = vehicleName;
+        document.getElementById("rcName").textContent = passengerName || "—";
+        document.getElementById("rcPhone").textContent = phone || "—";
+        document.getElementById("rcPickup").textContent = pickupLoc || "—";
+        document.getElementById("rcDropoff").textContent = dropoffLoc || "—";
+        document.getElementById("rcPickupDT").textContent = fmtDT(pickupDT);
+        document.getElementById("rcDropoffDT").textContent = fmtDT(dropoffDT);
+        document.getElementById("rcDuration").textContent = duration || "—";
+        document.getElementById("rcTotal").textContent = fmt(totalAmount);
+        document.getElementById("adTotal").textContent = fmt(totalAmount);
+        document.getElementById("btnTotal").textContent = fmt(totalAmount);
+        document.title = `AUTO DEALER — Payment · ${vehicleName}`;
       }
 
       /* ── Load vehicle photo ── */
@@ -2712,10 +1919,9 @@
               : BASE + v.thumbnail
             : null;
           const vtImg = document.getElementById("vtImg");
-          if (vtImg && thumb) {
+          if (vtImg && thumb)
             vtImg.innerHTML = `<img src="${thumb}" alt="${v.name}" style="width:100%;height:100%;object-fit:cover;border-radius:7px;" onerror="this.parentNode.textContent='🚗'">`;
-          }
-          const fuelIcons = {
+          const icons = {
             Petrol: "⛽",
             Diesel: "🛢️",
             Electric: "🔋",
@@ -2723,44 +1929,15 @@
             CNG: "🟢",
           };
           const vtChips = document.getElementById("vtChips");
-          if (vtChips) {
+          if (vtChips)
             vtChips.innerHTML = `
-              <span class="vt-chip">${fuelIcons[v.fuel_type] || "⛽"} ${v.fuel_type || ""}</span>
-              <span class="vt-chip">🚘 ${v.body_type || ""}</span>
-              <span class="vt-chip">⚙️ ${v.transmission || ""}</span>
-              <span class="vt-chip">👥 ${v.seating_capacity || ""} seats</span>`;
-          }
-        } catch (err) {
-          console.warn("Vehicle photo fetch failed:", err.message);
+            <span class="vt-chip">${icons[v.fuel_type] || "⛽"} ${v.fuel_type || ""}</span>
+            <span class="vt-chip">🚘 ${v.body_type || ""}</span>
+            <span class="vt-chip">⚙️ ${v.transmission || ""}</span>
+            <span class="vt-chip">👥 ${v.seating_capacity || ""} seats</span>`;
+        } catch (e) {
+          console.warn("Vehicle photo fetch failed:", e.message);
         }
-      }
-
-      /* ── Populate receipt ── */
-      function populateReceipt() {
-        const fmtDT = (val) => {
-          if (!val) return "—";
-          return new Date(val).toLocaleString("en-US", {
-            dateStyle: "medium",
-            timeStyle: "short",
-          });
-        };
-        const fmt = (n) => parseFloat(n).toLocaleString();
-        document.getElementById("rcRef").textContent = "REF: Pending…";
-        document.getElementById("vtName").textContent = vehicleName;
-        document.getElementById("rcName").textContent = passengerName || "—";
-        document.getElementById("rcPhone").textContent = phone || "—";
-        document.getElementById("rcPickup").textContent = pickupLoc || "—";
-        document.getElementById("rcDropoff").textContent = dropoffLoc || "—";
-        document.getElementById("rcPickupDT").textContent = fmtDT(pickupDT);
-        document.getElementById("rcDropoffDT").textContent = fmtDT(dropoffDT);
-        document.getElementById("rcDuration").textContent = duration || "—";
-        document.getElementById("rcTotal").textContent = fmt(totalAmount);
-        document.getElementById("adTotal").textContent = fmt(totalAmount);
-        document.getElementById("adRef").textContent =
-          "Will assign after payment";
-        document.getElementById("btnTotal").textContent = fmt(totalAmount);
-        document.getElementById("modalRef").textContent = "REF: —";
-        document.title = `AUTO DEALER — Payment · ${vehicleName}`;
       }
 
       /* ── Load user profile ── */
@@ -2780,67 +1957,54 @@
             .toUpperCase();
           const isVerified = user.kyc_status === "verified";
           const hasPhoto = !!user.profile_photo;
-
-          function populateAvatar(containerEl, initialsEl) {
-            if (!containerEl) return;
+          function populateAvatar(el, iEl) {
+            if (!el) return;
             if (hasPhoto) {
-              if (initialsEl) initialsEl.style.display = "none";
-              containerEl.querySelectorAll("img").forEach((i) => i.remove());
+              if (iEl) iEl.style.display = "none";
+              el.querySelectorAll("img").forEach((i) => i.remove());
               const img = document.createElement("img");
               img.src = user.profile_photo;
               img.alt = fullName;
-              containerEl.appendChild(img);
+              el.appendChild(img);
             } else {
-              if (initialsEl) initialsEl.textContent = initials;
+              if (iEl) iEl.textContent = initials;
             }
           }
-
           populateAvatar(
             document.getElementById("sidebarAvatar"),
             document.getElementById("sidebarInitials"),
           );
-          const sidebarNameEl = document.getElementById("sidebarName");
-          if (sidebarNameEl) sidebarNameEl.textContent = fullName;
-          const sidebarKycEl = document.getElementById("sidebarKyc");
-          if (sidebarKycEl) {
-            sidebarKycEl.textContent = isVerified
+          const sn = document.getElementById("sidebarName");
+          if (sn) sn.textContent = fullName;
+          const sk = document.getElementById("sidebarKyc");
+          if (sk) {
+            sk.textContent = isVerified
               ? "KYC Verified"
               : user.kyc_status === "rejected"
                 ? "KYC Rejected"
                 : "KYC Pending";
-            sidebarKycEl.className =
+            sk.className =
               "user-kyc-status " + (isVerified ? "verified" : "unverified");
           }
           populateAvatar(
             document.getElementById("topbarAvatar"),
             document.getElementById("topbarInitials"),
           );
-          const topbarNameEl = document.getElementById("topbarName");
-          if (topbarNameEl) topbarNameEl.textContent = fullName;
-          const topbarRoleEl = document.getElementById("topbarRole");
-          if (topbarRoleEl) {
-            topbarRoleEl.textContent = isVerified
-              ? "Verified Member"
-              : "Member";
-            topbarRoleEl.style.color = isVerified ? "#16a34a" : "";
+          const tn = document.getElementById("topbarName");
+          if (tn) tn.textContent = fullName;
+          const tr = document.getElementById("topbarRole");
+          if (tr) {
+            tr.textContent = isVerified ? "Verified Member" : "Member";
+            tr.style.color = isVerified ? "#16a34a" : "";
           }
-          const ddName = document.getElementById("ddName");
-          const ddEmail = document.getElementById("ddEmail");
-          if (ddName) ddName.textContent = fullName;
-          if (ddEmail) ddEmail.textContent = user.email;
-          const ddKycBadge = document.getElementById("ddKycBadge");
-          if (ddKycBadge && isVerified) ddKycBadge.style.display = "none";
-          window._userId = user.id;
-
-          const khaltiPhone = document.getElementById("khaltiPhone");
-          if (khaltiPhone && !khaltiPhone.value && user.phone) {
-            khaltiPhone.value = user.phone
-              .replace(/^\+977/, "")
-              .replace(/^977/, "")
-              .trim();
-          }
-        } catch (err) {
-          console.warn("Profile fetch failed:", err.message);
+          const dn = document.getElementById("ddName");
+          if (dn) dn.textContent = fullName;
+          const de = document.getElementById("ddEmail");
+          if (de) de.textContent = user.email;
+          const db = document.getElementById("ddKycBadge");
+          if (db && isVerified) db.style.display = "none";
+        } catch (e) {
+          console.warn("Profile fetch failed:", e.message);
         }
       }
 
@@ -2870,269 +2034,75 @@
           window.location.href = "/index.html";
         });
 
-      /* ── Khalti mini step indicator ── */
-      function setKhaltiStep(step) {
-        const items = [
-          document.getElementById("ks1"),
-          document.getElementById("ks2"),
-          document.getElementById("ks3"),
-        ];
-        const lines = [
-          document.getElementById("ksLine1"),
-          document.getElementById("ksLine2"),
-        ];
-        items.forEach((el, i) => {
-          el.classList.remove("ks-active", "ks-done");
-          if (i + 1 < step) {
-            el.classList.add("ks-done");
-            el.querySelector(".ks-dot").textContent = "✓";
-          } else if (i + 1 === step) {
-            el.classList.add("ks-active");
-            el.querySelector(".ks-dot").textContent = i + 1;
-          } else {
-            el.querySelector(".ks-dot").textContent = i + 1;
-          }
-        });
-        lines.forEach((line, i) => {
-          line.style.background = i + 1 < step ? "#22c55e" : "var(--border)";
-        });
-      }
-
-      /* ── Step 1: Phone → MPIN ── */
-      function requestOtp() {
-        const phoneVal = document.getElementById("khaltiPhone").value.trim();
-        if (!phoneVal || phoneVal.length < 10) {
-          shakEl(document.getElementById("khaltiPhone"));
-          return;
-        }
-        const btn = document.getElementById("requestOtpBtn");
-        btn.disabled = true;
-        btn.innerHTML = `<svg style="animation:spin .8s linear infinite" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" opacity=".25"/><path d="M21 12a9 9 0 0 1-9 9"/></svg> Connecting…`;
-        setTimeout(() => {
-          document.getElementById("phoneStep").style.display = "none";
-          document.getElementById("mpinStep").classList.add("show");
-          document.getElementById("mpinInput").focus();
-          btn.disabled = false;
-          btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.59 1.21h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.93a16 16 0 0 0 6.16 6.16l.93-.93a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg> Continue to MPIN`;
-          setKhaltiStep(2);
-        }, 1000);
-      }
-
-      /* ── Step 2: MPIN → OTP ── */
-      function proceedToOtp() {
-        const mpin = document.getElementById("mpinInput").value;
-        if (mpin.length < 4) {
-          shakEl(document.getElementById("mpinInput"));
-          return;
-        }
-        const btn = document.getElementById("proceedToOtpBtn");
-        btn.disabled = true;
-        btn.innerHTML = `<svg style="animation:spin .8s linear infinite" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" opacity=".25"/><path d="M21 12a9 9 0 0 1-9 9"/></svg> Verifying MPIN…`;
-        setTimeout(() => {
-          const phoneVal = document.getElementById("khaltiPhone").value.trim();
-          document.getElementById("mpinStep").classList.remove("show");
-          document.getElementById("otpStep").classList.add("show");
-          document.getElementById("otpSentTo").textContent = "+977 " + phoneVal;
-          document.getElementById("otp0").focus();
-          btn.disabled = false;
-          btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Verify MPIN & Get OTP`;
-          setKhaltiStep(3);
-        }, 1300);
-      }
-
-      /* ── OTP navigation ── */
-      function otpNav(el, idx) {
-        el.value = el.value.replace(/\D/g, "");
-        if (el.value && idx < 3)
-          document.getElementById("otp" + (idx + 1)).focus();
-        const full = [0, 1, 2, 3].every(
-          (i) => document.getElementById("otp" + i).value,
-        );
-        if (full) setTimeout(confirmPayment, 300);
-      }
-
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Backspace") {
-          const active = document.activeElement;
-          const match = active.id && active.id.match(/^otp(\d)$/);
-          if (match) {
-            const idx = parseInt(match[1]);
-            if (!active.value && idx > 0)
-              document.getElementById("otp" + (idx - 1)).focus();
-          }
-        }
-      });
-
-      function backToPhone() {
-        document.getElementById("mpinStep").classList.remove("show");
-        document.getElementById("otpStep").classList.remove("show");
-        document.getElementById("phoneStep").style.display = "";
-        document.getElementById("mpinInput").value = "";
-        updateMpinDots(0);
-        updateMpinStrength(0);
-        [0, 1, 2, 3].forEach((i) => {
-          document.getElementById("otp" + i).value = "";
-        });
-        setKhaltiStep(1);
-      }
-
-      function backToMpin() {
-        document.getElementById("otpStep").classList.remove("show");
-        document.getElementById("mpinStep").classList.add("show");
-        document.getElementById("mpinInput").focus();
-        [0, 1, 2, 3].forEach((i) => {
-          document.getElementById("otp" + i).value = "";
-        });
-        setKhaltiStep(2);
-      }
-
-      function resendOtp() {
-        [0, 1, 2, 3].forEach((i) => {
-          document.getElementById("otp" + i).value = "";
-        });
-        document.getElementById("otp0").focus();
-      }
-
-      /* ── MPIN logic ── */
-      let mpinVisible = false;
-      function onMpinInput(el) {
-        el.value = el.value.replace(/\D/g, "");
-        const len = el.value.length;
-        updateMpinDots(len);
-        updateMpinStrength(len);
-      }
-      function updateMpinDots(len) {
-        for (let i = 0; i < 4; i++) {
-          const dot = document.getElementById("md" + i);
-          if (dot) {
-            if (i < len) dot.classList.add("filled");
-            else dot.classList.remove("filled");
-          }
-        }
-      }
-      function updateMpinStrength(len) {
-        const fill = document.getElementById("mpinStrengthFill");
-        const label = document.getElementById("mpinStrengthLabel");
-        fill.style.width = (len / 4) * 100 + "%";
-        if (len === 0) {
-          fill.style.background = "var(--border)";
-          label.textContent = "Enter MPIN";
-        } else if (len < 2) {
-          fill.style.background = "#f97316";
-          label.textContent = "Incomplete";
-        } else if (len < 4) {
-          fill.style.background = "#eab308";
-          label.textContent = "Almost there…";
-        } else {
-          fill.style.background = "#22c55e";
-          label.textContent = "MPIN ready ✓";
-        }
-      }
-      function toggleMpin() {
-        mpinVisible = !mpinVisible;
-        const inp = document.getElementById("mpinInput");
-        inp.type = mpinVisible ? "text" : "password";
-        const showHideText = mpinVisible ? "Hide" : "Show";
-        document.getElementById("mpinToggleBtn").innerHTML = `
-          <svg id="mpinEyeIcon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            ${
-              mpinVisible
-                ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
-                : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
-            }
-          </svg>${showHideText}`;
-        document.getElementById("mpinEyeIcon2").innerHTML = mpinVisible
-          ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
-          : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
-      }
-
-      /* ── CONFIRM PAYMENT ── */
-      async function confirmPayment() {
-        const otp = [0, 1, 2, 3]
-          .map((i) => document.getElementById("otp" + i).value)
-          .join("");
-        if (otp.length < 4) {
-          shakEl(document.getElementById("otp0"));
-          return;
-        }
-
+      /* ══════════════════════════════════════════════════════════
+         PAY WITH ESEWA
+         Flow:
+           1. POST /api/payments/esewa/initiate  — backend stores booking
+              data as "pending_payment" and returns a signed eSewa form
+           2. Submit that form → browser goes to eSewa official page
+           3. User pays → eSewa hits your backend callback
+              (POST /api/payments/esewa/callback)
+           4. Backend verifies signature, creates/confirms the booking,
+              then redirects to payment-success-esewa.html?ref=...&amount=...
+         The booking row is only marked "confirmed" inside the callback.
+      ══════════════════════════════════════════════════════════ */
+      async function payWithEsewa() {
+        const btn = document.getElementById("esewaPayBtn");
         const proc = document.getElementById("procOverlay");
-        proc.classList.add("show");
         const setMsg = (t) => {
           const el = document.getElementById("procMsg");
           if (el) el.textContent = t;
         };
 
+        btn.disabled = true;
+        btn.innerHTML = `<svg style="animation:spin .8s linear infinite" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" opacity=".25"/><path d="M21 12a9 9 0 0 1-9 9"/></svg> <span>Preparing…</span>`;
+        proc.classList.add("show");
+
         try {
-          // Stage 1: Create booking
-          setMsg("Creating your booking…");
-          const bookingPayload = {
-            vehicle_id: vehicleId || null,
-            user_name: passengerName,
-            user_email: passengerEmail,
-            user_phone: phone,
-            pickup_location: pickupLoc,
-            rental_type: rentalType,
-            pickup_datetime: pickupDT,
-            drop_datetime: dropoffDT,
-            total_days: totalDays,
-            price_per_unit: totalAmount,
-            total_price: totalAmount,
-            notes: notes || null,
-            payment_method: "Khalti",
-            ...(pkgId && { pkg_id: pkgId }),
-          };
-
-          const bookingRes = await apiFetch("/bookings", {
+          setMsg("Preparing your eSewa payment…");
+          const esewaRes = await apiFetch("/payments/esewa/initiate", {
             method: "POST",
-            body: JSON.stringify(bookingPayload),
+            body: JSON.stringify({
+              amount: totalAmount,
+              vehicle_id: vehicleId || null,
+              vehicle_name: vehicleName,
+              rental_type: rentalType,
+              user_name: passengerName,
+              user_email: passengerEmail,
+              user_phone: phone,
+              pickup_location: pickupLoc,
+              dropoff_location: dropoffLoc,
+              pickup_datetime: pickupDT,
+              drop_datetime: dropoffDT,
+              total_days: totalDays,
+              notes: notes || null,
+              ...(pkgId && { pkg_id: pkgId }),
+            }),
           });
-          if (!bookingRes.success)
-            throw new Error(bookingRes.message || "Booking creation failed");
 
-          const createdBookingId = bookingRes.booking_id;
+          if (!esewaRes.success)
+            throw new Error(esewaRes.message || "eSewa initiation failed");
 
-          // Stage 2: Initiate Khalti
-          setMsg("Connecting to Khalti…");
-          const payRes = await apiFetch("/payments/initiate", {
-            method: "POST",
-            body: JSON.stringify({ booking_id: createdBookingId }),
-          });
-          if (!payRes.success)
-            throw new Error(payRes.message || "Payment initiation failed");
+          // ✅ Save all booking params so they survive the eSewa redirect back on cancel/failure
+          sessionStorage.setItem("paymentParams", location.search);
 
-          // Stage 3: Redirect
-          setMsg("Redirecting to Khalti payment page…");
-          await delay(600);
-          window.location.href = payRes.payment_url;
+          setMsg("Redirecting to eSewa official page…");
+          const div = document.createElement("div");
+          div.style.display = "none";
+          div.innerHTML = esewaRes.form_html;
+          document.body.appendChild(div);
+          div.querySelector("form").submit();
         } catch (err) {
           proc.classList.remove("show");
-          console.error("Payment error:", err);
-          alert("Payment failed: " + err.message);
-          [0, 1, 2, 3].forEach((i) => {
-            document.getElementById("otp" + i).value = "";
-          });
-          document.getElementById("otp0").focus();
+          btn.disabled = false;
+          btn.innerHTML = `<div class="esewa-btn-icon">💚</div><span>Pay Rs ${parseFloat(totalAmount).toLocaleString()} via eSewa</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:auto;opacity:.8"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+          alert("Payment error: " + err.message);
         }
       }
 
-      function delay(ms) {
-        return new Promise((r) => setTimeout(r, ms));
-      }
-
-      function shakEl(el) {
-        el.style.animation = "none";
-        el.offsetHeight;
-        el.style.animation = "shake 0.4s ease";
-        el.focus();
-        setTimeout(() => (el.style.animation = ""), 400);
-      }
-
       const ks = document.createElement("style");
-      ks.textContent = `
-        @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
-        @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-      `;
+      ks.textContent =
+        "@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}";
       document.head.appendChild(ks);
 
       /* ── Mobile sidebar ── */
@@ -3155,9 +2125,38 @@
         toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
 
       /* ── Boot ── */
+
+      // If eSewa redirected back with ?error=... but no booking params, restore from sessionStorage
+      if (urlParams.get("error") && !urlParams.get("amount")) {
+        const saved = sessionStorage.getItem("paymentParams");
+        if (saved) {
+          const merged = new URLSearchParams(saved);
+          merged.set("error", urlParams.get("error"));
+          history.replaceState(null, "", "?" + merged.toString());
+          location.reload();
+          // Stop here — reload will re-run the full boot with correct params
+        }
+      }
+
       populateReceipt();
       loadVehiclePhoto();
       loadUserProfile();
+
+      // Show error banner if eSewa cancelled/failed
+      if (urlParams.get("error")) {
+        const warn = document.querySelector(".pending-warn");
+        if (warn) {
+          warn.style.background = "#fef2f2";
+          warn.style.borderColor = "#fca5a5";
+          warn.style.color = "#991b1b";
+          warn.innerHTML = `
+      <span style="font-size:20px;flex-shrink:0">❌</span>
+      <div>
+        <strong style="color:#7f1d1d;display:block;margin-bottom:2px;font-size:13px">Payment was cancelled or failed</strong>
+        Your booking has not been created. All your details are still here — you can try paying again below.
+      </div>`;
+        }
+      }
     </script>
   </body>
 </html>

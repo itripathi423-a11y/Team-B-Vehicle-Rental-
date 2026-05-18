@@ -1850,6 +1850,7 @@
                   <th>Date</th>
                   <th>Amount</th>
                   <th>Status</th>
+                  <th>Payment</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -2250,6 +2251,19 @@
         const [cls, label] = map[status] || ["s-cancelled", status];
         return `<span class="s-badge ${cls}">${label}</span>`;
       }
+
+      function payBadge(status) {
+        const map = {
+          Paid: ["background:#ecfdf5;color:#16a34a", "Paid"],
+          Unpaid: ["background:#fffbeb;color:#d97706", "Unpaid"],
+          Refunded: ["background:#eff6ff;color:#2563eb", "Refunded"],
+        };
+        const [style, label] = map[status] || [
+          "background:#f3f4f6;color:#6b7280",
+          status || "—",
+        ];
+        return `<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:600;${style}">${label}</span>`;
+      }
       function thumbHtml(b, size = "small") {
         if (b.thumbnail) {
           const s =
@@ -2352,6 +2366,7 @@
             ts: new Date(b.pickup_datetime).getTime(),
             amount: parseFloat(b.total_price),
             status: normalizeStatus(b.status),
+            paymentStatus: b.payment_status || "Unpaid",
             _raw: b,
           }));
           updateStatCards();
@@ -2445,6 +2460,7 @@
             <td><div class="td-inner" style="font-size:13px">${b.date}</div></td>
             <td><div class="td-inner"><div class="amount-cell">Rs ${b.amount.toLocaleString()}</div></div></td>
             <td><div class="td-inner">${badge(b.status)}</div></td>
+            <td><div class="td-inner">${payBadge(b.paymentStatus)}</div></td>   
             <td><div class="td-inner"><div class="actions">
               <button class="act-btn act-view" title="View details" onclick="viewBooking(${b._idx})">
                 <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -2551,6 +2567,10 @@
                 <div class="vc-info-lbl">📞 Contact</div>
                 <div class="vc-info-val">${raw.user_phone || "—"}</div>
               </div>
+              <div class="vc-info-cell">
+  <div class="vc-info-lbl">💳 Payment</div>
+  <div class="vc-info-val">${payBadge(raw.payment_status)}</div>
+</div>
             </div>
             <div class="vc-price-strip">
               <div>

@@ -129,6 +129,8 @@ exports.getAllBookings = (req, res) => {
       rental_type: b.rental_type,
       start_date: toDate(b.pickup_datetime),
       end_date: toDate(b.drop_datetime),
+      pickup_datetime: b.pickup_datetime,
+      drop_datetime: b.drop_datetime,
       total_days: parseFloat(b.total_days) || 1,
       per_day: parseFloat(b.price_per_unit) || 0,
       total_price: parseFloat(b.total_price) || 0,

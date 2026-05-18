@@ -8,8 +8,16 @@ const {
   createNotification,
 } = require("../controllers/notification.controller");
 
+let isRunning = false;
+
 // ── Run every 15 minutes ──────────────────────────────────────────────────
 cron.schedule("*/15 * * * *", () => {
+  if (isRunning) {
+    console.warn("[Reminder Cron] Previous run still in progress, skipping.");
+    return;
+  }
+  isRunning = true;
+
   const sql = `
     SELECT
       b.id,
@@ -25,24 +33,30 @@ cron.schedule("*/15 * * * *", () => {
       AND b.pickup_datetime <= DATE_ADD(NOW(), INTERVAL 25 HOUR)
   `;
 
-  db.query(sql, async (err, bookings) => {
+  db.query(sql, (err, bookings) => {
     if (err) {
       console.error("[Reminder Cron] DB error:", err);
+      isRunning = false;
       return;
     }
 
-    for (const booking of bookings) {
-      const mins = booking.mins_left;
+    const tasks = bookings
+      .map((booking) => {
+        const mins = booking.mins_left;
+        if (mins >= 1380 && mins <= 1500) {
+          return tryReminder(booking, 24, "24 hours");
+        } else if (mins >= 45 && mins <= 75) {
+          return tryReminder(booking, 1, "1 hour");
+        }
+        return null;
+      })
+      .filter(Boolean);
 
-      // 24-hour reminder window: 23h–25h away (1380–1500 mins)
-      if (mins >= 1380 && mins <= 1500) {
-        await tryReminder(booking, 24, "24 hours");
-      }
-      // 1-hour reminder window: 45–75 mins away
-      else if (mins >= 45 && mins <= 75) {
-        await tryReminder(booking, 1, "1 hour");
-      }
-    }
+    Promise.all(tasks)
+      .catch((e) => console.error("[Reminder Cron] Promise.all error:", e))
+      .finally(() => {
+        isRunning = false;
+      });
   });
 });
 

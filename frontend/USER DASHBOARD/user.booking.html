@@ -48,9 +48,9 @@
         --radius-sm: 8px;
         --shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
         --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.1);
-        --khalti: #5c2d91;
-        --khalti-light: #7c3db8;
-        --khalti-dim: rgba(92, 45, 145, 0.12);
+        --esewa: #007b5e;
+        --esewa-light: #00a876;
+        --esewa-dim: rgba(0, 123, 94, 0.12);
       }
       *,
       *::before,
@@ -469,6 +469,12 @@
         border-radius: var(--radius);
         padding: 16px 24px;
         box-shadow: var(--shadow);
+        overflow-x: auto;
+        scrollbar-width: none;
+        flex-wrap: nowrap;
+      }
+      .step-bar::-webkit-scrollbar {
+        display: none;
       }
       .step {
         display: flex;
@@ -846,23 +852,6 @@
       #pkg-location-notice strong {
         color: #7c2d12;
       }
-      .locked-field-wrap {
-        position: relative;
-      }
-      .locked-badge {
-        position: absolute;
-        right: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 9px;
-        background: #f3f4f6;
-        color: #6b7280;
-        padding: 2px 8px;
-        border-radius: 99px;
-        font-family: "Space Mono", monospace;
-        pointer-events: none;
-        border: 1px solid var(--border);
-      }
 
       /* ── VEHICLE SUMMARY ── */
       .v-summary {
@@ -1062,7 +1051,7 @@
         height: 360px;
         background: radial-gradient(
           circle,
-          rgba(255, 92, 26, 0.14) 0%,
+          rgba(0, 123, 94, 0.14) 0%,
           transparent 70%
         );
         pointer-events: none;
@@ -1092,7 +1081,7 @@
         gap: 10px;
       }
       .sc-head .accent {
-        color: var(--orange);
+        color: var(--esewa-light);
       }
       .sc-head-icon {
         margin-left: auto;
@@ -1141,7 +1130,7 @@
         word-break: break-word;
       }
       .sc-cell-val.hi {
-        color: var(--orange);
+        color: var(--esewa-light);
       }
       .sc-cell.full-width {
         grid-column: 1 / -1;
@@ -1174,7 +1163,7 @@
       .sc-total-amt {
         font-family: "Bebas Neue", sans-serif;
         font-size: 58px;
-        color: var(--orange);
+        color: var(--esewa-light);
         line-height: 1;
         letter-spacing: 1px;
       }
@@ -1196,7 +1185,7 @@
       .sc-total-note svg {
         width: 12px;
         height: 12px;
-        stroke: var(--orange);
+        stroke: var(--esewa-light);
         flex-shrink: 0;
       }
       .sc-right {
@@ -1206,14 +1195,14 @@
         gap: 10px;
       }
 
-      /* ── ✦ PAY WITH KHALTI BUTTON ── */
-      .pay-khalti-btn {
+      /* ── PAY WITH ESEWA BUTTON ── */
+      .pay-esewa-btn {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 10px;
         padding: 15px 32px;
-        background: linear-gradient(135deg, #5c2d91 0%, #7c3db8 100%);
+        background: linear-gradient(135deg, #007b5e 0%, #00a876 100%);
         border: none;
         border-radius: 11px;
         font-family: "DM Sans", sans-serif;
@@ -1230,45 +1219,42 @@
         position: relative;
         overflow: hidden;
       }
-      .pay-khalti-btn::before {
+      .pay-esewa-btn::before {
         content: "";
         position: absolute;
         inset: 0;
         background: linear-gradient(
           135deg,
-          rgba(255, 255, 255, 0.08),
+          rgba(255, 255, 255, 0.1),
           transparent
         );
         border-radius: inherit;
       }
-      .pay-khalti-btn:hover {
+      .pay-esewa-btn:hover {
         opacity: 0.92;
         transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(92, 45, 145, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 123, 94, 0.45);
       }
-      .pay-khalti-btn:active {
+      .pay-esewa-btn:active {
         transform: translateY(0);
       }
-      .pay-khalti-btn:disabled {
+      .pay-esewa-btn:disabled {
         background: #374151;
         cursor: not-allowed;
         transform: none;
         box-shadow: none;
         color: #4b5563;
       }
-      .khalti-logo-inline {
-        width: 22px;
-        height: 22px;
-        background: rgba(255, 255, 255, 0.15);
-        border-radius: 6px;
+      .esewa-btn-icon-inline {
+        width: 30px;
+        height: 30px;
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 18px;
         flex-shrink: 0;
-      }
-      .khalti-logo-inline svg {
-        width: 14px;
-        height: 14px;
       }
 
       /* ── FOOTER ── */
@@ -1435,7 +1421,7 @@
           align-items: flex-start;
           width: 100%;
         }
-        .pay-khalti-btn {
+        .pay-esewa-btn {
           width: 100%;
         }
         .duration-opts {
@@ -1487,258 +1473,6 @@
           order: -1;
         }
       }
-
-      /* ── CHATBOT ── */
-      #chat-bubble {
-        position: fixed;
-        bottom: 24px;
-        right: 24px;
-        width: 52px;
-        height: 52px;
-        border-radius: 50%;
-        background: #ff5c1a;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 12px rgba(255, 92, 26, 0.35);
-        z-index: 1000;
-        transition:
-          transform 0.15s,
-          background 0.15s;
-      }
-      #chat-bubble:hover {
-        background: #e04a0e;
-        transform: scale(1.07);
-      }
-      #chat-bubble svg {
-        color: #fff;
-      }
-      .chat-notif-dot {
-        position: absolute;
-        top: 6px;
-        right: 6px;
-        width: 10px;
-        height: 10px;
-        background: #22c55e;
-        border-radius: 50%;
-        border: 2px solid #fff;
-      }
-      #chat-panel {
-        position: fixed;
-        bottom: 88px;
-        right: 24px;
-        width: 320px;
-        height: 420px;
-        background: #fff;
-        border: 0.5px solid #e5e7eb;
-        border-radius: 16px;
-        display: flex;
-        flex-direction: column;
-        z-index: 999;
-        overflow: hidden;
-        transform: scale(0.92) translateY(12px);
-        opacity: 0;
-        pointer-events: none;
-        transition:
-          transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-          opacity 0.18s;
-      }
-      #chat-panel.open {
-        transform: scale(1) translateY(0);
-        opacity: 1;
-        pointer-events: all;
-      }
-      .cp-header {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 14px 16px;
-        border-bottom: 0.5px solid #f0f0f0;
-        background: #fff;
-      }
-      .cp-avatar {
-        width: 34px;
-        height: 34px;
-        border-radius: 50%;
-        background: #fff0e8;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-      }
-      .cp-title {
-        font-size: 14px;
-        font-weight: 600;
-        color: #111;
-      }
-      .cp-sub {
-        font-size: 11px;
-        color: #22c55e;
-      }
-      .cp-close {
-        margin-left: auto;
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: #6b7280;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 6px;
-        padding: 4px;
-      }
-      .cp-close:hover {
-        background: #f9fafb;
-      }
-      .cp-messages {
-        flex: 1;
-        overflow-y: auto;
-        padding: 14px 14px 6px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-      .cp-msg {
-        display: flex;
-        gap: 8px;
-        align-items: flex-end;
-      }
-      .cp-msg.user {
-        flex-direction: row-reverse;
-      }
-      .cp-bubble {
-        max-width: 76%;
-        padding: 9px 12px;
-        border-radius: 12px;
-        font-size: 13px;
-        line-height: 1.5;
-      }
-      .cp-msg.bot .cp-bubble {
-        background: #f3f4f6;
-        color: #111;
-        border-bottom-left-radius: 4px;
-      }
-      .cp-msg.user .cp-bubble {
-        background: #ff5c1a;
-        color: #fff;
-        border-bottom-right-radius: 4px;
-      }
-      .cp-av {
-        width: 26px;
-        height: 26px;
-        border-radius: 50%;
-        background: #fff0e8;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 10px;
-        font-weight: 600;
-        color: #ff5c1a;
-        flex-shrink: 0;
-      }
-      .cp-typing {
-        display: flex;
-        gap: 4px;
-        align-items: center;
-        padding: 9px 12px;
-        background: #f3f4f6;
-        border-radius: 12px;
-        border-bottom-left-radius: 4px;
-        width: fit-content;
-      }
-      .cp-typing span {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: #9ca3af;
-        animation: cpbounce 1.2s infinite;
-      }
-      .cp-typing span:nth-child(2) {
-        animation-delay: 0.2s;
-      }
-      .cp-typing span:nth-child(3) {
-        animation-delay: 0.4s;
-      }
-      @keyframes cpbounce {
-        0%,
-        60%,
-        100% {
-          transform: translateY(0);
-        }
-        30% {
-          transform: translateY(-5px);
-        }
-      }
-      .cp-quick {
-        padding: 6px 14px 10px;
-        display: flex;
-        gap: 6px;
-        flex-wrap: wrap;
-      }
-      .cp-chip {
-        font-size: 11px;
-        padding: 5px 10px;
-        border-radius: 99px;
-        border: 0.5px solid #e5e7eb;
-        background: none;
-        color: #6b7280;
-        cursor: pointer;
-      }
-      .cp-chip:hover {
-        background: #fff0e8;
-        color: #ff5c1a;
-        border-color: #ff5c1a;
-      }
-      .cp-input-row {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        padding: 10px 12px;
-        border-top: 0.5px solid #f0f0f0;
-      }
-      .cp-input {
-        flex: 1;
-        border: 0.5px solid #e5e7eb;
-        border-radius: 20px;
-        padding: 8px 14px;
-        font-size: 13px;
-        outline: none;
-        font-family: inherit;
-      }
-      .cp-input:focus {
-        border-color: #ff5c1a;
-      }
-      .cp-send {
-        width: 34px;
-        height: 34px;
-        border-radius: 50%;
-        background: #ff5c1a;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-      }
-      .cp-send:hover {
-        background: #e04a0e;
-      }
-      .cp-send svg {
-        color: #fff;
-      }
-      /* ── STEP BAR RESPONSIVE ── */
-      .step-bar {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        flex-wrap: nowrap;
-      }
-      .step-bar::-webkit-scrollbar {
-        display: none;
-      }
-
       @media (max-width: 1100px) {
         .step-label {
           display: none;
@@ -1748,7 +1482,6 @@
           margin: 0 4px;
         }
       }
-
       @media (max-width: 768px) {
         .step-bar {
           padding: 10px 14px;
@@ -1769,7 +1502,6 @@
           flex-shrink: 1;
         }
       }
-
       @media (max-width: 480px) {
         .step-bar {
           padding: 8px 10px;
@@ -1808,9 +1540,8 @@
             <rect x="3" y="3" width="7" height="7" rx="1" />
             <rect x="14" y="3" width="7" height="7" rx="1" />
             <rect x="3" y="14" width="7" height="7" rx="1" />
-            <rect x="14" y="14" width="7" height="7" rx="1" />
-          </svg>
-          Dashboard
+            <rect x="14" y="14" width="7" height="7" rx="1" /></svg
+          >Dashboard
         </a>
         <a href="user.vehicle.listing.html" class="nav-item active">
           <svg
@@ -1825,9 +1556,8 @@
             />
             <circle cx="7" cy="17" r="2" />
             <circle cx="17" cy="17" r="2" />
-            <path d="M5 17h8M3 9h18" />
-          </svg>
-          Vehicles
+            <path d="M5 17h8M3 9h18" /></svg
+          >Vehicles
         </a>
         <a href="mybooking.html" class="nav-item">
           <svg
@@ -1840,9 +1570,8 @@
             <rect x="3" y="4" width="18" height="18" rx="2" />
             <line x1="16" y1="2" x2="16" y2="6" />
             <line x1="8" y1="2" x2="8" y2="6" />
-            <line x1="3" y1="10" x2="21" y2="10" />
-          </svg>
-          My Bookings
+            <line x1="3" y1="10" x2="21" y2="10" /></svg
+          >My Bookings
         </a>
         <a href="kyc.html" class="nav-item">
           <svg
@@ -1852,9 +1581,8 @@
             stroke="currentColor"
             stroke-width="1.8"
           >
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-          </svg>
-          KYC
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+          >KYC
         </a>
         <a href="user.wishlist.html" class="nav-item">
           <svg
@@ -1866,9 +1594,8 @@
           >
             <polygon
               points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
-            />
-          </svg>
-          Wishlist
+            /></svg
+          >Wishlist
         </a>
       </nav>
       <div class="sidebar-footer">
@@ -1930,8 +1657,8 @@
             </button>
             <div class="notif-panel" id="notifPanel">
               <div class="np-head">
-                <span class="np-title">Notifications</span
-                ><button class="np-mark-all" id="npMarkAll">
+                <span class="np-title">Notifications</span>
+                <button class="np-mark-all" id="npMarkAll">
                   Mark all read
                 </button>
               </div>
@@ -2011,9 +1738,8 @@
                   height="15"
                 >
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
-                >KYC verification<span class="dd-kyc-badge" id="ddKycBadge"
-                  >Pending</span
-                >
+                >KYC verification
+                <span class="dd-kyc-badge" id="ddKycBadge">Pending</span>
               </button>
               <div class="dd-divider"></div>
               <button class="dd-item dd-danger" id="logoutBtn">
@@ -2132,8 +1858,8 @@
             <div id="userFields" style="display: none">
               <div class="form-row">
                 <div class="form-group">
-                  <label>Full Name</label
-                  ><input
+                  <label>Full Name</label>
+                  <input
                     type="text"
                     id="userName"
                     placeholder="Your full name"
@@ -2141,8 +1867,8 @@
                   />
                 </div>
                 <div class="form-group">
-                  <label>Email Address</label
-                  ><input
+                  <label>Email Address</label>
+                  <input
                     type="email"
                     id="userEmail"
                     placeholder="your@email.com"
@@ -2152,8 +1878,8 @@
               </div>
               <div class="form-row single">
                 <div class="form-group">
-                  <label>Phone Number</label
-                  ><input
+                  <label>Phone Number</label>
+                  <input
                     type="tel"
                     id="userPhone"
                     placeholder="+977 98XXXXXXXX"
@@ -2356,8 +2082,8 @@
             </div>
             <div class="form-row single">
               <div class="form-group">
-                <label
-                  ><svg
+                <label>
+                  <svg
                     width="13"
                     height="13"
                     fill="none"
@@ -2372,8 +2098,8 @@
                     <path
                       d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
                     /></svg
-                  >Notes / Special Requests</label
-                >
+                  >Notes / Special Requests
+                </label>
                 <textarea
                   id="bookingNotes"
                   maxlength="500"
@@ -2524,41 +2250,27 @@
                 </div>
               </div>
 
-              <!-- ── PAYMENT BUTTON ── -->
+              <!-- ── PAY WITH ESEWA BUTTON ── -->
               <div class="sc-right">
                 <button
-                  class="pay-khalti-btn"
-                  id="khaltiBtn"
-                  onclick="payWithKhalti()"
+                  class="pay-esewa-btn"
+                  id="esewaBtn"
+                  onclick="payWithEsewa()"
                 >
-                  <div class="khalti-logo-inline">
-                    <svg
-                      viewBox="0 0 40 40"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10 8 L10 32"
-                        stroke="white"
-                        stroke-width="4"
-                        stroke-linecap="round"
-                      />
-                      <path
-                        d="M10 20 L22 8"
-                        stroke="white"
-                        stroke-width="4"
-                        stroke-linecap="round"
-                      />
-                      <path
-                        d="M10 20 L26 32"
-                        stroke="white"
-                        stroke-width="4"
-                        stroke-linecap="round"
-                      />
-                      <circle cx="30" cy="28" r="5" fill="#F5A623" />
-                    </svg>
-                  </div>
-                  Pay with Khalti · Rs <span id="khaltiTotal">0</span>
+                  <div class="esewa-btn-icon-inline">💚</div>
+                  Pay with eSewa · Rs <span id="esewaTotal">0</span>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    style="margin-left: 4px; opacity: 0.8"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
                 </button>
               </div>
             </div>
@@ -2576,7 +2288,7 @@
       </main>
     </div>
 
-    <!-- SUCCESS MODAL (kept for potential future use) -->
+    <!-- SUCCESS MODAL -->
     <div class="modal-overlay" id="successModal">
       <div class="modal">
         <div class="modal-icon">🎉</div>
@@ -2588,7 +2300,6 @@
         <div class="modal-ref" id="modalRef">REF: AD-000000</div>
         <p style="font-size: 12px; color: var(--muted)">
           Our team will contact you before pickup to confirm delivery details.
-          Payment will be collected on pickup.
         </p>
         <div class="modal-divider"></div>
         <div class="modal-btns">
@@ -2597,85 +2308,6 @@
             >Browse More Vehicles</a
           >
         </div>
-      </div>
-    </div>
-
-    <!-- ChatBot -->
-    <button id="chat-bubble" title="Chat with us">
-      <div class="chat-notif-dot"></div>
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        width="22"
-        height="22"
-      >
-        <path
-          d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
-        />
-      </svg>
-    </button>
-    <div id="chat-panel">
-      <div class="cp-header">
-        <div class="cp-avatar">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#FF5C1A"
-            stroke-width="1.8"
-            width="16"
-            height="16"
-          >
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-          </svg>
-        </div>
-        <div>
-          <div class="cp-title">Auto Dealer Support</div>
-          <div class="cp-sub">● Online now</div>
-        </div>
-        <button class="cp-close" id="chat-close">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            width="16"
-            height="16"
-          >
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
-      </div>
-      <div class="cp-messages" id="cpMessages">
-        <div class="cp-msg bot">
-          <div class="cp-av">AD</div>
-          <div class="cp-bubble">Hi there! 👋 How can I help you today?</div>
-        </div>
-      </div>
-      <div class="cp-quick" id="cpQuick">
-        <button class="cp-chip" onclick="cpSendChip(this)">
-          Browse vehicles
-        </button>
-        <button class="cp-chip" onclick="cpSendChip(this)">My bookings</button>
-        <button class="cp-chip" onclick="cpSendChip(this)">KYC status</button>
-      </div>
-      <div class="cp-input-row">
-        <input class="cp-input" id="cpInput" placeholder="Type a message…" />
-        <button class="cp-send" id="cpSendBtn">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            width="14"
-            height="14"
-          >
-            <line x1="22" y1="2" x2="11" y2="13" />
-            <polygon points="22 2 15 22 11 13 2 9 22 2" />
-          </svg>
-        </button>
       </div>
     </div>
 
@@ -2711,7 +2343,6 @@
       let selectedDuration = IS_PACKAGE ? "custom" : "4h";
       let currentPrice = IS_PACKAGE ? PKG_PRICE : 0;
 
-      /* ── API helper ─────────────────────────────────────────────────────── */
       async function apiFetch(path, options = {}) {
         const res = await fetch(`${BASE_URL}${path}`, {
           credentials: "include",
@@ -2722,11 +2353,10 @@
         return res.json();
       }
 
-      /* ── User dropdown ──────────────────────────────────────────────────── */
+      /* ── User dropdown ── */
       const userDropdownWrap = document.getElementById("userDropdownWrap");
       const userDropdownMenu = document.getElementById("userDropdownMenu");
       const topbarChevron = document.getElementById("topbarChevron");
-
       userDropdownWrap?.addEventListener("click", (e) => {
         e.stopPropagation();
         const open = userDropdownMenu.classList.toggle("open");
@@ -2749,7 +2379,7 @@
           window.location.href = "/index.html";
         });
 
-      /* ── Package banner ─────────────────────────────────────────────────── */
+      /* ── Package banner ── */
       function renderPackageBanner() {
         if (!IS_PACKAGE) return;
         const banner = document.getElementById("pkg-banner");
@@ -2766,55 +2396,36 @@
         if (changeLink) changeLink.style.display = "none";
       }
 
-      /* ── Package locks ──────────────────────────────────────────────────── */
+      /* ── Package locks ── */
       function applyPackageLocks() {
         if (!IS_PACKAGE) return;
-
-        // Lock duration tiles — package controls the days
         document.querySelectorAll(".dur-opt").forEach((el) => {
           el.classList.remove("selected");
           el.classList.add("locked");
         });
-
-        // Show custom days input but lock it
         const customWrap = document.getElementById("customDaysWrap");
         customWrap.classList.add("show");
         const customInput = document.getElementById("customDays");
         customInput.value = PKG_DAYS;
         customInput.setAttribute("readonly", true);
         customInput.setAttribute("disabled", true);
-
-        // Set a sensible default for pickup (next full hour) but keep it EDITABLE
         const now = new Date();
         now.setMinutes(0, 0, 0);
         now.setHours(now.getHours() + 1);
         const pad = (n) => String(n).padStart(2, "0");
         const toLocalDT = (d) =>
           `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-
-        const pickupDT = document.getElementById("pickupDT");
-        const dropoffDT = document.getElementById("dropoffDT");
-
-        // Set default pickup — user CAN change it
-        pickupDT.value = toLocalDT(now);
-
-        // Auto-calculate dropoff based on package days
+        document.getElementById("pickupDT").value = toLocalDT(now);
         const drop = new Date(now.getTime() + PKG_DAYS * 24 * 3600_000);
-        dropoffDT.value = toLocalDT(drop);
-        // dropoffDT stays readonly — it auto-updates when pickup changes
-
-        // Lock price display since package has fixed price
+        document.getElementById("dropoffDT").value = toLocalDT(drop);
         document.getElementById("dp4h").textContent = "—";
         document.getElementById("dp8h").textContent = "—";
         document.getElementById("dp1d").textContent = "—";
-
         currentPrice = PKG_PRICE;
-
-        // Focus pickup location since that's what's left to fill
         setTimeout(() => document.getElementById("pickupLoc")?.focus(), 400);
       }
 
-      /* ── Load vehicle ───────────────────────────────────────────────────── */
+      /* ── Load vehicle ── */
       async function loadVehicle() {
         if (!vehicleId) {
           if (IS_PACKAGE) {
@@ -2843,20 +2454,17 @@
           ]
             .filter(Boolean)
             .map((img) => (img.startsWith("http") ? img : BASE_IMG + img));
-
           document.getElementById("bcVehicle").textContent = vehicle.name;
           document.title = `AUTO DEALER — Book ${vehicle.name}`;
-
           const vsImg = document.getElementById("vsImg");
           if (vehicle.images[0])
             vsImg.innerHTML = `<img src="${vehicle.images[0]}" alt="${vehicle.name}" onerror="this.parentNode.textContent='🚗'">`;
           document.getElementById("vsName").textContent = vehicle.name;
           document.getElementById("vsChips").innerHTML = `
-      <span class="vs-chip">${fuelIcons[vehicle.fuel_type] || "⛽"} ${vehicle.fuel_type}</span>
-      <span class="vs-chip">🚘 ${vehicle.body_type}</span>
-      <span class="vs-chip">⚙️ ${vehicle.transmission}</span>
-      <span class="vs-chip">👥 ${vehicle.seating_capacity} seats</span>`;
-
+            <span class="vs-chip">${fuelIcons[vehicle.fuel_type] || "⛽"} ${vehicle.fuel_type}</span>
+            <span class="vs-chip">🚘 ${vehicle.body_type}</span>
+            <span class="vs-chip">⚙️ ${vehicle.transmission}</span>
+            <span class="vs-chip">👥 ${vehicle.seating_capacity} seats</span>`;
           if (!IS_PACKAGE) {
             document.getElementById("dp4h").textContent =
               `Rs ${parseFloat(vehicle.price_4h).toLocaleString()}`;
@@ -2892,7 +2500,7 @@
         }
       }
 
-      /* ── Load user profile ──────────────────────────────────────────────── */
+      /* ── Load user profile ── */
       async function loadUserProfile() {
         try {
           const user = await apiFetch("/user/profile");
@@ -2909,7 +2517,6 @@
             .toUpperCase();
           const isVerified = user.kyc_status === "verified";
           const hasPhoto = !!user.profile_photo;
-
           function populateAvatar(containerEl, initialsEl) {
             if (!containerEl) return;
             if (hasPhoto) {
@@ -2923,58 +2530,51 @@
               if (initialsEl) initialsEl.textContent = initials;
             }
           }
-
           populateAvatar(
             document.getElementById("sidebarAvatar"),
             document.getElementById("sidebarInitials"),
           );
-          const sidebarNameEl = document.getElementById("sidebarName");
-          if (sidebarNameEl) sidebarNameEl.textContent = fullName;
-          const sidebarKycEl = document.getElementById("sidebarKyc");
-          if (sidebarKycEl) {
-            sidebarKycEl.textContent = isVerified
+          const sn = document.getElementById("sidebarName");
+          if (sn) sn.textContent = fullName;
+          const sk = document.getElementById("sidebarKyc");
+          if (sk) {
+            sk.textContent = isVerified
               ? "KYC Verified"
               : user.kyc_status === "rejected"
                 ? "KYC Rejected"
                 : "KYC Pending";
-            sidebarKycEl.className =
+            sk.className =
               "user-kyc-status " + (isVerified ? "verified" : "unverified");
           }
           populateAvatar(
             document.getElementById("topbarAvatar"),
             document.getElementById("topbarInitials"),
           );
-          const topbarNameEl = document.getElementById("topbarName");
-          if (topbarNameEl) topbarNameEl.textContent = fullName;
-          const topbarRoleEl = document.getElementById("topbarRole");
-          if (topbarRoleEl) {
-            topbarRoleEl.textContent = isVerified
-              ? "Verified Member"
-              : "Member";
-            topbarRoleEl.style.color = isVerified ? "#16a34a" : "";
+          const tn = document.getElementById("topbarName");
+          if (tn) tn.textContent = fullName;
+          const tr = document.getElementById("topbarRole");
+          if (tr) {
+            tr.textContent = isVerified ? "Verified Member" : "Member";
+            tr.style.color = isVerified ? "#16a34a" : "";
           }
-          const ddName = document.getElementById("ddName");
-          const ddEmail = document.getElementById("ddEmail");
-          if (ddName) ddName.textContent = fullName;
-          if (ddEmail) ddEmail.textContent = user.email;
-          const ddKycBadge = document.getElementById("ddKycBadge");
-          if (ddKycBadge && isVerified) ddKycBadge.style.display = "none";
-
+          const dn = document.getElementById("ddName");
+          if (dn) dn.textContent = fullName;
+          const de = document.getElementById("ddEmail");
+          if (de) de.textContent = user.email;
+          const db = document.getElementById("ddKycBadge");
+          if (db && isVerified) db.style.display = "none";
           const nameEl = document.getElementById("userName");
-          const emailEl = document.getElementById("userEmail");
-          const phoneEl = document.getElementById("userPhone");
           if (nameEl) nameEl.value = fullName;
+          const emailEl = document.getElementById("userEmail");
           if (emailEl) emailEl.value = user.email || "";
+          const phoneEl = document.getElementById("userPhone");
           if (phoneEl) phoneEl.value = user.phone || "";
-
           window._userId = user.id;
           window._userEmail = user.email;
           window._userName = fullName;
-
           document.getElementById("profileLoadingState")?.remove();
           const fields = document.getElementById("userFields");
           if (fields) fields.style.display = "";
-
           const fsHead = document
             .querySelector("#userFields")
             ?.closest(".form-section")
@@ -3000,7 +2600,7 @@
         }
       }
 
-      /* ── Duration logic ─────────────────────────────────────────────────── */
+      /* ── Duration logic ── */
       function selectDuration(dur, el) {
         if (IS_PACKAGE) return;
         selectedDuration = dur;
@@ -3028,10 +2628,9 @@
         if (!pVal) return;
         const pickup = new Date(pVal);
         if (isNaN(pickup.getTime())) return;
-
         let hours = 4;
         if (IS_PACKAGE) {
-          hours = PKG_DAYS * 24; // ← use package days
+          hours = PKG_DAYS * 24;
         } else {
           if (selectedDuration === "8h") hours = 8;
           if (selectedDuration === "1day") hours = 24;
@@ -3039,7 +2638,6 @@
             hours =
               (parseInt(document.getElementById("customDays").value) || 2) * 24;
         }
-
         const drop = new Date(pickup.getTime() + hours * 3_600_000);
         const pad = (n) => String(n).padStart(2, "0");
         document.getElementById("dropoffDT").value =
@@ -3086,7 +2684,7 @@
         });
       }
 
-      /* ── Notes helpers ──────────────────────────────────────────────────── */
+      /* ── Notes helpers ── */
       function appendNote(text) {
         const ta = document.getElementById("bookingNotes");
         const current = ta.value.trim();
@@ -3104,7 +2702,7 @@
           "char-counter" + (len >= 500 ? " over" : len >= 400 ? " warn" : "");
       }
 
-      /* ── Live summary ───────────────────────────────────────────────────── */
+      /* ── Live summary ── */
       function updateSummary() {
         currentPrice = calcPrice();
         const name = document.getElementById("userName")?.value || "—";
@@ -3128,7 +2726,7 @@
         set("scDropoffDT", fmtDT(ddt));
         set("scPhone", phone);
         set("scTotal", currentPrice.toLocaleString());
-        set("khaltiTotal", currentPrice.toLocaleString());
+        set("esewaTotal", currentPrice.toLocaleString());
         const notesRow = document.getElementById("scNotesRow");
         const notesVal = document.getElementById("scNotes");
         if (notes) {
@@ -3152,7 +2750,7 @@
         if (el) el.className = "step " + state;
       }
 
-      /* ── INLINE ERROR HELPERS ── */
+      /* ── Inline error helpers ── */
       function showError(id, msg) {
         const el = document.getElementById(id);
         if (!el) return;
@@ -3168,7 +2766,6 @@
         }
         err.innerHTML = `<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>${msg}`;
       }
-
       function clearError(id) {
         const el = document.getElementById(id);
         if (!el) return;
@@ -3177,7 +2774,6 @@
         const err = el.parentElement.querySelector(".field-error");
         if (err) err.remove();
       }
-
       function showSuccess(id) {
         const el = document.getElementById(id);
         if (!el) return;
@@ -3185,7 +2781,6 @@
         el.style.boxShadow = "0 0 0 3px rgba(22,163,74,0.1)";
       }
 
-      /* ── LIVE VALIDATORS (attach to inputs) ── */
       function validateName() {
         const val = document.getElementById("userName")?.value.trim();
         if (!val || val.length < 2) {
@@ -3196,7 +2791,6 @@
         showSuccess("userName");
         return true;
       }
-
       function validateEmail() {
         const val = document.getElementById("userEmail")?.value.trim();
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -3211,7 +2805,6 @@
         showSuccess("userEmail");
         return true;
       }
-
       function validatePhone() {
         const raw = document.getElementById("userPhone")?.value || "";
         const digits = raw.replace(/[\s\-\+]/g, "");
@@ -3226,7 +2819,6 @@
         showSuccess("userPhone");
         return true;
       }
-
       function validatePickupLoc() {
         const val = document.getElementById("pickupLoc")?.value.trim();
         if (!val) {
@@ -3237,7 +2829,6 @@
         showSuccess("pickupLoc");
         return true;
       }
-
       function validatePickupDT() {
         const val = document.getElementById("pickupDT")?.value;
         if (!val) {
@@ -3253,74 +2844,28 @@
         return true;
       }
 
-      /* ── ATTACH LIVE LISTENERS ── */
-      function attachLiveValidation() {
-        document
-          .getElementById("userName")
-          ?.addEventListener("input", validateName);
-        document
-          .getElementById("userName")
-          ?.addEventListener("blur", validateName);
-
-        document
-          .getElementById("userEmail")
-          ?.addEventListener("input", validateEmail);
-        document
-          .getElementById("userEmail")
-          ?.addEventListener("blur", validateEmail);
-
-        document
-          .getElementById("userPhone")
-          ?.addEventListener("input", validatePhone);
-        document
-          .getElementById("userPhone")
-          ?.addEventListener("blur", validatePhone);
-
-        document
-          .getElementById("pickupLoc")
-          ?.addEventListener("input", validatePickupLoc);
-        document
-          .getElementById("pickupLoc")
-          ?.addEventListener("blur", validatePickupLoc);
-
-        document
-          .getElementById("pickupDT")
-          ?.addEventListener("change", validatePickupDT);
-        document
-          .getElementById("pickupDT")
-          ?.addEventListener("blur", validatePickupDT);
-      }
-
-      /* ── VALIDATE FORM (on submit) ── */
       function validateForm() {
         const nameOk = validateName();
         const emailOk = validateEmail();
         const phoneOk = validatePhone();
         const pickupOk = validatePickupLoc();
         const dtOk = validatePickupDT();
-
         if (!nameOk || !emailOk || !phoneOk || !pickupOk || !dtOk) {
-          // scroll to first error
           const firstErr = document.querySelector(".field-error");
-          if (firstErr) {
-            firstErr.closest(".form-section")?.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          }
+          if (firstErr)
+            firstErr
+              .closest(".form-section")
+              ?.scrollIntoView({ behavior: "smooth", block: "center" });
           return null;
         }
-
         if (!IS_PACKAGE && !vehicle) {
           alert("Vehicle data not loaded. Please refresh the page.");
           return null;
         }
-
         const pickupVal = document.getElementById("pickupDT").value;
         const dropoffVal = document.getElementById("dropoffDT").value;
         const pickupDate = new Date(pickupVal);
         const dropDate = new Date(dropoffVal);
-
         if (!dropoffVal || dropDate <= pickupDate) {
           showError(
             "dropoffDT",
@@ -3328,13 +2873,11 @@
           );
           return null;
         }
-
         const diffMs = dropDate - pickupDate;
         const totalDays = diffMs / (1000 * 60 * 60 * 24);
         const phone = document
           .getElementById("userPhone")
           .value.replace(/[\s\-\+]/g, "");
-
         return {
           name: document.getElementById("userName").value.trim(),
           email: document.getElementById("userEmail").value.trim(),
@@ -3347,36 +2890,24 @@
         };
       }
 
-      function disableButtons(loading) {
-        const kb = document.getElementById("khaltiBtn");
-        kb.disabled = loading;
+      function disableBtn(loading) {
+        const btn = document.getElementById("esewaBtn");
+        btn.disabled = loading;
         if (loading) {
-          kb.innerHTML = `<svg style="animation:spin .8s linear infinite" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" opacity=".25"/><path d="M21 12a9 9 0 0 1-9 9"/></svg> Validating…`;
+          btn.innerHTML = `<svg style="animation:spin .8s linear infinite" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" opacity=".25"/><path d="M21 12a9 9 0 0 1-9 9"/></svg> Validating…`;
         } else {
-          kb.innerHTML = `<div class="khalti-logo-inline"><svg viewBox="0 0 40 40" fill="none"><path d="M10 8 L10 32" stroke="white" stroke-width="4" stroke-linecap="round"/><path d="M10 20 L22 8" stroke="white" stroke-width="4" stroke-linecap="round"/><path d="M10 20 L26 32" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="30" cy="28" r="5" fill="#F5A623"/></svg></div> Pay with Khalti · Rs <span id="khaltiTotal">${currentPrice.toLocaleString()}</span>`;
+          btn.innerHTML = `<div class="esewa-btn-icon-inline">💚</div> Pay with eSewa · Rs <span id="esewaTotal">${currentPrice.toLocaleString()}</span>`;
         }
       }
 
-      /* ════════════════════════════════════════════════════════════════════════
-   PAY WITH KHALTI
-   ─ CHANGED: NO longer creates the booking here.
-   ─ We only validate the form, then redirect to payment.html
-     with all booking data as URL params.
-   ─ The booking is created in payment.html only after OTP succeeds.
-════════════════════════════════════════════════════════════════════════ */
-      async function payWithKhalti() {
+      /* ── PAY WITH ESEWA ── redirects to payment page ── */
+      async function payWithEsewa() {
         const data = validateForm();
         if (!data) return;
-
-        disableButtons(true);
-
+        disableBtn(true);
         try {
-          // Mark all steps done visually
           [1, 2, 3, 4, 5, 6, 7].forEach((n) => markStep(n, "done"));
-
-          // Build params — pass ALL booking data so payment.html can create the booking
           const params = new URLSearchParams({
-            // booking details (no booking_id yet — will be created after OTP)
             amount: currentPrice,
             vehicle_id: vehicleId || "",
             vehicle: IS_PACKAGE ? PKG_TITLE : vehicle?.name || "",
@@ -3394,22 +2925,20 @@
             notes: data.notes || "",
             ...(IS_PACKAGE && { pkg_id: PKG_ID }),
           });
-
           window.location.href = `user.payment.html?${params.toString()}`;
         } catch (err) {
           console.error("Redirect error:", err);
           alert("Something went wrong: " + err.message);
-          disableButtons(false);
+          disableBtn(false);
         }
       }
 
-      /* ── Keyframe ── */
       const ks = document.createElement("style");
       ks.textContent =
         "@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}";
       document.head.appendChild(ks);
 
-      /* ── Mobile sidebar ─────────────────────────────────────────────────── */
+      /* ── Mobile sidebar ── */
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("sidebarOverlay");
       const toggle = document.getElementById("sidebarToggle");
