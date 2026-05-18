@@ -2406,6 +2406,32 @@
         t.className = `toast ${type} show`;
         setTimeout(() => t.classList.remove("show"), 3200);
       }
+      /* ── AUTO STATUS SCHEDULER ── */
+      async function runAutoScheduler() {
+        const now = new Date();
+
+        for (const b of data) {
+          if (b.status === "Confirmed") {
+            const pickupTime = b.pickup_datetime
+              ? new Date(b.pickup_datetime)
+              : null;
+            if (pickupTime && now >= pickupTime) {
+              await doStatus(b.id, "Active");
+            }
+          }
+
+          if (b.status === "Active") {
+            const dropTime = b.drop_datetime ? new Date(b.drop_datetime) : null;
+            if (dropTime && now >= dropTime) {
+              await doStatus(b.id, "Completed");
+            }
+          }
+        }
+      }
+
+      /* Run on load, then every 60 seconds */
+      runAutoScheduler();
+      setInterval(runAutoScheduler, 60 * 1000);
     </script>
   </body>
 </html>

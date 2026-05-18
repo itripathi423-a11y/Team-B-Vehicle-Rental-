@@ -37,9 +37,10 @@ const adminPaymentRoutes = require("./routes/admin.payments.routes");
 
 const app = express();
 const server = http.createServer(app);
-const { initSocket } = require("./socket"); // ← ADD
+const { initSocket } = require("./socket");
 initSocket(server);
 require("./utils/reminderCron");
+require("./utils/bookingStatusCron");
 
 /* ── BODY PARSING ── */
 app.use(express.json());

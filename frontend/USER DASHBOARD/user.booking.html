@@ -537,6 +537,7 @@
         max-width: 820px;
         margin: 0 auto;
         width: 100%;
+        overflow: visible;
       }
 
       /* ── FORM SECTIONS ── */
@@ -546,8 +547,13 @@
         border-radius: var(--radius);
         padding: 28px;
         box-shadow: var(--shadow);
+        overflow: visible;
         margin-bottom: 20px;
         animation: fadeUp 0.35s ease both;
+        animation-fill-mode: none;
+        transform: none;
+        will-change: auto;
+        isolation: auto;
       }
       @keyframes fadeUp {
         from {
@@ -898,6 +904,161 @@
         background: var(--white);
         border: 1px solid var(--border);
         color: var(--text);
+      }
+
+      /* ── LOCATION DROPDOWN ── */
+      .loc-dropdown-wrap {
+        position: relative;
+      }
+      .loc-dropdown-btn {
+        width: 100%;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 14px;
+        background: var(--white);
+        border: 1.5px solid var(--border);
+        border-radius: 9px;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        color: var(--text);
+        text-align: left;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .loc-dropdown-btn:hover {
+        border-color: var(--orange);
+      }
+      .loc-dropdown-btn.open {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 3px var(--orange-dim);
+      }
+      .loc-dropdown-btn.selected {
+        color: var(--dark);
+        font-weight: 500;
+      }
+      .loc-drop-icon {
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+      .loc-drop-label {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .loc-drop-label.placeholder {
+        color: #c0c5cd;
+      }
+      .loc-drop-chevron {
+        flex-shrink: 0;
+        transition: transform 0.2s;
+        color: var(--muted);
+      }
+      .loc-drop-chevron.open {
+        transform: rotate(180deg);
+      }
+      .loc-dropdown-menu {
+        display: none;
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        right: 0;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+        z-index: 9999;
+        overflow: hidden;
+        animation: locMenuIn 0.18s ease;
+      }
+      .loc-dropdown-menu.open {
+        display: block;
+      }
+      @keyframes locMenuIn {
+        from {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .loc-menu-header {
+        padding: 10px 14px 8px;
+        font-family: "Space Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        color: var(--muted);
+        border-bottom: 1px solid var(--border);
+        background: var(--bg);
+      }
+      .loc-menu-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        cursor: pointer;
+        border-bottom: 1px solid #f9fafb;
+        transition: background 0.15s;
+      }
+      .loc-menu-item:last-child {
+        border-bottom: none;
+      }
+      .loc-menu-item:hover {
+        background: var(--orange-dim);
+      }
+      .loc-menu-item.selected {
+        background: var(--orange-dim);
+      }
+      .loc-menu-item.selected .loc-item-name {
+        color: var(--orange);
+        font-weight: 600;
+      }
+      .loc-item-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+        background: var(--bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+        border: 1px solid var(--border);
+      }
+      .loc-menu-item.selected .loc-item-icon {
+        background: var(--orange-dim);
+        border-color: rgba(255, 92, 26, 0.3);
+      }
+      .loc-item-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .loc-item-name {
+        font-size: 13.5px;
+        font-weight: 500;
+        color: var(--dark);
+        margin-bottom: 2px;
+      }
+      .loc-item-sub {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .loc-item-check {
+        color: var(--orange);
+        font-size: 15px;
+        flex-shrink: 0;
+        opacity: 0;
+        transition: opacity 0.15s;
+      }
+      .loc-menu-item.selected .loc-item-check {
+        opacity: 1;
       }
 
       /* ── LOCATION ── */
@@ -1822,7 +1983,7 @@
             <span style="font-size: 20px; flex-shrink: 0">📍</span>
             <span
               >All package details are pre-filled and locked.
-              <strong>Please enter your pickup location</strong> below to
+              <strong>Please select your pickup location</strong> below to
               complete the booking.</span
             >
           </div>
@@ -1929,41 +2090,135 @@
               <div class="fs-num">3</div>
               <div>
                 <div class="fs-title">Pickup & Drop-off Location</div>
-                <div class="fs-sub">
-                  Drop-off auto-fills from pickup — edit if returning elsewhere
+                <div class="fs-sub" id="locationSubtitle">
+                  Select your pickup and drop-off points
                 </div>
               </div>
             </div>
-            <div class="location-pair">
-              <div class="form-group">
-                <label>📍 Pickup Location</label>
-                <input
-                  type="text"
-                  id="pickupLoc"
-                  placeholder="e.g. Thamel, Kathmandu"
-                  oninput="
-                    syncDropoff();
-                    updateSummary();
-                  "
-                />
-                <span class="hint"
-                  >We'll deliver the vehicle to this address</span
-                >
-              </div>
-              <div class="loc-arrow"><div class="loc-arrow-icon">↔</div></div>
-              <div class="form-group">
-                <label>📍 Drop-off Location</label>
-                <input
-                  type="text"
-                  id="dropoffLoc"
-                  placeholder="Same as pickup"
-                  oninput="updateSummary()"
-                />
-                <span class="hint"
-                  >Edit if returning to a different location</span
-                >
+
+            <!-- PACKAGE MODE: custom location dropdowns -->
+            <div id="pkgLocationWrap" style="display: none">
+              <div class="form-row">
+                <div class="form-group">
+                  <label
+                    >📍 Pickup Location
+                    <span class="field-badge">SELECT</span></label
+                  >
+                  <div class="loc-dropdown-wrap">
+                    <button
+                      type="button"
+                      class="loc-dropdown-btn"
+                      id="pickupDropBtn"
+                      onclick="toggleLocDrop('pickup')"
+                    >
+                      <span class="loc-drop-icon">📍</span>
+                      <span
+                        class="loc-drop-label placeholder"
+                        id="pickupDropLabel"
+                        >Select pickup point…</span
+                      >
+                      <svg
+                        class="loc-drop-chevron"
+                        id="pickupDropChevron"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.2"
+                        width="15"
+                        height="15"
+                      >
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </button>
+                    <div class="loc-dropdown-menu" id="pickupDropMenu"></div>
+                  </div>
+                  <span class="hint"
+                    >We'll deliver the vehicle to this point</span
+                  >
+                </div>
+                <div class="form-group">
+                  <label
+                    >📍 Drop-off Location
+                    <span class="field-badge">SELECT</span></label
+                  >
+                  <div class="loc-dropdown-wrap">
+                    <button
+                      type="button"
+                      class="loc-dropdown-btn"
+                      id="dropoffDropBtn"
+                      onclick="toggleLocDrop('dropoff')"
+                    >
+                      <span class="loc-drop-icon">📍</span>
+                      <span
+                        class="loc-drop-label placeholder"
+                        id="dropoffDropLabel"
+                        >Same as pickup</span
+                      >
+                      <svg
+                        class="loc-drop-chevron"
+                        id="dropoffDropChevron"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.2"
+                        width="15"
+                        height="15"
+                      >
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </button>
+                    <div class="loc-dropdown-menu" id="dropoffDropMenu"></div>
+                  </div>
+                  <span class="hint"
+                    >Edit if returning to a different location</span
+                  >
+                </div>
               </div>
             </div>
+
+            <!-- REGULAR MODE: free-text inputs -->
+            <div id="freeLocationWrap" style="display: none">
+              <div class="location-pair">
+                <div class="form-group">
+                  <label>📍 Pickup Location</label>
+                  <input
+                    type="text"
+                    id="pickupLocFree"
+                    placeholder="e.g. Thamel, Kathmandu"
+                    oninput="
+                      document.getElementById('pickupLocHidden').value =
+                        this.value;
+                      syncDropoffFree();
+                      updateSummary();
+                    "
+                  />
+                  <span class="hint"
+                    >We'll deliver the vehicle to this address</span
+                  >
+                </div>
+                <div class="loc-arrow"><div class="loc-arrow-icon">↔</div></div>
+                <div class="form-group">
+                  <label>📍 Drop-off Location</label>
+                  <input
+                    type="text"
+                    id="dropoffLocFree"
+                    placeholder="Same as pickup"
+                    oninput="
+                      document.getElementById('dropoffLocHidden').value =
+                        this.value;
+                      updateSummary();
+                    "
+                  />
+                  <span class="hint"
+                    >Edit if returning to a different location</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Hidden inputs used by form logic for both modes -->
+            <input type="hidden" id="pickupLocHidden" />
+            <input type="hidden" id="dropoffLocHidden" />
           </div>
 
           <!-- SEC 4: DATE & TIME -->
@@ -2097,8 +2352,9 @@
                     />
                     <path
                       d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
-                    /></svg
-                  >Notes / Special Requests
+                    />
+                  </svg>
+                  Notes / Special Requests
                 </label>
                 <textarea
                   id="bookingNotes"
@@ -2229,7 +2485,6 @@
                 <div class="sc-cell-val" id="scNotes">—</div>
               </div>
             </div>
-
             <div class="sc-bottom">
               <div>
                 <div class="sc-total-lbl">TOTAL AMOUNT</div>
@@ -2249,8 +2504,6 @@
                   Free cancellation up to 24 hrs before pickup
                 </div>
               </div>
-
-              <!-- ── PAY WITH ESEWA BUTTON ── -->
               <div class="sc-right">
                 <button
                   class="pay-esewa-btn"
@@ -2279,9 +2532,8 @@
           <div class="footer-strip">
             <p>© 2026 Auto Dealer Fleet Management. All rights reserved.</p>
             <div class="footer-links">
-              <a href="#">Privacy Policy</a>
-              <a href="#">Terms of Service</a>
-              <a href="#">Contact Us</a>
+              <a href="#">Privacy Policy</a><a href="#">Terms of Service</a
+              ><a href="#">Contact Us</a>
             </div>
           </div>
         </div>
@@ -2343,6 +2595,172 @@
       let selectedDuration = IS_PACKAGE ? "custom" : "4h";
       let currentPrice = IS_PACKAGE ? PKG_PRICE : 0;
 
+      /* ═══════════════════════════════════════════════════
+         TOUR PACKAGE LOCATION PRESETS
+         Five well-known Kathmandu pickup/drop-off points
+         ═══════════════════════════════════════════════════ */
+      const TOUR_LOCATIONS = [
+        {
+          id: "thamel",
+          name: "Thamel",
+          sub: "Thamel Marg, Kathmandu",
+          icon: "🏨",
+        },
+        {
+          id: "banepa",
+          name: "Banepa",
+          sub: "Banepa, Kavrepalanchok",
+          icon: "🏘️",
+        },
+        {
+          id: "kalanki",
+          name: "Kalanki",
+          sub: "Kalanki Chowk, Kathmandu",
+          icon: "🚦",
+        },
+        {
+          id: "bouddha",
+          name: "Bouddha",
+          sub: "Bouddhanath Stupa, Kathmandu",
+          icon: "🕌",
+        },
+        {
+          id: "pokhara",
+          name: "Pokhara Bus Park",
+          sub: "Prithvi Chowk, Pokhara",
+          icon: "⛵",
+        },
+      ];
+
+      /* Currently selected location values (pkg mode) */
+      let selectedPickupId = null;
+      let selectedDropoffId = null;
+
+      /* ─── Build dropdown menus ─── */
+      function buildLocMenus() {
+        ["pickup", "dropoff"].forEach((type) => {
+          const menu = document.getElementById(type + "DropMenu");
+          if (!menu) return;
+          menu.innerHTML =
+            `<div class="loc-menu-header">Select ${type} point</div>` +
+            TOUR_LOCATIONS.map(
+              (loc) => `
+              <div class="loc-menu-item" data-id="${loc.id}" data-type="${type}" onclick="selectLocation('${type}','${loc.id}')">
+                <div class="loc-item-icon">${loc.icon}</div>
+                <div class="loc-item-info">
+                  <div class="loc-item-name">${loc.name}</div>
+                  <div class="loc-item-sub">${loc.sub}</div>
+                </div>
+                <span class="loc-item-check">✓</span>
+              </div>`,
+            ).join("");
+        });
+      }
+
+      /* ─── Toggle open/close ─── */
+      function toggleLocDrop(type) {
+        const menu = document.getElementById(type + "DropMenu");
+        const btn = document.getElementById(type + "DropBtn");
+        const chevron = document.getElementById(type + "DropChevron");
+        const isOpen = menu.classList.contains("open");
+
+        /* close all first */
+        document
+          .querySelectorAll(".loc-dropdown-menu.open")
+          .forEach((m) => m.classList.remove("open"));
+        document
+          .querySelectorAll(".loc-dropdown-btn.open")
+          .forEach((b) => b.classList.remove("open"));
+        document
+          .querySelectorAll(".loc-drop-chevron.open")
+          .forEach((c) => c.classList.remove("open"));
+
+        if (!isOpen) {
+          menu.classList.add("open");
+          btn.classList.add("open");
+          chevron.classList.add("open");
+        }
+      }
+
+      /* Close on outside click */
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".loc-dropdown-wrap")) {
+          document
+            .querySelectorAll(".loc-dropdown-menu.open")
+            .forEach((m) => m.classList.remove("open"));
+          document
+            .querySelectorAll(".loc-dropdown-btn.open")
+            .forEach((b) => b.classList.remove("open"));
+          document
+            .querySelectorAll(".loc-drop-chevron.open")
+            .forEach((c) => c.classList.remove("open"));
+        }
+      });
+
+      /* ─── Select a location ─── */
+      function selectLocation(type, id) {
+        const loc = TOUR_LOCATIONS.find((l) => l.id === id);
+        if (!loc) return;
+
+        const labelEl = document.getElementById(type + "DropLabel");
+        const hiddenId =
+          type === "pickup" ? "pickupLocHidden" : "dropoffLocHidden";
+        const chevronEl = document.getElementById(type + "DropChevron");
+        const btnEl = document.getElementById(type + "DropBtn");
+        const menuEl = document.getElementById(type + "DropMenu");
+
+        /* Update label */
+        labelEl.textContent = `${loc.icon}  ${loc.name} — ${loc.sub}`;
+        labelEl.classList.remove("placeholder");
+
+        /* Update hidden input */
+        document.getElementById(hiddenId).value = `${loc.name}, ${loc.sub}`;
+
+        /* Track selection */
+        if (type === "pickup") {
+          selectedPickupId = id;
+          /* If dropoff not yet set, mirror it */
+          if (!selectedDropoffId) {
+            selectLocation("dropoff", id);
+            return; /* avoid double close */
+          }
+        } else {
+          selectedDropoffId = id;
+        }
+
+        /* Highlight selected item */
+        menuEl.querySelectorAll(".loc-menu-item").forEach((item) => {
+          item.classList.toggle("selected", item.dataset.id === id);
+        });
+
+        /* Close menu */
+        menuEl.classList.remove("open");
+        btnEl.classList.remove("open");
+        chevronEl.classList.remove("open");
+
+        updateSummary();
+      }
+
+      /* ─── Free-text helpers (non-package mode) ─── */
+      function syncDropoffFree() {
+        const free = document.getElementById("dropoffLocFree");
+        const pickup = document.getElementById("pickupLocFree")?.value || "";
+        if (free && !free.value) {
+          free.value = pickup;
+          document.getElementById("dropoffLocHidden").value = pickup;
+        }
+      }
+
+      /* ─── Get current pickup / dropoff values ─── */
+      function getPickup() {
+        return document.getElementById("pickupLocHidden")?.value || "";
+      }
+      function getDropoff() {
+        return document.getElementById("dropoffLocHidden")?.value || "";
+      }
+
+      /* ═══════════════════════════════════════════════════ */
+
       async function apiFetch(path, options = {}) {
         const res = await fetch(`${BASE_URL}${path}`, {
           credentials: "include",
@@ -2378,7 +2796,16 @@
           sessionStorage.removeItem("postLoginRedirect");
           window.location.href = "/index.html";
         });
-
+      document.querySelectorAll(".form-section").forEach((el) => {
+        el.addEventListener(
+          "animationend",
+          () => {
+            el.style.animation = "none";
+            el.style.transform = "none";
+          },
+          { once: true },
+        );
+      });
       /* ── Package banner ── */
       function renderPackageBanner() {
         if (!IS_PACKAGE) return;
@@ -2391,7 +2818,15 @@
         banner.style.display = "flex";
         notice.style.display = "flex";
         document.getElementById("pageSubtitle").textContent =
-          `Booking for "${PKG_TITLE}" — just enter your pickup location to confirm`;
+          `Booking for "${PKG_TITLE}" — select your pickup location to confirm`;
+
+        /* Show dropdown mode, hide free-text mode */
+        document.getElementById("pkgLocationWrap").style.display = "";
+        document.getElementById("freeLocationWrap").style.display = "none";
+        document.getElementById("locationSubtitle").textContent =
+          "Choose from our 5 supported pickup & drop-off points";
+        buildLocMenus();
+
         const changeLink = document.getElementById("changeVehicleLink");
         if (changeLink) changeLink.style.display = "none";
       }
@@ -2422,11 +2857,18 @@
         document.getElementById("dp8h").textContent = "—";
         document.getElementById("dp1d").textContent = "—";
         currentPrice = PKG_PRICE;
-        setTimeout(() => document.getElementById("pickupLoc")?.focus(), 400);
       }
 
       /* ── Load vehicle ── */
       async function loadVehicle() {
+        if (!IS_PACKAGE) {
+          /* Show free-text inputs for regular bookings */
+          document.getElementById("freeLocationWrap").style.display = "";
+          document.getElementById("pkgLocationWrap").style.display = "none";
+          document.getElementById("locationSubtitle").textContent =
+            "Drop-off auto-fills from pickup — edit if returning elsewhere";
+        }
+
         if (!vehicleId) {
           if (IS_PACKAGE) {
             document.getElementById("vsName").textContent = PKG_TITLE;
@@ -2619,10 +3061,6 @@
         const v = parseInt(inp.value);
         if (!isNaN(v)) inp.value = Math.min(5, Math.max(2, v));
       }
-      function syncDropoff() {
-        document.getElementById("dropoffLoc").value =
-          document.getElementById("pickupLoc").value;
-      }
       function updateDropoff() {
         const pVal = document.getElementById("pickupDT").value;
         if (!pVal) return;
@@ -2673,8 +3111,7 @@
         if (selectedDuration === "4h") return "4h";
         if (selectedDuration === "8h") return "8h";
         if (selectedDuration === "1day") return "1d";
-        if (selectedDuration === "custom") return "custom";
-        return "4h";
+        return "custom";
       }
       function fmtDT(val) {
         if (!val) return "—";
@@ -2707,8 +3144,8 @@
         currentPrice = calcPrice();
         const name = document.getElementById("userName")?.value || "—";
         const phone = document.getElementById("userPhone")?.value || "—";
-        const pickup = document.getElementById("pickupLoc")?.value || "—";
-        const dropoff = document.getElementById("dropoffLoc")?.value || pickup;
+        const pickup = getPickup() || "—";
+        const dropoff = getDropoff() || pickup;
         const pdt = document.getElementById("pickupDT")?.value;
         const ddt = document.getElementById("dropoffDT")?.value;
         const notes =
@@ -2750,8 +3187,8 @@
         if (el) el.className = "step " + state;
       }
 
-      /* ── Inline error helpers ── */
-      function showError(id, msg) {
+      /* ── Field error helpers ── */
+      function showFieldError(id, msg) {
         const el = document.getElementById(id);
         if (!el) return;
         el.style.borderColor = "#dc2626";
@@ -2766,7 +3203,7 @@
         }
         err.innerHTML = `<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>${msg}`;
       }
-      function clearError(id) {
+      function clearFieldError(id) {
         const el = document.getElementById(id);
         if (!el) return;
         el.style.borderColor = "";
@@ -2774,83 +3211,98 @@
         const err = el.parentElement.querySelector(".field-error");
         if (err) err.remove();
       }
-      function showSuccess(id) {
+      function showFieldSuccess(id) {
         const el = document.getElementById(id);
         if (!el) return;
         el.style.borderColor = "#16a34a";
         el.style.boxShadow = "0 0 0 3px rgba(22,163,74,0.1)";
       }
 
-      function validateName() {
-        const val = document.getElementById("userName")?.value.trim();
-        if (!val || val.length < 2) {
-          showError("userName", "Name must be at least 2 characters.");
-          return false;
+      /* Show dropdown error (package mode) */
+      function showDropdownError(type, msg) {
+        const btn = document.getElementById(type + "DropBtn");
+        if (!btn) return;
+        btn.style.borderColor = "#dc2626";
+        btn.style.boxShadow = "0 0 0 3px rgba(220,38,38,0.12)";
+        let err = btn.parentElement.parentElement.querySelector(".field-error");
+        if (!err) {
+          err = document.createElement("span");
+          err.className = "field-error";
+          err.style.cssText =
+            "font-size:11px;color:#dc2626;margin-top:4px;display:flex;align-items:center;gap:4px;";
+          btn.parentElement.insertAdjacentElement("afterend", err);
         }
-        clearError("userName");
-        showSuccess("userName");
-        return true;
+        err.innerHTML = `<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>${msg}`;
       }
-      function validateEmail() {
-        const val = document.getElementById("userEmail")?.value.trim();
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!val || !regex.test(val)) {
-          showError(
-            "userEmail",
-            "Enter a valid email address (e.g. name@example.com).",
-          );
-          return false;
-        }
-        clearError("userEmail");
-        showSuccess("userEmail");
-        return true;
-      }
-      function validatePhone() {
-        const raw = document.getElementById("userPhone")?.value || "";
-        const digits = raw.replace(/[\s\-\+]/g, "");
-        if (!/^\d{10}$/.test(digits)) {
-          showError(
-            "userPhone",
-            "Phone must be exactly 10 digits (e.g. 9812345678).",
-          );
-          return false;
-        }
-        clearError("userPhone");
-        showSuccess("userPhone");
-        return true;
-      }
-      function validatePickupLoc() {
-        const val = document.getElementById("pickupLoc")?.value.trim();
-        if (!val) {
-          showError("pickupLoc", "Pickup location is required.");
-          return false;
-        }
-        clearError("pickupLoc");
-        showSuccess("pickupLoc");
-        return true;
-      }
-      function validatePickupDT() {
-        const val = document.getElementById("pickupDT")?.value;
-        if (!val) {
-          showError("pickupDT", "Please select a pickup date and time.");
-          return false;
-        }
-        if (new Date(val) < new Date()) {
-          showError("pickupDT", "Pickup date cannot be in the past.");
-          return false;
-        }
-        clearError("pickupDT");
-        showSuccess("pickupDT");
-        return true;
+      function clearDropdownError(type) {
+        const btn = document.getElementById(type + "DropBtn");
+        if (!btn) return;
+        btn.style.borderColor = "";
+        btn.style.boxShadow = "";
+        const err =
+          btn.parentElement.parentElement.querySelector(".field-error");
+        if (err) err.remove();
       }
 
       function validateForm() {
-        const nameOk = validateName();
-        const emailOk = validateEmail();
-        const phoneOk = validatePhone();
-        const pickupOk = validatePickupLoc();
-        const dtOk = validatePickupDT();
-        if (!nameOk || !emailOk || !phoneOk || !pickupOk || !dtOk) {
+        /* ─ User fields ─ */
+        let ok = true;
+        const nameVal = document.getElementById("userName")?.value.trim();
+        if (!nameVal || nameVal.length < 2) {
+          showFieldError("userName", "Name must be at least 2 characters.");
+          ok = false;
+        } else {
+          clearFieldError("userName");
+          showFieldSuccess("userName");
+        }
+        const emailVal = document.getElementById("userEmail")?.value.trim();
+        if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+          showFieldError("userEmail", "Enter a valid email address.");
+          ok = false;
+        } else {
+          clearFieldError("userEmail");
+          showFieldSuccess("userEmail");
+        }
+        const phoneRaw = document.getElementById("userPhone")?.value || "";
+        const phoneDig = phoneRaw.replace(/[\s\-\+]/g, "");
+        if (!/^\d{10}$/.test(phoneDig)) {
+          showFieldError("userPhone", "Phone must be exactly 10 digits.");
+          ok = false;
+        } else {
+          clearFieldError("userPhone");
+          showFieldSuccess("userPhone");
+        }
+
+        /* ─ Location ─ */
+        const pickup = getPickup();
+        const dropoff = getDropoff();
+        if (!pickup) {
+          if (IS_PACKAGE)
+            showDropdownError("pickup", "Please select a pickup point.");
+          else showFieldError("pickupLocFree", "Pickup location is required.");
+          ok = false;
+        } else {
+          if (IS_PACKAGE) clearDropdownError("pickup");
+          else {
+            clearFieldError("pickupLocFree");
+            showFieldSuccess("pickupLocFree");
+          }
+        }
+
+        /* ─ Pickup datetime ─ */
+        const pVal = document.getElementById("pickupDT")?.value;
+        if (!pVal) {
+          showFieldError("pickupDT", "Please select a pickup date and time.");
+          ok = false;
+        } else if (new Date(pVal) < new Date()) {
+          showFieldError("pickupDT", "Pickup date cannot be in the past.");
+          ok = false;
+        } else {
+          clearFieldError("pickupDT");
+          showFieldSuccess("pickupDT");
+        }
+
+        if (!ok) {
           const firstErr = document.querySelector(".field-error");
           if (firstErr)
             firstErr
@@ -2862,28 +3314,28 @@
           alert("Vehicle data not loaded. Please refresh the page.");
           return null;
         }
-        const pickupVal = document.getElementById("pickupDT").value;
+
         const dropoffVal = document.getElementById("dropoffDT").value;
-        const pickupDate = new Date(pickupVal);
+        const pickupDate = new Date(pVal);
         const dropDate = new Date(dropoffVal);
         if (!dropoffVal || dropDate <= pickupDate) {
-          showError(
+          showFieldError(
             "dropoffDT",
             "Drop-off must be after pickup. Check your duration.",
           );
           return null;
         }
+
         const diffMs = dropDate - pickupDate;
         const totalDays = diffMs / (1000 * 60 * 60 * 24);
-        const phone = document
-          .getElementById("userPhone")
-          .value.replace(/[\s\-\+]/g, "");
+
         return {
-          name: document.getElementById("userName").value.trim(),
-          email: document.getElementById("userEmail").value.trim(),
-          phone,
-          pickup: document.getElementById("pickupLoc").value.trim(),
-          pickupVal,
+          name: nameVal,
+          email: emailVal,
+          phone: phoneDig,
+          pickup,
+          dropoff: dropoff || pickup,
+          pickupVal: pVal,
           dropoffVal,
           totalDays,
           notes: document.getElementById("bookingNotes")?.value.trim() || null,
@@ -2900,7 +3352,6 @@
         }
       }
 
-      /* ── PAY WITH ESEWA ── redirects to payment page ── */
       async function payWithEsewa() {
         const data = validateForm();
         if (!data) return;
@@ -2916,8 +3367,7 @@
             email: data.email,
             phone: data.phone,
             pickup: data.pickup,
-            dropoff:
-              document.getElementById("dropoffLoc")?.value || data.pickup,
+            dropoff: data.dropoff,
             pickup_dt: data.pickupVal,
             dropoff_dt: data.dropoffVal,
             total_days: data.totalDays,
