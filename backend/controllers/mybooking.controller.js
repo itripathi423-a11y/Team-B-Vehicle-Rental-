@@ -10,6 +10,7 @@ exports.getMyBookings = (req, res) => {
     SELECT
       b.id,
       b.booking_ref,
+      b.vehicle_id,
       b.rental_type,
       b.pickup_datetime,
       b.drop_datetime,

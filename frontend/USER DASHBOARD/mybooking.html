@@ -2356,6 +2356,7 @@
           bookings = data.bookings.map((b) => ({
             _dbId: b.id,
             id: b.booking_ref,
+            vehicleId: b.vehicle_id,
             vehicle: b.vehicle_name,
             plate: b.license_plate || "—",
             emoji: bodyEmoji(b.body_type),
@@ -2449,26 +2450,27 @@
         tbody.innerHTML = paginated
           .map(
             (b) => `
-          <tr>
-            <td><div class="td-inner"><div class="veh-cell">
-              <div class="veh-thumb">${thumbHtml(b, "small")}</div>
-              <div><div class="veh-name">${b.vehicle}</div><div class="veh-plate">${b.plate}</div></div>
-            </div></div></td>
-            <td><div class="td-inner" style="font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted)">${b.id}</div></td>
-            <td><div class="td-inner" style="font-size:13px">${b.duration}</div></td>
-            <td><div class="td-inner" style="font-size:13px">${b.date}</div></td>
-            <td><div class="td-inner"><div class="amount-cell">Rs ${b.amount.toLocaleString()}</div></div></td>
-            <td><div class="td-inner">${badge(b.status)}</div></td>
-            <td><div class="td-inner">${payBadge(b.paymentStatus)}</div></td>   
-            <td><div class="td-inner"><div class="actions">
-              <button class="act-btn act-view" title="View details" onclick="viewBooking(${b._idx})">
-                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              </button>
-              <button class="act-btn act-delete" title="Cancel booking" onclick="deleteBooking(${b._idx})" ${b.status === "cancelled" || b.status === "rejected" ? 'disabled style="opacity:.4;cursor:not-allowed"' : ""}>
-                <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-              </button>
-            </div></div></td>
-          </tr>`,
+            
+  <tr onclick="window.location.href='/USER%20DASHBOARD/vehicle-details.html?id=${b.vehicleId}'">
+    <td><div class="td-inner"><div class="veh-cell">
+      <div class="veh-thumb">${thumbHtml(b, "small")}</div>
+      <div><div class="veh-name">${b.vehicle}</div><div class="veh-plate">${b.plate}</div></div>
+    </div></div></td>
+    <td><div class="td-inner" style="font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted)">${b.id}</div></td>
+    <td><div class="td-inner" style="font-size:13px">${b.duration}</div></td>
+    <td><div class="td-inner" style="font-size:13px">${b.date}</div></td>
+    <td><div class="td-inner"><div class="amount-cell">Rs ${b.amount.toLocaleString()}</div></div></td>
+    <td><div class="td-inner">${badge(b.status)}</div></td>
+    <td><div class="td-inner">${payBadge(b.paymentStatus)}</div></td>   
+    <td onclick="event.stopPropagation()"><div class="td-inner"><div class="actions">
+      <button class="act-btn act-view" title="View details" onclick="event.stopPropagation(); viewBooking(${b._idx})">
+        <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+      <button class="act-btn act-delete" title="Cancel booking" onclick="event.stopPropagation(); deleteBooking(${b._idx})" ${b.status === "cancelled" || b.status === "rejected" ? 'disabled style="opacity:.4;cursor:not-allowed"' : ""}>
+        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+      </button>
+    </div></div></td>
+  </tr>`,
           )
           .join("");
       }

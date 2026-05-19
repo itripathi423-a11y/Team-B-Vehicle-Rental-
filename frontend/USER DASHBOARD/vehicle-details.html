@@ -2028,6 +2028,7 @@
       async function loadVehicle() {
         const params = new URLSearchParams(location.search);
         const id = params.get("id");
+        window.vehicleId = id;
         if (!id) {
           window.location.href = "user.vehicle.listing.html";
           return;
@@ -2287,13 +2288,14 @@
       }
 
       function goToBooking() {
-        if (!vehicle?.id) return alert("Vehicle not loaded yet.");
+        if (!vehicle?.id && !vehicle?.vehicle_id)
+          return alert("Vehicle not loaded yet.");
         const pickup =
           document.getElementById("pickupLocDetail")?.value.trim() || "";
         const pDate = document.getElementById("pickupDate")?.value || "";
         const pTime = document.getElementById("pickupTime")?.value || "09:00";
         const params = new URLSearchParams({
-          id: vehicle.id,
+          id: vehicle.id || vehicle.vehicle_id,
           dur: selectedDur,
           pickup,
           pickup_date: pDate,

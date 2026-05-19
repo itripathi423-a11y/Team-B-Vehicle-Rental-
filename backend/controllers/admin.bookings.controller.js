@@ -118,6 +118,7 @@ exports.getAllBookings = (req, res) => {
       user_email: b.user_email,
       user_phone: b.user_phone,
       user_photo: "",
+      vehicle_id: b.vehicle_id,
       vehicle_name: b.vehicle_name || "—",
       vehicle_plate: b.vehicle_plate || "—",
       vehicle_type: b.vehicle_type || "—",
