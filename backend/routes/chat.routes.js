@@ -294,7 +294,7 @@ Here's how to book a vehicle on AutoDrive Nepal:
    Review your summary and confirm. You'll receive a booking reference number (e.g. BK-2025-XXXX).
 
 6️⃣ **Pay**
-   Choose online payment (eSewa / Khalti) or cash at pickup.
+   Choose online payment eSewa 
 
 Status meanings after booking:
 • Pending = awaiting confirmation
