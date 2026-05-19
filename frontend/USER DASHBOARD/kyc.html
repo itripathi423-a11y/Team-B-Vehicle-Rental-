@@ -2677,9 +2677,6 @@
     <script src="notification.js"></script>
 
     <script>
-      /* ─────────────────────────────────────────
-         CONSTANTS
-      ───────────────────────────────────────── */
       const API = "http://localhost:5000/api/kyc";
       const ALLOWED_TYPES = [
         "image/jpeg",
@@ -2691,8 +2688,8 @@
       const MAX_SIZE_MB = 5;
 
       /* ─────────────────────────────────────────
-         SIDEBAR MOBILE
-      ───────────────────────────────────────── */
+   SIDEBAR MOBILE
+───────────────────────────────────────── */
       const sidebar = document.getElementById("sidebar");
       const overlay = document.getElementById("sidebarOverlay");
       const toggle = document.getElementById("sidebarToggle");
@@ -2712,8 +2709,8 @@
         toggle.style.display = window.innerWidth <= 768 ? "flex" : "none";
 
       /* ─────────────────────────────────────────
-         USER DROPDOWN
-      ───────────────────────────────────────── */
+   USER DROPDOWN
+───────────────────────────────────────── */
       const userDropdownWrap = document.getElementById("userDropdownWrap");
       const userDropdownMenu = document.getElementById("userDropdownMenu");
       const topbarChevron = document.getElementById("topbarChevron");
@@ -2731,8 +2728,8 @@
       });
 
       /* ─────────────────────────────────────────
-         SPOUSE TOGGLE
-      ───────────────────────────────────────── */
+   SPOUSE TOGGLE
+───────────────────────────────────────── */
       function toggleSpouse(val) {
         const grp = document.getElementById("spouseGroup");
         if (val === "Married") {
@@ -2747,8 +2744,8 @@
       }
 
       /* ─────────────────────────────────────────
-         VALIDATION HELPERS
-      ───────────────────────────────────────── */
+   VALIDATION HELPERS
+───────────────────────────────────────── */
       function showErr(id, msg) {
         const el = document.getElementById("err-" + id);
         if (!el) return;
@@ -2761,12 +2758,18 @@
         }
       }
 
-      /* ── Personal Info validators ── */
+      /* ─────────────────────────────────────────
+   PERSONAL INFO VALIDATORS
+───────────────────────────────────────── */
       function validateFullName(val) {
         if (!val.trim()) return "Full name is required.";
         if (val.trim().length < 2) return "Name must be at least 2 characters.";
+        if (/\d/.test(val)) return "Name must not contain numbers.";
+        if (!/^[a-zA-Z\s'.()-]+$/.test(val.trim()))
+          return "Name must contain letters only.";
         return "";
       }
+
       function validateEmail(val) {
         if (!val.trim()) return "Email address is required.";
         if (!val.includes("@") || !val.includes("."))
@@ -2775,54 +2778,73 @@
           return "Invalid email format.";
         return "";
       }
+
       function validatePhone(val) {
         if (!val.trim()) return "Phone number is required.";
         if (!/^\d{10}$/.test(val.trim()))
           return "Phone must be exactly 10 digits, numbers only.";
         return "";
       }
+
+      /* Document Number — digits only */
       function validateDocNumber(val) {
         if (!val.trim()) return "Document number is required.";
+        if (/\D/.test(val.trim()))
+          return "Document number must contain digits only.";
         return "";
       }
+
+      /* Date of Birth — must be 18+ */
       function validateDOB(val) {
         if (!val) return "Date of birth is required.";
-        const dob = new Date(val),
-          today = new Date();
+        const dob = new Date(val);
+        const today = new Date();
         today.setHours(0, 0, 0, 0);
         if (dob >= today)
           return "Date of birth cannot be today or a future date.";
-        const min = new Date(today);
-        min.setFullYear(min.getFullYear() - 120);
-        if (dob < min) return "Please enter a valid date of birth.";
+        const minAge18 = new Date(today);
+        minAge18.setFullYear(minAge18.getFullYear() - 18);
+        if (dob > minAge18)
+          return "You must be at least 18 years old to proceed.";
+        const maxAge = new Date(today);
+        maxAge.setFullYear(maxAge.getFullYear() - 120);
+        if (dob < maxAge) return "Please enter a valid date of birth.";
         return "";
       }
+
       function validateGender(val) {
         if (!val) return "Please select a gender.";
         return "";
       }
+
       function validateNationality(val) {
         if (!val.trim()) return "Nationality is required.";
         if (/\d/.test(val)) return "Nationality should not contain numbers.";
+        if (!/^[a-zA-Z\s'.()-]+$/.test(val.trim()))
+          return "Nationality should contain letters only.";
         return "";
       }
 
-      /* ── Additional Info validators (ALL REQUIRED) ── */
+      /* ─────────────────────────────────────────
+   ADDITIONAL INFO VALIDATORS (ALL OPTIONAL)
+───────────────────────────────────────── */
       const NAME_REGEX = /^[a-zA-Z\s'.()-]+$/;
 
+      /* Occupation — letters/spaces only, no digits */
       function validateOccupation(val) {
-        if (!val.trim()) return "Occupation is required.";
+        if (!val.trim()) return "";
         if (val.trim().length < 2)
           return "Occupation must be at least 2 characters.";
         if (val.trim().length > 80)
           return "Occupation must be under 80 characters.";
+        if (/\d/.test(val)) return "Occupation must not contain numbers.";
         if (/[<>{}[\]\\|^~`]/.test(val))
           return "Occupation contains invalid characters.";
         return "";
       }
 
       function validateAddress(val, label) {
-        if (!val.trim()) return `${label} is required.`;
+        if (!val.trim()) return "";
         if (val.trim().length < 3)
           return `${label} must be at least 3 characters.`;
         if (val.trim().length > 150)
@@ -2833,30 +2855,93 @@
       }
 
       function validatePersonName(val, label) {
-        if (!val.trim()) return `${label} is required.`;
+        if (!val.trim()) return "";
         if (val.trim().length < 2)
           return `${label} must be at least 2 characters.`;
         if (val.trim().length > 80)
           return `${label} must be under 80 characters.`;
+        if (/\d/.test(val)) return `${label} should not contain numbers.`;
         if (!NAME_REGEX.test(val.trim()))
           return `${label} should only contain letters, spaces, or basic punctuation.`;
-        if (/\d/.test(val)) return `${label} should not contain numbers.`;
         return "";
       }
 
       function validateMaritalStatus(val) {
-        if (!val) return "Please select a marital status.";
         return "";
       }
 
       function validateSpouseName(val) {
         const marital = document.getElementById("maritalStatus").value;
         if (marital !== "Married") return "";
-        if (!val.trim()) return "Spouse name is required when married.";
+        if (!val.trim()) return "";
         return validatePersonName(val, "Spouse's name");
       }
 
-      /* ── Live validation: Personal Info ── */
+      /* ─────────────────────────────────────────
+   KEY BLOCKERS
+───────────────────────────────────────── */
+
+      /** Block digits from name/text fields */
+      function blockDigits(e) {
+        if (/\d/.test(e.key)) e.preventDefault();
+      }
+
+      /** Block non-digits from number fields */
+      function blockNonDigits(e) {
+        if (!/\d/.test(e.key)) e.preventDefault();
+      }
+
+      /* ── Name fields: block digits ── */
+      [
+        "fullName",
+        "nationality",
+        "fatherName",
+        "motherName",
+        "grandfatherName",
+        "spouseName",
+      ].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("keypress", blockDigits);
+        el.addEventListener("input", (e) => {
+          e.target.value = e.target.value.replace(/\d/g, "");
+        });
+      });
+
+      /* ── Occupation: block digits ── */
+      const occupationEl = document.getElementById("occupation");
+      if (occupationEl) {
+        occupationEl.addEventListener("keypress", blockDigits);
+        occupationEl.addEventListener("input", (e) => {
+          e.target.value = e.target.value.replace(/\d/g, "");
+          showErr("occupation", validateOccupation(e.target.value));
+          updateSteps();
+        });
+      }
+
+      /* ── Phone: digits only, max 10 ── */
+      document
+        .getElementById("phone")
+        ?.addEventListener("keypress", blockNonDigits);
+      document.getElementById("phone")?.addEventListener("input", (e) => {
+        e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
+        showErr("phone", validatePhone(e.target.value));
+        updateSteps();
+      });
+
+      /* ── Document Number: digits only ── */
+      document
+        .getElementById("dob")
+        ?.addEventListener("keypress", blockNonDigits);
+      document.getElementById("dob")?.addEventListener("input", (e) => {
+        e.target.value = e.target.value.replace(/\D/g, "");
+        showErr("dob", validateDocNumber(e.target.value));
+        updateSteps();
+      });
+
+      /* ─────────────────────────────────────────
+   LIVE VALIDATION: PERSONAL INFO
+───────────────────────────────────────── */
       const liveFields = [
         { id: "fullName", fn: validateFullName },
         { id: "email", fn: validateEmail },
@@ -2880,17 +2965,9 @@
         updateSteps();
       });
 
-      /* Phone: digits only */
-      document.getElementById("phone")?.addEventListener("keypress", (e) => {
-        if (!/\d/.test(e.key)) e.preventDefault();
-      });
-      document.getElementById("phone")?.addEventListener("input", (e) => {
-        e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
-        showErr("phone", validatePhone(e.target.value));
-        updateSteps();
-      });
-
-      /* ── Live validation: Additional Info ── */
+      /* ─────────────────────────────────────────
+   LIVE VALIDATION: ADDITIONAL INFO (optional)
+───────────────────────────────────────── */
       const additionalLiveFields = [
         { id: "occupation", fn: (v) => validateOccupation(v) },
         {
@@ -2937,8 +3014,8 @@
         });
 
       /* ─────────────────────────────────────────
-         FILE VALIDATION & UPLOAD HANDLERS
-      ───────────────────────────────────────── */
+   FILE VALIDATION & UPLOAD HANDLERS
+───────────────────────────────────────── */
       function isAllowedFile(file) {
         if (!file) return false;
         const ext = "." + file.name.split(".").pop().toLowerCase();
@@ -2991,7 +3068,6 @@
         updateSteps();
       }
 
-      /* ── Remove file handler ── */
       function removeFile(
         zoneId,
         inputId,
@@ -3005,7 +3081,6 @@
         const preview = document.getElementById(previewId);
         const labelEl = document.getElementById(labelId);
         const errEl = document.getElementById(errId);
-        // Reset state
         zone.classList.remove("has-file", "upload-error", "drag");
         input.value = "";
         if (preview) {
@@ -3044,8 +3119,8 @@
       }
 
       /* ─────────────────────────────────────────
-         STEP PROGRESS
-      ───────────────────────────────────────── */
+   STEP PROGRESS
+───────────────────────────────────────── */
       function updateSteps() {
         const hasName = !validateFullName(
           document.getElementById("fullName")?.value || "",
@@ -3066,7 +3141,6 @@
           document.getElementById("nationality")?.value || "",
         );
 
-        // Additional info — all required now
         const addFields = [
           { id: "occupation", fn: validateOccupation },
           {
@@ -3135,8 +3209,8 @@
       }
 
       /* ─────────────────────────────────────────
-         INIT: LOAD USER + KYC STATUS
-      ───────────────────────────────────────── */
+   INIT: LOAD USER + KYC STATUS
+───────────────────────────────────────── */
       async function init() {
         await loadUserInfo();
         await loadKycStatus();
@@ -3274,12 +3348,11 @@
       }
 
       /* ─────────────────────────────────────────
-         SUBMIT KYC
-      ───────────────────────────────────────── */
+   SUBMIT KYC
+───────────────────────────────────────── */
       async function submitKYC() {
         let hasErrors = false;
 
-        /* Personal Info */
         const personalChecks = [
           {
             id: "fullName",
@@ -3323,7 +3396,6 @@
           if (err) hasErrors = true;
         });
 
-        /* Additional Info — all required */
         const additionalChecks = [
           {
             id: "occupation",
@@ -3372,7 +3444,6 @@
           if (err) hasErrors = true;
         });
 
-        /* Files */
         const hasFront = document
           .getElementById("frontZone")
           .classList.contains("has-file");
@@ -3445,6 +3516,7 @@
           "nationality",
           document.getElementById("nationality").value.trim(),
         );
+
         const additionalData = {
           occupation: document.getElementById("occupation").value.trim(),
           permanent_address: document
@@ -3501,8 +3573,8 @@
       }
 
       /* ─────────────────────────────────────────
-         RESET FORM
-      ───────────────────────────────────────── */
+   RESET FORM
+───────────────────────────────────────── */
       function resetForm() {
         document.getElementById("kycForm").style.display = "";
         document.getElementById("statusPanel").classList.remove("visible");
@@ -3539,7 +3611,6 @@
           }
         });
         toggleSpouse("");
-        // Reset upload zones using removeFile helper
         removeFile(
           "frontZone",
           "frontInput",
