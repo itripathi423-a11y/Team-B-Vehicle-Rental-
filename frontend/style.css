@@ -21,7 +21,20 @@
   width: 100%;
   padding-right: 45px;
 }
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
+.forgot-password {
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
 .eye-btn {
   position: absolute;
   right: 10px;
