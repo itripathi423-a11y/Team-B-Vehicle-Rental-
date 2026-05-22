@@ -124,10 +124,7 @@ exports.getServiceList = (req, res) => {
   });
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// PUT /api/admin/servicing/:id
 // Update service status + date. Sends a notification when marked complete.
-// ─────────────────────────────────────────────────────────────────────────────
 exports.updateServiceStatus = (req, res) => {
   const { id } = req.params;
   const { status, servicing_date } = req.body;
@@ -135,7 +132,6 @@ exports.updateServiceStatus = (req, res) => {
   const dbStatus = mapToDbStatus(status);
   const dateValue = servicing_date || null;
 
-  // First fetch vehicle name for the notification message
   db.query(
     "SELECT name, license_plate FROM vehicles WHERE id = ?",
     [id],
@@ -157,7 +153,7 @@ exports.updateServiceStatus = (req, res) => {
           return res.status(404).json({ message: "Vehicle not found" });
         }
 
-        // ── Notify admins when a service is marked completed ──────────────
+        // ── Completed ─────────────────────────────────────────────────────
         if (status === "completed") {
           const nextDate = dateValue
             ? (() => {
@@ -189,6 +185,26 @@ exports.updateServiceStatus = (req, res) => {
           );
         }
 
+        // ── Overdue ───────────────────────────────────────────────────────
+        if (status === "overdue") {
+          createAdminNotification({
+            title: `🚨 Service Overdue — ${vehicle.name}`,
+            message: `${vehicle.name} (${vehicle.license_plate}) has been manually marked as overdue. Immediate attention required.`,
+            type: "general",
+            ref_id: parseInt(id),
+            ref_type: "vehicle",
+            meta: {
+              vehicle_id: parseInt(id),
+              vehicle_name: vehicle.name,
+              vehicle_plate: vehicle.license_plate,
+              marked_overdue_on:
+                dateValue || new Date().toISOString().slice(0, 10),
+            },
+          }).catch((e) =>
+            console.warn("[Servicing] Overdue notification failed:", e.message),
+          );
+        }
+
         res.json({
           message: "Service status updated",
           id,
@@ -200,10 +216,7 @@ exports.updateServiceStatus = (req, res) => {
   );
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
 // POST /api/admin/servicing/:id/mark-serviced
-// Quick action — sets today as service date + marks as Serviced.
-// ─────────────────────────────────────────────────────────────────────────────
 exports.markServiced = (req, res) => {
   const { id } = req.params;
   const today = new Date().toISOString().slice(0, 10);
@@ -268,17 +281,7 @@ exports.markServiced = (req, res) => {
   );
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CRON JOB FUNCTION — call this daily (e.g. every morning at 8 AM)
-//
-// Checks all vehicles:
-//   • Exactly 25 days since last service → "Due Soon" warning notification
-//   • Exactly 30 days since last service → "Overdue" notification + updates DB flag
-//
-// Usage in your cron file:
-//   const { checkAndNotifyServiceDue } = require('./admin.servicing.controller');
-//   cron.schedule('0 8 * * *', () => checkAndNotifyServiceDue());
-// ─────────────────────────────────────────────────────────────────────────────
+// Check notify for vehicles due for service. To be run as a daily cron job.
 exports.checkAndNotifyServiceDue = () => {
   const sql = `
     SELECT id, name, license_plate, last_service_date, service_status

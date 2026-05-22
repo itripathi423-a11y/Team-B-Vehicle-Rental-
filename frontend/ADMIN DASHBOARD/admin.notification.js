@@ -1,8 +1,3 @@
-// admin.notification.js
-// Drop-in replacement for the existing admin.notification.js
-// Matches the user-side notification panel UI exactly.
-// Load AFTER socket.io client script in every admin HTML page.
-
 (function () {
   "use strict";
 
